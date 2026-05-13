@@ -16,10 +16,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const safeValue = Math.min(100, Math.max(0, value));
 
   const colors = {
-    primary: 'bg-indigo-600',
-    success: 'bg-emerald-500',
-    warning: 'bg-amber-500',
-    error: 'bg-red-500',
+    primary: 'bg-brand-primary',
+    success: 'bg-success',
+    warning: 'bg-warning',
+    error: 'bg-danger',
   };
 
   const sizes = {
@@ -28,7 +28,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     lg: 'h-4',
   };
 
-  const baseStyles = 'w-full bg-zinc-800 overflow-hidden rounded-full';
+  const baseStyles = 'w-full bg-surface-highlight overflow-hidden rounded-full';
   const containerClasses = [baseStyles, sizes[size], className].filter(Boolean).join(' ');
 
   return (

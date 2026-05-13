@@ -1,0 +1,52 @@
+import { Coach } from '@/schemas/coach.schema';
+
+export const mockCoaches: Coach[] = [
+  {
+    id: 'c1',
+    name: 'Fallen',
+    avatarUrl: 'https://i.pravatar.cc/150?u=c1',
+    game: 'CS2',
+    specialty: ['AWP', 'IGL', 'Táticas em Grupo'],
+    rating: 5.0,
+    reviews: 124,
+    pricePerHour: 150,
+    isAvailable: true,
+    premiumOnly: true,
+  },
+  {
+    id: 'c2',
+    name: 'Sacy',
+    avatarUrl: 'https://i.pravatar.cc/150?u=c2',
+    game: 'Valorant',
+    specialty: ['Iniciador', 'Comunicação', 'Macro Play'],
+    rating: 4.9,
+    reviews: 89,
+    pricePerHour: 100,
+    isAvailable: false,
+    premiumOnly: true,
+  },
+  {
+    id: 'c3',
+    name: 'Tensei',
+    avatarUrl: 'https://i.pravatar.cc/150?u=c3',
+    game: 'Valorant',
+    specialty: ['Duelista', 'Mira', 'Entry Fragging'],
+    rating: 4.7,
+    reviews: 45,
+    pricePerHour: 60,
+    isAvailable: true,
+    premiumOnly: false,
+  },
+  {
+    id: 'c4',
+    name: 'Coldzera',
+    avatarUrl: 'https://i.pravatar.cc/150?u=c4',
+    game: 'CS2',
+    specialty: ['Rifler', 'Clutch', 'Posicionamento'],
+    rating: 4.8,
+    reviews: 210,
+    pricePerHour: 120,
+    isAvailable: true,
+    premiumOnly: false,
+  }
+];

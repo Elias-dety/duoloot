@@ -1,38 +1,34 @@
 @layer base {
   :root {
     /* Colors (Dark mode by default, Riot/Valorant style) */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 5.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 5.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 24 100% 55%; /* Laranja de Ação */
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
+    --brand-primary: 24 100% 55%; /* Laranja de Ação */
+    --brand-secondary: 24 100% 45%; 
+    
+    --surface-dark: 240 10% 3.9%;
+    --surface-base: 240 10% 5.9%;
+    --surface-highlight: 240 3.7% 15.9%;
+    
+    --content-base: 0 0% 100%;
+    --content-primary: 0 0% 98%;
+    --content-secondary: 240 5% 84.9%;
+    --content-muted: 240 5% 64.9%;
+    --content-highlight: 0 0% 100%;
+    
+    --success: 142 71% 45%; /* Emerald */
+    --warning: 38 92% 50%; /* Amber */
+    --error: 0 84% 60%; /* Red */
+    --info: 217 91% 60%; /* Blue */
+    --premium: 45 93% 47%; /* Gold/Amber */
+    
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 24 100% 55%;
 
     /* Radius */
     --radius-sm: 0.125rem;
     --radius-md: 0.25rem;
     --radius-lg: 0.5rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.375rem; /* 22px */
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);

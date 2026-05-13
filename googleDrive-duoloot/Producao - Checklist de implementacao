@@ -26,9 +26,9 @@ Estado inicial do projeto:
 | Item | Status | Observação |
 |---|---|---|
 | Checklist oficial criado no Google Drive | Pronto | Este documento passa a ser a fonte de acompanhamento da implementação. |
-| Projeto iniciado | Pendente | Ainda não foi criado React + Vite + TypeScript. |
-| Pastas oficiais criadas | Pendente | Ainda não criamos a estrutura src/. |
-| Primeira página implementada | Pendente | Nenhuma página deve ser feita antes da fundação. |
+| Projeto iniciado | Pronto | React + Vite + TypeScript criado e validado. |
+| Pastas oficiais criadas | Pronto | Estrutura src/ organizada. |
+| Primeira página implementada | Pronto | HomePage, LobbyPage e VaultPage funcionais. |
 
 ---
 
@@ -36,9 +36,9 @@ Estado inicial do projeto:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 1.1 | Criar projeto React + Vite + TypeScript | Pendente | Projeto inicia localmente, TypeScript ativo, React renderiza sem erro. |
-| 1.2 | Conferir package.json inicial | Pendente | Sem biblioteca extra não aprovada. |
-| 1.3 | Remover arquivos padrão desnecessários do Vite, se houver | Pendente | Base limpa sem quebrar renderização inicial. |
+| 1.1 | Criar projeto React + Vite + TypeScript | Pronto | Projeto inicia localmente, TypeScript ativo, React renderiza sem erro. |
+| 1.2 | Conferir package.json inicial | Pronto | Sem biblioteca extra não aprovada. |
+| 1.3 | Remover arquivos padrão desnecessários do Vite, se houver | Pronto | Base limpa sem quebrar renderização inicial. |
 
 Arquivos esperados:
 - package.json
@@ -53,16 +53,16 @@ Arquivos esperados:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 2.1 | Instalar react-router-dom | Pendente | Rotas podem ser configuradas. |
-| 2.2 | Instalar zod | Pendente | Schemas podem ser criados. |
-| 2.3 | Instalar react-hook-form e @hookform/resolvers | Pendente | Formulários futuros preparados. |
-| 2.4 | Instalar date-fns | Pendente | Datas e timer podem ser tratados. |
-| 2.5 | Instalar lucide-react | Pendente | Ícones aprovados disponíveis. |
-| 2.6 | Instalar framer-motion | Pendente | Animações aprovadas disponíveis. |
-| 2.7 | Instalar recharts | Pendente | Gráficos futuros preparados. |
-| 2.8 | Instalar clsx, tailwind-merge e class-variance-authority | Pendente | Componentes podem ter variantes limpas. |
-| 2.9 | Não instalar Zustand ainda | Pendente | Só entra com necessidade real de estado global. |
-| 2.10 | Não instalar TanStack Query ainda | Pendente | Só entra com API real/cache/revalidação. |
+| 2.1 | Instalar react-router-dom | Pronto | Rotas podem ser configuradas. |
+| 2.2 | Instalar zod | Pronto | Schemas podem ser criados. |
+| 2.3 | Instalar react-hook-form e @hookform/resolvers | Pronto | Formulários futuros preparados. |
+| 2.4 | Instalar date-fns | Pronto | Datas e timer podem ser tratados. |
+| 2.5 | Instalar lucide-react | Pronto | Ícones aprovados disponíveis. |
+| 2.6 | Instalar framer-motion | Pronto | Animações aprovadas disponíveis. |
+| 2.7 | Instalar recharts | Pronto | Gráficos futuros preparados. |
+| 2.8 | Instalar clsx, tailwind-merge e class-variance-authority | Pronto | Componentes podem ter variantes limpas. |
+| 2.9 | Não instalar Zustand ainda | Pronto | Só entra com necessidade real de estado global. |
+| 2.10 | Não instalar TanStack Query ainda | Pronto | Só entra com API real/cache/revalidação. |
 
 ---
 
@@ -70,12 +70,12 @@ Arquivos esperados:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 3.1 | Instalar Tailwind CSS | Pendente | Tailwind disponível no projeto. |
-| 3.2 | Criar tailwind.config.ts | Pendente | Configuração reconhece arquivos src. |
-| 3.3 | Criar postcss.config.js | Pendente | Build reconhece Tailwind. |
-| 3.4 | Criar src/styles/globals.css | Pendente | CSS global conectado ao app. |
-| 3.5 | Criar src/styles/tokens.css | Pendente | Tokens visuais V1 centralizados. |
-| 3.6 | Importar tokens.css dentro de globals.css | Pendente | Variáveis disponíveis globalmente. |
+| 3.1 | Instalar Tailwind CSS | Pronto | Tailwind disponível no projeto. |
+| 3.2 | Criar tailwind.config.ts | Pronto | Configuração reconhece arquivos src. |
+| 3.3 | Criar postcss.config.js | Pronto | Build reconhece Tailwind. |
+| 3.4 | Criar src/styles/globals.css | Pronto | CSS global conectado ao app. |
+| 3.5 | Criar src/styles/tokens.css | Pronto | Tokens visuais V1 centralizados. |
+| 3.6 | Importar tokens.css dentro de globals.css | Pronto | Variáveis disponíveis globalmente. |
 
 Regra:
 - Não criar estilos soltos por página.
@@ -87,9 +87,9 @@ Regra:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 4.1 | Configurar aliases no tsconfig.json | Pendente | TypeScript reconhece @/. |
-| 4.2 | Configurar aliases no vite.config.ts | Pendente | Vite reconhece @/. |
-| 4.3 | Validar import com @/ | Pendente | Import interno funciona sem ../../../. |
+| 4.1 | Configurar aliases no tsconfig.json | Pronto | TypeScript reconhece @/. |
+| 4.2 | Configurar aliases no vite.config.ts | Pronto | Vite reconhece @/. |
+| 4.3 | Validar import com @/ | Pronto | Import interno funciona sem ../../../. |
 
 Aliases obrigatórios:
 - @/app
@@ -115,35 +115,35 @@ Aliases obrigatórios:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 5.1 | Criar src/app | Pendente | Pasta existe. |
-| 5.2 | Criar src/assets | Pendente | Pasta existe. |
-| 5.3 | Criar src/components/atoms | Pendente | Pasta existe. |
-| 5.4 | Criar src/components/molecules | Pendente | Pasta existe. |
-| 5.5 | Criar src/components/organisms | Pendente | Pasta existe. |
-| 5.6 | Criar src/constants | Pendente | Pasta existe. |
-| 5.7 | Criar src/data/mocks | Pendente | Pasta existe. |
-| 5.8 | Criar src/features/auth | Pendente | Pasta existe. |
-| 5.9 | Criar src/features/dashboard | Pendente | Pasta existe. |
-| 5.10 | Criar src/features/vault | Pendente | Pasta existe. |
-| 5.11 | Criar src/features/lobby | Pendente | Pasta existe. |
-| 5.12 | Criar src/features/premium | Pendente | Pasta existe. |
-| 5.13 | Criar src/features/coaches | Pendente | Pasta existe. |
-| 5.14 | Criar src/features/reputation | Pendente | Pasta existe. |
-| 5.15 | Criar src/features/profile | Pendente | Pasta existe. |
-| 5.16 | Criar src/features/notifications | Pendente | Pasta existe. |
-| 5.17 | Criar src/features/messages | Pendente | Pasta existe. |
-| 5.18 | Criar src/features/shared | Pendente | Pasta existe. |
-| 5.19 | Criar src/hooks | Pendente | Pasta existe. |
-| 5.20 | Criar src/layouts | Pendente | Pasta existe. |
-| 5.21 | Criar src/lib | Pendente | Pasta existe. |
-| 5.22 | Criar src/pages | Pendente | Pasta existe. |
-| 5.23 | Criar src/routes | Pendente | Pasta existe. |
-| 5.24 | Criar src/schemas | Pendente | Pasta existe. |
-| 5.25 | Criar src/services/api | Pendente | Pasta existe. |
-| 5.26 | Criar src/services/realtime | Pendente | Pasta existe. |
-| 5.27 | Criar src/styles | Pendente | Pasta existe. |
-| 5.28 | Criar src/templates | Pendente | Pasta existe. |
-| 5.29 | Criar src/types | Pendente | Pasta existe. |
+| 5.1 | Criar src/app | Pronto | Pasta existe. |
+| 5.2 | Criar src/assets | Pronto | Pasta existe. |
+| 5.3 | Criar src/components/atoms | Pronto | Pasta existe. |
+| 5.4 | Criar src/components/molecules | Pronto | Pasta existe. |
+| 5.5 | Criar src/components/organisms | Pronto | Pasta existe. |
+| 5.6 | Criar src/constants | Pronto | Pasta existe. |
+| 5.7 | Criar src/data/mocks | Pronto | Pasta existe. |
+| 5.8 | Criar src/features/auth | Pronto | Pasta existe. |
+| 5.9 | Criar src/features/dashboard | Pronto | Pasta existe. |
+| 5.10 | Criar src/features/vault | Pronto | Pasta existe. |
+| 5.11 | Criar src/features/lobby | Pronto | Pasta existe. |
+| 5.12 | Criar src/features/premium | Pronto | Pasta existe. |
+| 5.13 | Criar src/features/coaches | Pronto | Pasta existe. |
+| 5.14 | Criar src/features/reputation | Pronto | Pasta existe. |
+| 5.15 | Criar src/features/profile | Pronto | Pasta existe. |
+| 5.16 | Criar src/features/notifications | Pronto | Pasta existe. |
+| 5.17 | Criar src/features/messages | Pronto | Pasta existe. |
+| 5.18 | Criar src/features/shared | Pronto | Pasta existe. |
+| 5.19 | Criar src/hooks | Pronto | Pasta existe. |
+| 5.20 | Criar src/layouts | Pronto | Pasta existe. |
+| 5.21 | Criar src/lib | Pronto | Pasta existe. |
+| 5.22 | Criar src/pages | Pronto | Pasta existe. |
+| 5.23 | Criar src/routes | Pronto | Pasta existe. |
+| 5.24 | Criar src/schemas | Pronto | Pasta existe. |
+| 5.25 | Criar src/services/api | Pronto | Pasta existe. |
+| 5.26 | Criar src/services/realtime | Pronto | Pasta existe. |
+| 5.27 | Criar src/styles | Pronto | Pasta existe. |
+| 5.28 | Criar src/templates | Pronto | Pasta existe. |
+| 5.29 | Criar src/types | Pronto | Pasta existe. |
 
 Regra:
 - Nenhuma pasta improvisada.
@@ -155,17 +155,17 @@ Regra:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 6.1 | Criar src/constants/routes.ts | Pendente | Paths centralizados. |
-| 6.2 | Criar src/routes/router.tsx | Pendente | Router principal existe. |
-| 6.3 | Criar src/routes/public-routes.tsx | Pendente | Rotas públicas separadas. |
-| 6.4 | Criar src/routes/private-routes.tsx | Pendente | Rotas privadas separadas. |
-| 6.5 | Criar placeholder HomePage | Pendente | Rota / renderiza. |
-| 6.6 | Criar placeholder VaultPage | Pendente | Rota /cofre renderiza. |
-| 6.7 | Criar placeholder LobbyPage | Pendente | Rota /lobby renderiza. |
-| 6.8 | Criar placeholder DashboardPage | Pendente | Rota /dashboard renderiza. |
-| 6.9 | Criar placeholder PremiumPage | Pendente | Rota /premium renderiza. |
-| 6.10 | Criar placeholder CoachesPage | Pendente | Rota /coaches renderiza. |
-| 6.11 | Criar placeholder PlayerProfilePage | Pendente | Rota /perfil/:playerId renderiza. |
+| 6.1 | Criar src/constants/routes.ts | Pronto | Paths centralizados. |
+| 6.2 | Criar src/routes/router.tsx | Pronto | Router principal existe. |
+| 6.3 | Criar src/routes/public-routes.tsx | Pronto | Rotas públicas separadas. |
+| 6.4 | Criar src/routes/private-routes.tsx | Pronto | Rotas privadas separadas. |
+| 6.5 | Criar placeholder HomePage | Pronto | Rota / renderiza. |
+| 6.6 | Criar placeholder VaultPage | Pronto | Rota /cofre renderiza. |
+| 6.7 | Criar placeholder LobbyPage | Pronto | Rota /lobby renderiza. |
+| 6.8 | Criar placeholder DashboardPage | Pronto | Rota /dashboard renderiza. |
+| 6.9 | Criar placeholder PremiumPage | Pronto | Rota /premium renderiza. |
+| 6.10 | Criar placeholder CoachesPage | Pronto | Rota /coaches renderiza. |
+| 6.11 | Criar placeholder PlayerProfilePage | Pronto | Rota /perfil/:playerId renderiza. |
 
 Rotas MVP oficiais:
 - /
@@ -182,11 +182,11 @@ Rotas MVP oficiais:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 7.1 | Criar PublicLayout | Pendente | Aplicado em páginas públicas. |
-| 7.2 | Criar DashboardLayout | Pendente | Aplicado em /dashboard. |
-| 7.3 | Criar AuthLayout | Pendente | Criado para uso futuro. |
-| 7.4 | Criar EventLayout | Pendente | Aplicado em /cofre. |
-| 7.5 | Validar layouts sem busca de dados | Pendente | Layouts só definem casca. |
+| 7.1 | Criar PublicLayout | Pronto | Aplicado em páginas públicas. |
+| 7.2 | Criar DashboardLayout | Pronto | Aplicado em /dashboard. |
+| 7.3 | Criar AuthLayout | Pronto | Criado para uso futuro. |
+| 7.4 | Criar EventLayout | Pronto | Aplicado em /cofre. |
+| 7.5 | Validar layouts sem busca de dados | Pronto | Layouts só definem casca. |
 
 Arquivos esperados:
 - src/layouts/PublicLayout.tsx
@@ -200,15 +200,15 @@ Arquivos esperados:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 8.1 | Definir colors | Pendente | Fundo escuro e laranja de ação definidos. |
-| 8.2 | Definir spacing | Pendente | Espaçamentos reutilizáveis. |
-| 8.3 | Definir radius | Pendente | Bordas padronizadas. |
-| 8.4 | Definir shadow | Pendente | Sombras padronizadas. |
-| 8.5 | Definir fontScale | Pendente | Escala tipográfica inicial. |
-| 8.6 | Definir breakpoints | Pendente | Mobile-first respeitado. |
-| 8.7 | Definir zIndex | Pendente | Camadas previstas. |
-| 8.8 | Definir animations | Pendente | Animações base. |
-| 8.9 | Definir states | Pendente | Estados visuais padronizados. |
+| 8.1 | Definir colors | Pronto | Fundo escuro e laranja de ação definidos. |
+| 8.2 | Definir spacing | Pronto | Espaçamentos reutilizáveis. |
+| 8.3 | Definir radius | Pronto | Bordas padronizadas. |
+| 8.4 | Definir shadow | Pronto | Sombras padronizadas. |
+| 8.5 | Definir fontScale | Pronto | Escala tipográfica inicial. |
+| 8.6 | Definir breakpoints | Pronto | Mobile-first respeitado. |
+| 8.7 | Definir zIndex | Pronto | Camadas previstas. |
+| 8.8 | Definir animations | Pronto | Animações base. |
+| 8.9 | Definir states | Pronto | Estados visuais padronizados. |
 
 Direção visual:
 - fundo escuro
@@ -280,12 +280,12 @@ Regra:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 12.1 | CountdownTimer | Pendente | Recebe data alvo e exibe contagem. |
-| 12.2 | PrizeBox | Pendente | Recebe prêmio, moeda, status e multiplicador. |
-| 12.3 | CompatibilityMeter | Pendente | Recebe score 0 a 100. |
-| 12.4 | RewardProgress | Pendente | Recebe progresso 0 a 100 e próximo marco. |
-| 12.5 | LobbyCardHeader | Pendente | Recebe snapshot do dono. |
-| 12.6 | PlayerStat | Pendente | Recebe label e valor. |
+| 12.1 | CountdownTimer | Pronto | Recebe data alvo e exibe contagem. |
+| 12.2 | PrizeBox | Pronto | Recebe prêmio, moeda, status e multiplicador. |
+| 12.3 | CompatibilityMeter | Pronto | Recebe score 0 a 100. |
+| 12.4 | RewardProgress | Pronto | Recebe progresso 0 a 100 e próximo marco. |
+| 12.5 | LobbyCardHeader | Pronto | Recebe snapshot do dono. |
+| 12.6 | PlayerStat | Pronto | Recebe label e valor. |
 
 ---
 
@@ -293,12 +293,12 @@ Regra:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 13.1 | Header | Pendente | Funciona desktop e mobile. |
-| 13.2 | Footer | Pendente | Renderiza links básicos oficiais. |
-| 13.3 | LobbyGrid | Pendente | Recebe lista de lobbies por props. |
-| 13.4 | VaultEventSection | Pendente | Exibe prêmio, timer e progresso por props. |
-| 13.5 | DashboardSummary | Pendente | Exibe estatísticas principais por props. |
-| 13.6 | WinnersList | Pendente | Renderiza lista ou estado vazio. |
+| 13.1 | Header | Pronto | Funciona desktop e mobile. |
+| 13.2 | Footer | Pronto | Renderiza links básicos oficiais. |
+| 13.3 | LobbyGrid | Pronto | Recebe lista de lobbies por props. |
+| 13.4 | VaultEventSection | Pronto | Exibe prêmio, timer e progresso por props. |
+| 13.5 | DashboardSummary | Pronto | Exibe estatísticas principais por props. |
+| 13.6 | WinnersList | Pronto | Renderiza lista ou estado vazio. |
 
 Regra:
 - Organisms podem compor atoms e molecules.
@@ -310,20 +310,20 @@ Regra:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 14.1 | Criar src/pages/LobbyPage.tsx | Pendente | Página existe. |
-| 14.2 | Criar src/templates/LobbyTemplate/index.tsx | Pendente | Template existe. |
-| 14.3 | Criar estrutura features/lobby/components | Pendente | Feature organizada. |
-| 14.4 | Criar estrutura features/lobby/hooks | Pendente | Hooks específicos separados. |
-| 14.5 | Exibir hero da página | Pendente | Título, subtítulo e CTA. |
-| 14.6 | Exibir busca ou filtro básico | Pendente | Filtro funcional com mock. |
-| 14.7 | Exibir grid de lobbies | Pendente | Usa lobbies.mock.ts. |
-| 14.8 | Exibir vagas | Pendente | Informação sempre visível. |
-| 14.9 | Exibir rank mínimo e máximo | Pendente | Informação sempre visível. |
-| 14.10 | Exibir modo e fila | Pendente | Informação sempre visível. |
-| 14.11 | Exibir compatibilidade | Pendente | Nunca some no mobile. |
-| 14.12 | Exibir score de confiança | Pendente | Nunca some no mobile. |
-| 14.13 | Criar estados loading, error e empty | Pendente | Estados visíveis. |
-| 14.14 | Validar mobile em uma coluna | Pendente | Cards empilhados. |
+| 14.1 | Criar src/pages/LobbyPage.tsx | Pronto | Página existe. |
+| 14.2 | Criar src/templates/LobbyTemplate/index.tsx | Pronto | Template existe. |
+| 14.3 | Criar estrutura features/lobby/components | Pronto | Feature organizada. |
+| 14.4 | Criar estrutura features/lobby/hooks | Pronto | Hooks específicos separados. |
+| 14.5 | Exibir hero da página | Pronto | Título, subtítulo e CTA. |
+| 14.6 | Exibir busca ou filtro básico | Pronto | Filtro funcional com mock. |
+| 14.7 | Exibir grid de lobbies | Pronto | Usa lobbies.mock.ts. |
+| 14.8 | Exibir vagas | Pronto | Informação sempre visível. |
+| 14.9 | Exibir rank mínimo e máximo | Pronto | Informação sempre visível. |
+| 14.10 | Exibir modo e fila | Pronto | Informação sempre visível. |
+| 14.11 | Exibir compatibilidade | Pronto | Nunca some no mobile. |
+| 14.12 | Exibir score de confiança | Pronto | Nunca some no mobile. |
+| 14.13 | Criar estados loading, error e empty | Pronto | Estados visíveis. |
+| 14.14 | Validar mobile em uma coluna | Pronto | Cards empilhados. |
 
 ---
 
@@ -331,21 +331,21 @@ Regra:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 15.1 | Criar src/pages/VaultPage.tsx | Pendente | Página existe. |
-| 15.2 | Criar src/templates/VaultTemplate/index.tsx | Pendente | Template existe. |
-| 15.3 | Criar estrutura features/vault/components | Pendente | Feature organizada. |
-| 15.4 | Criar estrutura features/vault/hooks | Pendente | Hooks específicos separados. |
-| 15.5 | Exibir prêmio | Pendente | PrizeBox visível. |
-| 15.6 | Exibir timer | Pendente | CountdownTimer visível. |
-| 15.7 | Exibir status do evento | Pendente | scheduled, active, ended ou cancelled. |
-| 15.8 | Exibir jogadores online | Pendente | Informação crítica visível. |
-| 15.9 | Exibir inscritos | Pendente | Informação crítica visível. |
-| 15.10 | Exibir progresso para próximo aumento | Pendente | RewardProgress visível. |
-| 15.11 | Exibir missões/micões | Pendente | Usa missions.mock.ts. |
-| 15.12 | Exibir últimos vencedores | Pendente | Usa events.mock.ts ou players.mock.ts. |
-| 15.13 | Exibir CTA de participação | Pendente | CTA destacado. |
-| 15.14 | Criar estados loading, error e empty | Pendente | Estados visíveis. |
-| 15.15 | Validar mobile com prêmio primeiro | Pendente | Prêmio, timer e CTA priorizados. |
+| 15.1 | Criar src/pages/VaultPage.tsx | Pronto | Página existe. |
+| 15.2 | Criar src/templates/VaultTemplate/index.tsx | Pronto | Template existe. |
+| 15.3 | Criar estrutura features/vault/components | Pronto | Feature organizada. |
+| 15.4 | Criar estrutura features/vault/hooks | Pronto | Hooks específicos separados. |
+| 15.5 | Exibir prêmio | Pronto | PrizeBox visível. |
+| 15.6 | Exibir timer | Pronto | CountdownTimer visível. |
+| 15.7 | Exibir status do evento | Pronto | scheduled, active, ended ou cancelled. |
+| 15.8 | Exibir jogadores online | Pronto | Informação crítica visível. |
+| 15.9 | Exibir inscritos | Pronto | Informação crítica visível. |
+| 15.10 | Exibir progresso para próximo aumento | Pronto | RewardProgress visível. |
+| 15.11 | Exibir missões/micões | Pronto | Usa missions.mock.ts. |
+| 15.12 | Exibir últimos vencedores | Pronto | Usa events.mock.ts ou players.mock.ts. |
+| 15.13 | Exibir CTA de participação | Pronto | CTA destacado. |
+| 15.14 | Criar estados loading, error e empty | Pronto | Estados visíveis. |
+| 15.15 | Validar mobile com prêmio primeiro | Pronto | Prêmio, timer e CTA priorizados. |
 
 ---
 
@@ -353,23 +353,23 @@ Regra:
 
 | Ordem | Item | Status | Critério de aceite |
 |---|---|---|---|
-| 16.1 | Projeto inicia sem erro | Pendente | npm run dev funciona. |
-| 16.2 | Tailwind funciona | Pendente | Classes renderizam corretamente. |
-| 16.3 | Aliases funcionam | Pendente | Imports @/ funcionam. |
-| 16.4 | Estrutura de pastas correta | Pendente | Todas as pastas oficiais existem. |
-| 16.5 | Rotas base funcionam | Pendente | Todas as rotas MVP renderizam. |
-| 16.6 | Layouts base existem | Pendente | Public, Dashboard, Auth e Event criados. |
-| 16.7 | Schemas principais existem | Pendente | Schemas compilam. |
-| 16.8 | Mocks principais existem | Pendente | Mocks compatíveis com schemas. |
-| 16.9 | Atoms principais existem | Pendente | Atoms renderizam. |
-| 16.10 | Molecules essenciais existem | Pendente | Molecules renderizam com props. |
-| 16.11 | Organisms essenciais existem | Pendente | Organisms recebem dados por props. |
-| 16.12 | LobbyPage renderiza com mocks | Pendente | Dados críticos visíveis. |
-| 16.13 | VaultPage renderiza com mocks | Pendente | Prêmio e timer visíveis. |
-| 16.14 | Loading, error e empty existem nas páginas principais | Pendente | Estados testáveis. |
-| 16.15 | Mobile considerado em Lobby e Cofre | Pendente | Nada crítico escondido. |
-| 16.16 | Não há imports profundos ../../../ | Pendente | Imports internos usam @/. |
-| 16.17 | Não há dados fixos soltos nos componentes | Pendente | Dados vêm de mocks/schemas. |
+| 16.1 | Projeto inicia sem erro | Pronto | npm run build e dev funcionam sem erros. |
+| 16.2 | Tailwind funciona | Pronto | Classes renderizam corretamente. |
+| 16.3 | Aliases funcionam | Pronto | Imports @/ funcionam. |
+| 16.4 | Estrutura de pastas correta | Pronto | Todas as pastas oficiais existem. |
+| 16.5 | Rotas base funcionam | Pronto | Todas as rotas MVP renderizam. |
+| 16.6 | Layouts base existem | Pronto | Public, Dashboard, Auth e Event criados e aplicados. |
+| 16.7 | Schemas principais existem | Pronto | Schemas compilam e validam mocks. |
+| 16.8 | Mocks principais existem | Pronto | Mocks compatíveis com schemas. |
+| 16.9 | Atoms principais existem | Pronto | Atoms renderizam com tokens V1. |
+| 16.10 | Molecules essenciais existem | Pronto | Molecules renderizam com props. |
+| 16.11 | Organisms essenciais existem | Pronto | Organisms recebem dados por props. |
+| 16.12 | LobbyPage renderiza com mocks | Pronto | Dados críticos visíveis e funcionais. |
+| 16.13 | VaultPage renderiza com mocks | Pronto | Prêmio e timer visíveis e funcionais. |
+| 16.14 | Loading, error e empty existem nas páginas principais | Pronto | Estados testáveis e implementados. |
+| 16.15 | Mobile considerado em Lobby e Cofre | Pronto | Nada crítico escondido, empilhamento correto. |
+| 16.16 | Não há imports profundos ../../../ | Pronto | Todos os imports internos usam @/. |
+| 16.17 | Não há dados fixos soltos nos componentes | Pronto | Dados vêm de mocks/schemas. |
 
 ---
 
@@ -403,23 +403,25 @@ Primeira ação aprovada pelo checklist:
 Status atual:
 
 - Em desenvolvimento:
-  - Molecules essenciais
+  - Vazio (Sprint 1 Frontend finalizada)
 - Pronto:
-  - Setup do projeto
-  - Dependências
-  - Tailwind
-  - Aliases
-  - Estrutura de pastas
-  - Rotas base
-  - Layouts base
-  - Tokens visuais V1
-  - Schemas principais
-  - Mocks principais
-  - Atoms principais
-- Pendente:
-  - Organisms essenciais
+  - Sprint 1 completa (Setup, Foundation, Components, Pages)
   - LobbyPage
   - VaultPage
+  - HomePage
+  - DashboardPage
+  - PlayerProfilePage
+  - PremiumPage
+  - CoachesPage
+  - Validação final técnica
+  - Reparo Design System V2
+  - Correção de dependências
+  - Correção da estrutura de pastas
+  - PremiumPlanSchema e CoachSchema
+  - Mocks premiumPlans e coaches atualizados
+  - PageState molecule (estados padronizados)
+- Pendente:
+  - nada por enquanto.
 - Bloqueado:
   - nada por enquanto.
 

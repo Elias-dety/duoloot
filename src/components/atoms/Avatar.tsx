@@ -24,7 +24,7 @@ export const Avatar: React.FC<AvatarProps> = ({
     xl: 'w-20 h-20 text-xl',
   };
 
-  const baseStyles = 'relative flex shrink-0 overflow-hidden rounded-full bg-zinc-800 items-center justify-center border border-zinc-700/50';
+  const baseStyles = 'relative flex shrink-0 overflow-hidden rounded-full bg-surface-highlight items-center justify-center border border-surface-highlight/50';
   const classes = [baseStyles, sizes[size], className].filter(Boolean).join(' ');
 
   const showFallback = !src || imgError;

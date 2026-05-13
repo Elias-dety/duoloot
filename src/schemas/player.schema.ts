@@ -20,7 +20,7 @@ export const PlayerSchema = z.object({
     playStyle: z.string(),
   }),
   isPremium: z.boolean(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });

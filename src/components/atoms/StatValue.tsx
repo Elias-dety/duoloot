@@ -16,9 +16,9 @@ export const StatValue: React.FC<StatValueProps> = ({
   return (
     <div className={`flex flex-col gap-1 ${className}`} {...props}>
       <span className="text-sm font-medium text-zinc-400">{label}</span>
-      <span className="text-2xl font-bold tracking-tight text-zinc-100">{value}</span>
+      <span className="text-2xl font-bold tracking-tight text-content-primary">{value}</span>
       {description && (
-        <span className="text-xs text-zinc-500">{description}</span>
+        <span className="text-xs text-content-muted">{description}</span>
       )}
     </div>
   );

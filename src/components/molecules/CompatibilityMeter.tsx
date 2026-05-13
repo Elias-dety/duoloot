@@ -25,7 +25,7 @@ export const CompatibilityMeter: React.FC<CompatibilityMeterProps> = ({ score, c
         <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
           Match de Perfil
         </span>
-        <span className={`text-lg font-bold ${score >= 80 ? 'text-emerald-500' : score >= 50 ? 'text-amber-500' : 'text-red-500'}`}>
+        <span className={`text-lg font-bold ${score >= 80 ? 'text-success' : score >= 50 ? 'text-warning' : 'text-danger'}`}>
           {score}%
         </span>
       </div>

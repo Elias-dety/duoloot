@@ -19,7 +19,7 @@ export const PrizeBox: React.FC<PrizeBoxProps> = ({
   const isAccumulating = status === 'active';
 
   return (
-    <div className={`flex flex-col p-4 bg-zinc-900/50 border border-zinc-800 rounded-xl gap-3 ${className}`}>
+    <div className={`flex flex-col p-4 bg-surface-base/50 border border-surface-highlight rounded-xl gap-3 ${className}`}>
       <div className="flex justify-between items-center">
         <Badge variant={isAccumulating ? 'success' : 'default'}>
           {isAccumulating ? 'Acumulando' : 'Prêmio Total'}

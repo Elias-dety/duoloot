@@ -13,7 +13,7 @@ export const SkeletonBlock: React.FC<SkeletonBlockProps> = ({
   className = '',
   ...props
 }) => {
-  const baseStyles = 'animate-pulse bg-zinc-800/80';
+  const baseStyles = 'animate-pulse bg-surface-highlight/80';
   
   const roundedStyles = {
     none: 'rounded-none',

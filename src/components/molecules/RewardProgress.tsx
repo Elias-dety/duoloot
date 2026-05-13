@@ -30,12 +30,12 @@ export const RewardProgress: React.FC<RewardProgressProps> = ({
       {(nextMilestone || rewardValue) && (
         <div className="flex justify-between items-center mt-1">
           {nextMilestone && (
-            <span className="text-[11px] text-zinc-500 uppercase font-semibold">
+            <span className="text-[11px] text-content-muted uppercase font-semibold">
               Próximo: {nextMilestone}
             </span>
           )}
           {rewardValue && (
-            <span className="text-[11px] text-emerald-500 font-bold uppercase">
+            <span className="text-[11px] text-success font-bold uppercase">
               Ganho: {rewardValue}
             </span>
           )}

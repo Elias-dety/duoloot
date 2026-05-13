@@ -11,11 +11,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
     
     const variants = {
-      primary: 'bg-indigo-600 text-white hover:bg-indigo-700 focus-visible:ring-indigo-600',
-      secondary: 'bg-zinc-800 text-zinc-100 hover:bg-zinc-700 focus-visible:ring-zinc-800',
-      outline: 'border border-zinc-700 text-zinc-100 hover:bg-zinc-800 focus-visible:ring-zinc-700',
-      ghost: 'text-zinc-100 hover:bg-zinc-800 hover:text-white focus-visible:ring-zinc-800',
-      danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600',
+      primary: 'bg-brand-primary text-content-base hover:bg-brand-primary/90 focus-visible:ring-brand-primary',
+      secondary: 'bg-surface-highlight text-content-primary hover:bg-surface-highlight/80 focus-visible:ring-surface-highlight',
+      outline: 'border border-surface-highlight text-content-primary hover:bg-surface-highlight focus-visible:ring-surface-highlight',
+      ghost: 'text-content-primary hover:bg-surface-highlight hover:text-content-base focus-visible:ring-surface-highlight',
+      danger: 'bg-danger text-content-base hover:bg-danger/90 focus-visible:ring-danger',
     };
 
     const sizes = {
