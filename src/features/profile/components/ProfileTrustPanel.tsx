@@ -1,7 +1,7 @@
 import React from 'react';
 import { Player } from '@/schemas/player.schema';
-import { ProgressBar } from '@/components/atoms';
-import { ShieldCheck, ThumbsUp, ThumbsDown, AlertTriangle } from 'lucide-react';
+import { Card, ProgressBar } from '@/components/atoms';
+import { AlertTriangle, ShieldCheck, ThumbsUp } from 'lucide-react';
 
 export interface ProfileTrustPanelProps {
   player: Player;
@@ -14,10 +14,10 @@ export const ProfileTrustPanel: React.FC<ProfileTrustPanelProps> = ({ player }) 
   const textColor = isHighTrust ? 'text-success' : isMediumTrust ? 'text-warning' : 'text-danger';
 
   return (
-    <section className="bg-surface-dark border border-surface-highlight p-6 rounded-2xl h-full flex flex-col">
-      <div className="flex justify-between items-start mb-6">
-        <h3 className="text-lg font-bold text-content-base flex items-center gap-2">
-          <ShieldCheck className={`w-5 h-5 ${textColor}`} />
+    <Card variant="default" className="flex h-full flex-col">
+      <div className="mb-6 flex items-start justify-between">
+        <h3 className="flex items-center gap-2 text-lg font-bold text-content-base">
+          <ShieldCheck className={`h-5 w-5 ${textColor}`} />
           Trust Score
         </h3>
         <span className={`text-2xl font-black ${textColor}`}>{player.trustScore}/100</span>
@@ -26,33 +26,35 @@ export const ProfileTrustPanel: React.FC<ProfileTrustPanelProps> = ({ player }) 
       <div className="mb-6">
         <ProgressBar value={player.trustScore} color={color} size="lg" className="mb-2" />
         <p className="text-sm text-content-muted">
-          {isHighTrust ? 'Jogador altamente confiável e bem avaliado.' : 
-           isMediumTrust ? 'Jogador com confiança mediana na comunidade.' : 
-           'Atenção: jogador com histórico recente de denúncias ou abandonos.'}
+          {isHighTrust
+            ? 'Jogador altamente confiavel e bem avaliado.'
+            : isMediumTrust
+              ? 'Jogador estavel, mas ainda com margem para melhorar a reputacao.'
+              : 'Atencao: o historico recente pede mais consistencia.'}
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-auto">
-        <div className="bg-success/10 border border-emerald-500/20 p-3 rounded-xl flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-success/20 flex items-center justify-center">
-            <ThumbsUp className="w-4 h-4 text-success" />
+      <div className="mt-auto grid grid-cols-2 gap-4">
+        <div className="flex items-center gap-3 rounded-xl border border-success/20 bg-success/10 p-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success/20">
+            <ThumbsUp className="h-4 w-4 text-success" />
           </div>
           <div>
             <p className="text-xs text-content-muted">Elogios</p>
-            <p className="text-lg font-bold text-content-base">124</p>
+            <p className="text-lg font-bold text-content-base">{player.stats.commendations}</p>
           </div>
         </div>
-        
-        <div className="bg-danger/10 border border-red-500/20 p-3 rounded-xl flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-danger/20 flex items-center justify-center">
-            <AlertTriangle className="w-4 h-4 text-danger" />
+
+        <div className="flex items-center gap-3 rounded-xl border border-danger/20 bg-danger/10 p-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-danger/20">
+            <AlertTriangle className="h-4 w-4 text-danger" />
           </div>
           <div>
             <p className="text-xs text-content-muted">Abandonos</p>
-            <p className="text-lg font-bold text-content-base">2</p>
+            <p className="text-lg font-bold text-content-base">{player.stats.abandons}</p>
           </div>
         </div>
       </div>
-    </section>
+    </Card>
   );
 };

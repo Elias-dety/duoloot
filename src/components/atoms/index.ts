@@ -8,3 +8,4 @@ export * from './Avatar';
 export * from './ProgressBar';
 export * from './StatValue';
 export * from './SkeletonBlock';
+export * from './Card';

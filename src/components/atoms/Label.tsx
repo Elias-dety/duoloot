@@ -6,7 +6,7 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
 
 export const Label = forwardRef<HTMLLabelElement, LabelProps>(
   ({ className = '', required, children, ...props }, ref) => {
-    const baseStyles = 'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-zinc-200';
+    const baseStyles = 'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-content-secondary';
     const classes = [baseStyles, className].filter(Boolean).join(' ');
 
     return (

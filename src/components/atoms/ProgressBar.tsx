@@ -1,8 +1,8 @@
 import React from 'react';
 
 export interface ProgressBarProps {
-  value: number; // 0 to 100
-  color?: 'primary' | 'success' | 'warning' | 'error';
+  value: number;
+  color?: 'primary' | 'success' | 'warning' | 'error' | 'premium' | 'info';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -18,8 +18,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const colors = {
     primary: 'bg-brand-primary',
     success: 'bg-success',
-    warning: 'bg-warning',
+    warning: 'bg-prize',
     error: 'bg-danger',
+    premium: 'bg-premium',
+    info: 'bg-info',
   };
 
   const sizes = {
@@ -28,15 +30,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     lg: 'h-4',
   };
 
-  const baseStyles = 'w-full bg-surface-highlight overflow-hidden rounded-full';
+  const baseStyles = 'w-full overflow-hidden rounded-full bg-surface-hover';
   const containerClasses = [baseStyles, sizes[size], className].filter(Boolean).join(' ');
 
   return (
     <div className={containerClasses} role="progressbar" aria-valuenow={safeValue} aria-valuemin={0} aria-valuemax={100}>
-      <div
-        className={`h-full transition-all duration-300 ease-in-out ${colors[color]}`}
-        style={{ width: `${safeValue}%` }}
-      />
+      <div className={`h-full transition-all duration-300 ease-out ${colors[color]}`} style={{ width: `${safeValue}%` }} />
     </div>
   );
 };

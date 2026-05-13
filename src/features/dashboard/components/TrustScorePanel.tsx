@@ -1,30 +1,23 @@
 import React from 'react';
-import { SectionTitle } from '@/components/atoms';
+import { Card, SectionTitle } from '@/components/atoms';
 
 export interface TrustScorePanelProps {
   trustScore: number;
 }
 
 export const TrustScorePanel: React.FC<TrustScorePanelProps> = ({ trustScore }) => {
-  // Calculate visual properties based on score
   const isHigh = trustScore >= 80;
   const isMedium = trustScore >= 50 && trustScore < 80;
-  const color = isHigh ? 'text-success' : isMedium ? 'text-orange-500' : 'text-danger';
-  const bgColor = isHigh ? 'bg-success' : isMedium ? 'bg-warning' : 'bg-danger';
+  const color = isHigh ? 'text-success' : isMedium ? 'text-prize' : 'text-danger';
 
   return (
-    <section className="w-full p-6 bg-surface-dark border border-surface-highlight rounded-2xl flex flex-col h-full">
-      <SectionTitle title="Trust Score" subtitle="Sua reputação na comunidade" />
-      
-      <div className="flex-1 flex flex-col items-center justify-center py-6">
-        <div className="relative w-32 h-32 flex items-center justify-center rounded-full border-4 border-surface-highlight mb-4">
-          <svg className="absolute inset-0 w-full h-full -rotate-90">
-            <circle
-              cx="60"
-              cy="60"
-              r="58"
-              className="fill-none stroke-surface-highlight stroke-[4]"
-            />
+    <Card variant="default" className="flex h-full w-full flex-col">
+      <SectionTitle title="Trust Score" subtitle="Sua reputacao na comunidade" accent="green" />
+
+      <div className="flex flex-1 flex-col items-center justify-center py-6">
+        <div className="relative mb-4 flex h-32 w-32 items-center justify-center rounded-full border-4 border-border">
+          <svg className="absolute inset-0 h-full w-full -rotate-90">
+            <circle cx="60" cy="60" r="58" className="fill-none stroke-surface-hover stroke-[4]" />
             <circle
               cx="60"
               cy="60"
@@ -36,30 +29,30 @@ export const TrustScorePanel: React.FC<TrustScorePanelProps> = ({ trustScore }) 
             />
           </svg>
           <div className="flex flex-col items-center justify-center">
-            <span className={`text-4xl font-bold ${color}`}>{trustScore}</span>
+            <span className={`text-4xl font-black ${color}`}>{trustScore}</span>
             <span className="text-xs text-content-muted">/ 100</span>
           </div>
         </div>
 
-        <p className="text-center text-sm text-content-base max-w-[200px]">
-          {isHigh 
-            ? 'Excelente! Você é um jogador altamente confiável.' 
-            : isMedium 
-            ? 'Bom, mas cuidado com abandonos e denúncias.' 
-            : 'Atenção! Seu score está baixo. Evite penalidades.'}
+        <p className="max-w-[220px] text-center text-sm text-content-base">
+          {isHigh
+            ? 'Excelente reputacao para formar duo.'
+            : isMedium
+              ? 'Bom historico, com margem para subir.'
+              : 'Score baixo. Evite abandonos e penalidades.'}
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 mt-auto">
-        <div className="p-3 bg-surface-base rounded-lg border border-surface-highlight/50 text-center">
-          <p className="text-xs text-content-muted mb-1">Elogios</p>
-          <p className="text-lg font-semibold text-content-base">42</p>
+      <div className="mt-auto grid grid-cols-2 gap-2">
+        <div className="rounded-lg border border-border bg-surface-elevated p-3 text-center">
+          <p className="mb-1 text-xs text-content-muted">Elogios</p>
+          <p className="text-lg font-semibold text-success">42</p>
         </div>
-        <div className="p-3 bg-surface-base rounded-lg border border-surface-highlight/50 text-center">
-          <p className="text-xs text-content-muted mb-1">Abandonos</p>
+        <div className="rounded-lg border border-border bg-surface-elevated p-3 text-center">
+          <p className="mb-1 text-xs text-content-muted">Abandonos</p>
           <p className="text-lg font-semibold text-content-base">0</p>
         </div>
       </div>
-    </section>
+    </Card>
   );
 };

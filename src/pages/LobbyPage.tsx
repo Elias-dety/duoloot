@@ -19,7 +19,7 @@ export default function LobbyPage() {
         
         // Simulação bem sucedida
         setLobbies(mockLobbies);
-      } catch (err) {
+      } catch {
         setIsError(true);
       } finally {
         setIsLoading(false);

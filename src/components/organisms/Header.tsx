@@ -9,7 +9,7 @@ export interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onLogin, onSignUp, isLoggedIn }) => {
   return (
-    <header className="w-full bg-surface-dark border-b border-surface-highlight py-4 px-6 flex justify-between items-center">
+    <header className="flex w-full items-center justify-between border-b border-border bg-surface-card px-6 py-4">
       <div className="flex items-center gap-2">
         <span className="text-xl font-bold text-content-primary">Duo Loot</span>
       </div>

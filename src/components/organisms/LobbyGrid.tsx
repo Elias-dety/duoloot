@@ -1,5 +1,5 @@
 import React from 'react';
-import { SkeletonBlock } from '@/components/atoms';
+import { Card, SkeletonBlock } from '@/components/atoms';
 import { LobbyCard } from '@/features/lobby/components/LobbyCard';
 import { Lobby } from '@/schemas/lobby.schema';
 
@@ -26,10 +26,10 @@ export const LobbyGrid: React.FC<LobbyGridProps> = ({
 
   if (items.length === 0) {
     return (
-      <div className="w-full py-16 flex flex-col items-center justify-center bg-surface-dark/50 border border-surface-highlight rounded-xl border-dashed">
+      <Card variant="elevated" className="flex w-full flex-col items-center justify-center border-dashed py-16">
         <p className="text-content-secondary text-center mb-2 text-lg">Nenhum lobby encontrado.</p>
         <span className="text-sm text-content-tertiary">Tente ajustar seus filtros ou crie um novo lobby.</span>
-      </div>
+      </Card>
     );
   }
 

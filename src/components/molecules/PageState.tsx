@@ -1,16 +1,16 @@
 import React from 'react';
-import { SkeletonBlock, Button } from '@/components/atoms';
-import { AlertCircle, FileSearch } from 'lucide-react';
+import { AlertCircle, FileSearch, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Button, Card, SkeletonBlock } from '@/components/atoms';
 
 export interface PageStateProps {
-  type: 'loading' | 'error' | 'empty';
+  type: 'loading' | 'error' | 'empty' | 'locked';
   title?: string;
   description?: string;
   actionText?: string;
   onAction?: () => void;
-  // Options specific to loading
   loadingBlocks?: number;
+  className?: string;
 }
 
 export const PageState: React.FC<PageStateProps> = ({
@@ -20,58 +20,67 @@ export const PageState: React.FC<PageStateProps> = ({
   actionText,
   onAction,
   loadingBlocks = 3,
+  className = '',
 }) => {
   const navigate = useNavigate();
+  const containerClassName = `w-full max-w-5xl mx-auto px-4 ${className}`.trim();
 
   if (type === 'loading') {
     return (
-      <div className="w-full max-w-5xl mx-auto px-4 py-8 space-y-6">
+      <div className={`${containerClassName} py-8 space-y-6`}>
         {Array.from({ length: loadingBlocks }).map((_, i) => (
-          <SkeletonBlock key={i} height={120} rounded="lg" />
+          <SkeletonBlock key={i} height={120} rounded="xl" />
         ))}
       </div>
     );
   }
 
-  if (type === 'error') {
-    return (
-      <div className="w-full max-w-5xl mx-auto px-4 py-16 flex flex-col items-center justify-center text-center">
-        <div className="w-16 h-16 rounded-full bg-danger/10 flex items-center justify-center mb-4">
-          <AlertCircle className="w-8 h-8 text-danger" />
-        </div>
-        <h2 className="text-2xl font-bold text-content-base mb-2">
-          {title || 'Ocorreu um Erro'}
-        </h2>
-        <p className="text-content-muted mb-6 max-w-md">
-          {description || 'Não foi possível carregar os dados no momento. Tente novamente mais tarde.'}
-        </p>
-        <div className="flex gap-4">
-          <Button variant="outline" onClick={onAction || (() => window.location.reload())}>
-            {actionText || 'Tentar novamente'}
-          </Button>
-          <Button variant="ghost" onClick={() => navigate(-1)}>Voltar</Button>
-        </div>
-      </div>
-    );
-  }
+  const stateConfig = {
+    error: {
+      icon: AlertCircle,
+      card: 'danger' as const,
+      iconClass: 'text-danger',
+      defaultTitle: 'Ocorreu um erro',
+      defaultDescription: 'Nao foi possivel carregar os dados no momento. Tente novamente mais tarde.',
+      defaultAction: 'Tentar novamente',
+    },
+    locked: {
+      icon: Lock,
+      card: 'locked' as const,
+      iconClass: 'text-premium',
+      defaultTitle: 'Conteudo bloqueado',
+      defaultDescription: 'Este recurso exige acesso premium para ser desbloqueado.',
+      defaultAction: 'Ver planos',
+    },
+    empty: {
+      icon: FileSearch,
+      card: 'elevated' as const,
+      iconClass: 'text-content-muted',
+      defaultTitle: 'Nenhum resultado',
+      defaultDescription: 'Nao encontramos nenhum dado para exibir aqui no momento.',
+      defaultAction: 'Voltar',
+    },
+  }[type];
 
-  // type === 'empty'
+  const Icon = stateConfig.icon;
+
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-16 flex flex-col items-center justify-center text-center">
-      <div className="w-16 h-16 rounded-full bg-surface-base border border-surface-highlight flex items-center justify-center mb-4">
-        <FileSearch className="w-8 h-8 text-content-muted" />
-      </div>
-      <h2 className="text-2xl font-bold text-content-base mb-2">
-        {title || 'Nenhum resultado'}
-      </h2>
-      <p className="text-content-muted mb-6 max-w-md">
-        {description || 'Não encontramos nenhum dado para exibir aqui no momento.'}
-      </p>
-      {onAction && (
-        <Button variant="outline" onClick={onAction}>
-          {actionText || 'Voltar'}
-        </Button>
-      )}
+    <div className={`${containerClassName} py-16`}>
+      <Card variant={stateConfig.card} className="flex flex-col items-center justify-center text-center">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-border bg-surface-elevated">
+          <Icon className={`h-8 w-8 ${stateConfig.iconClass}`} />
+        </div>
+        <h2 className="mb-2 text-2xl font-black text-content-base">{title || stateConfig.defaultTitle}</h2>
+        <p className="mb-6 max-w-md text-content-secondary">{description || stateConfig.defaultDescription}</p>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          {(onAction || type === 'error') && (
+            <Button variant={type === 'locked' ? 'premium' : 'secondary'} onClick={onAction || (() => window.location.reload())}>
+              {actionText || stateConfig.defaultAction}
+            </Button>
+          )}
+          {type === 'error' && <Button variant="ghost" onClick={() => navigate(-1)}>Voltar</Button>}
+        </div>
+      </Card>
     </div>
   );
 };

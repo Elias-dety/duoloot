@@ -6,11 +6,19 @@
 
 @layer base {
   * {
-    border-color: hsl(var(--border));
+    border-color: var(--dl-line);
   }
+
+  html {
+    background: var(--dl-bg);
+  }
+
   body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top left, rgb(var(--dl-orange-rgb) / 0.08), transparent 32rem),
+      linear-gradient(180deg, var(--dl-bg-soft) 0%, var(--dl-bg) 40%);
+    color: var(--dl-text);
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
   }

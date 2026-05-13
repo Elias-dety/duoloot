@@ -14,25 +14,23 @@ export const CompatibilityMeter: React.FC<CompatibilityMeterProps> = ({ score, c
   };
 
   const getLabel = () => {
-    if (score >= 80) return 'Alta Compatibilidade';
-    if (score >= 50) return 'Média Compatibilidade';
-    return 'Baixa Compatibilidade';
+    if (score >= 80) return 'Alta compatibilidade';
+    if (score >= 50) return 'Media compatibilidade';
+    return 'Baixa compatibilidade';
   };
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <div className="flex justify-between items-end">
-        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-          Match de Perfil
-        </span>
+      <div className="flex items-end justify-between">
+        <span className="text-xs font-semibold uppercase tracking-wider text-content-muted">Match de perfil</span>
         <span className={`text-lg font-bold ${score >= 80 ? 'text-success' : score >= 50 ? 'text-warning' : 'text-danger'}`}>
           {score}%
         </span>
       </div>
-      
+
       <ProgressBar value={score} color={getVariant()} size="md" />
-      
-      <Badge variant={getVariant()} className="w-fit mt-1">
+
+      <Badge variant={getVariant()} className="mt-1 w-fit">
         {getLabel()}
       </Badge>
     </div>

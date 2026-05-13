@@ -9,7 +9,7 @@ export const Divider: React.FC<DividerProps> = ({
   className = '',
   ...props
 }) => {
-  const baseStyles = 'shrink-0 bg-surface-highlight border-none';
+  const baseStyles = 'shrink-0 bg-surface-hover border-none';
   const orientationStyles = orientation === 'horizontal' ? 'h-[1px] w-full' : 'h-full w-[1px]';
   
   const classes = [baseStyles, orientationStyles, className].filter(Boolean).join(' ');

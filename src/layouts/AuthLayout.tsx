@@ -1,11 +1,12 @@
 import { Outlet } from 'react-router-dom';
+import { Card } from '@/components/atoms';
 
 export default function AuthLayout() {
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-full max-w-md border border-surface-highlight rounded-lg p-6">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <Card variant="elevated" className="w-full max-w-md">
         <Outlet />
-      </div>
+      </Card>
     </div>
   );
 }

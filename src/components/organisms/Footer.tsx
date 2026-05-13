@@ -3,7 +3,7 @@ import { Divider } from '@/components/atoms';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-surface-dark py-8 px-6 mt-auto border-t border-surface-highlight text-center md:text-left">
+    <footer className="mt-auto w-full border-t border-border bg-surface-card px-6 py-8 text-center md:text-left">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
           <span className="text-lg font-bold text-content-primary">Duo Loot</span>

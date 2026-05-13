@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { intervalToDuration, isBefore, Duration } from 'date-fns';
+import React, { useEffect, useState } from 'react';
+import { Duration, intervalToDuration, isBefore } from 'date-fns';
 
 export interface CountdownTimerProps {
   targetDate: string;
@@ -31,7 +31,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onEx
 
   if (isExpired) {
     return (
-      <div className="flex gap-2 items-center text-danger font-bold uppercase tracking-wider text-sm">
+      <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-danger">
         <span>Encerrado</span>
       </div>
     );
@@ -42,25 +42,25 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate, onEx
   const formatUnit = (value: number | undefined) => String(value || 0).padStart(2, '0');
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex items-center gap-4">
       <div className="flex flex-col items-center">
-        <span className="text-2xl font-bold text-white tabular-nums">{formatUnit(duration.days)}</span>
-        <span className="text-[10px] uppercase text-content-muted font-medium">Dias</span>
+        <span className="text-2xl font-bold tabular-nums text-content-base">{formatUnit(duration.days)}</span>
+        <span className="text-[10px] font-medium uppercase text-content-muted">Dias</span>
       </div>
-      <span className="text-zinc-700 font-bold mb-4">:</span>
+      <span className="mb-4 font-bold text-surface-hover">:</span>
       <div className="flex flex-col items-center">
-        <span className="text-2xl font-bold text-white tabular-nums">{formatUnit(duration.hours)}</span>
-        <span className="text-[10px] uppercase text-content-muted font-medium">Horas</span>
+        <span className="text-2xl font-bold tabular-nums text-content-base">{formatUnit(duration.hours)}</span>
+        <span className="text-[10px] font-medium uppercase text-content-muted">Horas</span>
       </div>
-      <span className="text-zinc-700 font-bold mb-4">:</span>
+      <span className="mb-4 font-bold text-surface-hover">:</span>
       <div className="flex flex-col items-center">
-        <span className="text-2xl font-bold text-white tabular-nums">{formatUnit(duration.minutes)}</span>
-        <span className="text-[10px] uppercase text-content-muted font-medium">Min</span>
+        <span className="text-2xl font-bold tabular-nums text-content-base">{formatUnit(duration.minutes)}</span>
+        <span className="text-[10px] font-medium uppercase text-content-muted">Min</span>
       </div>
-      <span className="text-zinc-700 font-bold mb-4">:</span>
+      <span className="mb-4 font-bold text-surface-hover">:</span>
       <div className="flex flex-col items-center">
-        <span className="text-2xl font-bold text-orange-500 tabular-nums">{formatUnit(duration.seconds)}</span>
-        <span className="text-[10px] uppercase text-content-muted font-medium">Seg</span>
+        <span className="text-2xl font-bold tabular-nums text-warning">{formatUnit(duration.seconds)}</span>
+        <span className="text-[10px] font-medium uppercase text-content-muted">Seg</span>
       </div>
     </div>
   );

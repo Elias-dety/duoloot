@@ -16,29 +16,21 @@ export const RewardProgress: React.FC<RewardProgressProps> = ({
 }) => {
   return (
     <div className={`flex flex-col gap-2.5 ${className}`}>
-      <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-zinc-300">
-          Progresso da Missão
-        </span>
-        <span className="text-sm font-bold text-indigo-400">
-          {currentProgress}%
-        </span>
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-content-secondary">Progresso da missao</span>
+        <span className="text-sm font-bold text-info">{currentProgress}%</span>
       </div>
 
       <ProgressBar value={currentProgress} color="primary" size="md" />
 
       {(nextMilestone || rewardValue) && (
-        <div className="flex justify-between items-center mt-1">
+        <div className="mt-1 flex items-center justify-between">
           {nextMilestone && (
-            <span className="text-[11px] text-content-muted uppercase font-semibold">
-              Próximo: {nextMilestone}
+            <span className="text-[11px] font-semibold uppercase text-content-muted">
+              Proximo: {nextMilestone}
             </span>
           )}
-          {rewardValue && (
-            <span className="text-[11px] text-success font-bold uppercase">
-              Ganho: {rewardValue}
-            </span>
-          )}
+          {rewardValue && <span className="text-[11px] font-bold uppercase text-success">Ganho: {rewardValue}</span>}
         </div>
       )}
     </div>

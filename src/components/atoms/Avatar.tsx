@@ -18,21 +18,21 @@ export const Avatar: React.FC<AvatarProps> = ({
   const [imgError, setImgError] = useState(false);
 
   const sizes = {
-    sm: 'w-8 h-8 text-xs',
-    md: 'w-10 h-10 text-sm',
-    lg: 'w-14 h-14 text-base',
-    xl: 'w-20 h-20 text-xl',
+    sm: 'h-8 w-8 text-xs',
+    md: 'h-10 w-10 text-sm',
+    lg: 'h-14 w-14 text-base',
+    xl: 'h-20 w-20 text-xl',
   };
 
-  const baseStyles = 'relative flex shrink-0 overflow-hidden rounded-full bg-surface-highlight items-center justify-center border border-surface-highlight/50';
+  const baseStyles =
+    'relative flex shrink-0 items-center justify-center overflow-hidden rounded-full border border-brand-primary/25 bg-surface-elevated shadow-sm';
   const classes = [baseStyles, sizes[size], className].filter(Boolean).join(' ');
-
   const showFallback = !src || imgError;
 
   return (
-    <div className={classes}>
+    <div className={classes} title={showFallback ? '[Imagem pendente: avatar do jogador]' : undefined}>
       {showFallback ? (
-        <span className="font-medium text-zinc-400 uppercase select-none">
+        <span className="select-none font-black uppercase text-brand-primary">
           {fallback.substring(0, 2)}
         </span>
       ) : (

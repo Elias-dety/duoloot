@@ -30,7 +30,7 @@ export default function VaultPage() {
         // Simulação bem sucedida usando o evento ativo
         setEvent(mockEvents[0]);
         setMissions(mockMissions);
-      } catch (err) {
+      } catch {
         setIsError(true);
       } finally {
         setIsLoading(false);

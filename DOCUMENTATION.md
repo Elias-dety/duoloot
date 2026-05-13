@@ -100,6 +100,27 @@ Página de identidade do jogador:
 
 ---
 
+### 7. Validação e Tipagem (Zod + TypeScript)
+Recentemente, implementamos uma camada rigorosa de validação:
+*   **Schemas:** Localizados em `src/schemas/`, definem a estrutura de dados (ex: `PlayerSchema`, `CoachSchema`).
+*   **Mock Data:** Localizados em `src/data/mocks/`, garantem que o desenvolvimento da UI ocorra de forma independente do backend, mas respeitando os contratos de dados.
+
+---
+
+## 🚦 Rotas do Sistema
+
+| Rota | Descrição | Acesso |
+| :--- | :--- | :--- |
+| `/` | Landing Page | Público |
+| `/dashboard` | Painel Geral | Privado |
+| `/lobby` | Busca de Partidas | Público |
+| `/coaches` | Lista de Treinadores | Público |
+| `/premium` | Planos e Assinaturas | Privado |
+| `/profile` | Perfil do Jogador | Público |
+| `/vault` | Recompensas e Loot | Público |
+
+---
+
 ## 📝 Próximos Passos (Roadmap)
 1.  **Integração com Supabase:** Implementação de autenticação e banco de dados real.
 2.  **Sistema de Chat:** Mensageria em tempo real para lobbies.
@@ -108,4 +129,4 @@ Página de identidade do jogador:
 
 ---
 
-*Documentação atualizada em: 12 de Maio de 2026*
+*Documentação atualizada em: 13 de Maio de 2026*

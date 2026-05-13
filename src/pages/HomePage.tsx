@@ -26,7 +26,7 @@ export default function HomePage() {
         
         // Use first mock event
         setActiveEvent(mockEvents[0]);
-      } catch (err) {
+      } catch {
         setIsError(true);
       } finally {
         setIsLoading(false);

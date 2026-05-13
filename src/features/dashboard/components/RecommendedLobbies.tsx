@@ -1,30 +1,29 @@
 import React from 'react';
-import { SectionTitle, Badge, Button } from '@/components/atoms';
-import { mockLobbies } from '@/data/mocks/lobbies.mock';
 import { Link } from 'react-router-dom';
+import { Badge, Button, Card, SectionTitle } from '@/components/atoms';
+import { mockLobbies } from '@/data/mocks/lobbies.mock';
 
 export const RecommendedLobbies: React.FC = () => {
-  // Pegar 2 lobbies mockados
   const recommended = mockLobbies.slice(0, 2);
 
   return (
-    <section className="w-full p-6 bg-surface-dark border border-surface-highlight rounded-2xl flex flex-col h-full">
+    <Card variant="default" className="flex h-full w-full flex-col">
       <SectionTitle title="Lobbies Recomendados" subtitle="Compatibilidade baseada no seu perfil" />
-      
-      <div className="mt-4 flex-1 flex flex-col gap-4">
+
+      <div className="mt-4 flex flex-1 flex-col gap-4">
         {recommended.map((lobby) => (
-          <div key={lobby.id} className="p-4 bg-surface-base rounded-xl border border-surface-highlight/50 flex flex-col gap-3">
-            <div className="flex justify-between items-start">
+          <div key={lobby.id} className="flex flex-col gap-3 rounded-xl border border-border bg-surface-elevated p-4">
+            <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-bold text-content-base">{lobby.mode}</p>
                 <p className="text-sm text-content-muted">{lobby.minRank} a {lobby.maxRank}</p>
               </div>
               <Badge variant="success">{lobby.compatibilityScore}% Match</Badge>
             </div>
-            <div className="flex justify-between items-center mt-2">
+            <div className="mt-2 flex items-center justify-between">
               <p className="text-sm text-content-muted">{lobby.slotsTotal - lobby.slotsFilled} vagas</p>
               <Link to="/lobby">
-                <Button variant="outline" size="sm">Ver Lobby</Button>
+                <Button variant="secondary" size="sm">Ver Lobby</Button>
               </Link>
             </div>
           </div>
@@ -32,10 +31,10 @@ export const RecommendedLobbies: React.FC = () => {
       </div>
 
       <div className="mt-4">
-        <Link to="/lobby" className="w-full text-center block">
-          <Button variant="secondary" className="w-full">Procurar mais Lobbies</Button>
+        <Link to="/lobby" className="block w-full text-center">
+          <Button variant="primary" className="w-full">Procurar mais Lobbies</Button>
         </Link>
       </div>
-    </section>
+    </Card>
   );
 };

@@ -1,64 +1,105 @@
 @layer base {
   :root {
-    /* Colors (Dark mode by default, Riot/Valorant style) */
-    --brand-primary: 24 100% 55%; /* Laranja de Ação */
-    --brand-secondary: 24 100% 45%; 
-    
-    --surface-dark: 240 10% 3.9%;
-    --surface-base: 240 10% 5.9%;
-    --surface-highlight: 240 3.7% 15.9%;
-    
-    --content-base: 0 0% 100%;
-    --content-primary: 0 0% 98%;
-    --content-secondary: 240 5% 84.9%;
-    --content-muted: 240 5% 64.9%;
-    --content-highlight: 0 0% 100%;
-    
-    --success: 142 71% 45%; /* Emerald */
-    --warning: 38 92% 50%; /* Amber */
-    --error: 0 84% 60%; /* Red */
-    --info: 217 91% 60%; /* Blue */
-    --premium: 45 93% 47%; /* Gold/Amber */
-    
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    /* Duo Loot V2 official palette */
+    --dl-bg: #070708;
+    --dl-bg-soft: #0b0d10;
+
+    --dl-card: #101010;
+    --dl-card-elevated: #11161c;
+    --dl-card-hover: #171f29;
+
+    --dl-orange: #ff7a1a;
+    --dl-orange-strong: #ff5a0a;
+    --dl-orange-soft: rgba(255, 122, 26, 0.14);
+
+    --dl-green: #38f28b;
+    --dl-green-strong: #16e57c;
+
+    --dl-purple: #8d5cff;
+    --dl-red: #ff4d4d;
+    --dl-gold: #ffd15a;
+    --dl-blue: #46b7ff;
+
+    --dl-text: #f4f4f5;
+    --dl-muted: #a7a7a7;
+    --dl-muted-strong: #68717e;
+
+    --dl-line: rgba(255, 255, 255, 0.085);
+    --dl-line-orange: rgba(255, 122, 26, 0.22);
+
+    /* RGB channels for Tailwind opacity modifiers */
+    --dl-bg-rgb: 7 7 8;
+    --dl-bg-soft-rgb: 11 13 16;
+    --dl-card-rgb: 16 16 16;
+    --dl-card-elevated-rgb: 17 22 28;
+    --dl-card-hover-rgb: 23 31 41;
+    --dl-orange-rgb: 255 122 26;
+    --dl-orange-strong-rgb: 255 90 10;
+    --dl-green-rgb: 56 242 139;
+    --dl-green-strong-rgb: 22 229 124;
+    --dl-purple-rgb: 141 92 255;
+    --dl-red-rgb: 255 77 77;
+    --dl-gold-rgb: 255 209 90;
+    --dl-blue-rgb: 70 183 255;
+    --dl-text-rgb: 244 244 245;
+    --dl-muted-rgb: 167 167 167;
+    --dl-muted-strong-rgb: 104 113 126;
+
+    /* Semantic aliases used by the existing app */
+    --brand-primary: var(--dl-orange);
+    --brand-secondary: var(--dl-orange-strong);
+    --surface-dark: var(--dl-bg);
+    --surface-base: var(--dl-bg-soft);
+    --surface-highlight: var(--dl-card-hover);
+    --content-base: var(--dl-text);
+    --content-primary: var(--dl-text);
+    --content-secondary: var(--dl-muted);
+    --content-muted: var(--dl-muted-strong);
+    --content-highlight: var(--dl-text);
+    --success: var(--dl-green);
+    --warning: var(--dl-gold);
+    --error: var(--dl-red);
+    --danger: var(--dl-red);
+    --info: var(--dl-blue);
+    --premium: var(--dl-purple);
+    --prize: var(--dl-gold);
+    --background: var(--dl-bg);
+    --foreground: var(--dl-text);
+    --border: var(--dl-line);
+    --input: var(--dl-line);
 
     /* Radius */
-    --radius-sm: 0.125rem;
-    --radius-md: 0.25rem;
-    --radius-lg: 0.5rem;
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
     --radius-xl: 1rem;
-    --radius-2xl: 1.375rem; /* 22px */
+    --radius-2xl: 1.375rem;
 
     /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-sm: 0 10px 24px rgb(var(--dl-bg-rgb) / 0.22);
+    --shadow-md: 0 16px 34px rgb(var(--dl-bg-rgb) / 0.28);
+    --shadow-lg: 0 0 38px rgb(var(--dl-orange-rgb) / 0.12);
+    --shadow-premium: 0 0 34px rgb(var(--dl-purple-rgb) / 0.16);
+    --shadow-prize: 0 0 34px rgb(var(--dl-gold-rgb) / 0.14);
 
     /* Spacing */
-    --space-1: 0.25rem; /* 4px */
-    --space-2: 0.5rem;  /* 8px */
-    --space-3: 0.75rem; /* 12px */
-    --space-4: 1rem;    /* 16px */
-    --space-6: 1.5rem;  /* 24px */
-    --space-8: 2rem;    /* 32px */
-    --space-12: 3rem;   /* 48px */
-    --space-16: 4rem;   /* 64px */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
 
-    /* Font Scale */
-    --font-xs: 0.75rem; /* 12px */
-    --font-sm: 0.875rem; /* 14px */
-    --font-base: 1rem; /* 16px */
-    --font-lg: 1.125rem; /* 18px */
-    --font-xl: 1.25rem; /* 20px */
-    --font-2xl: 1.5rem; /* 24px */
-    --font-3xl: 1.875rem; /* 30px */
-
-    /* Breakpoints (Not directly consumed by CSS variables in Tailwind due to limitations, but documented here) */
-    --bp-sm: 640px;
-    --bp-md: 768px;
-    --bp-lg: 1024px;
-    --bp-xl: 1280px;
+    /* Font scale */
+    --font-xs: 0.75rem;
+    --font-sm: 0.875rem;
+    --font-base: 1rem;
+    --font-lg: 1.125rem;
+    --font-xl: 1.25rem;
+    --font-2xl: 1.5rem;
+    --font-3xl: 1.875rem;
 
     /* zIndex */
     --z-base: 0;
@@ -68,7 +109,7 @@
     --z-modal: 300;
     --z-toast: 400;
 
-    /* States (Opacity / Variations) */
+    /* States */
     --state-hover: 0.8;
     --state-active: 0.9;
     --state-disabled: 0.5;

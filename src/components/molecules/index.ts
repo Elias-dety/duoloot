@@ -6,3 +6,4 @@ export * from './LobbyCardHeader';
 export * from './PlayerStat';
 
 export * from './PageState';
+export * from './PageCardGridSkeleton';

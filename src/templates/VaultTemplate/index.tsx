@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/atoms';
+import { Button, Card } from '@/components/atoms';
 import { VaultEventSection } from '@/components/organisms/VaultEventSection';
 import { WinnersList, Winner } from '@/components/organisms/WinnersList';
 import { MissionCard } from '@/features/vault/components/MissionCard';
@@ -15,58 +15,56 @@ export interface VaultTemplateProps {
   isError: boolean;
 }
 
-export const VaultTemplate: React.FC<VaultTemplateProps> = ({ 
-  event, 
-  missions, 
-  winners,
-  isLoading, 
-  isError 
-}) => {
+export const VaultTemplate: React.FC<VaultTemplateProps> = ({ event, missions, winners, isLoading, isError }) => {
+  const eventStatus =
+    event?.status === 'ended' ? 'completed' : event?.status === 'scheduled' ? 'upcoming' : 'active';
+
   if (isLoading) {
     return (
-      <div className="w-full max-w-7xl mx-auto space-y-8 pb-12 flex flex-col items-center justify-center min-h-[50vh]">
-        <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-content-secondary mt-4">Carregando cofre...</p>
+      <div className="mx-auto flex min-h-[50vh] w-full max-w-7xl flex-col items-center justify-center space-y-8 pb-12">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-brand-primary border-t-transparent"></div>
+        <p className="mt-4 text-content-secondary">Carregando cofre...</p>
       </div>
     );
   }
 
   if (isError || !event) {
     return (
-      <div className="w-full max-w-7xl mx-auto py-16 flex flex-col items-center justify-center bg-danger/10 border border-red-500/20 rounded-xl">
-        <p className="text-red-400 font-bold mb-4 text-lg">Erro ao carregar os dados do cofre.</p>
-        <Button variant="outline">Tentar Novamente</Button>
-      </div>
+      <Card variant="danger" className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center py-16">
+        <p className="mb-4 text-lg font-bold text-danger">Erro ao carregar os dados do cofre.</p>
+        <Button variant="secondary">Tentar Novamente</Button>
+      </Card>
     );
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-8 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500 px-4 md:px-0">
-      
-      {/* Hero / Event Section (Mobile: Prize, Timer, CTA first) */}
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 pb-12 animate-fade-in md:px-0">
       <div className="flex flex-col gap-6 lg:flex-row">
-        <div className="flex-1 w-full order-1">
-          <VaultEventSection 
+        <div className="order-1 w-full flex-1">
+          <VaultEventSection
             title={event.title}
             prizeAmount={event.prizePool}
             currency={event.prizeCurrency}
             endsAt={new Date(event.endsAt || new Date().toISOString())}
-            currentValue={event.totalParticipants * 15} // Mock data for progress
+            currentValue={event.totalParticipants * 15}
             targetValue={100000}
-            status={event.status as any}
+            status={eventStatus}
           />
-          <div className="mt-4 flex flex-col sm:flex-row gap-4 items-center bg-surface-dark border border-brand-primary/30 p-4 rounded-xl">
+          <Card variant="default" className="mt-4 flex flex-col items-center gap-4 p-4 sm:flex-row">
             <div className="flex-1 text-center sm:text-left">
-              <span className="text-brand-primary font-bold">Multiplicador Ativo: 1.5x</span>
-              <p className="text-xs text-content-secondary mt-1">Ganhos em dobro nas próximas 2 horas jogando em duo fechado.</p>
+              <span className="font-bold text-brand-primary">Multiplicador Ativo: 1.5x</span>
+              <p className="mt-1 text-xs text-content-secondary">
+                Ganhos em dobro nas proximas 2 horas jogando em duo fechado.
+              </p>
             </div>
-            <Button variant="primary" className="w-full sm:w-auto shrink-0 py-3 font-bold text-md">Participar Agora</Button>
-          </div>
+            <Button variant="primary" className="w-full shrink-0 py-3 text-base font-bold sm:w-auto">
+              Participar Agora
+            </Button>
+          </Card>
         </div>
 
-        {/* Stats Section */}
-        <div className="w-full lg:w-80 shrink-0 order-2">
-          <VaultStats 
+        <div className="order-2 w-full shrink-0 lg:w-80">
+          <VaultStats
             totalParticipants={event.totalParticipants}
             onlineParticipants={event.onlineParticipants}
             currentValue={event.totalParticipants * 15}
@@ -75,26 +73,24 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 order-3">
-        {/* Missions */}
-        <div className="lg:col-span-2 space-y-4">
-          <h2 className="text-xl font-bold text-content-primary border-b border-surface-highlight pb-4">
-            Missões e Micões do Dia
+      <div className="order-3 grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="space-y-4 lg:col-span-2">
+          <h2 className="border-b border-border pb-4 text-xl font-bold text-content-primary">
+            Missoes e Micoes do Dia
           </h2>
           {missions.length === 0 ? (
-            <div className="p-8 text-center bg-surface-dark border border-surface-highlight rounded-xl">
-              <span className="text-content-secondary">Nenhuma missão disponível no momento.</span>
-            </div>
+            <Card variant="elevated" className="p-8 text-center">
+              <span className="text-content-secondary">Nenhuma missao disponivel no momento.</span>
+            </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {missions.map(mission => (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {missions.map((mission) => (
                 <MissionCard key={mission.id} mission={mission} />
               ))}
             </div>
           )}
         </div>
 
-        {/* Winners */}
         <div className="space-y-4">
           <WinnersList winners={winners} isLoading={false} />
         </div>

@@ -19,7 +19,7 @@ export default function DashboardPage() {
         await new Promise((resolve) => setTimeout(resolve, 800));
         setPlayer(mockPlayers[0]); // Assumindo o usuário logado
         setSummary(mockDashboardSummary);
-      } catch (err) {
+      } catch {
         setIsError(true);
       } finally {
         setIsLoading(false);

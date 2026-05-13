@@ -1,7 +1,7 @@
 import React from 'react';
 import { Player } from '@/schemas/player.schema';
-import { Badge } from '@/components/atoms';
-import { Trophy, Crosshair, Mic, Gamepad2 } from 'lucide-react';
+import { Badge, Card } from '@/components/atoms';
+import { Crosshair, Gamepad2, Trophy } from 'lucide-react';
 
 export interface ProfileGameInfoProps {
   player: Player;
@@ -9,28 +9,28 @@ export interface ProfileGameInfoProps {
 
 export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
   return (
-    <section className="bg-surface-dark border border-surface-highlight p-6 rounded-2xl h-full flex flex-col">
-      <h3 className="text-lg font-bold text-content-base mb-6 flex items-center gap-2">
-        <Gamepad2 className="w-5 h-5 text-brand-primary" />
-        Perfil de Jogo
+    <Card variant="elevated" className="h-full">
+      <h3 className="mb-6 flex items-center gap-2 text-lg font-bold text-content-base">
+        <Gamepad2 className="h-5 w-5 text-brand-primary" />
+        Perfil competitivo
       </h3>
 
-      <div className="space-y-6 flex-grow">
-        <div>
-          <p className="text-sm text-content-muted mb-2">Rank Atual</p>
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-surface-highlight flex items-center justify-center border border-surface-highlight">
-              <Trophy className="w-6 h-6 text-warning" />
+      <div className="space-y-6">
+        <div className="rounded-xl border border-border bg-surface-card p-4">
+          <p className="text-sm text-content-muted">Rank atual</p>
+          <div className="mt-3 flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-prize/30 bg-prize/10">
+              <Trophy className="h-6 w-6 text-prize" />
             </div>
             <span className="text-xl font-black text-content-base">{player.gameProfile.rank}</span>
           </div>
         </div>
 
         <div>
-          <p className="text-sm text-content-muted mb-2">Funções (Roles)</p>
+          <p className="mb-2 text-sm text-content-muted">Roles</p>
           <div className="flex flex-wrap gap-2">
             <Badge variant="info" className="gap-1 px-3 py-1 text-sm">
-              <Crosshair className="w-3.5 h-3.5" />
+              <Crosshair className="h-3.5 w-3.5" />
               {player.gameProfile.mainRole}
             </Badge>
             {player.gameProfile.secondaryRole && (
@@ -40,18 +40,7 @@ export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
             )}
           </div>
         </div>
-
-        <div>
-          <p className="text-sm text-content-muted mb-2">Preferências</p>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="default" className="gap-1">
-              {player.preferences.micRequired ? <Mic className="w-3 h-3" /> : null}
-              {player.preferences.micRequired ? 'Com Microfone' : 'Sem Microfone'}
-            </Badge>
-            <Badge variant="default">{player.preferences.playStyle}</Badge>
-          </div>
-        </div>
       </div>
-    </section>
+    </Card>
   );
 };

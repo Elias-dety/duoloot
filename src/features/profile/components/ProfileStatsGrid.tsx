@@ -1,6 +1,6 @@
 import React from 'react';
+import { Card, StatValue } from '@/components/atoms';
 import { Player } from '@/schemas/player.schema';
-import { StatValue } from '@/components/atoms';
 
 export interface ProfileStatsGridProps {
   player: Player;
@@ -8,30 +8,26 @@ export interface ProfileStatsGridProps {
 
 export const ProfileStatsGrid: React.FC<ProfileStatsGridProps> = ({ player }) => {
   return (
-    <section className="bg-surface-dark border border-surface-highlight p-6 rounded-2xl">
-      <h3 className="text-lg font-bold text-content-base mb-6">Estatísticas Gerais</h3>
-      
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-surface-base/50 p-4 rounded-xl border border-surface-highlight">
-          <p className="text-sm text-content-muted mb-1">Partidas</p>
-          <p className="text-2xl font-black text-content-base">{player.stats.matchesPlayed}</p>
+    <Card variant="elevated">
+      <h3 className="mb-6 text-lg font-bold text-content-base">Estatisticas gerais</h3>
+
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="rounded-xl border border-border bg-surface-card p-4">
+          <StatValue label="Partidas" value={player.stats.matchesPlayed} />
         </div>
-        
-        <div className="bg-surface-base/50 p-4 rounded-xl border border-surface-highlight">
-          <p className="text-sm text-content-muted mb-1">Win Rate</p>
-          <p className="text-2xl font-black text-success">{player.stats.winRate}%</p>
+
+        <div className="rounded-xl border border-border bg-surface-card p-4">
+          <StatValue label="Win rate" value={`${player.stats.winRate}%`} tone="success" />
         </div>
-        
-        <div className="bg-surface-base/50 p-4 rounded-xl border border-surface-highlight">
-          <p className="text-sm text-content-muted mb-1">K/D/A Médio</p>
-          <p className="text-2xl font-black text-content-base">1.45</p>
+
+        <div className="rounded-xl border border-border bg-surface-card p-4">
+          <StatValue label="KDA medio" value={player.stats.averageKda.toFixed(2)} tone="info" />
         </div>
-        
-        <div className="bg-surface-base/50 p-4 rounded-xl border border-surface-highlight">
-          <p className="text-sm text-content-muted mb-1">Horas Jogadas</p>
-          <p className="text-2xl font-black text-content-base">324h</p>
+
+        <div className="rounded-xl border border-border bg-surface-card p-4">
+          <StatValue label="Horas" value={`${player.stats.hoursPlayed}h`} />
         </div>
       </div>
-    </section>
+    </Card>
   );
 };

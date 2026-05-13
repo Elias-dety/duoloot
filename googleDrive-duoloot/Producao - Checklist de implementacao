@@ -413,6 +413,11 @@ Status atual:
   - PlayerProfilePage
   - PremiumPage
   - CoachesPage
+  - ProfileTemplate, PremiumTemplate e CoachesTemplate finalizados
+  - Schemas complementares: review, notification e message
+  - Mocks complementares: reviews, notifications e messages
+  - Validacao mobile final das paginas MVP
+  - Skeleton reutilizavel para grids de pagina
   - Validação final técnica
   - Reparo Design System V2
   - Correção de dependências
@@ -423,5 +428,6 @@ Status atual:
 - Pendente:
   - nada por enquanto.
 - Bloqueado:
-  - nada por enquanto.
+  - Validacao legal do Cofre continua fora do MVP.
+  - Backend real, auth real, pagamentos, antifraude, chat real, APIs externas, assets finais e refinamento completo do design system seguem fora do MVP atual.
 

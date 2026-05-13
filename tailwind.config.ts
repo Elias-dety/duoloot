@@ -1,5 +1,7 @@
 import type { Config } from 'tailwindcss'
 
+const withOpacity = (variable: string) => `rgb(var(${variable}) / <alpha-value>)`
+
 const config: Config = {
   content: [
     "./index.html",
@@ -15,46 +17,42 @@ const config: Config = {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--brand-primary))",
-        background: "hsl(var(--surface-dark))",
-        foreground: "hsl(var(--content-primary))",
+        border: "var(--dl-line)",
+        input: "var(--dl-line)",
+        ring: withOpacity("--dl-orange-rgb"),
+        background: withOpacity("--dl-bg-rgb"),
+        foreground: withOpacity("--dl-text-rgb"),
         brand: {
-          primary: "hsl(var(--brand-primary))",
-          secondary: "hsl(var(--brand-secondary))",
+          primary: withOpacity("--dl-orange-rgb"),
+          secondary: withOpacity("--dl-orange-strong-rgb"),
         },
         surface: {
-          base: "hsl(var(--surface-base))",
-          dark: "hsl(var(--surface-dark))",
-          highlight: "hsl(var(--surface-highlight))",
+          base: withOpacity("--dl-bg-soft-rgb"),
+          dark: withOpacity("--dl-bg-rgb"),
+          card: withOpacity("--dl-card-rgb"),
+          elevated: withOpacity("--dl-card-elevated-rgb"),
+          hover: withOpacity("--dl-card-hover-rgb"),
+          highlight: withOpacity("--dl-card-hover-rgb"),
         },
         content: {
-          base: "hsl(var(--content-base))",
-          primary: "hsl(var(--content-primary))",
-          secondary: "hsl(var(--content-secondary))",
-          muted: "hsl(var(--content-muted))",
-          highlight: "hsl(var(--content-highlight))",
+          base: withOpacity("--dl-text-rgb"),
+          primary: withOpacity("--dl-text-rgb"),
+          secondary: withOpacity("--dl-muted-rgb"),
+          tertiary: withOpacity("--dl-muted-strong-rgb"),
+          muted: withOpacity("--dl-muted-strong-rgb"),
+          highlight: withOpacity("--dl-text-rgb"),
         },
-        success: {
-          DEFAULT: "hsl(var(--success))",
-        },
-        warning: {
-          DEFAULT: "hsl(var(--warning))",
-        },
-        error: {
-          DEFAULT: "hsl(var(--error))",
-        },
-        danger: {
-          DEFAULT: "hsl(var(--error))",
-        },
-        info: {
-          DEFAULT: "hsl(var(--info))",
-        },
+        success: withOpacity("--dl-green-rgb"),
+        warning: withOpacity("--dl-gold-rgb"),
+        error: withOpacity("--dl-red-rgb"),
+        danger: withOpacity("--dl-red-rgb"),
+        info: withOpacity("--dl-blue-rgb"),
+        premium: withOpacity("--dl-purple-rgb"),
+        prize: withOpacity("--dl-gold-rgb"),
         accent: {
-          base: "hsl(var(--brand-primary))",
-          DEFAULT: "hsl(var(--brand-primary))",
-          foreground: "hsl(var(--content-primary))",
+          base: withOpacity("--dl-orange-rgb"),
+          DEFAULT: withOpacity("--dl-orange-rgb"),
+          foreground: withOpacity("--dl-text-rgb"),
         },
       },
       borderRadius: {
@@ -68,6 +66,8 @@ const config: Config = {
         sm: "var(--shadow-sm)",
         md: "var(--shadow-md)",
         lg: "var(--shadow-lg)",
+        premium: "var(--shadow-premium)",
+        prize: "var(--shadow-prize)",
       },
       spacing: {
         '1': 'var(--space-1)',
@@ -102,26 +102,17 @@ const config: Config = {
         'disabled': 'var(--state-disabled)',
       },
       keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
         "fade-in": {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
+          from: { opacity: "0", transform: "translateY(8px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.3s ease-in-out",
+        "fade-in": "fade-in 0.28s ease-out",
       },
     },
   },
   plugins: [],
 }
+
 export default config

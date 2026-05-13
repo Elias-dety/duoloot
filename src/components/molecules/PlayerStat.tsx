@@ -10,16 +10,16 @@ interface PlayerStatProps {
 
 export const PlayerStat: React.FC<PlayerStatProps> = ({ label, value, trend, className = '' }) => {
   return (
-    <div className={`bg-surface-base/30 border border-surface-highlight/50 p-3 rounded-lg flex justify-between items-center ${className}`}>
+    <div className={`flex items-center justify-between rounded-lg border border-border bg-surface-elevated p-3 ${className}`}>
       <StatValue label={label} value={value} className="gap-0" />
-      
+
       {trend && (
         <div className={`text-xs font-bold ${
           trend === 'up' ? 'text-success' : trend === 'down' ? 'text-danger' : 'text-content-muted'
         }`}>
-          {trend === 'up' && '↑'}
-          {trend === 'down' && '↓'}
-          {trend === 'neutral' && '•'}
+          {trend === 'up' && 'up'}
+          {trend === 'down' && 'down'}
+          {trend === 'neutral' && 'stable'}
         </div>
       )}
     </div>
