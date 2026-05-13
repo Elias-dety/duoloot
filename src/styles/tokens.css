@@ -1,0 +1,80 @@
+@layer base {
+  :root {
+    /* Colors (Dark mode by default, Riot/Valorant style) */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 5.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 5.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 24 100% 55%; /* Laranja de Ação */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 24 100% 55%;
+
+    /* Radius */
+    --radius-sm: 0.125rem;
+    --radius-md: 0.25rem;
+    --radius-lg: 0.5rem;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    /* Spacing */
+    --space-1: 0.25rem; /* 4px */
+    --space-2: 0.5rem;  /* 8px */
+    --space-3: 0.75rem; /* 12px */
+    --space-4: 1rem;    /* 16px */
+    --space-6: 1.5rem;  /* 24px */
+    --space-8: 2rem;    /* 32px */
+    --space-12: 3rem;   /* 48px */
+    --space-16: 4rem;   /* 64px */
+
+    /* Font Scale */
+    --font-xs: 0.75rem; /* 12px */
+    --font-sm: 0.875rem; /* 14px */
+    --font-base: 1rem; /* 16px */
+    --font-lg: 1.125rem; /* 18px */
+    --font-xl: 1.25rem; /* 20px */
+    --font-2xl: 1.5rem; /* 24px */
+    --font-3xl: 1.875rem; /* 30px */
+
+    /* Breakpoints (Not directly consumed by CSS variables in Tailwind due to limitations, but documented here) */
+    --bp-sm: 640px;
+    --bp-md: 768px;
+    --bp-lg: 1024px;
+    --bp-xl: 1280px;
+
+    /* zIndex */
+    --z-base: 0;
+    --z-dropdown: 50;
+    --z-sticky: 100;
+    --z-overlay: 200;
+    --z-modal: 300;
+    --z-toast: 400;
+
+    /* States (Opacity / Variations) */
+    --state-hover: 0.8;
+    --state-active: 0.9;
+    --state-disabled: 0.5;
+  }
+}
