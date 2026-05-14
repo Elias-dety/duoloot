@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '@/components/atoms';
 
 export interface LobbyActionsBarProps {
   totalLobbies: number;
@@ -8,13 +7,16 @@ export interface LobbyActionsBarProps {
 
 export const LobbyActionsBar: React.FC<LobbyActionsBarProps> = ({ totalLobbies, onCreateLobby }) => {
   return (
-    <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-border py-4 md:flex-row md:items-center">
-      <h2 className="text-xl font-bold text-content-primary">
-        Lobbies Disponíveis <span className="text-content-tertiary text-base font-normal ml-2">({totalLobbies})</span>
+    <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-[var(--dl-tactical-line)] py-4 md:flex-row md:items-center">
+      <h2 className="font-['Rajdhani'] text-xl font-bold uppercase text-[var(--dl-tactical-text)] flex items-center gap-3">
+        Lobbies disponíveis
+        <span className="dl-stamp" style={{ color: 'var(--dl-tactical-blue)', borderColor: 'rgba(70,183,255,0.3)', background: 'rgba(70,183,255,0.07)' }}>
+          {totalLobbies}
+        </span>
       </h2>
-      <Button variant="primary" onClick={onCreateLobby}>
+      <button type="button" className="dl-btn dl-btn-primary" onClick={onCreateLobby}>
         + Criar Lobby
-      </Button>
+      </button>
     </div>
   );
 };

@@ -3,37 +3,40 @@ import { ROUTES } from '../constants/routes';
 
 export default function EventLayout() {
   return (
-    <div className="flex min-h-screen flex-col bg-surface-dark text-content-primary">
-      {/* Header especial do Cofre */}
-      <header className="border-b border-prize/30 bg-surface-card/50 backdrop-blur-md">
-        <div className="container flex h-16 items-center justify-between">
+    <div className="dl-scanlines min-h-screen flex flex-col" style={{ background: 'var(--dl-tactical-bg)' }}>
+      {/* Header Painel de Operação do Cofre */}
+      <header className="sticky top-0 z-20 border-b border-[rgba(255,226,102,0.25)] bg-[rgba(13,18,27,0.92)] backdrop-blur-[14px]">
+        <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between px-6">
           <div className="flex items-center gap-4">
-            <Link 
-              to={ROUTES.HOME} 
-              className="text-sm font-bold text-content-secondary transition-colors hover:text-content-primary"
+            <Link
+              to={ROUTES.HOME}
+              className="dl-btn text-[11px] no-underline"
             >
-              ← Voltar ao site
+              ← Voltar
             </Link>
-            <div className="h-4 w-px bg-border" />
-            <h1 className="text-lg font-black tracking-tight text-prize">
-              COFRE <span className="text-content-muted">/ EVENTO</span>
+            <div className="h-5 w-px bg-[var(--dl-tactical-line)]" />
+            <h1 className="dl-title text-lg font-bold text-[var(--dl-tactical-yellow)] flex items-center gap-2">
+              <span className="dl-brand-mark" style={{ width: 30, height: 30, fontSize: 11 }}>VLT</span>
+              COFRE <span className="text-[var(--dl-tactical-muted)] text-[13px]">// OPERAÇÃO LOOT</span>
             </h1>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="hidden h-8 items-center rounded-full bg-prize/10 px-3 text-[10px] font-bold uppercase tracking-widest text-prize md:flex">
-              Destaque Semanal
-            </div>
+
+          <div className="flex items-center gap-3">
+            <span className="dl-stamp dl-stamp-yellow hidden md:inline-flex">Evento ativo</span>
+            <span className="dl-hud-label hidden lg:inline-flex">
+              <span className="inline-block w-2 h-2 rounded-full bg-[var(--dl-tactical-yellow)] animate-pulse" />
+              Vault online
+            </span>
           </div>
         </div>
       </header>
 
-      {/* Main com fundo imersivo */}
-      <main className="relative flex-1 overflow-hidden">
-        {/* Efeito de luz de fundo */}
-        <div className="absolute left-1/2 top-0 -z-base h-[500px] w-full -translate-x-1/2 bg-[radial-gradient(circle_at_center,rgba(255,191,0,0.15)_0%,transparent_70%)]" />
-        
-        <div className="container py-8">
+      {/* Main com efeito de luz amarela do cofre */}
+      <main className="relative flex-1">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,226,102,0.12)_0%,transparent_50%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(45deg,rgba(255,226,102,0.015)_0_4px,transparent_4px_9px)]" />
+
+        <div className="relative z-[4] mx-auto max-w-[1240px] px-4 py-8 md:px-6">
           <Outlet />
         </div>
       </main>

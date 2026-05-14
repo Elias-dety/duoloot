@@ -6,18 +6,18 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 export const Badge: React.FC<BadgeProps> = ({ children, variant = 'default', className = '', ...props }) => {
   const baseStyles =
-    'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-background';
+    'inline-flex items-center [clip-path:var(--dl-cut-button)] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] transition-colors';
 
-  const variants = {
-    default: 'border-brand-primary/20 bg-brand-primary/10 text-content-primary',
-    success: 'border-success/25 bg-success/10 text-success',
-    premium: 'border-premium/35 bg-premium/15 text-premium',
-    danger: 'border-danger/30 bg-danger/10 text-danger',
-    error: 'border-danger/30 bg-danger/10 text-danger',
-    warning: 'border-prize/35 bg-prize/10 text-prize',
-    gold: 'border-prize/35 bg-prize/10 text-prize',
-    info: 'border-info/30 bg-info/10 text-info',
-    muted: 'border-border bg-surface-hover/50 text-content-muted',
+  const variants: Record<string, string> = {
+    default: 'border-[var(--dl-tactical-line)] bg-[rgba(255,255,255,0.035)] text-[var(--dl-tactical-muted)]',
+    success: 'border-[rgba(56,242,139,0.3)] bg-[rgba(56,242,139,0.07)] text-[var(--dl-tactical-green)]',
+    premium: 'border-[rgba(141,92,255,0.3)] bg-[rgba(141,92,255,0.08)] text-[var(--dl-tactical-purple)]',
+    danger: 'border-[rgba(255,51,102,0.3)] bg-[rgba(255,51,102,0.07)] text-[var(--dl-tactical-red)]',
+    error: 'border-[rgba(255,51,102,0.3)] bg-[rgba(255,51,102,0.07)] text-[var(--dl-tactical-red)]',
+    warning: 'border-[rgba(255,122,26,0.3)] bg-[rgba(255,122,26,0.07)] text-[var(--dl-tactical-orange)]',
+    gold: 'border-[rgba(255,226,102,0.3)] bg-[rgba(255,226,102,0.07)] text-[var(--dl-tactical-yellow)]',
+    info: 'border-[rgba(70,183,255,0.28)] bg-[rgba(70,183,255,0.07)] text-[var(--dl-tactical-blue)]',
+    muted: 'border-[var(--dl-tactical-line)] bg-[rgba(255,255,255,0.025)] text-[var(--dl-tactical-muted)]',
   };
 
   const classes = [baseStyles, variants[variant], className].filter(Boolean).join(' ');

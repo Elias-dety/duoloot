@@ -3,93 +3,103 @@ import { ROUTES } from '../constants/routes';
 
 export default function PublicLayout() {
   const menuItems = [
-    { label: 'Início', path: ROUTES.HOME },
-    { label: 'Lobby', path: ROUTES.LOBBY },
+    { label: 'Scanner', path: ROUTES.HOME },
+    { label: 'Lobbies', path: ROUTES.LOBBY },
     { label: 'Cofre', path: ROUTES.VAULT },
     { label: 'Coaches', path: ROUTES.COACHES },
   ];
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-content-primary">
-      {/* Header Fixo com efeito Glass */}
-      <header className="sticky top-0 z-sticky border-b border-border bg-surface-dark/80 backdrop-blur-md">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link to={ROUTES.HOME} className="text-xl font-black tracking-tighter text-brand-primary">
-              DUO LOOT
-            </Link>
+    <div className="dl-scanlines min-h-screen flex flex-col" style={{ background: 'var(--dl-tactical-bg)' }}>
+      {/* Top Strip */}
+      <div className="dl-top-strip">
+        <span>
+          Underground Loot Network // <b>Vault market open</b>
+        </span>
+        <span>DL-042 // Contratos ativos // Matchmaking sync</span>
+      </div>
 
-            {/* Desktop Menu */}
-            <nav className="hidden items-center gap-6 md:flex">
-              {menuItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `text-sm font-medium transition-colors hover:text-brand-primary ${
-                      isActive ? 'text-brand-primary' : 'text-content-secondary'
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
-          </div>
+      {/* Header Command Center */}
+      <header className="dl-header">
+        <Link to={ROUTES.HOME} className="dl-brand no-underline">
+          <span className="dl-brand-mark">DL</span>
+          <span>
+            Duo Loot
+            <small>Underground Tactical</small>
+          </span>
+        </Link>
 
-          <div className="flex items-center gap-4">
-            <button className="hidden text-sm font-medium text-content-secondary hover:text-content-primary md:block">
-              Entrar
-            </button>
-            <button className="rounded-md bg-brand-primary px-4 py-2 text-sm font-bold text-background transition-transform active:scale-95">
-              Criar conta
-            </button>
-          </div>
+        <nav className="dl-nav">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) => isActive ? 'active' : ''}
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="dl-actions">
+          <button type="button" className="dl-btn">
+            Entrar
+          </button>
+          <button type="button" className="dl-btn dl-btn-primary">
+            Abrir acesso
+          </button>
         </div>
+
+        {/* Mobile menu button */}
+        <button type="button" className="dl-btn md:hidden">
+          Menu
+        </button>
       </header>
 
       {/* Conteúdo Principal */}
-      <main className="flex-1">
-        <div className="container py-8">
-          <Outlet />
-        </div>
+      <main className="flex-1 relative z-[4]">
+        <Outlet />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-surface-card py-12">
-        <div className="container">
+      {/* Footer Underground */}
+      <footer className="relative z-[4] border-t border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-panel)] backdrop-blur-[10px]">
+        <div className="mx-auto max-w-[1240px] px-6 py-10">
           <div className="grid gap-8 md:grid-cols-4">
-            <div className="col-span-2">
-              <Link to={ROUTES.HOME} className="text-xl font-black tracking-tighter text-brand-primary">
-                DUO LOOT
+            <div className="md:col-span-2">
+              <Link to={ROUTES.HOME} className="dl-brand no-underline text-[22px]">
+                <span className="dl-brand-mark" style={{ width: 34, height: 34, fontSize: 14 }}>DL</span>
+                <span>
+                  Duo Loot
+                  <small>Underground Tactical</small>
+                </span>
               </Link>
-              <p className="mt-4 max-w-xs text-sm text-content-muted">
-                A plataforma definitiva para gamers competitivos encontrarem seus duos e evoluírem no ranking.
+              <p className="mt-4 max-w-xs text-[13px] leading-[1.65] text-[var(--dl-tactical-muted)]">
+                Central clandestina de estatísticas, lobbies e recompensas para gamers competitivos.
               </p>
             </div>
             <div>
-              <h4 className="mb-4 text-sm font-bold uppercase tracking-wider text-content-primary">Plataforma</h4>
-              <ul className="space-y-2 text-sm text-content-secondary">
-                <li><Link to={ROUTES.LOBBY} className="hover:text-brand-primary">Lobby</Link></li>
-                <li><Link to={ROUTES.VAULT} className="hover:text-brand-primary">Cofre</Link></li>
-                <li><Link to={ROUTES.COACHES} className="hover:text-brand-primary">Coaches</Link></li>
+              <h4 className="dl-title mb-4 text-[11px] font-bold tracking-[0.18em] text-[var(--dl-tactical-yellow)]">Plataforma</h4>
+              <ul className="space-y-2 text-[12px] font-bold uppercase tracking-[0.08em]">
+                <li><Link to={ROUTES.LOBBY} className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Lobby Radar</Link></li>
+                <li><Link to={ROUTES.VAULT} className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Cofre</Link></li>
+                <li><Link to={ROUTES.COACHES} className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Coaches</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="mb-4 text-sm font-bold uppercase tracking-wider text-content-primary">Comunidade</h4>
-              <ul className="space-y-2 text-sm text-content-secondary">
-                <li><a href="#" className="hover:text-brand-primary">Discord</a></li>
-                <li><a href="#" className="hover:text-brand-primary">Twitter</a></li>
-                <li><a href="#" className="hover:text-brand-primary">Suporte</a></li>
+              <h4 className="dl-title mb-4 text-[11px] font-bold tracking-[0.18em] text-[var(--dl-tactical-yellow)]">Comunidade</h4>
+              <ul className="space-y-2 text-[12px] font-bold uppercase tracking-[0.08em]">
+                <li><a href="#" className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Discord</a></li>
+                <li><a href="#" className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Twitter</a></li>
+                <li><a href="#" className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Suporte</a></li>
               </ul>
             </div>
           </div>
-          <div className="mt-12 flex flex-col items-center justify-between border-t border-border pt-8 md:flex-row">
-            <p className="text-xs text-content-muted">
-              © 2024 Duo Loot. Todos os direitos reservados.
+          <div className="mt-10 flex flex-col items-center justify-between border-t border-[var(--dl-tactical-line)] pt-8 md:flex-row">
+            <p className="text-[10px] tracking-[0.16em] uppercase text-[var(--dl-tactical-muted)]">
+              © 2024 Duo Loot // Underground Tactical Command Center
             </p>
-            <span className="mt-4 rounded-full bg-surface-elevated px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-brand-primary md:mt-0">
-              MVP em produção
+            <span className="dl-stamp dl-stamp-yellow mt-4 md:mt-0">
+              Sistema ativo
             </span>
           </div>
         </div>

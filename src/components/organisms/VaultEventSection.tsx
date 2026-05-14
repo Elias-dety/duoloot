@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, SectionTitle } from '@/components/atoms';
+import { SectionTitle } from '@/components/atoms';
 import { CountdownTimer, PrizeBox, RewardProgress } from '@/components/molecules';
 
 export interface VaultEventSectionProps {
@@ -22,14 +22,14 @@ export const VaultEventSection: React.FC<VaultEventSectionProps> = ({
   status = 'active',
 }) => {
   return (
-    <Card variant="prize" className="w-full">
+    <div className="dl-panel w-full p-5 md:p-6" style={{ borderColor: 'rgba(255,226,102,0.25)' }}>
       <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-start">
         <SectionTitle
           title={title}
-          subtitle="Acumule pontos para bater a meta e liberar o premio coletivo."
+          subtitle="Acumule pontos para bater a meta e liberar o prêmio coletivo."
           accent="prize"
         />
-        <div className="rounded-2xl border border-prize/25 bg-surface-card px-4 py-3">
+        <div className="border border-[rgba(255,226,102,0.25)] bg-[var(--dl-tactical-metal)] px-4 py-3 [clip-path:var(--dl-cut-card)]">
           <CountdownTimer targetDate={endsAt.toISOString()} size="md" />
         </div>
       </div>
@@ -40,14 +40,14 @@ export const VaultEventSection: React.FC<VaultEventSectionProps> = ({
           currency={currency}
           status={status === 'completed' ? 'ended' : 'active'}
         />
-        <div className="flex flex-col justify-center rounded-2xl border border-brand-primary/20 bg-surface-elevated p-5">
+        <div className="flex flex-col justify-center border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] p-5 [clip-path:var(--dl-cut-card)]">
           <RewardProgress
             currentProgress={(currentValue / targetValue) * 100}
-            nextMilestone="Proximo aumento"
-            rewardValue="bonus ativo"
+            nextMilestone="Próximo aumento"
+            rewardValue="bônus ativo"
           />
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
