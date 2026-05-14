@@ -1,10 +1,8 @@
-import { HeroSection } from '@/components/organisms/HeroSection';
-import { VaultEventSection } from '@/components/organisms/VaultEventSection';
-import { WinnersList, Winner } from '@/components/organisms/WinnersList';
-import { Button, Card, SectionTitle, Badge, StatValue } from '@/components/atoms';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import type { Event } from '@/schemas/event.schema';
+import type { Winner } from '@/components/organisms/WinnersList';
 
 export interface HomeTemplateProps {
   activeEvent: Event | null;
@@ -13,149 +11,288 @@ export interface HomeTemplateProps {
   isError: boolean;
 }
 
+const formatCurrency = (value: number, currency = 'R$') => {
+  return `${currency} ${value.toLocaleString('pt-BR')}`;
+};
+
 export const HomeTemplate = ({ activeEvent, recentWinners, isLoading, isError }: HomeTemplateProps) => {
   const navigate = useNavigate();
-  const eventStatus =
-    activeEvent?.status === 'ended' ? 'completed' : activeEvent?.status === 'scheduled' ? 'upcoming' : 'active';
+
+  const vaultPrize = activeEvent?.prizePool ?? 2500;
+  const vaultCurrency = activeEvent?.prizeCurrency ?? 'R$';
+  const vaultTitle = activeEvent?.title ?? 'Cofre clandestino';
+  const winnersCount = recentWinners.length || 3;
+
+  const vaultProgress = useMemo(() => {
+    if (!activeEvent?.totalParticipants) return 72;
+    return Math.min(Math.round((activeEvent.totalParticipants / 1000) * 100), 100);
+  }, [activeEvent?.totalParticipants]);
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-24 pb-20 animate-fade-in">
-      <HeroSection />
-
-      <section className="px-4 md:px-0">
-        <div className="mb-8 flex flex-col items-end justify-between gap-4 md:flex-row">
-          <SectionTitle title="Cofre da Semana" subtitle="Jogue, pontue e dispute uma fatia do premio comunitario." />
-          <Button variant="ghost" onClick={() => navigate(ROUTES.VAULT)}>
-            Ver detalhes do cofre -&gt;
-          </Button>
+    <div className="dl-scanlines">
+      <main className="dl-page-shell">
+        <div className="dl-top-strip">
+          <span>
+            Underground Loot Network // <b>Vault market open</b>
+          </span>
+          <span>DL-042 // Contratos ativos // Matchmaking sync</span>
         </div>
 
-        {isLoading ? (
-          <Card variant="elevated" className="flex h-[200px] w-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent"></div>
-          </Card>
-        ) : isError || !activeEvent ? (
-          <Card variant="danger" className="p-8 text-center">
-            <span className="font-bold text-danger">Erro ao carregar o evento ativo.</span>
-          </Card>
-        ) : (
-          <VaultEventSection
-            title={activeEvent.title}
-            prizeAmount={activeEvent.prizePool}
-            currency={activeEvent.prizeCurrency}
-            endsAt={new Date(activeEvent.endsAt || new Date().toISOString())}
-            currentValue={activeEvent.totalParticipants * 15}
-            targetValue={100000}
-            status={eventStatus}
-          />
-        )}
-      </section>
+        <header className="dl-header">
+          <button type="button" onClick={() => navigate(ROUTES.HOME)} className="dl-brand text-left">
+            <span className="dl-brand-mark">DL</span>
+            <span>
+              Duo Loot
+              <small>Underground Tactical</small>
+            </span>
+          </button>
 
-      <section className="px-4 md:px-0">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-          <div className="space-y-6">
-            <Badge variant="premium">O Matchmaking Perfeito</Badge>
-            <h2 className="text-3xl font-black uppercase tracking-tight text-content-primary md:text-5xl">
-              Ache seu Duo. <br /> Feche o Squad.
-            </h2>
-            <p className="text-lg text-content-secondary">
-              Chega de cair com trolls. Nosso sistema de Trust Score garante que voce jogue com players que
-              levam o jogo a serio. Filtre por rank, estilo de jogo e compatibilidade.
+          <nav className="dl-nav">
+            <a href="#scanner" className="active">
+              Scanner
+            </a>
+            <button type="button" onClick={() => navigate(ROUTES.LOBBY)}>
+              Lobbies
+            </button>
+            <button type="button" onClick={() => navigate(ROUTES.VAULT)}>
+              Cofre
+            </button>
+            <a href="#ranking">Ranking</a>
+          </nav>
+
+          <div className="dl-actions">
+            <button type="button" className="dl-btn">
+              Entrar
+            </button>
+            <button type="button" className="dl-btn dl-btn-primary">
+              Abrir acesso
+            </button>
+          </div>
+
+          <button type="button" className="dl-btn md:hidden">
+            Menu
+          </button>
+        </header>
+
+        <section
+          id="scanner"
+          className="relative z-[4] grid gap-[18px] px-3 py-4 md:px-6 md:py-8 lg:grid-cols-[minmax(0,1fr)_350px]"
+        >
+          <div className="dl-panel relative min-h-[492px] overflow-hidden p-[18px] md:p-[34px]">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_18%,rgba(255,226,102,0.14),transparent_20rem),radial-gradient(circle_at_68%_96%,rgba(56,242,139,0.12),transparent_19rem),linear-gradient(120deg,transparent,rgba(255,255,255,0.035),transparent)]" />
+
+            <div className="relative z-[2]">
+              <div className="dl-hud-label mb-6">ALPHA Underground Loot Command</div>
+
+              <h1 className="dl-title mb-5 max-w-[790px] text-[clamp(45px,7.2vw,88px)] leading-[0.86]">
+                Escaneie jogadores. Feche contratos.{' '}
+                <span className="text-[var(--dl-tactical-yellow)] drop-shadow-[0_0_30px_rgba(255,226,102,0.34)]">
+                  Abra o cofre.
+                </span>
+              </h1>
+
+              <p className="dl-muted mb-7 max-w-[670px] text-[15px] leading-[1.65]">
+                Uma central clandestina de estatisticas, lobbies e recompensas. Analise perfis, detecte risco de troll,
+                encontre duos compativeis e entre nos eventos do cofre antes que a janela feche.
+              </p>
+
+              <div className="mb-6 flex flex-wrap gap-2">
+                <span className="dl-stamp dl-stamp-green">Verified player</span>
+                <span className="dl-stamp dl-stamp-yellow">Cofre ativo</span>
+                <span className="dl-stamp dl-stamp-red">Risco detectavel</span>
+              </div>
+
+              <div className="max-w-[780px]">
+                <div className="mb-2 flex justify-between text-[11px] font-bold uppercase tracking-[0.12em] text-white/60 max-sm:flex-col max-sm:gap-1">
+                  <span>Scanner de alvo</span>
+                  <span>Nick // ID // Perfil</span>
+                </div>
+
+                <form className="dl-search-box" onSubmit={(event) => event.preventDefault()}>
+                  <div className="dl-search-icon">SRCH</div>
+                  <input className="dl-search-input" type="text" placeholder="Buscar Estatisticas" />
+                  <button type="submit" className="dl-btn dl-btn-green h-[52px] px-6">
+                    Escanear
+                  </button>
+                </form>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="dl-chip dl-chip-green">Trust Score</span>
+                  <span className="dl-chip dl-chip-blue">Historico</span>
+                  <span className="dl-chip dl-chip-purple">Ranking elite</span>
+                  <span className="dl-chip dl-chip-yellow">Cofre</span>
+                  <span className="dl-chip">Compatibilidade</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside className="dl-panel relative grid gap-4 overflow-hidden p-[18px] md:p-[22px]">
+            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,226,102,0.10),transparent_35%),repeating-linear-gradient(45deg,rgba(255,255,255,0.025)_0_4px,transparent_4px_9px)]" />
+
+            <div className="relative z-[2] flex items-start justify-between gap-3">
+              <h2 className="font-['Rajdhani'] text-[34px] font-bold uppercase leading-[0.94]">{vaultTitle}</h2>
+              <span className="dl-stamp dl-stamp-yellow">Ativo</span>
+            </div>
+
+            <div className="relative z-[2] grid h-[120px] place-items-center border border-[rgba(255,226,102,0.18)] bg-[rgba(5,8,11,0.52)] text-center font-['Rajdhani'] text-[44px] font-bold text-[var(--dl-tactical-yellow)] [clip-path:var(--dl-cut-card)] drop-shadow-[0_0_28px_rgba(255,226,102,0.36)]">
+              {isLoading ? 'SYNC...' : isError ? 'OFFLINE' : formatCurrency(vaultPrize, vaultCurrency)}
+            </div>
+
+            <p className="dl-muted relative z-[2] text-[13px] leading-[1.5]">
+              Premio acumulado por inscricoes, metas da comunidade e contratos concluidos.
             </p>
-            <ul className="space-y-3 pb-4">
-              <li className="flex items-center gap-3 font-medium text-content-primary">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/20 text-sm font-bold text-success">
-                  OK
-                </span>
-                Trust Score visivel em todos os perfis
-              </li>
-              <li className="flex items-center gap-3 font-medium text-content-primary">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/20 text-sm font-bold text-success">
-                  OK
-                </span>
-                Filtros estritos de Rank e Elo
-              </li>
-              <li className="flex items-center gap-3 font-medium text-content-primary">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-success/20 text-sm font-bold text-success">
-                  OK
-                </span>
-                Analise de Compatibilidade por roles
-              </li>
-            </ul>
-            <Button variant="primary" size="lg" className="w-full font-bold uppercase sm:w-auto" onClick={() => navigate(ROUTES.LOBBY)}>
-              Buscar Lobbies
-            </Button>
+
+            <div className="relative z-[2]">
+              <div className="mb-2 flex justify-between text-[11px] font-bold uppercase text-[var(--dl-tactical-muted)]">
+                <span>Meta para bonus</span>
+                <span>{vaultProgress}%</span>
+              </div>
+              <div className="dl-progress">
+                <span style={{ width: `${vaultProgress}%` }} />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate(ROUTES.VAULT)}
+              className="dl-btn dl-btn-primary relative z-[2]"
+            >
+              Abrir cofre
+            </button>
+          </aside>
+        </section>
+
+        <section className="relative z-[4] grid gap-4 px-3 pb-7 md:px-6 lg:grid-cols-4">
+          <article className="dl-panel dl-access-card dl-card-green">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="font-['Rajdhani'] text-[27px] font-bold uppercase leading-[0.94]">Scanner</h3>
+                <p className="dl-muted mt-2 text-[13px] leading-[1.48]">
+                  Analise Trust Score, K/D, win rate, consistencia e historico recente.
+                </p>
+              </div>
+              <div className="dl-icon-box">SCN</div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-bold uppercase text-[var(--dl-tactical-muted)]">
+              <span>Acao principal</span>
+              <b className="text-[var(--card-color)]">Buscar</b>
+            </div>
+          </article>
+
+          <article className="dl-panel dl-access-card dl-card-blue">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="font-['Rajdhani'] text-[27px] font-bold uppercase leading-[0.94]">Lobby radar</h3>
+                <p className="dl-muted mt-2 text-[13px] leading-[1.48]">
+                  Encontre squads por rank, funcao, horario, estilo e compatibilidade.
+                </p>
+              </div>
+              <div className="dl-icon-box">LBR</div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-bold uppercase text-[var(--dl-tactical-muted)]">
+              <span>Lobbies ativos</span>
+              <b className="text-[var(--card-color)]">247</b>
+            </div>
+          </article>
+
+          <article className="dl-panel dl-access-card dl-card-yellow">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="font-['Rajdhani'] text-[27px] font-bold uppercase leading-[0.94]">Vault run</h3>
+                <p className="dl-muted mt-2 text-[13px] leading-[1.48]">
+                  Entre nos desafios do cofre e dispute recompensas da comunidade.
+                </p>
+              </div>
+              <div className="dl-icon-box">VLT</div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-bold uppercase text-[var(--dl-tactical-muted)]">
+              <span>Bonus atual</span>
+              <b className="text-[var(--card-color)]">+10%</b>
+            </div>
+          </article>
+
+          <article id="ranking" className="dl-panel dl-access-card dl-card-purple">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="font-['Rajdhani'] text-[27px] font-bold uppercase leading-[0.94]">Elite board</h3>
+                <p className="dl-muted mt-2 text-[13px] leading-[1.48]">
+                  Veja jogadores em destaque, perfis valiosos e squads dominantes.
+                </p>
+              </div>
+              <div className="dl-icon-box">ELT</div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-bold uppercase text-[var(--dl-tactical-muted)]">
+              <span>Ranking</span>
+              <b className="text-[var(--card-color)]">Top 100</b>
+            </div>
+          </article>
+        </section>
+
+        <section className="relative z-[4] grid gap-[18px] px-3 pb-8 md:px-6 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="dl-panel p-[18px] md:p-[22px]">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 className="font-['Rajdhani'] text-[29px] font-bold uppercase">Contratos recentes</h3>
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--dl-tactical-muted)]">
+                Alvos analisados
+              </span>
+            </div>
+
+            {[
+              ['DETY_FPS', 'Trust 92', 'Duelista', 'Seguro', 'dl-good'],
+              ['RUSH_KING', 'Trust 61', 'Entry', 'Medio', 'dl-mid'],
+              ['TILT_MODE', 'Trust 28', 'Flex', 'Risco', 'dl-bad'],
+            ].map(([name, trust, role, risk, tone]) => (
+              <div
+                key={name}
+                className="mb-2 grid items-center gap-3 border border-[var(--dl-tactical-line)] bg-white/[0.025] p-3 text-[12px] font-bold text-[var(--dl-tactical-muted)] [clip-path:var(--dl-cut-button)] md:grid-cols-[1fr_78px_86px_92px]"
+              >
+                <b className="text-[var(--dl-tactical-text)]">{name}</b>
+                <span className={tone}>{trust}</span>
+                <span className="dl-info">{role}</span>
+                <span className={tone}>{risk}</span>
+              </div>
+            ))}
           </div>
 
-          <div className="relative mt-8 lg:mt-0">
-            <div className="absolute inset-0 translate-y-10 -translate-x-10 rounded-full bg-brand-primary/20 opacity-30 blur-3xl" />
-            <Card variant="interactive" className="relative mx-auto max-w-sm">
-              <div className="mb-4 flex items-start justify-between border-b border-border pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-brand-primary bg-surface-hover"></div>
-                  <div>
-                    <h4 className="text-lg font-bold leading-tight text-content-base">Fnx_Pro</h4>
-                    <span className="text-xs font-bold uppercase tracking-wider text-brand-primary">Radiante</span>
-                  </div>
-                </div>
-                <Badge variant="success">Trust: 98/100</Badge>
-              </div>
-              <div className="mb-6 grid grid-cols-2 gap-4">
-                <StatValue label="Modo" value="Competitivo" />
-                <StatValue label="Vagas" value="2/5" />
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium text-content-secondary">Compatibilidade</span>
-                  <span className="font-bold text-success">92%</span>
-                </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-surface-hover">
-                  <div className="h-full w-[92%] rounded-full bg-success" />
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </section>
+          <aside className="dl-panel dl-card-red p-[18px] md:p-[22px]">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 className="font-['Rajdhani'] text-[29px] font-bold uppercase">Risco de lobby</h3>
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--dl-tactical-muted)]">
+                Deteccao ativa
+              </span>
+            </div>
 
-      <section className="px-4 md:px-0">
-        <div className="mx-auto mb-12 max-w-2xl text-center">
-          <Badge variant="default" className="mb-4">
-            Eles ja ganharam
-          </Badge>
-          <h2 className="mb-4 text-3xl font-black uppercase tracking-tight text-content-primary md:text-4xl">
-            A Comunidade Esta Faturando
-          </h2>
-          <p className="text-lg text-content-secondary">
-            Confira os vencedores dos cofres anteriores. Jogue as missoes, feche grupos e seja o proximo a
-            aparecer aqui.
-          </p>
-        </div>
+            <span className="dl-stamp dl-stamp-red mb-4 inline-flex">Risco de tilt monitorado</span>
 
-        {isLoading ? (
-          <Card variant="elevated" className="flex h-[200px] w-full items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent"></div>
-          </Card>
-        ) : (
-          <div className="mx-auto max-w-3xl">
-            <WinnersList winners={recentWinners} isLoading={false} />
-          </div>
-        )}
-      </section>
+            <div className="grid gap-3">
+              <div className="flex justify-between border border-[var(--dl-tactical-line)] bg-white/[0.035] p-3 text-[12px] font-bold uppercase text-[var(--dl-tactical-muted)] [clip-path:var(--dl-cut-button)]">
+                <span>Abandono recente</span>
+                <b className="dl-good">baixo</b>
+              </div>
 
-      <section className="mb-12 px-4 md:px-0">
-        <Card variant="default" className="flex w-full flex-col items-center text-center md:p-12">
-          <h2 className="mb-4 text-2xl font-black uppercase tracking-tight text-content-base md:text-4xl">
-            Sua vez de jogar com os melhores
-          </h2>
-          <p className="mb-8 max-w-lg text-content-secondary">
-            Crie sua conta gratuitamente, preencha seu perfil e comece a disputar as missoes hoje mesmo.
-          </p>
-          <Button variant="primary" size="lg" className="w-full px-10 py-4 font-bold uppercase tracking-wider sm:w-auto">
-            Criar Conta Gratis
-          </Button>
-        </Card>
-      </section>
+              <div className="flex justify-between border border-[var(--dl-tactical-line)] bg-white/[0.035] p-3 text-[12px] font-bold uppercase text-[var(--dl-tactical-muted)] [clip-path:var(--dl-cut-button)]">
+                <span>Historico toxico</span>
+                <b className="dl-mid">medio</b>
+              </div>
+
+              <div className="flex justify-between border border-[var(--dl-tactical-line)] bg-white/[0.035] p-3 text-[12px] font-bold uppercase text-[var(--dl-tactical-muted)] [clip-path:var(--dl-cut-button)]">
+                <span>Compatibilidade</span>
+                <b className="dl-good">alta</b>
+              </div>
+
+              <div className="flex justify-between border border-[var(--dl-tactical-line)] bg-white/[0.035] p-3 text-[12px] font-bold uppercase text-[var(--dl-tactical-muted)] [clip-path:var(--dl-cut-button)]">
+                <span>Vencedores recentes</span>
+                <b className="dl-info">{winnersCount}</b>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </main>
     </div>
   );
 };

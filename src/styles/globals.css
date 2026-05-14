@@ -1,4 +1,5 @@
 @import url('./tokens.css');
+@import url('./tactical-theme.css');
 
 @tailwind base;
 @tailwind components;
@@ -10,15 +11,21 @@
   }
 
   html {
-    background: var(--dl-bg);
+    background: var(--dl-tactical-bg);
   }
 
   body {
     min-height: 100vh;
     background:
-      radial-gradient(circle at top left, rgb(var(--dl-orange-rgb) / 0.08), transparent 32rem),
-      linear-gradient(180deg, var(--dl-bg-soft) 0%, var(--dl-bg) 40%);
-    color: var(--dl-text);
+      linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px),
+      radial-gradient(circle at 14% 10%, rgba(56, 242, 139, 0.13), transparent 28rem),
+      radial-gradient(circle at 82% 12%, rgba(255, 226, 102, 0.11), transparent 25rem),
+      radial-gradient(circle at 78% 90%, rgba(141, 92, 255, 0.10), transparent 28rem),
+      var(--dl-tactical-bg);
+    background-size: 42px 42px, 42px 42px, auto, auto, auto, auto;
+    color: var(--dl-tactical-text);
+    font-family: "Chakra Petch", sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
   }
