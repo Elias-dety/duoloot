@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, SectionTitle } from '@/components/atoms';
+
 
 export interface TrustScorePanelProps {
   trustScore: number;

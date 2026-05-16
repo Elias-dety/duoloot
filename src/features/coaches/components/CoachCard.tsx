@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Badge, Button, Card } from '@/components/atoms';
+import { Avatar } from '@/components/atoms';
 import { Coach } from '@/schemas/coach.schema';
 import { Clock3, Lock, Star } from 'lucide-react';
 

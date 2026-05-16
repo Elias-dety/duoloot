@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Badge, Button, Card, SectionTitle } from '@/components/atoms';
+
 import { mockLobbies } from '@/data/mocks/lobbies.mock';
 
 export const RecommendedLobbies: React.FC = () => {

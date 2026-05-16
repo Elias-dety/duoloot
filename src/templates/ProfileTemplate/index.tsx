@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, SkeletonBlock } from '@/components/atoms';
-import { PageState } from '@/components/molecules';
+
 import { Player } from '@/schemas/player.schema';
 import { ProfileGameInfo } from '@/features/profile/components/ProfileGameInfo';
 import { ProfileHeader } from '@/features/profile/components/ProfileHeader';

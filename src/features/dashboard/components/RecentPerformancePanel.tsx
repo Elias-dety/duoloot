@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Card, SectionTitle } from '@/components/atoms';
+
 
 export const RecentPerformancePanel: React.FC = () => {
   const recentMatches = [

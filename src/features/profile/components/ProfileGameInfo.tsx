@@ -1,7 +1,6 @@
 import React from 'react';
 import { Player } from '@/schemas/player.schema';
-import { Badge, Card } from '@/components/atoms';
-import { Crosshair, Gamepad2, Trophy } from 'lucide-react';
+import { Crosshair, Trophy } from 'lucide-react';
 
 export interface ProfileGameInfoProps {
   player: Player;

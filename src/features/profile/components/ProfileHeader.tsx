@@ -1,6 +1,6 @@
 import React from 'react';
 import { Player } from '@/schemas/player.schema';
-import { Avatar, Badge, Button, Card } from '@/components/atoms';
+import { Avatar } from '@/components/atoms';
 import { MessageCircle, Shield, Trophy } from 'lucide-react';
 
 export interface ProfileHeaderProps {

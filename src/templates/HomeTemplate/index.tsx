@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import type { Event } from '@/schemas/event.schema';
@@ -23,10 +23,10 @@ export const HomeTemplate = ({ activeEvent, recentWinners, isLoading, isError }:
   const vaultTitle = activeEvent?.title ?? 'Cofre clandestino';
   const winnersCount = recentWinners.length || 3;
 
-  const vaultProgress = useMemo(() => {
-    if (!activeEvent?.totalParticipants) return 72;
-    return Math.min(Math.round((activeEvent.totalParticipants / 1000) * 100), 100);
-  }, [activeEvent?.totalParticipants]);
+  let vaultProgress = 72;
+  if (activeEvent?.totalParticipants) {
+    vaultProgress = Math.min(Math.round((activeEvent.totalParticipants / 1000) * 100), 100);
+  }
 
   return (
     <div className="mx-auto max-w-[1240px] px-3 md:px-6">

@@ -1,7 +1,6 @@
 export * from './Button';
 export * from './Badge';
 export * from './SectionTitle';
-export * from './Divider';
 export * from './Input';
 export * from './Label';
 export * from './Avatar';

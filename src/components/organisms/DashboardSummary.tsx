@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Badge, Card, StatValue } from '@/components/atoms';
+import { Avatar, StatValue } from '@/components/atoms';
 import { Player } from '@/schemas/player.schema';
 import { DashboardSummary as DashboardSummaryType } from '@/schemas/dashboardSummary.schema';
 

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Badge, Button, Card } from '@/components/atoms';
-import { Crown, Sparkles } from 'lucide-react';
+import { Crown } from 'lucide-react';
 
 export const PremiumHero: React.FC = () => {
   return (

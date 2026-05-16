@@ -1,6 +1,6 @@
 import React from 'react';
 import { Check, X } from 'lucide-react';
-import { Badge, Card } from '@/components/atoms';
+
 import { PremiumPlan } from '@/schemas/premiumPlan.schema';
 
 export interface PremiumComparisonProps {

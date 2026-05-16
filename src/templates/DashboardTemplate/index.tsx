@@ -6,8 +6,7 @@ import { TrustScorePanel } from '@/features/dashboard/components/TrustScorePanel
 import { RecentPerformancePanel } from '@/features/dashboard/components/RecentPerformancePanel';
 import { DashboardVaultProgress } from '@/features/dashboard/components/DashboardVaultProgress';
 import { RecommendedLobbies } from '@/features/dashboard/components/RecommendedLobbies';
-import { SkeletonBlock, Button } from '@/components/atoms';
-import { AlertCircle } from 'lucide-react';
+
 
 export interface DashboardTemplateProps {
   player: Player | null;

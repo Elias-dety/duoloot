@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, StatValue } from '@/components/atoms';
+import { StatValue } from '@/components/atoms';
 import { Player } from '@/schemas/player.schema';
 
 export interface ProfileStatsGridProps {

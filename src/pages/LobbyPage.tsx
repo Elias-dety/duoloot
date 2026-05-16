@@ -31,6 +31,7 @@ export default function LobbyPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchLobbies();
 
     // Configurar Realtime
@@ -70,7 +71,8 @@ export default function LobbyPage() {
 
       await createLobby(payload);
       await fetchLobbies();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       setErrorMessage(error.message || 'Erro ao criar lobby.');
     } finally {
       setIsCreating(false);
@@ -84,7 +86,8 @@ export default function LobbyPage() {
       await joinLobby(lobbyId);
       // Opcional: atualizar lista ou redirecionar
       await fetchLobbies();
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       if (error.message?.includes('User not authenticated')) {
         setErrorMessage('Entre na sua conta para entrar em um lobby.');
       } else {

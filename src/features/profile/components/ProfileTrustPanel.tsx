@@ -1,7 +1,7 @@
 import React from 'react';
 import { Player } from '@/schemas/player.schema';
-import { Card, ProgressBar } from '@/components/atoms';
-import { AlertTriangle, ShieldCheck, ThumbsUp } from 'lucide-react';
+import { ProgressBar } from '@/components/atoms';
+import { AlertTriangle, ThumbsUp } from 'lucide-react';
 
 export interface ProfileTrustPanelProps {
   player: Player;

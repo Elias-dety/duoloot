@@ -34,7 +34,7 @@ export default function VaultPage() {
             description: eventData.description,
             prizePool: eventData.prize_pool,
             prizeCurrency: eventData.prize_currency,
-            status: eventData.status as any,
+            status: eventData.status as 'active' | 'scheduled' | 'ended' | 'cancelled',
             totalParticipants: eventData.total_participants,
             onlineParticipants: eventData.online_participants,
             startsAt: eventData.starts_at,
@@ -43,7 +43,7 @@ export default function VaultPage() {
           setActiveEvent(mappedEvent);
 
           const tasksData = await getVaultTasks(eventData.id);
-          const mappedTasks: Mission[] = tasksData.map((task: any) => ({
+          const mappedTasks: Mission[] = tasksData.map((task: { id: string; title: string; description: string; rules?: string[]; validation_type: string }) => ({
             id: task.id,
             title: task.title,
             description: task.description,
@@ -51,7 +51,7 @@ export default function VaultPage() {
             progress: 100, // Fallback visual para testar o card de missão
             isCompleted: true, // Libera o clique no botão
             reward: { amount: 50, currency: mappedEvent.prizeCurrency },
-            validationType: task.validation_type as any,
+            validationType: task.validation_type as 'manual' | 'automatic',
           }));
           setVaultTasks(mappedTasks);
 
@@ -65,7 +65,8 @@ export default function VaultPage() {
             }]);
           }
         }
-      } catch (error: any) {
+      } catch (err: unknown) {
+        const error = err as Error;
         setErrorMessage(error.message);
       } finally {
         setIsLoading(false);
@@ -81,7 +82,8 @@ export default function VaultPage() {
       setIsJoining(true);
       await joinVaultEvent(activeEvent.id);
       alert('Inscrição realizada com sucesso!');
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       if (error.message.includes('User not authenticated') || error.message.includes('Auth session missing')) {
         alert('Entre na sua conta para participar do Cofre.');
       } else if (error.message.includes('unique constraint') || error.message.includes('duplicate key')) {
@@ -110,7 +112,8 @@ export default function VaultPage() {
           date: 'Agora' 
         }]);
       }
-    } catch (error: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       if (error.message.includes('User not authenticated') || error.message.includes('Auth session missing')) {
         alert('Entre na sua conta para resgatar a missão.');
       } else {

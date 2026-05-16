@@ -1,6 +1,5 @@
 import React from 'react';
 import { Player } from '@/schemas/player.schema';
-import { Badge, Card } from '@/components/atoms';
 import { CalendarClock, Headphones, Swords } from 'lucide-react';
 
 export interface ProfilePreferencesPanelProps {

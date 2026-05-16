@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, ProgressBar, SectionTitle } from '@/components/atoms';
+import { ProgressBar } from '@/components/atoms';
 
 export const DashboardVaultProgress: React.FC = () => {
   return (

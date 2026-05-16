@@ -1,6 +1,5 @@
 import React from 'react';
-import { Badge, Button, Card } from '@/components/atoms';
-import { Sparkles, Trophy } from 'lucide-react';
+
 
 export interface CoachesHeroProps {
   totalCoaches: number;

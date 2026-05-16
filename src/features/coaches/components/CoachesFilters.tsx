@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Input } from '@/components/atoms';
+
 import { Search } from 'lucide-react';
 
 export interface CoachesFiltersProps {
