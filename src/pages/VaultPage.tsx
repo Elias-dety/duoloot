@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { VaultTemplate } from '@/templates/VaultTemplate';
-import { mockEvents } from '@/data/mocks/events.mock';
-import { mockMissions } from '@/data/mocks/missions.mock';
 import { Event } from '@/schemas/event.schema';
 import { Mission } from '@/schemas/mission.schema';
 import { Winner } from '@/components/organisms/WinnersList';
+import { getActiveVaultEvent, getVaultTasks, getVaultWinner, joinVaultEvent, claimVaultWinner } from '@/services';
 
 // Mock temporary para os vencedores
 const mockWinners: Winner[] = [
@@ -14,24 +13,60 @@ const mockWinners: Winner[] = [
 ];
 
 export default function VaultPage() {
-  const [event, setEvent] = useState<Event | null>(null);
-  const [missions, setMissions] = useState<Mission[]>([]);
+  const [activeEvent, setActiveEvent] = useState<Event | null>(null);
+  const [vaultTasks, setVaultTasks] = useState<Mission[]>([]);
+  const [winners, setWinners] = useState<Winner[]>(mockWinners);
   const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isJoining, setIsJoining] = useState(false);
 
   useEffect(() => {
     const fetchVaultData = async () => {
       try {
         setIsLoading(true);
-        setIsError(false);
-        // Delay simulado
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        setErrorMessage('');
         
-        // Simulação bem sucedida usando o evento ativo
-        setEvent(mockEvents[0]);
-        setMissions(mockMissions);
-      } catch {
-        setIsError(true);
+        const eventData = await getActiveVaultEvent();
+        if (eventData) {
+          const mappedEvent: Event = {
+            id: eventData.id,
+            title: eventData.title,
+            description: eventData.description,
+            prizePool: eventData.prize_pool,
+            prizeCurrency: eventData.prize_currency,
+            status: eventData.status as any,
+            totalParticipants: eventData.total_participants,
+            onlineParticipants: eventData.online_participants,
+            startsAt: eventData.starts_at,
+            endsAt: eventData.ends_at,
+          };
+          setActiveEvent(mappedEvent);
+
+          const tasksData = await getVaultTasks(eventData.id);
+          const mappedTasks: Mission[] = tasksData.map((task: any) => ({
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            rules: task.rules || [],
+            progress: 100, // Fallback visual para testar o card de missão
+            isCompleted: true, // Libera o clique no botão
+            reward: { amount: 50, currency: mappedEvent.prizeCurrency },
+            validationType: task.validation_type as any,
+          }));
+          setVaultTasks(mappedTasks);
+
+          const winnerData = await getVaultWinner(eventData.id);
+          if (winnerData) {
+            setWinners([{ 
+              id: winnerData.id, 
+              username: 'Vencedor!', 
+              prizeWon: `${eventData.prize_pool} ${eventData.prize_currency}`, 
+              date: new Date(winnerData.created_at).toLocaleTimeString() 
+            }]);
+          }
+        }
+      } catch (error: any) {
+        setErrorMessage(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -40,13 +75,60 @@ export default function VaultPage() {
     fetchVaultData();
   }, []);
 
+  const handleJoinVault = async () => {
+    if (!activeEvent) return;
+    try {
+      setIsJoining(true);
+      await joinVaultEvent(activeEvent.id);
+      alert('Inscrição realizada com sucesso!');
+    } catch (error: any) {
+      if (error.message.includes('User not authenticated') || error.message.includes('Auth session missing')) {
+        alert('Entre na sua conta para participar do Cofre.');
+      } else if (error.message.includes('unique constraint') || error.message.includes('duplicate key')) {
+        alert('Você já está participando deste cofre!');
+      } else {
+        alert('Erro ao se inscrever: ' + error.message);
+      }
+    } finally {
+      setIsJoining(false);
+    }
+  };
+
+  const handleClaimTask = async (taskId: string) => {
+    if (!activeEvent) return;
+    try {
+      // Ação temporária para teste do fluxo do Cofre. Depois será substituída pela validação real da missão.
+      await claimVaultWinner(activeEvent.id, taskId, { source: 'vault-page-test' });
+      alert('Recompensa resgatada com sucesso!');
+      
+      const winnerData = await getVaultWinner(activeEvent.id);
+      if (winnerData) {
+        setWinners([{ 
+          id: winnerData.id, 
+          username: 'Você venceu!', 
+          prizeWon: `${activeEvent.prizePool} ${activeEvent.prizeCurrency}`, 
+          date: 'Agora' 
+        }]);
+      }
+    } catch (error: any) {
+      if (error.message.includes('User not authenticated') || error.message.includes('Auth session missing')) {
+        alert('Entre na sua conta para resgatar a missão.');
+      } else {
+        alert('Erro ao resgatar: ' + error.message);
+      }
+    }
+  };
+
   return (
     <VaultTemplate 
-      event={event} 
-      missions={missions} 
-      winners={mockWinners}
+      event={activeEvent} 
+      missions={vaultTasks} 
+      winners={winners}
       isLoading={isLoading} 
-      isError={isError} 
+      isError={!!errorMessage}
+      onJoinVault={handleJoinVault}
+      onClaimTask={handleClaimTask}
+      isJoining={isJoining}
     />
   );
 }

@@ -13,9 +13,21 @@ export interface VaultTemplateProps {
   winners: Winner[];
   isLoading: boolean;
   isError: boolean;
+  onJoinVault?: () => void;
+  onClaimTask?: (taskId: string) => void;
+  isJoining?: boolean;
 }
 
-export const VaultTemplate: React.FC<VaultTemplateProps> = ({ event, missions, winners, isLoading, isError }) => {
+export const VaultTemplate: React.FC<VaultTemplateProps> = ({ 
+  event, 
+  missions, 
+  winners, 
+  isLoading, 
+  isError,
+  onJoinVault,
+  onClaimTask,
+  isJoining
+}) => {
   const eventStatus =
     event?.status === 'ended' ? 'completed' : event?.status === 'scheduled' ? 'upcoming' : 'active';
 
@@ -81,8 +93,13 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({ event, missions, w
                 Ganhos em dobro nas próximas 2 horas jogando em duo fechado.
               </p>
             </div>
-            <Button variant="primary" className="w-full shrink-0 sm:w-auto">
-              Participar Agora
+            <Button 
+              variant="primary" 
+              className="w-full shrink-0 sm:w-auto"
+              onClick={onJoinVault}
+              disabled={isJoining}
+            >
+              {isJoining ? 'Inscrevendo...' : 'Participar Agora'}
             </Button>
           </div>
         </div>
@@ -113,7 +130,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({ event, missions, w
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {missions.map((mission) => (
-                <MissionCard key={mission.id} mission={mission} />
+                <MissionCard key={mission.id} mission={mission} onClaim={onClaimTask} />
               ))}
             </div>
           )}
