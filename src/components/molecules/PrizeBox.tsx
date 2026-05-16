@@ -27,7 +27,7 @@ export const PrizeBox: React.FC<PrizeBoxProps> = ({
         </div>
         <div className="flex flex-wrap justify-end gap-2">
           <Badge variant={isAccumulating ? 'success' : 'gold'}>
-            {isAccumulating ? 'Acumulando' : 'Premio total'}
+            {isAccumulating ? 'Acumulando' : 'Prêmio total'}
           </Badge>
           {multiplier && <Badge variant="premium">{multiplier}x bonus</Badge>}
         </div>
@@ -36,7 +36,7 @@ export const PrizeBox: React.FC<PrizeBoxProps> = ({
       <StatValue
         label="Premiacao atual"
         value={`${amount.toLocaleString()} ${currency}`}
-        description={isAccumulating ? 'O premio sobe conforme a comunidade joga.' : undefined}
+        description={isAccumulating ? 'O prêmio sobe conforme a comunidade joga.' : undefined}
         tone="prize"
       />
 

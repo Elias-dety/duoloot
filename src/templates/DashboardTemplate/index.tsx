@@ -27,43 +27,53 @@ export default function DashboardTemplate({
   
   if (isLoading) {
     return (
-      <div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-6">
-        <SkeletonBlock height={180} rounded="lg" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <SkeletonBlock height={300} rounded="lg" />
-          <SkeletonBlock height={300} rounded="lg" />
-          <SkeletonBlock height={300} rounded="lg" />
-        </div>
+      <div className="mx-auto flex min-h-[50vh] w-full max-w-[1240px] flex-col items-center justify-center space-y-6 pb-12">
+        <div className="w-10 h-10 border-2 border-[var(--dl-tactical-green)] border-t-transparent rounded-full animate-spin" />
+        <p className="text-[var(--dl-tactical-muted)] text-[12px] font-bold uppercase tracking-[0.12em]">Acessando dados...</p>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="w-full max-w-7xl mx-auto px-4 py-16 flex flex-col items-center justify-center text-center">
-        <div className="w-16 h-16 rounded-full bg-danger/10 flex items-center justify-center mb-4">
-          <AlertCircle className="w-8 h-8 text-danger" />
-        </div>
-        <h2 className="text-2xl font-bold text-content-base mb-2">Erro ao carregar o Dashboard</h2>
-        <p className="text-content-muted mb-6 max-w-md">
-          Não foi possível carregar os seus dados no momento. Tente novamente mais tarde.
-        </p>
-        <Button variant="outline" onClick={() => window.location.reload()}>Tentar novamente</Button>
+      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16" style={{ borderColor: 'rgba(255,51,102,0.3)' }}>
+        <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-red)] font-['Rajdhani'] uppercase">Erro ao carregar o Dashboard.</p>
+        <button type="button" className="dl-btn dl-btn-red" onClick={() => window.location.reload()}>Tentar novamente</button>
       </div>
     );
   }
 
   if (isEmpty || !player || !summary) {
     return (
-      <div className="w-full max-w-7xl mx-auto px-4 py-16 flex flex-col items-center justify-center text-center">
-        <h2 className="text-2xl font-bold text-content-base mb-2">Nenhum dado encontrado</h2>
-        <p className="text-content-muted">Não há informações suficientes para exibir o seu dashboard.</p>
+      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+        <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-muted)] font-['Rajdhani'] uppercase">Nenhum dado encontrado.</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
+      {/* Header HUD do Dashboard */}
+      <div className="dl-panel relative overflow-hidden p-[18px] mb-6 md:p-[28px]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(56,242,139,0.14),transparent_20rem),linear-gradient(120deg,transparent,rgba(56,242,139,0.04),transparent)]" />
+        <div className="relative z-[2]">
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <span className="dl-hud-label" style={{ color: 'var(--dl-tactical-green)', borderColor: 'rgba(56,242,139,0.34)', background: 'rgba(56,242,139,0.08)' }}>
+              PLAYER COMMAND // OPERATOR DASHBOARD
+            </span>
+          </div>
+          <h1 className="dl-title mb-3 text-[clamp(28px,5vw,48px)] leading-[0.9]">
+            Painel do{' '}
+            <span className="text-[var(--dl-tactical-green)] drop-shadow-[0_0_24px_rgba(56,242,139,0.3)]">
+              Jogador
+            </span>
+          </h1>
+          <p className="dl-muted max-w-[600px] text-[14px] leading-[1.65]">
+            Sua central de operações. Analise sua performance, gerencie seu trust score e acompanhe seu progresso no cofre.
+          </p>
+        </div>
+      </div>
+
       {/* Top Section - User Summary */}
       <DashboardSummary player={player} summary={summary} />
 

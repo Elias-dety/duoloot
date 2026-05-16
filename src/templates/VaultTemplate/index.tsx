@@ -40,9 +40,25 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({ event, missions, w
   return (
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
       {/* Header HUD do Cofre */}
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="dl-hud-label">VAULT OPERATION // LOOT MODULE</span>
-        <span className="dl-stamp dl-stamp-yellow">{eventStatus === 'active' ? 'Cofre aberto' : eventStatus === 'upcoming' ? 'Em breve' : 'Encerrado'}</span>
+      <div className="dl-panel relative overflow-hidden p-[18px] mb-6 md:p-[28px]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(255,226,102,0.14),transparent_20rem),linear-gradient(120deg,transparent,rgba(255,226,102,0.04),transparent)]" />
+        <div className="relative z-[2]">
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <span className="dl-hud-label" style={{ color: 'var(--dl-tactical-yellow)', borderColor: 'rgba(255,226,102,0.34)', background: 'rgba(255,226,102,0.08)' }}>
+              VAULT OPERATION // LOOT MODULE
+            </span>
+            <span className="dl-stamp dl-stamp-yellow">{eventStatus === 'active' ? 'Cofre aberto' : eventStatus === 'upcoming' ? 'Em breve' : 'Encerrado'}</span>
+          </div>
+          <h1 className="dl-title mb-3 text-[clamp(28px,5vw,48px)] leading-[0.9]">
+            Dispute recompensas no{' '}
+            <span className="text-[var(--dl-tactical-yellow)] drop-shadow-[0_0_24px_rgba(255,226,102,0.3)]">
+              Cofre
+            </span>
+          </h1>
+          <p className="dl-muted max-w-[600px] text-[14px] leading-[1.65]">
+            Complete contratos ativos, jogue com duos compatíveis e receba sua parte do prêmio acumulado.
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6 lg:flex-row">

@@ -9,34 +9,34 @@ export interface ProfilePreferencesPanelProps {
 
 export const ProfilePreferencesPanel: React.FC<ProfilePreferencesPanelProps> = ({ player }) => {
   return (
-    <Card variant="elevated" className="h-full">
-      <h3 className="text-lg font-bold text-content-base mb-6">Preferencias</h3>
+    <article className="dl-panel h-full p-6">
+      <h3 className="dl-hud-label mb-6"><span className="text-[var(--dl-tactical-purple)]">■</span> Preferências</h3>
 
       <div className="space-y-4">
-        <div className="rounded-xl border border-border bg-surface-card p-4">
-          <p className="text-xs uppercase tracking-wide text-content-muted mb-2">Estilo de jogo</p>
-          <div className="flex items-center gap-2 text-content-base font-semibold">
-            <Swords className="w-4 h-4 text-brand-primary" />
+        <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-4 [clip-path:var(--dl-cut-button)]">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Estilo de jogo</p>
+          <div className="flex items-center gap-2 font-bold text-white uppercase tracking-wide text-[13px]">
+            <Swords className="h-4 w-4 text-[var(--dl-tactical-purple)]" />
             <span>{player.preferences.playStyle}</span>
           </div>
         </div>
 
-        <div className="rounded-xl border border-border bg-surface-card p-4">
-          <p className="text-xs uppercase tracking-wide text-content-muted mb-2">Foco da sessao</p>
-          <p className="text-content-base font-semibold">{player.preferences.sessionFocus}</p>
+        <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-4 [clip-path:var(--dl-cut-button)]">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Foco da sessão</p>
+          <p className="font-bold text-white uppercase tracking-wide text-[13px]">{player.preferences.sessionFocus}</p>
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Badge variant="info" className="gap-2 px-3 py-1.5">
-            <Headphones className="w-3.5 h-3.5" />
-            {player.preferences.micRequired ? 'Mic obrigatorio' : 'Mic opcional'}
-          </Badge>
-          <Badge variant="default" className="gap-2 px-3 py-1.5">
-            <CalendarClock className="w-3.5 h-3.5" />
+          <span className="dl-chip dl-chip-purple gap-2">
+            <Headphones className="h-3.5 w-3.5" />
+            {player.preferences.micRequired ? 'Mic obrigatório' : 'Mic opcional'}
+          </span>
+          <span className="dl-chip gap-2">
+            <CalendarClock className="h-3.5 w-3.5" />
             {player.preferences.availability}
-          </Badge>
+          </span>
         </div>
       </div>
-    </Card>
+    </article>
   );
 };

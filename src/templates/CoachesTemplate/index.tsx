@@ -1,9 +1,7 @@
 import React from 'react';
-import { PageCardGridSkeleton, PageState } from '@/components/molecules';
 import { Coach } from '@/schemas/coach.schema';
 import { CoachCard } from '@/features/coaches/components/CoachCard';
 import { CoachesFilters } from '@/features/coaches/components/CoachesFilters';
-import { CoachesHero } from '@/features/coaches/components/CoachesHero';
 
 export interface CoachesTemplateProps {
   coaches: Coach[];
@@ -20,7 +18,6 @@ export interface CoachesTemplateProps {
 }
 
 export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
-  coaches,
   filteredCoaches,
   search,
   game,
@@ -34,30 +31,44 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
-        <PageState type="loading" loadingBlocks={2} className="max-w-none px-0 py-0" />
-        <PageCardGridSkeleton />
+      <div className="mx-auto flex min-h-[50vh] w-full max-w-[1240px] flex-col items-center justify-center space-y-6 pb-12">
+        <div className="w-10 h-10 border-2 border-[var(--dl-tactical-purple)] border-t-transparent rounded-full animate-spin" />
+        <p className="text-[var(--dl-tactical-muted)] text-[12px] font-bold uppercase tracking-[0.12em]">Buscando instrutores...</p>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <PageState
-        type="error"
-        title="Erro ao carregar coaches"
-        description="Nao foi possivel montar a vitrine de coaches agora."
-        className="max-w-7xl"
-      />
+      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16" style={{ borderColor: 'rgba(255,51,102,0.3)' }}>
+        <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-red)] font-['Rajdhani'] uppercase">Erro ao carregar coaches.</p>
+        <p className="text-sm text-[var(--dl-tactical-muted)] mb-6">Não foi possível montar a vitrine de coaches agora.</p>
+      </div>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8">
-      <CoachesHero
-        totalCoaches={coaches.length}
-        premiumCount={coaches.filter((coach) => coach.premiumOnly).length}
-      />
+    <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
+      {/* Header HUD de Coaches */}
+      <div className="dl-panel relative overflow-hidden p-[18px] mb-6 md:p-[28px]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(168,85,247,0.14),transparent_20rem),linear-gradient(120deg,transparent,rgba(168,85,247,0.04),transparent)]" />
+        <div className="relative z-[2]">
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <span className="dl-hud-label" style={{ color: 'var(--dl-tactical-purple)', borderColor: 'rgba(168,85,247,0.34)', background: 'rgba(168,85,247,0.08)' }}>
+              COACH NETWORK // ELITE TRAINING
+            </span>
+          </div>
+          <h1 className="dl-title mb-3 text-[clamp(28px,5vw,48px)] leading-[0.9]">
+            Aprenda com a{' '}
+            <span className="text-[var(--dl-tactical-purple)] drop-shadow-[0_0_24px_rgba(168,85,247,0.3)]">
+              Elite
+            </span>
+          </h1>
+          <p className="dl-muted max-w-[600px] text-[14px] leading-[1.65]">
+            Encontre treinadores e mentores de alto nível para melhorar seu jogo, ajustar sua mentalidade e subir de rank mais rápido.
+          </p>
+        </div>
+      </div>
 
       <CoachesFilters
         search={search}
@@ -76,14 +87,11 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
           ))}
         </div>
       ) : (
-        <PageState
-          type="empty"
-          title="Nenhum coach encontrado"
-          description="Ajuste jogo, disponibilidade ou busca para ver novos resultados."
-          actionText="Limpar filtros"
-          onAction={onClearFilters}
-          className="max-w-7xl"
-        />
+        <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+          <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-muted)] font-['Rajdhani'] uppercase">Nenhum coach encontrado.</p>
+          <p className="mb-6 text-sm text-[var(--dl-tactical-muted)]">Ajuste jogo, disponibilidade ou busca para ver novos resultados.</p>
+          <button type="button" className="dl-btn" onClick={onClearFilters}>Limpar filtros</button>
+        </div>
       )}
     </div>
   );

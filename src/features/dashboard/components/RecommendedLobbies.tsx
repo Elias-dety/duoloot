@@ -7,23 +7,26 @@ export const RecommendedLobbies: React.FC = () => {
   const recommended = mockLobbies.slice(0, 2);
 
   return (
-    <Card variant="default" className="flex h-full w-full flex-col">
-      <SectionTitle title="Lobbies Recomendados" subtitle="Compatibilidade baseada no seu perfil" />
+    <article className="dl-panel flex h-full w-full flex-col p-6">
+      <div className="mb-6">
+        <h3 className="dl-hud-label mb-2"><span className="text-[var(--dl-tactical-green)]">■</span> Lobbies Recomendados</h3>
+        <p className="text-[13px] text-[var(--dl-tactical-muted)]">Compatibilidade baseada no seu perfil</p>
+      </div>
 
       <div className="mt-4 flex flex-1 flex-col gap-4">
         {recommended.map((lobby) => (
-          <div key={lobby.id} className="flex flex-col gap-3 rounded-xl border border-border bg-surface-elevated p-4">
+          <div key={lobby.id} className="flex flex-col gap-3 border border-[var(--dl-tactical-line)] bg-white/[0.02] p-4 [clip-path:var(--dl-cut-button)]">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-bold text-content-base">{lobby.mode}</p>
-                <p className="text-sm text-content-muted">{lobby.minRank} a {lobby.maxRank}</p>
+                <p className="font-bold text-[13px] uppercase tracking-wide text-white">{lobby.mode}</p>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">{lobby.minRank} a {lobby.maxRank}</p>
               </div>
-              <Badge variant="success">{lobby.compatibilityScore}% Match</Badge>
+              <span className="dl-stamp dl-stamp-green">{lobby.compatibilityScore}% Match</span>
             </div>
             <div className="mt-2 flex items-center justify-between">
-              <p className="text-sm text-content-muted">{lobby.slotsTotal - lobby.slotsFilled} vagas</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--dl-tactical-muted)]">{lobby.slotsTotal - lobby.slotsFilled} vagas</p>
               <Link to="/lobby">
-                <Button variant="secondary" size="sm">Ver Lobby</Button>
+                <button type="button" className="dl-btn h-8 px-4 text-[11px]">Ver Lobby</button>
               </Link>
             </div>
           </div>
@@ -32,9 +35,9 @@ export const RecommendedLobbies: React.FC = () => {
 
       <div className="mt-4">
         <Link to="/lobby" className="block w-full text-center">
-          <Button variant="primary" className="w-full">Procurar mais Lobbies</Button>
+          <button type="button" className="dl-btn dl-btn-green w-full">Procurar mais Lobbies</button>
         </Link>
       </div>
-    </Card>
+    </article>
   );
 };

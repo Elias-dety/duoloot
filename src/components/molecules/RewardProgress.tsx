@@ -17,7 +17,7 @@ export const RewardProgress: React.FC<RewardProgressProps> = ({
   return (
     <div className={`flex flex-col gap-2.5 ${className}`}>
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-content-secondary">Progresso da missao</span>
+        <span className="text-sm font-medium text-content-secondary">Progresso da missão</span>
         <span className="text-sm font-bold text-info">{currentProgress}%</span>
       </div>
 

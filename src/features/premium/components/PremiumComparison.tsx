@@ -22,42 +22,42 @@ export const PremiumComparison: React.FC<PremiumComparisonProps> = ({ freePlan, 
 
   const renderValue = (value: boolean | string, isPremium = false) => {
     if (typeof value !== 'boolean') {
-      return <span className={isPremium ? 'text-sm font-bold text-premium' : 'text-sm text-content-muted'}>{value}</span>;
+      return <span className={isPremium ? 'text-[12px] font-bold uppercase text-[var(--dl-tactical-purple)]' : 'text-[12px] font-bold uppercase text-[var(--dl-tactical-muted)]'}>{value}</span>;
     }
 
     return value ? (
-      <Check className={isPremium ? 'h-5 w-5 text-premium' : 'h-5 w-5 text-success'} />
+      <Check className={isPremium ? 'h-5 w-5 text-[var(--dl-tactical-purple)]' : 'h-5 w-5 text-[var(--dl-tactical-green)]'} />
     ) : (
-      <X className="h-5 w-5 text-content-muted" />
+      <X className="h-5 w-5 text-white/20" />
     );
   };
 
   return (
     <section className="mb-12">
-      <h2 className="mb-6 text-2xl font-black text-content-base">Comparativo</h2>
+      <h2 className="mb-6 font-['Rajdhani'] text-3xl font-bold uppercase text-white">Comparativo</h2>
 
-      <div className="hidden overflow-hidden rounded-2xl border border-brand-primary/20 bg-surface-card md:block">
+      <div className="dl-panel hidden overflow-hidden md:block">
         <table className="w-full border-collapse text-left">
-          <thead className="bg-surface-elevated">
+          <thead className="bg-white/[0.02] border-b border-[var(--dl-tactical-line)]">
             <tr>
-              <th className="w-1/2 border-b border-border p-4 text-content-muted">Beneficio</th>
-              <th className="w-1/4 border-b border-border p-4 text-center text-content-primary">{freePlan.name}</th>
-              <th className="w-1/4 border-b border-premium/30 bg-premium/10 p-4 text-center text-premium">
+              <th className="w-1/2 p-4 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Benefício</th>
+              <th className="w-1/4 p-4 text-center text-[12px] font-bold uppercase text-white">{freePlan.name}</th>
+              <th className="w-1/4 bg-[rgba(168,85,247,0.08)] p-4 text-center text-[12px] font-bold uppercase text-[var(--dl-tactical-purple)] border-l border-[rgba(168,85,247,0.2)]">
                 {premiumPlan.name}
               </th>
             </tr>
           </thead>
           <tbody>
             {features.map((feature) => (
-              <tr key={feature.name}>
-                <td className="border-b border-border p-4 text-content-base">
-                  <div className="font-medium">{feature.name}</div>
-                  {feature.premiumDesc && <div className="mt-1 text-xs text-premium">{feature.premiumDesc}</div>}
+              <tr key={feature.name} className="border-b border-[var(--dl-tactical-line)] last:border-0">
+                <td className="p-4 text-white">
+                  <div className="font-bold text-[13px] uppercase tracking-wide">{feature.name}</div>
+                  {feature.premiumDesc && <div className="mt-1 text-[11px] uppercase tracking-wide text-[var(--dl-tactical-purple)]">{feature.premiumDesc}</div>}
                 </td>
-                <td className="border-b border-border p-4">
+                <td className="p-4">
                   <div className="flex justify-center">{renderValue(feature.free)}</div>
                 </td>
-                <td className="border-b border-premium/20 bg-premium/5 p-4">
+                <td className="bg-[rgba(168,85,247,0.05)] p-4 border-l border-[rgba(168,85,247,0.1)]">
                   <div className="flex justify-center">{renderValue(feature.premium, true)}</div>
                 </td>
               </tr>
@@ -68,25 +68,25 @@ export const PremiumComparison: React.FC<PremiumComparisonProps> = ({ freePlan, 
 
       <div className="grid grid-cols-1 gap-3 md:hidden">
         {features.map((feature) => (
-          <Card key={feature.name} variant="elevated" className="p-4">
+          <article key={feature.name} className="dl-panel p-4">
             <div className="mb-3 flex items-start justify-between gap-4">
               <div>
-                <p className="font-bold text-content-base">{feature.name}</p>
-                {feature.premiumDesc && <p className="mt-1 text-xs text-premium">{feature.premiumDesc}</p>}
+                <p className="font-bold text-[13px] uppercase tracking-wide text-white">{feature.name}</p>
+                {feature.premiumDesc && <p className="mt-1 text-[11px] uppercase tracking-wide text-[var(--dl-tactical-purple)]">{feature.premiumDesc}</p>}
               </div>
-              <Badge variant="premium">Premium</Badge>
+              <span className="dl-stamp dl-stamp-purple">Premium</span>
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-lg border border-border bg-surface-card p-3">
-                <p className="mb-2 text-content-muted">{freePlan.name}</p>
+              <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-3 [clip-path:var(--dl-cut-button)]">
+                <p className="mb-2 text-[11px] font-bold uppercase text-[var(--dl-tactical-muted)]">{freePlan.name}</p>
                 {renderValue(feature.free)}
               </div>
-              <div className="rounded-lg border border-premium/25 bg-premium/10 p-3">
-                <p className="mb-2 text-premium">{premiumPlan.name}</p>
+              <div className="border border-[rgba(168,85,247,0.3)] bg-[rgba(168,85,247,0.08)] p-3 [clip-path:var(--dl-cut-button)]">
+                <p className="mb-2 text-[11px] font-bold uppercase text-[var(--dl-tactical-purple)]">{premiumPlan.name}</p>
                 {renderValue(feature.premium, true)}
               </div>
             </div>
-          </Card>
+          </article>
         ))}
       </div>
     </section>

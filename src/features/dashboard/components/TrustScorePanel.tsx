@@ -8,16 +8,19 @@ export interface TrustScorePanelProps {
 export const TrustScorePanel: React.FC<TrustScorePanelProps> = ({ trustScore }) => {
   const isHigh = trustScore >= 80;
   const isMedium = trustScore >= 50 && trustScore < 80;
-  const color = isHigh ? 'text-success' : isMedium ? 'text-prize' : 'text-danger';
+  const color = isHigh ? 'text-[var(--dl-tactical-green)]' : isMedium ? 'text-[var(--dl-tactical-yellow)]' : 'text-[var(--dl-tactical-red)]';
 
   return (
-    <Card variant="default" className="flex h-full w-full flex-col">
-      <SectionTitle title="Trust Score" subtitle="Sua reputacao na comunidade" accent="green" />
+    <article className="dl-panel flex h-full w-full flex-col p-6">
+      <div className="mb-6">
+        <h3 className="dl-hud-label mb-2"><span className="text-[var(--dl-tactical-green)]">■</span> Trust Score</h3>
+        <p className="text-[13px] text-[var(--dl-tactical-muted)]">Sua reputação na comunidade</p>
+      </div>
 
       <div className="flex flex-1 flex-col items-center justify-center py-6">
-        <div className="relative mb-4 flex h-32 w-32 items-center justify-center rounded-full border-4 border-border">
+        <div className="relative mb-4 flex h-32 w-32 items-center justify-center border-4 border-white/[0.05] [clip-path:polygon(30%_0%,70%_0%,100%_30%,100%_70%,70%_100%,30%_100%,0%_70%,0%_30%)]">
           <svg className="absolute inset-0 h-full w-full -rotate-90">
-            <circle cx="60" cy="60" r="58" className="fill-none stroke-surface-hover stroke-[4]" />
+            <circle cx="60" cy="60" r="58" className="fill-none stroke-white/[0.05] stroke-[4]" />
             <circle
               cx="60"
               cy="60"
@@ -28,31 +31,31 @@ export const TrustScorePanel: React.FC<TrustScorePanelProps> = ({ trustScore }) 
               strokeLinecap="round"
             />
           </svg>
-          <div className="flex flex-col items-center justify-center">
-            <span className={`text-4xl font-black ${color}`}>{trustScore}</span>
-            <span className="text-xs text-content-muted">/ 100</span>
+          <div className="flex flex-col items-center justify-center z-10">
+            <span className={`font-['Rajdhani'] text-4xl font-bold ${color}`}>{trustScore}</span>
+            <span className="text-[11px] font-bold uppercase tracking-wide text-white/40">/ 100</span>
           </div>
         </div>
 
-        <p className="max-w-[220px] text-center text-sm text-content-base">
+        <p className="max-w-[220px] text-center text-[13px] text-[var(--dl-tactical-muted)]">
           {isHigh
-            ? 'Excelente reputacao para formar duo.'
+            ? 'Excelente reputação para formar duo.'
             : isMedium
-              ? 'Bom historico, com margem para subir.'
+              ? 'Bom histórico, com margem para subir.'
               : 'Score baixo. Evite abandonos e penalidades.'}
         </p>
       </div>
 
       <div className="mt-auto grid grid-cols-2 gap-2">
-        <div className="rounded-lg border border-border bg-surface-elevated p-3 text-center">
-          <p className="mb-1 text-xs text-content-muted">Elogios</p>
-          <p className="text-lg font-semibold text-success">42</p>
+        <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-3 text-center [clip-path:var(--dl-cut-button)]">
+          <p className="mb-1 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Elogios</p>
+          <p className="font-['Rajdhani'] text-2xl font-bold text-[var(--dl-tactical-green)]">42</p>
         </div>
-        <div className="rounded-lg border border-border bg-surface-elevated p-3 text-center">
-          <p className="mb-1 text-xs text-content-muted">Abandonos</p>
-          <p className="text-lg font-semibold text-content-base">0</p>
+        <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-3 text-center [clip-path:var(--dl-cut-button)]">
+          <p className="mb-1 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Abandonos</p>
+          <p className="font-['Rajdhani'] text-2xl font-bold text-white">0</p>
         </div>
       </div>
-    </Card>
+    </article>
   );
 };

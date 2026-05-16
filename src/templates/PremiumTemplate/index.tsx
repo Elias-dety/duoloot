@@ -28,40 +28,34 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
 
   if (isError) {
     return (
-      <PageState
-        type="error"
-        title="Erro ao carregar planos"
-        description="Nao foi possivel carregar os planos premium neste momento."
-        className="max-w-6xl"
-      />
+      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16" style={{ borderColor: 'rgba(255,51,102,0.3)' }}>
+        <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-red)] font-['Rajdhani'] uppercase">Erro ao carregar planos</p>
+        <p className="text-[var(--dl-tactical-muted)] text-sm mb-6">Não foi possível carregar os planos premium neste momento.</p>
+      </div>
     );
   }
 
   if (isPremiumLocked) {
     return (
-      <PageState
-        type="locked"
-        title="Assinatura temporariamente indisponivel"
-        description="O acesso premium esta bloqueado para esta conta enquanto finalizamos a validacao."
-        actionText="Entender beneficios"
-        className="max-w-6xl"
-      />
+      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+        <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-yellow)] font-['Rajdhani'] uppercase">Assinatura temporariamente indisponível</p>
+        <p className="text-[var(--dl-tactical-muted)] text-sm mb-6">O acesso premium está bloqueado para esta conta enquanto finalizamos a validação.</p>
+        <button type="button" className="dl-btn">Entender benefícios</button>
+      </div>
     );
   }
 
   if (!plans.length || !freePlan || !premiumPlan) {
     return (
-      <PageState
-        type="empty"
-        title="Nenhum plano disponivel"
-        description="Os planos ainda nao foram configurados para exibicao."
-        className="max-w-6xl"
-      />
+      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+        <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-muted)] font-['Rajdhani'] uppercase">Nenhum plano disponível</p>
+        <p className="text-[var(--dl-tactical-muted)] text-sm mb-6">Os planos ainda não foram configurados para exibição.</p>
+      </div>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8">
+    <div className="mx-auto w-full max-w-[1240px] px-3 pb-12 md:px-6">
       <PremiumHero />
 
       <section className="mb-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -71,19 +65,18 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
 
       <PremiumComparison freePlan={freePlan} premiumPlan={premiumPlan} />
 
-      <Card variant="premium" className="text-center">
-        <h3 className="text-2xl font-black text-content-base">Pronto para subir de nivel?</h3>
-        <p className="mx-auto mt-3 max-w-2xl text-content-muted">
+      <div className="dl-panel text-center p-8 mt-12" style={{ borderColor: 'rgba(168,85,247,0.3)', background: 'rgba(168,85,247,0.05)' }}>
+        <h3 className="dl-title text-2xl font-black mb-3">Pronto para subir de nível?</h3>
+        <p className="dl-muted mx-auto max-w-2xl text-sm mb-6">
           Assine para destravar ganho extra no cofre, prioridade no lobby e acesso completo aos coaches premium.
         </p>
-        <Button
-          variant="primary"
-          size="lg"
-          className="mt-6 w-full sm:w-auto"
+        <button
+          type="button"
+          className="dl-btn dl-btn-purple mt-6 w-full sm:w-auto"
         >
           {premiumPlan.ctaLabel}
-        </Button>
-      </Card>
+        </button>
+      </div>
     </div>
   );
 };

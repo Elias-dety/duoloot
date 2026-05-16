@@ -41,7 +41,7 @@ export const PageState: React.FC<PageStateProps> = ({
       card: 'danger' as const,
       iconClass: 'text-danger',
       defaultTitle: 'Ocorreu um erro',
-      defaultDescription: 'Nao foi possivel carregar os dados no momento. Tente novamente mais tarde.',
+      defaultDescription: 'Não foi possível carregar os dados no momento. Tente novamente mais tarde.',
       defaultAction: 'Tentar novamente',
     },
     locked: {
@@ -57,7 +57,7 @@ export const PageState: React.FC<PageStateProps> = ({
       card: 'elevated' as const,
       iconClass: 'text-content-muted',
       defaultTitle: 'Nenhum resultado',
-      defaultDescription: 'Nao encontramos nenhum dado para exibir aqui no momento.',
+      defaultDescription: 'Não encontramos nenhum dado para exibir aqui no momento.',
       defaultAction: 'Voltar',
     },
   }[type];
