@@ -39,6 +39,7 @@ export async function joinVaultEvent(eventId: string) {
 }
 
 export async function claimVaultWinner(eventId: string, taskId: string, payload?: Record<string, unknown>) {
+  // claimVaultWinner deve ser usado futuramente por validação admin/automação, não pelo jogador diretamente.
   const { data, error } = await supabase.rpc('claim_vault_winner', {
     p_event_id: eventId,
     p_task_id: taskId,
@@ -47,6 +48,44 @@ export async function claimVaultWinner(eventId: string, taskId: string, payload?
 
   if (error) throw new Error(error.message);
   return data;
+}
+
+export async function submitVaultTask(eventId: string, taskId: string, payload?: Record<string, unknown>) {
+  const { data, error } = await supabase.rpc('submit_vault_task', {
+    p_event_id: eventId,
+    p_task_id: taskId,
+    p_payload: payload || {}
+  });
+
+  if (error) throw new Error(error.message);
+  
+  if (data && data.length > 0) {
+    if (!data[0].success) {
+      throw new Error(data[0].message);
+    }
+    return data[0];
+  }
+  
+  return null;
+}
+
+// Uso futuro: painel admin ou automação de validação.
+export async function validateVaultSubmission(submissionId: string, isValid: boolean) {
+  const { data, error } = await supabase.rpc('validate_vault_submission', {
+    p_submission_id: submissionId,
+    p_is_valid: isValid
+  });
+
+  if (error) throw new Error(error.message);
+
+  if (data && data.length > 0) {
+    if (!data[0].success) {
+      throw new Error(data[0].message);
+    }
+    return data[0];
+  }
+
+  return null;
 }
 
 export async function getVaultWinner(eventId: string) {

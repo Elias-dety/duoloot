@@ -45,7 +45,7 @@ export const MissionCard: React.FC<MissionCardProps> = ({ mission, onClaim }) =>
           disabled={!mission.isCompleted}
           onClick={() => onClaim && onClaim(mission.id)}
         >
-          {mission.isCompleted ? 'Resgatar recompensa' : 'Em andamento'}
+          {mission.isCompleted ? 'Enviar para validação' : 'Em andamento'}
         </Button>
       </div>
     </div>

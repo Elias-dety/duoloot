@@ -6,6 +6,8 @@ import { TrustScorePanel } from '@/features/dashboard/components/TrustScorePanel
 import { RecentPerformancePanel } from '@/features/dashboard/components/RecentPerformancePanel';
 import { DashboardVaultProgress } from '@/features/dashboard/components/DashboardVaultProgress';
 import { RecommendedLobbies } from '@/features/dashboard/components/RecommendedLobbies';
+import { RecommendedPlayersPanel } from '@/features/recommendations/components/RecommendedPlayersPanel';
+import { PendingInvitesPanel } from '@/features/invites/components/PendingInvitesPanel';
 
 
 export interface DashboardTemplateProps {
@@ -92,10 +94,19 @@ export default function DashboardTemplate({
           <DashboardVaultProgress />
         </div>
 
-        {/* Lobbies Connection */}
         <div className="md:col-span-2 lg:col-span-3 xl:col-span-1">
           <RecommendedLobbies />
         </div>
+      </div>
+
+      {/* Pending Invites Section */}
+      <div className="mt-8">
+        <PendingInvitesPanel />
+      </div>
+
+      {/* Recommended Players Section */}
+      <div className="mt-8">
+        <RecommendedPlayersPanel />
       </div>
     </div>
   );
