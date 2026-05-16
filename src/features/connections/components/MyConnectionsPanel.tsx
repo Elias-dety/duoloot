@@ -71,7 +71,7 @@ export const MyConnectionsPanel: React.FC = () => {
       .channel('chat-notifications-realtime')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'connection_messages' },
+        { event: '*', schema: 'public', table: 'connection_messages' },
         () => fetchConnections({ silent: true })
       )
       .subscribe();

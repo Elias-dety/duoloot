@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { getConnectionMessages, sendConnectionMessage, ConnectionMessage } from '@/services';
+import { getConnectionMessages, sendConnectionMessage, markConnectionMessagesAsRead, ConnectionMessage } from '@/services';
 import { supabase } from '@/lib/supabase';
 import { Card, Avatar, Button } from '@/components/atoms';
 import { format } from 'date-fns';
@@ -85,9 +85,15 @@ export const ConnectionChatDrawer: React.FC<ConnectionChatDrawerProps> = ({
           table: 'connection_messages',
           filter: `connection_id=eq.${connectionId}`
         },
-        () => {
+        async () => {
           // Quando uma nova mensagem é detectada, recarrega a lista
-          fetchMessages(true);
+          await fetchMessages(true);
+          // Marca as novas mensagens como lidas em tempo real
+          try {
+            await markConnectionMessagesAsRead(connectionId);
+          } catch (err) {
+            console.error('Erro ao marcar mensagens em tempo real:', err);
+          }
         }
       )
       .subscribe();
