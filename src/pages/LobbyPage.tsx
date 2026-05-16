@@ -1,39 +1,110 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { LobbyTemplate } from '@/templates/LobbyTemplate';
-import { mockLobbies } from '@/data/mocks/lobbies.mock';
 import { Lobby } from '@/schemas/lobby.schema';
+import { getOpenLobbies, createLobby, joinLobby } from '@/services/lobbies.service';
+import { supabase } from '@/lib/supabase';
 
 export default function LobbyPage() {
   const [lobbies, setLobbies] = useState<Lobby[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [joiningLobbyId, setJoiningLobbyId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Simular fetch da API com os diferentes estados
-    const fetchLobbies = async () => {
-      try {
+  const fetchLobbies = useCallback(async (options?: { silent?: boolean }) => {
+    try {
+      if (!options?.silent) {
         setIsLoading(true);
-        setIsError(false);
-        // Simulando delay de rede para exibir loading
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Simulação bem sucedida
-        setLobbies(mockLobbies);
-      } catch {
-        setIsError(true);
-      } finally {
+      }
+      setIsError(false);
+      const data = await getOpenLobbies();
+      setLobbies(data as unknown as Lobby[]);
+    } catch (error) {
+      console.error('Error fetching lobbies:', error);
+      setIsError(true);
+    } finally {
+      if (!options?.silent) {
         setIsLoading(false);
       }
-    };
-
-    fetchLobbies();
+    }
   }, []);
+
+  useEffect(() => {
+    fetchLobbies();
+
+    // Configurar Realtime
+    const channel = supabase
+      .channel('lobby-realtime-channel')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'lobbies' },
+        () => fetchLobbies({ silent: true })
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'lobby_members' },
+        () => fetchLobbies({ silent: true })
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchLobbies]);
+
+  const handleCreateTestLobby = async () => {
+    try {
+      setIsCreating(true);
+      setErrorMessage(null);
+      
+      const payload = {
+        slots_total: 5,
+        slots_filled: 1,
+        mode: 'competitivo',
+        queue: 'ranked',
+        min_rank: 'platina',
+        max_rank: 'imortal',
+        status: 'open'
+      };
+
+      await createLobby(payload);
+      await fetchLobbies();
+    } catch (error: any) {
+      setErrorMessage(error.message || 'Erro ao criar lobby.');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleJoinLobby = async (lobbyId: string) => {
+    try {
+      setJoiningLobbyId(lobbyId);
+      setErrorMessage(null);
+      await joinLobby(lobbyId);
+      // Opcional: atualizar lista ou redirecionar
+      await fetchLobbies();
+    } catch (error: any) {
+      if (error.message?.includes('User not authenticated')) {
+        setErrorMessage('Entre na sua conta para entrar em um lobby.');
+      } else {
+        setErrorMessage(error.message || 'Erro ao entrar no lobby.');
+      }
+    } finally {
+      setJoiningLobbyId(null);
+    }
+  };
 
   return (
     <LobbyTemplate 
       lobbies={lobbies} 
       isLoading={isLoading} 
-      isError={isError} 
+      isError={isError}
+      onJoinLobby={handleJoinLobby}
+      onCreateTestLobby={handleCreateTestLobby}
+      isCreating={isCreating}
+      joiningLobbyId={joiningLobbyId}
+      errorMessage={errorMessage}
     />
   );
 }

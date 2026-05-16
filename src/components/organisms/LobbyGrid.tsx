@@ -7,12 +7,14 @@ export interface LobbyGridProps {
   items: Lobby[];
   isLoading?: boolean;
   onJoinLobby?: (id: string) => void;
+  joiningLobbyId?: string | null;
 }
 
 export const LobbyGrid: React.FC<LobbyGridProps> = ({ 
   items, 
   isLoading = false,
-  onJoinLobby
+  onJoinLobby,
+  joiningLobbyId
 }) => {
   if (isLoading) {
     return (
@@ -38,7 +40,12 @@ export const LobbyGrid: React.FC<LobbyGridProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {items.map((lobby) => (
-        <LobbyCard key={lobby.id} lobby={lobby} onJoin={onJoinLobby} />
+        <LobbyCard 
+          key={lobby.id} 
+          lobby={lobby} 
+          onJoin={onJoinLobby} 
+          isJoining={joiningLobbyId === lobby.id}
+        />
       ))}
     </div>
   );

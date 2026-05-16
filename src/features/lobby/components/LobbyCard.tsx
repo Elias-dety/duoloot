@@ -6,9 +6,10 @@ import { Lobby } from '@/schemas/lobby.schema';
 export interface LobbyCardProps {
   lobby: Lobby;
   onJoin?: (id: string) => void;
+  isJoining?: boolean;
 }
 
-export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin }) => {
+export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }) => {
   const openSlots = lobby.slotsTotal - lobby.slotsFilled;
   const isFull = lobby.status === 'full' || openSlots === 0;
   const isClosed = lobby.status === 'closed';
@@ -67,10 +68,10 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin }) => {
         <Button
           variant={isFull || isClosed ? 'secondary' : 'tactical-green'}
           className="w-full"
-          disabled={isFull || isClosed}
+          disabled={isFull || isClosed || isJoining}
           onClick={() => onJoin && onJoin(lobby.id)}
         >
-          {isClosed ? 'Fechado' : isFull ? 'Lobby cheio' : 'Entrar no Lobby'}
+          {isJoining ? 'ENTRANDO...' : isClosed ? 'Fechado' : isFull ? 'Lobby cheio' : 'Entrar no Lobby'}
         </Button>
       </div>
     </div>
