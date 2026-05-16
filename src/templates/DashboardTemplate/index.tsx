@@ -8,6 +8,7 @@ import { DashboardVaultProgress } from '@/features/dashboard/components/Dashboar
 import { RecommendedLobbies } from '@/features/dashboard/components/RecommendedLobbies';
 import { RecommendedPlayersPanel } from '@/features/recommendations/components/RecommendedPlayersPanel';
 import { PendingInvitesPanel } from '@/features/invites/components/PendingInvitesPanel';
+import { MyConnectionsPanel } from '@/features/connections/components/MyConnectionsPanel';
 
 
 export interface DashboardTemplateProps {
@@ -102,6 +103,11 @@ export default function DashboardTemplate({
       {/* Pending Invites Section */}
       <div className="mt-8">
         <PendingInvitesPanel />
+      </div>
+
+      {/* My Connections Section */}
+      <div className="mt-8">
+        <MyConnectionsPanel />
       </div>
 
       {/* Recommended Players Section */}

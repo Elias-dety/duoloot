@@ -42,13 +42,13 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
               </span>
             </div>
             
-            {onCreateTestLobby && (
+            {onCreateTestLobby && import.meta.env.DEV && (
               <button 
                 onClick={onCreateTestLobby}
                 disabled={isCreating}
-                className="dl-btn text-[10px] py-1 px-3"
+                className="dl-btn text-[10px] py-1 px-3 border-[var(--dl-tactical-yellow)]/50 text-[var(--dl-tactical-yellow)]"
               >
-                {isCreating ? 'PROCESSANDO...' : '+ CRIAR LOBBY TESTE'}
+                {isCreating ? 'PROCESSANDO...' : 'DEV: criar lobby'}
               </button>
             )}
           </div>
@@ -68,10 +68,22 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
 
       {/* Alerta de Erro */}
       {errorMessage && (
-        <div className="dl-panel border-[var(--dl-tactical-red)] bg-[rgba(255,51,102,0.05)] p-4">
-          <p className="text-[var(--dl-tactical-red)] font-['Rajdhani'] font-bold text-[13px] uppercase">
-            [SISTEMA_ERRO]: {errorMessage}
-          </p>
+        <div className="dl-panel border-[var(--dl-tactical-red)] bg-[rgba(255,51,102,0.05)] p-4 flex items-center gap-4">
+          <div className="h-10 w-1 bg-[var(--dl-tactical-red)] rounded-full animate-pulse" />
+          <div className="flex-1">
+            <h4 className="text-[var(--dl-tactical-red)] font-['Rajdhani'] font-bold text-[14px] uppercase tracking-wider mb-1">
+              SISTEMA // ALERTA
+            </h4>
+            <p className="text-white/80 font-['Rajdhani'] text-[13px] uppercase">
+              {errorMessage}
+            </p>
+          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="dl-btn py-1 px-3 text-[10px] border-[var(--dl-tactical-red)]/50 text-[var(--dl-tactical-red)]"
+          >
+            RECONECTAR
+          </button>
         </div>
       )}
 

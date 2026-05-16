@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { LobbyTemplate } from '@/templates/LobbyTemplate';
 import { Lobby } from '@/schemas/lobby.schema';
 import { getOpenLobbies, createLobby, joinLobby } from '@/services/lobbies.service';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export default function LobbyPage() {
   const [lobbies, setLobbies] = useState<Lobby[]>([]);
@@ -11,6 +11,13 @@ export default function LobbyPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [joiningLobbyId, setJoiningLobbyId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setErrorMessage('Configuração do Supabase ausente.');
+      setIsLoading(false);
+    }
+  }, []);
 
   const fetchLobbies = useCallback(async (options?: { silent?: boolean }) => {
     try {
@@ -72,8 +79,7 @@ export default function LobbyPage() {
       await createLobby(payload);
       await fetchLobbies();
     } catch (err: unknown) {
-      const error = err as Error;
-      setErrorMessage(error.message || 'Erro ao criar lobby.');
+      setErrorMessage(err instanceof Error ? err.message : 'Erro ao criar lobby.');
     } finally {
       setIsCreating(false);
     }
@@ -84,15 +90,9 @@ export default function LobbyPage() {
       setJoiningLobbyId(lobbyId);
       setErrorMessage(null);
       await joinLobby(lobbyId);
-      // Opcional: atualizar lista ou redirecionar
       await fetchLobbies();
     } catch (err: unknown) {
-      const error = err as Error;
-      if (error.message?.includes('User not authenticated')) {
-        setErrorMessage('Entre na sua conta para entrar em um lobby.');
-      } else {
-        setErrorMessage(error.message || 'Erro ao entrar no lobby.');
-      }
+      setErrorMessage(err instanceof Error ? err.message : 'Erro ao entrar no lobby.');
     } finally {
       setJoiningLobbyId(null);
     }

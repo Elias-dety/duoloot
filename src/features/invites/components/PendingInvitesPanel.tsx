@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { getMyPendingInvites, respondPlayerInvite } from '@/services';
 import { Card, Avatar, Button, Badge } from '@/components/atoms';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 interface PendingInvite {
   id: string;
@@ -25,44 +25,62 @@ export const PendingInvitesPanel: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [respondingId, setRespondingId] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const isMounted = useRef(true);
 
   const fetchInvites = useCallback(async (options?: { silent?: boolean }) => {
+    if (!isSupabaseConfigured) return;
     try {
       if (!options?.silent) setIsLoading(true);
       const data = await getMyPendingInvites();
-      setInvites((data as any) || []);
+      if (isMounted.current) {
+        setInvites((data as PendingInvite[]) || []);
+      }
     } catch (err: unknown) {
       console.error('Error fetching invites:', err);
-      if (!options?.silent) setError('Falha ao sincronizar convites.');
+      if (!options?.silent && isMounted.current) {
+        setError('Falha ao sincronizar convites.');
+      }
     } finally {
-      if (!options?.silent) setIsLoading(false);
+      if (!options?.silent && isMounted.current) {
+        setIsLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
-    fetchInvites();
+    isMounted.current = true;
+    
+    if (isSupabaseConfigured) {
+      fetchInvites();
 
-    const channel = supabase
-      .channel('pending-invites-realtime-channel')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'player_invites',
-        },
-        () => {
-          fetchInvites({ silent: true });
-        }
-      )
-      .subscribe();
+      const channel = supabase
+        .channel('pending-invites-realtime-channel')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'player_invites',
+          },
+          () => {
+            fetchInvites({ silent: true });
+          }
+        )
+        .subscribe();
+
+      return () => {
+        isMounted.current = false;
+        supabase.removeChannel(channel);
+      };
+    }
 
     return () => {
-      supabase.removeChannel(channel);
+      isMounted.current = false;
     };
   }, [fetchInvites]);
 
   const handleResponse = async (inviteId: string, status: 'accepted' | 'declined') => {
+    if (!isSupabaseConfigured) return;
     try {
       setRespondingId(inviteId);
       setError(null);
@@ -70,22 +88,27 @@ export const PendingInvitesPanel: React.FC = () => {
       
       const result = await respondPlayerInvite(inviteId, status);
       
+      if (!isMounted.current) return;
+
       if (result.success) {
         setInvites(prev => prev.filter(inv => inv.id !== inviteId));
         setSuccessMsg(status === 'accepted' ? 'Operação autorizada: Convite aceito.' : 'Operação encerrada: Convite recusado.');
         
-        // Limpar mensagem após 3 segundos
-        setTimeout(() => setSuccessMsg(null), 3000);
+        setTimeout(() => {
+          if (isMounted.current) setSuccessMsg(null);
+        }, 3000);
       } else {
         setError(result.message);
       }
     } catch (err: unknown) {
       console.error('Error responding to invite:', err);
-      setError('Erro na rede neural ao processar resposta.');
+      if (isMounted.current) setError('Erro ao processar resposta.');
     } finally {
-      setRespondingId(null);
+      if (isMounted.current) setRespondingId(null);
     }
   };
+
+  if (!isSupabaseConfigured) return null;
 
   if (isLoading && invites.length === 0) {
     return (
@@ -131,9 +154,9 @@ export const PendingInvitesPanel: React.FC = () => {
           <Card key={invite.id} className="relative p-4 bg-white/[0.03] border-white/10 hover:border-[var(--dl-tactical-blue)]/30 transition-all overflow-hidden">
             <div className="flex items-start justify-between gap-3 mb-4">
               <div className="flex items-center gap-3">
-                <Avatar src={invite.sender.avatar_url} fallback={invite.sender.nickname} size="md" />
+                <Avatar src={invite.sender?.avatar_url} fallback={invite.sender?.nickname || 'OP'} size="md" />
                 <div>
-                  <h4 className="text-white font-bold font-['Rajdhani'] text-lg leading-none">{invite.sender.nickname}</h4>
+                  <h4 className="text-white font-bold font-['Rajdhani'] text-lg leading-none">{invite.sender?.nickname || 'Operador'}</h4>
                   <p className="text-[9px] text-[var(--dl-tactical-muted)] uppercase tracking-widest mt-1.5 font-medium">
                     Detectado {formatDistanceToNow(new Date(invite.created_at), { addSuffix: true, locale: ptBR })}
                   </p>
@@ -141,7 +164,7 @@ export const PendingInvitesPanel: React.FC = () => {
               </div>
               <div className="text-right">
                 <span className="text-[8px] uppercase text-[var(--dl-tactical-muted)] block font-black tracking-widest mb-0.5">Trust Score</span>
-                <span className="text-[14px] font-black text-[var(--dl-tactical-green)] drop-shadow-[0_0_8px_rgba(56,242,139,0.3)]">{invite.sender.trust_score}</span>
+                <span className="text-[14px] font-black text-[var(--dl-tactical-green)] drop-shadow-[0_0_8px_rgba(56,242,139,0.3)]">{invite.sender?.trust_score || 0}</span>
               </div>
             </div>
 

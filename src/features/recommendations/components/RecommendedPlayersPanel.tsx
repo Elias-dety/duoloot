@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { getRecommendedPlayers } from '@/services/recommendations.service';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { Card, Avatar, Badge, Button } from '@/components/atoms';
 import { sendPlayerInvite } from '@/services';
 
 interface RecommendedPlayer {
   player_id: string;
-  name: string;
+  name?: string;
   nickname: string;
-  avatar_url: string;
+  avatar_url?: string;
   trust_score: number;
-  rank: string;
-  main_role: string;
-  secondary_role: string;
+  rank?: string;
+  main_role?: string;
+  secondary_role?: string;
   win_rate: number;
-  average_kda: number;
-  matches_played: number;
-  commendations: number;
-  abandons: number;
-  play_style: string;
-  session_focus: string;
-  availability: string;
+  average_kda?: number;
+  matches_played?: number;
+  commendations?: number;
+  abandons?: number;
+  play_style?: string;
+  session_focus?: string;
+  availability?: string;
   compatibility_score: number;
 }
 
@@ -33,6 +33,7 @@ export const RecommendedPlayersPanel: React.FC = () => {
   const [inviteStatus, setInviteStatus] = useState<Record<string, { status: string; message: string }>>({});
 
   const handleInvite = async (playerId: string) => {
+    if (!isSupabaseConfigured) return;
     try {
       setInvitingIds((prev) => new Set(prev).add(playerId));
       const result = await sendPlayerInvite(playerId);
@@ -65,6 +66,12 @@ export const RecommendedPlayersPanel: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setError('Recomendações indisponíveis: configure o Supabase.');
+      setIsLoading(false);
+      return;
+    }
+
     const fetchRecommendations = async () => {
       try {
         setIsLoading(true);
@@ -80,8 +87,13 @@ export const RecommendedPlayersPanel: React.FC = () => {
         setPlayers((data as unknown as RecommendedPlayer[]) || []);
       } catch (err: unknown) {
         console.error('Error fetching recommendations:', err);
-        const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar recomendações.';
-        setError(errorMessage);
+        const errorMessage = err instanceof Error ? err.message : '';
+        
+        if (errorMessage.includes('not found') || errorMessage.includes('PGRST202')) {
+          setError('Módulo de recomendações ainda não está ativo.');
+        } else {
+          setError('Erro ao carregar recomendações táticas.');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -90,12 +102,24 @@ export const RecommendedPlayersPanel: React.FC = () => {
     fetchRecommendations();
   }, []);
 
+  if (!isSupabaseConfigured) {
+    return (
+      <Card className="p-6 border-[var(--dl-tactical-red)]/30 bg-[rgba(255,51,102,0.05)] border-dashed">
+        <div className="text-center py-4">
+          <p className="text-[var(--dl-tactical-red)] text-[12px] font-bold uppercase tracking-[0.12em]">
+            Recomendações indisponíveis: configure o Supabase.
+          </p>
+        </div>
+      </Card>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <Card className="p-6 border-dashed border-[var(--dl-tactical-line)] bg-white/[0.01]">
         <div className="text-center py-4">
           <p className="text-[var(--dl-tactical-muted)] text-[12px] font-bold uppercase tracking-[0.12em]">
-            Entre na sua conta para receber recomendações personalizadas.
+            Entre na sua conta para receber operadores recomendados.
           </p>
         </div>
       </Card>
@@ -129,7 +153,7 @@ export const RecommendedPlayersPanel: React.FC = () => {
     return (
       <Card className="p-6 border-[var(--dl-tactical-red)]/30 bg-[rgba(255,51,102,0.05)]">
         <p className="text-[var(--dl-tactical-red)] text-center text-[12px] font-bold uppercase tracking-wide">
-          Falha na conexão neural: {error}
+          SISTEMA // ALERTA: {error}
         </p>
       </Card>
     );
@@ -162,30 +186,30 @@ export const RecommendedPlayersPanel: React.FC = () => {
           <Card key={player.player_id} className="relative p-4 bg-white/[0.02] border-white/5 hover:border-[var(--dl-tactical-green)]/30 transition-all group overflow-hidden">
              {/* Compatibility Indicator */}
              <div className="absolute top-0 right-0 p-2 text-right">
-                <span className="block text-[14px] font-black text-[var(--dl-tactical-green)] leading-none drop-shadow-[0_0_8px_rgba(56,242,139,0.4)]">{player.compatibility_score}%</span>
+                <span className="block text-[14px] font-black text-[var(--dl-tactical-green)] leading-none drop-shadow-[0_0_8px_rgba(56,242,139,0.4)]">{Math.round(player.compatibility_score || 0)}%</span>
                 <span className="block text-[7px] uppercase tracking-tighter text-[var(--dl-tactical-muted)] font-bold">Compatibilidade</span>
              </div>
 
              <div className="flex items-center gap-3 mb-5">
                 <Avatar 
                   src={player.avatar_url} 
-                  fallback={player.nickname} 
+                  fallback={player.nickname || 'OP'} 
                   size="md" 
                 />
                 <div className="overflow-hidden">
-                   <h4 className="text-white font-bold truncate font-['Rajdhani'] text-lg leading-tight group-hover:text-[var(--dl-tactical-yellow)] transition-colors">{player.nickname}</h4>
-                   <p className="text-[9px] text-[var(--dl-tactical-muted)] truncate uppercase tracking-[0.15em] font-medium">{player.name}</p>
+                   <h4 className="text-white font-bold truncate font-['Rajdhani'] text-lg leading-tight group-hover:text-[var(--dl-tactical-yellow)] transition-colors">{player.nickname || 'Operador'}</h4>
+                   <p className="text-[9px] text-[var(--dl-tactical-muted)] truncate uppercase tracking-[0.15em] font-medium">{player.name || 'Desconhecido'}</p>
                 </div>
              </div>
 
              <div className="grid grid-cols-2 gap-3 mb-5">
                 <div className="bg-black/40 p-2.5 rounded [clip-path:var(--dl-cut-button)] border border-white/5">
                    <p className="text-[7px] uppercase text-[var(--dl-tactical-muted)] font-black tracking-widest mb-1">Rank</p>
-                   <p className="text-[11px] text-[var(--dl-tactical-yellow)] font-black uppercase leading-none">{player.rank}</p>
+                   <p className="text-[11px] text-[var(--dl-tactical-yellow)] font-black uppercase leading-none">{player.rank || 'Livre'}</p>
                 </div>
                 <div className="bg-black/40 p-2.5 rounded [clip-path:var(--dl-cut-button)] border border-white/5">
                    <p className="text-[7px] uppercase text-[var(--dl-tactical-muted)] font-black tracking-widest mb-1">Função</p>
-                   <p className="text-[11px] text-white font-black uppercase leading-none">{player.main_role}</p>
+                   <p className="text-[11px] text-white font-black uppercase leading-none">{player.main_role || 'Flex'}</p>
                 </div>
              </div>
 
@@ -196,15 +220,15 @@ export const RecommendedPlayersPanel: React.FC = () => {
                       <div className="h-1 w-8 bg-white/10 rounded-full overflow-hidden">
                          <div 
                            className="h-full bg-[var(--dl-tactical-green)]" 
-                           style={{ width: `${player.trust_score}%` }} 
+                           style={{ width: `${player.trust_score || 0}%` }} 
                          />
                       </div>
-                      <span className="text-[10px] font-black text-white">{player.trust_score}</span>
+                      <span className="text-[10px] font-black text-white">{player.trust_score || 0}</span>
                    </div>
                 </div>
                 <div className="flex flex-col items-end">
                    <span className="text-[7px] uppercase text-[var(--dl-tactical-muted)] font-bold tracking-widest mb-0.5">Win Rate</span>
-                   <span className="text-[11px] font-black text-[var(--dl-tactical-green)] leading-none">{player.win_rate.toFixed(1)}%</span>
+                   <span className="text-[11px] font-black text-[var(--dl-tactical-green)] leading-none">{(player.win_rate || 0).toFixed(1)}%</span>
                 </div>
              </div>
 

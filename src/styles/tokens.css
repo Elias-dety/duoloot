@@ -1,33 +1,46 @@
 @layer base {
   :root {
-    /* Duo Loot V2 official palette */
-    --dl-bg: #070708;
-    --dl-bg-soft: #0b0d10;
+    /* ==========================================================================
+       Duo Loot V2 official palette
+       Cores base do sistema 'Tactical Underground Loot'.
+       ========================================================================== */
+    
+    /* Backgrounds e Superfícies */
+    --dl-bg: #070708;           /* Fundo principal escuro */
+    --dl-bg-soft: #0b0d10;      /* Fundo secundário para seções */
 
-    --dl-card: #101010;
-    --dl-card-elevated: #11161c;
-    --dl-card-hover: #171f29;
+    /* Cards e Containers */
+    --dl-card: #101010;          /* Cor padrão de cartões */
+    --dl-card-elevated: #11161c; /* Cor para cartões com profundidade */
+    --dl-card-hover: #171f29;    /* Cor de destaque ao passar o mouse */
 
-    --dl-orange: #ff7a1a;
-    --dl-orange-strong: #ff5a0a;
-    --dl-orange-soft: rgba(255, 122, 26, 0.14);
+    /* Cores de Destaque (Brand) */
+    --dl-orange: #ff7a1a;        /* Laranja principal (Ação/Primária) */
+    --dl-orange-strong: #ff5a0a; /* Laranja intenso para estados ativos */
+    --dl-orange-soft: rgba(255, 122, 26, 0.14); /* Laranja suave para transparências */
 
-    --dl-green: #38f28b;
-    --dl-green-strong: #16e57c;
+    /* Cores de Status */
+    --dl-green: #38f28b;         /* Sucesso / Online / Disponível */
+    --dl-green-strong: #16e57c;  /* Verde intenso para badges */
 
-    --dl-purple: #8d5cff;
-    --dl-red: #ff4d4d;
-    --dl-gold: #ffd15a;
-    --dl-blue: #46b7ff;
+    --dl-purple: #8d5cff;        /* Premium / Destaque / Squad */
+    --dl-red: #ff4d4d;           /* Erro / Perigo / Alerta */
+    --dl-gold: #ffd15a;          /* Prêmios / Moedas / VIP */
+    --dl-blue: #46b7ff;          /* Informação / Blueprints */
 
-    --dl-text: #f4f4f5;
-    --dl-muted: #a7a7a7;
-    --dl-muted-strong: #68717e;
+    /* Tipografia e Escalas de Cinza */
+    --dl-text: #f4f4f5;          /* Texto principal (quase branco) */
+    --dl-muted: #a7a7a7;         /* Texto secundário/desativado */
+    --dl-muted-strong: #68717e;  /* Texto muito discreto/borders */
 
-    --dl-line: rgba(255, 255, 255, 0.085);
-    --dl-line-orange: rgba(255, 122, 26, 0.22);
+    /* Linhas e Divisores */
+    --dl-line: rgba(255, 255, 255, 0.085);      /* Linha sutil padrão */
+    --dl-line-orange: rgba(255, 122, 26, 0.22); /* Linha de destaque temática */
 
-    /* RGB channels for Tailwind opacity modifiers */
+    /* ==========================================================================
+       Canais RGB (Necessários para modificadores de opacidade do Tailwind)
+       Permite usar classes como bg-brand-primary/50
+       ========================================================================== */
     --dl-bg-rgb: 7 7 8;
     --dl-bg-soft-rgb: 11 13 16;
     --dl-card-rgb: 16 16 16;
@@ -45,7 +58,10 @@
     --dl-muted-rgb: 167 167 167;
     --dl-muted-strong-rgb: 104 113 126;
 
-    /* Semantic aliases used by the existing app */
+    /* ==========================================================================
+       Aliases Semânticos
+       Facilitam a manutenção e a troca de temas sem alterar o código do componente.
+       ========================================================================== */
     --brand-primary: var(--dl-orange);
     --brand-secondary: var(--dl-orange-strong);
     --surface-dark: var(--dl-bg);
@@ -68,21 +84,21 @@
     --border: var(--dl-line);
     --input: var(--dl-line);
 
-    /* Radius */
+    /* Arredondamento (Radius) */
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
     --radius-lg: 0.75rem;
     --radius-xl: 1rem;
     --radius-2xl: 1.375rem;
 
-    /* Shadows */
+    /* Sombras (Shadows) com glow tático */
     --shadow-sm: 0 10px 24px rgb(var(--dl-bg-rgb) / 0.22);
     --shadow-md: 0 16px 34px rgb(var(--dl-bg-rgb) / 0.28);
     --shadow-lg: 0 0 38px rgb(var(--dl-orange-rgb) / 0.12);
     --shadow-premium: 0 0 34px rgb(var(--dl-purple-rgb) / 0.16);
     --shadow-prize: 0 0 34px rgb(var(--dl-gold-rgb) / 0.14);
 
-    /* Spacing */
+    /* Espaçamento (Spacing) */
     --space-1: 0.25rem;
     --space-2: 0.5rem;
     --space-3: 0.75rem;
@@ -92,7 +108,7 @@
     --space-12: 3rem;
     --space-16: 4rem;
 
-    /* Font scale */
+    /* Escala de Fontes (Font scale) */
     --font-xs: 0.75rem;
     --font-sm: 0.875rem;
     --font-base: 1rem;
@@ -101,7 +117,7 @@
     --font-2xl: 1.5rem;
     --font-3xl: 1.875rem;
 
-    /* zIndex */
+    /* Camadas (zIndex) */
     --z-base: 0;
     --z-dropdown: 50;
     --z-sticky: 100;
@@ -109,9 +125,10 @@
     --z-modal: 300;
     --z-toast: 400;
 
-    /* States */
+    /* Opacidade de Estados (States) */
     --state-hover: 0.8;
     --state-active: 0.9;
     --state-disabled: 0.5;
   }
 }
+
