@@ -32,7 +32,9 @@ export const DashboardSummary: React.FC<DashboardSummaryProps> = ({ player, summ
                 <span className={`h-2 w-2 [clip-path:var(--dl-cut-button)] ${status === 'online' ? 'bg-[var(--dl-tactical-green)]' : status === 'in-game' ? 'bg-[var(--dl-tactical-blue)]' : 'bg-white/20'}`} />
                 {status}
               </span>
-              <span className="text-[var(--dl-tactical-yellow)]">{gameProfile.rank}</span>
+              <span className="text-[var(--dl-tactical-yellow)]">
+                {gameProfile?.currentRank || (gameProfile as any)?.rank || 'Sem Rank'}
+              </span>
             </div>
           </div>
         </div>

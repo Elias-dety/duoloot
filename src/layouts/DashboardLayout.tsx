@@ -1,13 +1,43 @@
-import { Outlet, NavLink, Link } from 'react-router-dom';
+import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
+import { useAuth } from '@/features/auth/useAuth';
+import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 
 export default function DashboardLayout() {
+  const { profile, user, signOut } = useAuth();
+  usePlayerPresence(); // Inicializa a presença online tática do operador no terminal
+  const navigate = useNavigate();
+
   const navItems = [
     { label: 'Dashboard', path: ROUTES.DASHBOARD, code: 'CMD' },
     { label: 'Premium', path: ROUTES.PREMIUM, code: 'PRE' },
     { label: 'Lobby', path: ROUTES.LOBBY, code: 'LBR' },
     { label: 'Cofre', path: ROUTES.VAULT, code: 'VLT' },
   ];
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate(ROUTES.HOME);
+  };
+
+  const getOperatorNickname = () => {
+    if (profile?.nickname) return profile.nickname;
+    if (user?.email) return user.email.split('@')[0];
+    return 'Operador';
+  };
+
+  const getOperatorInitials = () => {
+    const nick = getOperatorNickname();
+    return nick.slice(0, 2).toUpperCase();
+  };
+
+  const getOperatorRank = () => {
+    const gameProfile = profile?.game_profile;
+    if (gameProfile && gameProfile.main_game && gameProfile.rank) {
+      return `${gameProfile.main_game.toUpperCase()} // ${gameProfile.rank.toUpperCase()}`;
+    }
+    return 'SEM PERFIL GAMER';
+  };
 
   return (
     <div className="dl-scanlines flex min-h-screen flex-col md:flex-row" style={{ background: 'var(--dl-tactical-bg)' }}>
@@ -17,9 +47,14 @@ export default function DashboardLayout() {
           <span className="dl-brand-mark" style={{ width: 32, height: 32, fontSize: 12 }}>DL</span>
           <span>Duo Loot</span>
         </Link>
-        <button type="button" className="dl-btn text-[11px]">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
+        <div className="flex items-center gap-2">
+          <Link to={ROUTES.ONBOARDING} className="dl-btn text-[10px] font-bold tracking-wider font-[Chakra_Petch] uppercase no-underline">
+            Perfil
+          </Link>
+          <button type="button" onClick={handleLogout} className="dl-btn text-[10px] font-bold tracking-wider font-[Chakra_Petch] uppercase">
+            Sair
+          </button>
+        </div>
       </header>
 
       {/* Sidebar Painel de Comando */}
@@ -65,16 +100,40 @@ export default function DashboardLayout() {
         </nav>
 
         {/* Player Card */}
-        <div className="border-t border-[var(--dl-tactical-line)] p-4">
+        <div className="border-t border-[var(--dl-tactical-line)] p-4 space-y-3">
           <div className="flex items-center gap-3 p-3 border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] [clip-path:var(--dl-cut-card)]">
-            <div className="w-10 h-10 grid place-items-center bg-[rgba(255,226,102,0.1)] border border-[rgba(255,226,102,0.3)] [clip-path:var(--dl-cut-button)] text-[var(--dl-tactical-yellow)] font-bold text-[13px] shrink-0">
-              JD
+            <div className="w-10 h-10 grid place-items-center bg-[rgba(255,226,102,0.1)] border border-[rgba(255,226,102,0.3)] [clip-path:var(--dl-cut-button)] text-[var(--dl-tactical-yellow)] font-bold text-[13px] shrink-0 font-[Chakra_Petch]">
+              {getOperatorInitials()}
             </div>
             <div className="flex-1 overflow-hidden">
-              <p className="truncate text-[13px] font-bold text-[var(--dl-tactical-text)]">Jogador Demo</p>
-              <p className="truncate text-[10px] uppercase tracking-[0.12em] text-[var(--dl-tactical-muted)]">Nível 1 // Operador</p>
+              <p className="truncate text-[13px] font-bold text-[var(--dl-tactical-text)] lowercase font-[Chakra_Petch] mb-0.5">
+                {getOperatorNickname()}
+              </p>
+              <p className="truncate text-[9px] uppercase tracking-[0.12em] text-[var(--dl-tactical-muted)]">
+                Nível 1 // {profile?.is_premium ? 'PREMIUM' : 'OPERADOR'}
+              </p>
+              {profile?.game_profile && (
+                <p className="truncate text-[9.5px] font-bold tracking-[0.12em] text-[var(--dl-tactical-green)] uppercase mt-1 font-mono">
+                  {getOperatorRank()}
+                </p>
+              )}
             </div>
           </div>
+          
+          <Link
+            to={ROUTES.ONBOARDING}
+            className="w-full py-1.5 border border-[rgba(56,242,139,0.3)] bg-[rgba(56,242,139,0.04)] hover:bg-[rgba(56,242,139,0.1)] text-[var(--dl-tactical-green)] text-[10px] font-bold uppercase tracking-widest font-[Chakra_Petch] transition-all [clip-path:var(--dl-cut-button)] text-center no-underline block"
+          >
+            EDITAR PERFIL GAMER
+          </Link>
+
+          <button 
+            type="button" 
+            onClick={handleLogout}
+            className="w-full py-1.5 border border-[var(--dl-tactical-line)] hover:border-[var(--dl-tactical-red)]/50 hover:bg-[var(--dl-tactical-red)]/5 hover:text-[var(--dl-tactical-red)] text-[var(--dl-tactical-muted)] text-[10px] font-bold uppercase tracking-widest font-[Chakra_Petch] transition-all [clip-path:var(--dl-cut-button)]"
+          >
+            DESCONECTAR TERMINAL
+          </button>
         </div>
       </aside>
 

@@ -7,6 +7,11 @@ export interface ProfileGameInfoProps {
 }
 
 export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
+  const gameProfile = player?.gameProfile || {};
+  const rank = gameProfile.currentRank || (gameProfile as any).rank || 'NÃO CONFIGURADO';
+  const mainRole = gameProfile.mainRole || 'Não informada';
+  const secondaryRole = gameProfile.secondaryRole || '';
+
   return (
     <article className="dl-panel h-full p-6">
       <h3 className="dl-hud-label mb-6"><span className="text-[var(--dl-tactical-yellow)]">■</span> Perfil competitivo</h3>
@@ -18,20 +23,20 @@ export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
             <div className="flex h-12 w-12 items-center justify-center border border-[var(--dl-tactical-yellow)]/[0.3] bg-[var(--dl-tactical-yellow)]/[0.1] [clip-path:var(--dl-cut-button)]">
               <Trophy className="h-6 w-6 text-[var(--dl-tactical-yellow)]" />
             </div>
-            <span className="font-['Rajdhani'] text-3xl font-bold uppercase text-white">{player.gameProfile.rank}</span>
+            <span className="font-['Rajdhani'] text-3xl font-bold uppercase text-white">{rank}</span>
           </div>
         </div>
 
         <div>
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Roles</p>
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Funções principais</p>
           <div className="flex flex-wrap gap-2">
-            <span className="dl-chip dl-chip-blue gap-1">
+            <span className="dl-chip dl-chip-yellow gap-1">
               <Crosshair className="h-3.5 w-3.5" />
-              {player.gameProfile.mainRole}
+              {mainRole}
             </span>
-            {player.gameProfile.secondaryRole && (
+            {secondaryRole && (
               <span className="dl-chip">
-                {player.gameProfile.secondaryRole}
+                {secondaryRole}
               </span>
             )}
           </div>

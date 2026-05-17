@@ -51,7 +51,7 @@ export async function getVaultTasks(eventId: string) {
 /**
  * Registra o interesse do usuário atual em participar de um evento do Cofre.
  */
-export async function joinVaultEvent(eventId: string) {
+export async function legacyJoinVaultEvent(eventId: string) {
   if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
 
   const { data: { user }, error: userError } = await supabase.auth.getUser();

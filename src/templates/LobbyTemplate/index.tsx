@@ -25,6 +25,73 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   joiningLobbyId,
   errorMessage
 }) => {
+  const [filters, setFilters] = React.useState({
+    search: '',
+    game: 'all',
+    rank: 'all',
+    region: 'all',
+    microphone: 'all',
+  });
+
+  const handleClearFilters = () => {
+    setFilters({
+      search: '',
+      game: 'all',
+      rank: 'all',
+      region: 'all',
+      microphone: 'all',
+    });
+  };
+
+  const filteredLobbies = React.useMemo(() => {
+    return lobbies.filter(lobby => {
+      // 1. Filtro por busca de texto (nickname ou nome do dono do lobby)
+      const ownerName = (lobby.owner?.name || '').toLowerCase();
+      const riotId = String((lobby.metadata as any)?.riotId || '').toLowerCase();
+      const bio = String((lobby.metadata as any)?.bio || '').toLowerCase();
+      const searchLower = filters.search.toLowerCase();
+      if (
+        filters.search &&
+        !ownerName.includes(searchLower) &&
+        !riotId.includes(searchLower) &&
+        !bio.includes(searchLower)
+      ) {
+        return false;
+      }
+
+      // 2. Filtro por jogo
+      const gameVal = String((lobby.metadata as any)?.mainGame || lobby.owner?.gameProfile?.mainGame || '').toLowerCase();
+      if (filters.game !== 'all' && gameVal !== filters.game.toLowerCase()) {
+        return false;
+      }
+
+      // 3. Filtro por rank
+      const rankVal = String(lobby.owner?.gameProfile?.currentRank || (lobby.metadata as any)?.currentRank || lobby.minRank || '').toLowerCase();
+      if (filters.rank !== 'all' && rankVal !== filters.rank.toLowerCase()) {
+        return false;
+      }
+
+      // 4. Filtro por região
+      const regionVal = String(lobby.owner?.gameProfile?.region || (lobby.metadata as any)?.region || '').toLowerCase();
+      if (filters.region !== 'all' && regionVal !== filters.region.toLowerCase()) {
+        return false;
+      }
+
+      // 5. Filtro por microfone
+      const micVal = lobby.owner?.gameProfile?.microphone !== undefined 
+        ? lobby.owner.gameProfile.microphone 
+        : ((lobby.metadata as any)?.microphone !== undefined ? (lobby.metadata as any).microphone : false);
+      if (filters.microphone !== 'all') {
+        const wantsMic = filters.microphone === 'yes';
+        if (micVal !== wantsMic) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [lobbies, filters]);
+
   return (
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
       {/* Header HUD */}
@@ -38,7 +105,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
                 LOBBY RADAR // MATCHMAKING NODE
               </span>
               <span className="dl-stamp" style={{ color: 'var(--dl-tactical-blue)', borderColor: 'rgba(70,183,255,0.3)', background: 'rgba(70,183,255,0.07)' }}>
-                {lobbies.length} contratos
+                {filteredLobbies.length} contratos
               </span>
             </div>
             
@@ -72,7 +139,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
           <div className="h-10 w-1 bg-[var(--dl-tactical-red)] rounded-full animate-pulse" />
           <div className="flex-1">
             <h4 className="text-[var(--dl-tactical-red)] font-['Rajdhani'] font-bold text-[14px] uppercase tracking-wider mb-1">
-              SISTEMA // ALERTA
+               SISTEMA // ALERTA
             </h4>
             <p className="text-white/80 font-['Rajdhani'] text-[13px] uppercase">
               {errorMessage}
@@ -89,12 +156,16 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
 
       {/* Filtros Console */}
       <section>
-        <LobbyFilters />
+        <LobbyFilters 
+          filters={filters}
+          onFiltersChange={setFilters}
+          onClearFilters={handleClearFilters}
+        />
       </section>
 
       {/* Grid de Lobbies */}
       <section>
-        <LobbyActionsBar totalLobbies={lobbies.length} />
+        <LobbyActionsBar totalLobbies={filteredLobbies.length} />
 
         {isError ? (
           <div className="dl-panel flex w-full flex-col items-center justify-center py-16" style={{ borderColor: 'rgba(255,51,102,0.3)' }}>
@@ -107,9 +178,21 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
               Tentar Novamente
             </button>
           </div>
+        ) : !isLoading && filteredLobbies.length === 0 ? (
+          <div className="dl-panel flex w-full flex-col items-center justify-center py-16" style={{ borderColor: 'rgba(70,183,255,0.2)' }}>
+            <p className="mb-2 text-lg font-bold text-[var(--dl-tactical-blue)] font-['Rajdhani'] uppercase tracking-widest">// CONTRATOS ENCONTRADOS: 0</p>
+            <p className="mb-6 text-sm text-[var(--dl-tactical-muted)] font-['Rajdhani'] uppercase tracking-wider">Tente ajustar seus parâmetros de busca tática.</p>
+            <button 
+              type="button" 
+              className="dl-btn"
+              onClick={handleClearFilters}
+            >
+              // RESETAR FILTROS
+            </button>
+          </div>
         ) : (
           <LobbyGrid 
-            items={lobbies} 
+            items={filteredLobbies} 
             isLoading={isLoading} 
             onJoinLobby={onJoinLobby}
             joiningLobbyId={joiningLobbyId}

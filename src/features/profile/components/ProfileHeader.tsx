@@ -37,7 +37,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ player }) => {
               <span className="hidden h-1 w-1 bg-[var(--dl-tactical-line)] sm:block" />
               <span className="flex items-center gap-2 text-[var(--dl-tactical-yellow)]">
                 <Trophy className="h-4 w-4" />
-                {player.gameProfile.rank}
+                {player.gameProfile?.currentRank || (player.gameProfile as any)?.rank || 'Sem Rank'}
               </span>
               <span className="hidden h-1 w-1 bg-[var(--dl-tactical-line)] sm:block" />
               <span>Membro desde {new Date(player.createdAt).getFullYear()}</span>

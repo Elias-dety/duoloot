@@ -1,13 +1,28 @@
-import { Outlet, NavLink, Link } from 'react-router-dom';
+import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
+import { useAuth } from '@/features/auth/useAuth';
 
 export default function PublicLayout() {
+  const { isAuthenticated, profile, user, signOut } = useAuth();
+  const navigate = useNavigate();
+
   const menuItems = [
     { label: 'Scanner', path: ROUTES.HOME },
     { label: 'Lobbies', path: ROUTES.LOBBY },
     { label: 'Cofre', path: ROUTES.VAULT },
     { label: 'Coaches', path: ROUTES.COACHES },
   ];
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate(ROUTES.HOME);
+  };
+
+  const getOperatorName = () => {
+    if (profile?.nickname) return profile.nickname;
+    if (user?.email) return user.email.split('@')[0];
+    return 'OPERADOR';
+  };
 
   return (
     <div className="dl-scanlines min-h-screen flex flex-col" style={{ background: 'var(--dl-tactical-bg)' }}>
@@ -42,12 +57,28 @@ export default function PublicLayout() {
         </nav>
 
         <div className="dl-actions">
-          <button type="button" className="dl-btn">
-            Entrar
-          </button>
-          <button type="button" className="dl-btn dl-btn-primary">
-            Abrir acesso
-          </button>
+          {isAuthenticated ? (
+            <>
+              <span className="text-[11px] font-bold tracking-[0.15em] text-[var(--dl-tactical-green)] uppercase mr-2 border border-[var(--dl-tactical-green)]/30 bg-[var(--dl-tactical-green)]/5 px-2.5 py-1 rounded-sm font-[Chakra_Petch]">
+                ⚡ [{getOperatorName()}]
+              </span>
+              <Link to={ROUTES.DASHBOARD} className="dl-btn dl-btn-primary no-underline text-xs">
+                Painel
+              </Link>
+              <button type="button" onClick={handleLogout} className="dl-btn text-xs">
+                Sair
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to={ROUTES.LOGIN} className="dl-btn no-underline text-xs">
+                Entrar
+              </Link>
+              <Link to={ROUTES.REGISTER} className="dl-btn dl-btn-primary no-underline text-xs">
+                Abrir acesso
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile menu button */}

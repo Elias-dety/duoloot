@@ -3,6 +3,8 @@ import { getRecommendedPlayers } from '@/services/recommendations.service';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { Card, Avatar, Badge, Button } from '@/components/atoms';
 import { sendPlayerInvite } from '@/services';
+import { usePlayerPresence } from '@/hooks/usePlayerPresence';
+import { isPlayerOnline } from '@/utils/presence';
 
 interface RecommendedPlayer {
   player_id: string;
@@ -25,6 +27,7 @@ interface RecommendedPlayer {
 }
 
 export const RecommendedPlayersPanel: React.FC = () => {
+  const { onlineUserIds } = usePlayerPresence();
   const [players, setPlayers] = useState<RecommendedPlayer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -191,14 +194,30 @@ export const RecommendedPlayersPanel: React.FC = () => {
              </div>
 
              <div className="flex items-center gap-3 mb-5">
-                <Avatar 
-                  src={player.avatar_url} 
-                  fallback={player.nickname || 'OP'} 
-                  size="md" 
-                />
+                <div className="relative flex-shrink-0">
+                   <Avatar 
+                     src={player.avatar_url} 
+                     fallback={player.nickname || 'OP'} 
+                     size="md" 
+                   />
+                   <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[#0B0D13] ${
+                     isPlayerOnline(player.player_id, onlineUserIds)
+                       ? 'bg-[var(--dl-tactical-green)] shadow-[0_0_6px_rgba(56,242,139,0.5)]'
+                       : 'bg-white/20'
+                   }`} />
+                </div>
                 <div className="overflow-hidden">
                    <h4 className="text-white font-bold truncate font-['Rajdhani'] text-lg leading-tight group-hover:text-[var(--dl-tactical-yellow)] transition-colors">{player.nickname || 'Operador'}</h4>
-                   <p className="text-[9px] text-[var(--dl-tactical-muted)] truncate uppercase tracking-[0.15em] font-medium">{player.name || 'Desconhecido'}</p>
+                   <div className="flex items-center gap-1.5 min-w-0">
+                     <p className="text-[9px] text-[var(--dl-tactical-muted)] truncate uppercase tracking-[0.15em] font-medium leading-none">{player.name || 'Desconhecido'}</p>
+                     <span className={`text-[7px] font-black uppercase tracking-widest leading-none ${
+                       isPlayerOnline(player.player_id, onlineUserIds)
+                         ? 'text-[var(--dl-tactical-green)]'
+                         : 'text-[var(--dl-tactical-muted)]'
+                     }`}>
+                       • {isPlayerOnline(player.player_id, onlineUserIds) ? 'ON' : 'OFF'}
+                     </span>
+                   </div>
                 </div>
              </div>
 

@@ -5,12 +5,16 @@ import { ConnectionChatDrawer } from '@/features/messages/components/ConnectionC
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/lib/supabase';
+import { usePlayerPresence } from '@/hooks/usePlayerPresence';
+import { isPlayerOnline } from '@/utils/presence';
 
 /**
  * Componente MyConnectionsPanel: Painel que exibe a lista de amigos/duos do usuário.
  * Permite visualizar o status de conexão, contagem de mensagens não lidas e abrir o chat.
  */
 export const MyConnectionsPanel: React.FC = () => {
+  const { onlineUserIds } = usePlayerPresence();
+
   // Estados para dados, carregamento, erros e chat selecionado
   const [connections, setConnections] = useState<PlayerConnection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -138,14 +142,23 @@ export const MyConnectionsPanel: React.FC = () => {
         {connections.map((conn) => (
           <Card key={conn.connection_id} className="relative p-4 bg-white/[0.03] border-white/10 hover:border-[var(--dl-tactical-purple)]/30 transition-all group overflow-hidden">
             {/* Indicadores de Status e Mensagens Não Lidas */}
-            <div className="absolute top-0 right-0 p-2 flex flex-col items-end gap-1.5">
-               <div className="w-1.5 h-1.5 rounded-full bg-[var(--dl-tactical-green)] shadow-[0_0_8px_rgba(56,242,139,0.5)]" />
+             <div className="absolute top-0 right-0 p-2 flex flex-col items-end gap-1.5">
+               <div className="flex items-center gap-1.5">
+                 <span className="text-[7px] font-bold tracking-widest text-[var(--dl-tactical-muted)] uppercase">
+                   {isPlayerOnline(conn.player_id, onlineUserIds) ? 'ONLINE' : 'OFFLINE'}
+                 </span>
+                 <div className={`w-1.5 h-1.5 rounded-full ${
+                   isPlayerOnline(conn.player_id, onlineUserIds)
+                     ? 'bg-[var(--dl-tactical-green)] shadow-[0_0_8px_rgba(56,242,139,0.5)]'
+                     : 'bg-white/20'
+                 }`} />
+               </div>
                {conn.unread_count > 0 && (
                  <Badge variant="premium" className="text-[8px] bg-[var(--dl-tactical-red)] border-none animate-pulse px-1.5 py-0.5">
                    {conn.unread_count} NOVAS
                  </Badge>
                )}
-            </div>
+             </div>
             
             {/* Info Básica do Jogador */}
             <div className="flex items-center gap-3">

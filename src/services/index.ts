@@ -7,3 +7,7 @@ export * from './invites.service';
 export * from './vault-admin.service';
 export * from './connections.service';
 export * from './messages.service';
+export * from './auth.service';
+export * from './presence.service';
+export * from './onboarding.service';
+export * from './vault-progress.service';

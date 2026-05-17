@@ -1,10 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LobbyTemplate } from '@/templates/LobbyTemplate';
 import { Lobby } from '@/schemas/lobby.schema';
 import { getOpenLobbies, createLobby, joinLobby } from '@/services/lobbies.service';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { useAuth } from '@/features/auth/useAuth';
+import { ROUTES } from '@/constants/routes';
+import { isGameProfileComplete } from '@/services/onboarding.service';
 
 export default function LobbyPage() {
+  const { isAuthenticated, profile } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [lobbies, setLobbies] = useState<Lobby[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -38,7 +46,6 @@ export default function LobbyPage() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchLobbies();
 
     // Configurar Realtime
@@ -62,18 +69,46 @@ export default function LobbyPage() {
   }, [fetchLobbies]);
 
   const handleCreateTestLobby = async () => {
+    if (!isAuthenticated) {
+      console.log('Operador não autenticado para criar lobby. Redirecionando para login.');
+      navigate(ROUTES.LOGIN, { state: { from: location } });
+      return;
+    }
+
+    if (!profile || !isGameProfileComplete(profile)) {
+      setErrorMessage('Complete seu perfil gamer antes de criar um lobby.');
+      setTimeout(() => {
+        navigate('/onboarding');
+      }, 1500);
+      return;
+    }
+
     try {
       setIsCreating(true);
       setErrorMessage(null);
       
+      const gp = profile.game_profile;
       const payload = {
         slots_total: 5,
         slots_filled: 1,
-        mode: 'competitivo',
-        queue: 'ranked',
-        min_rank: 'platina',
-        max_rank: 'imortal',
-        status: 'open'
+        mode: gp.preferredModes?.[0] || 'competitivo',
+        queue: gp.preferredModes?.[0] || 'ranked',
+        min_rank: gp.currentRank || 'ferro',
+        max_rank: gp.currentRank || 'radiante',
+        status: 'open',
+        metadata: {
+          mainGame: gp.mainGame,
+          riotId: gp.riotId,
+          currentRank: gp.currentRank,
+          mainRole: gp.mainRole,
+          secondaryRole: gp.secondaryRole,
+          playStyle: gp.playStyle,
+          sessionFocus: gp.sessionFocus,
+          availability: gp.availability,
+          microphone: gp.microphone,
+          region: gp.region,
+          bio: gp.bio
+        }
       };
 
       await createLobby(payload);
@@ -86,6 +121,28 @@ export default function LobbyPage() {
   };
 
   const handleJoinLobby = async (lobbyId: string) => {
+    if (!isAuthenticated) {
+      console.log('Operador não autenticado para entrar em lobby. Redirecionando para login.');
+      navigate(ROUTES.LOGIN, { state: { from: location } });
+      return;
+    }
+
+    if (!profile || !isGameProfileComplete(profile)) {
+      setErrorMessage('Complete seu perfil gamer antes de entrar em um lobby.');
+      setTimeout(() => {
+        navigate('/onboarding');
+      }, 1500);
+      return;
+    }
+
+    const targetLobby = lobbies.find((l) => l.id === lobbyId);
+    if (targetLobby) {
+      if (targetLobby.status !== 'open' || targetLobby.slotsFilled >= targetLobby.slotsTotal) {
+        setErrorMessage('Este lobby não está mais disponível.');
+        return;
+      }
+    }
+
     try {
       setJoiningLobbyId(lobbyId);
       setErrorMessage(null);
