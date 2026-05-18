@@ -16,12 +16,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const safeValue = Math.min(100, Math.max(0, value));
 
   const colors: Record<string, string> = {
-    primary: 'bg-gradient-to-r from-[var(--dl-tactical-green)] to-[var(--dl-tactical-yellow)] shadow-[0_0_16px_rgba(255,226,102,0.45)]',
-    success: 'bg-[var(--dl-tactical-green)] shadow-[0_0_12px_rgba(56,242,139,0.3)]',
-    warning: 'bg-[var(--dl-tactical-yellow)] shadow-[0_0_12px_rgba(255,226,102,0.3)]',
-    error: 'bg-[var(--dl-tactical-red)] shadow-[0_0_12px_rgba(255,51,102,0.3)]',
-    premium: 'bg-[var(--dl-tactical-purple)] shadow-[0_0_12px_rgba(141,92,255,0.3)]',
-    info: 'bg-[var(--dl-tactical-blue)] shadow-[0_0_12px_rgba(70,183,255,0.3)]',
+    primary: 'bg-gradient-to-r from-[var(--dl-red-dark)] to-[var(--dl-red)] shadow-[0_0_16px_rgba(255,0,0,0.3)]',
+    success: 'bg-[var(--dl-red)] shadow-[0_0_12px_rgba(255,0,0,0.25)]',
+    warning: 'bg-[var(--dl-muted-light)] shadow-[0_0_10px_rgba(255,255,255,0.16)]',
+    error: 'bg-[var(--dl-red-dark)] shadow-[0_0_12px_rgba(143,8,8,0.3)]',
+    premium: 'bg-[var(--dl-red-soft)] shadow-[0_0_12px_rgba(255,42,42,0.28)]',
+    info: 'bg-[var(--dl-muted)] shadow-[0_0_10px_rgba(183,186,193,0.16)]',
   };
 
   const sizes: Record<string, string> = {
@@ -31,7 +31,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   };
 
   const containerClasses = [
-    'w-full overflow-hidden border border-[var(--dl-tactical-line)] bg-[rgba(255,255,255,0.06)] [clip-path:var(--dl-cut-button)]',
+    'w-full overflow-hidden rounded-full border border-[var(--dl-border)] bg-white/[0.06]',
     sizes[size],
     className,
   ].filter(Boolean).join(' ');

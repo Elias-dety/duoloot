@@ -1,56 +1,53 @@
+import { useState } from 'react';
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
-import { ROUTES } from '../constants/routes';
+
 import { useAuth } from '@/features/auth/useAuth';
+import { ROUTES } from '../constants/routes';
+import { DuolootButton, DuolootLogo } from '@/components/duoloot';
 
 export default function PublicLayout() {
   const { isAuthenticated, profile, user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuItems = [
-    { label: 'Scanner', path: ROUTES.HOME },
-    { label: 'Lobbies', path: ROUTES.LOBBY },
-    { label: 'Cofre', path: ROUTES.VAULT },
-    { label: 'Coaches', path: ROUTES.COACHES },
+    { label: 'Home', path: ROUTES.HOME },
+    { label: 'Features', path: ROUTES.LOBBY },
+    { label: 'Vault', path: ROUTES.VAULT },
+    { label: 'Community', path: ROUTES.COACHES },
   ];
 
   const handleLogout = async () => {
     await signOut();
+    setIsMobileMenuOpen(false);
     navigate(ROUTES.HOME);
   };
 
-  const getOperatorName = () => {
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const getProfileName = () => {
     if (profile?.nickname) return profile.nickname;
     if (user?.email) return user.email.split('@')[0];
-    return 'OPERADOR';
+    return 'Player';
   };
 
   return (
-    <div className="dl-scanlines min-h-screen flex flex-col" style={{ background: 'var(--dl-tactical-bg)' }}>
-      {/* Top Strip */}
+    <div className="dl-grid-bg flex min-h-screen flex-col bg-[var(--dl-black)]">
       <div className="dl-top-strip">
-        <span>
-          Underground Loot Network // <b>Vault market open</b>
-        </span>
-        <span>DL-042 // Contratos ativos // Matchmaking sync</span>
+        <span>Duoloot Red Vault</span>
+        <span>Matchmaking live • Vault rewards active</span>
       </div>
 
-      {/* Header Command Center */}
       <header className="dl-header">
-        <Link to={ROUTES.HOME} className="dl-brand no-underline">
-          <span className="dl-brand-mark">DL</span>
-          <span>
-            Duo Loot
-            <small>Underground Tactical</small>
-          </span>
+        <Link to={ROUTES.HOME} className="dl-brand">
+          <DuolootLogo subtitle="Red Vault" />
         </Link>
 
         <nav className="dl-nav">
           {menuItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) => isActive ? 'active' : ''}
-            >
+            <NavLink key={item.path} to={item.path} className={({ isActive }) => (isActive ? 'active' : '')}>
               {item.label}
             </NavLink>
           ))}
@@ -59,79 +56,115 @@ export default function PublicLayout() {
         <div className="dl-actions">
           {isAuthenticated ? (
             <>
-              <span className="text-[11px] font-bold tracking-[0.15em] text-[var(--dl-tactical-green)] uppercase mr-2 border border-[var(--dl-tactical-green)]/30 bg-[var(--dl-tactical-green)]/5 px-2.5 py-1 rounded-sm font-[Chakra_Petch]">
-                ⚡ [{getOperatorName()}]
+              <span className="rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
+                {getProfileName()}
               </span>
-              <Link to={ROUTES.DASHBOARD} className="dl-btn dl-btn-primary no-underline text-xs">
-                Painel
-              </Link>
-              <button type="button" onClick={handleLogout} className="dl-btn text-xs">
+              <DuolootButton size="sm" onClick={() => navigate(ROUTES.DASHBOARD)}>
+                Dashboard
+              </DuolootButton>
+              <DuolootButton variant="secondary" size="sm" onClick={handleLogout}>
                 Sair
-              </button>
+              </DuolootButton>
             </>
           ) : (
             <>
-              <Link to={ROUTES.LOGIN} className="dl-btn no-underline text-xs">
-                Entrar
-              </Link>
-              <Link to={ROUTES.REGISTER} className="dl-btn dl-btn-primary no-underline text-xs">
-                Abrir acesso
-              </Link>
+              <DuolootButton variant="ghost" size="sm" onClick={() => navigate(ROUTES.LOGIN)}>Login</DuolootButton>
+              <DuolootButton size="sm" onClick={() => navigate(ROUTES.REGISTER)}>Get Duoloot</DuolootButton>
             </>
           )}
         </div>
 
-        {/* Mobile menu button */}
-        <button type="button" className="dl-btn md:hidden">
-          Menu
-        </button>
+        <DuolootButton
+          type="button"
+          variant="secondary"
+          size="sm"
+          className="md:hidden"
+          onClick={() => setIsMobileMenuOpen((current) => !current)}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="public-mobile-nav"
+        >
+          {isMobileMenuOpen ? 'Fechar' : 'Menu'}
+        </DuolootButton>
       </header>
 
-      {/* Conteúdo Principal */}
-      <main className="flex-1 relative z-[4]">
+      {isMobileMenuOpen && (
+        <div id="public-mobile-nav" className="dl-mobile-nav md:hidden">
+          <div className="dl-mobile-nav-grid">
+            {menuItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className="no-underline"
+                onClick={closeMobileMenu}
+              >
+                <span className="inline-flex min-h-9 w-full items-center justify-center rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-3.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-white">
+                  {item.label}
+                </span>
+              </NavLink>
+            ))}
+          </div>
+
+          {isAuthenticated ? (
+            <div className="space-y-3">
+              <div className="rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.04] px-4 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
+                Perfil ativo: {getProfileName()}
+              </div>
+              <div className="dl-mobile-nav-grid">
+                <DuolootButton fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.DASHBOARD); }}>
+                  Dashboard
+                </DuolootButton>
+                <DuolootButton variant="secondary" size="sm" fullWidth onClick={handleLogout}>
+                  Sair
+                </DuolootButton>
+              </div>
+            </div>
+          ) : (
+            <div className="dl-mobile-nav-grid">
+              <DuolootButton variant="secondary" fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.LOGIN); }}>Login</DuolootButton>
+              <DuolootButton fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.REGISTER); }}>Get Duoloot</DuolootButton>
+            </div>
+          )}
+        </div>
+      )}
+
+      <main className="relative z-[1] flex-1">
         <Outlet />
       </main>
 
-      {/* Footer Underground */}
-      <footer className="relative z-[4] border-t border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-panel)] backdrop-blur-[10px]">
-        <div className="mx-auto max-w-[1240px] px-6 py-10">
-          <div className="grid gap-8 md:grid-cols-4">
-            <div className="md:col-span-2">
-              <Link to={ROUTES.HOME} className="dl-brand no-underline text-[22px]">
-                <span className="dl-brand-mark" style={{ width: 34, height: 34, fontSize: 14 }}>DL</span>
-                <span>
-                  Duo Loot
-                  <small>Underground Tactical</small>
-                </span>
+      <footer className="border-t border-[var(--dl-border)] bg-[rgba(8,10,14,0.86)]">
+        <div className="mx-auto flex max-w-[1240px] flex-col gap-8 px-4 py-10 md:px-6">
+          <div className="grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
+            <div>
+              <Link to={ROUTES.HOME} className="dl-brand">
+                <DuolootLogo compact subtitle="Red Vault" />
               </Link>
-              <p className="mt-4 max-w-xs text-[13px] leading-[1.65] text-[var(--dl-tactical-muted)]">
-                Central clandestina de estatísticas, lobbies e recompensas para gamers competitivos.
+              <p className="mt-4 max-w-sm text-sm leading-7 text-[var(--dl-muted-light)]">
+                Plataforma para encontrar duos, melhorar lobbies e destravar recompensas do Vault com uma identidade única.
               </p>
             </div>
+
             <div>
-              <h4 className="dl-title mb-4 text-[11px] font-bold tracking-[0.18em] text-[var(--dl-tactical-yellow)]">Plataforma</h4>
-              <ul className="space-y-2 text-[12px] font-bold uppercase tracking-[0.08em]">
-                <li><Link to={ROUTES.LOBBY} className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Lobby Radar</Link></li>
-                <li><Link to={ROUTES.VAULT} className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Cofre</Link></li>
-                <li><Link to={ROUTES.COACHES} className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Coaches</Link></li>
+              <h4 className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Produto</h4>
+              <ul className="mt-4 space-y-3 text-sm text-[var(--dl-muted-light)]">
+                <li><Link to={ROUTES.LOBBY} className="hover:text-white">Lobby</Link></li>
+                <li><Link to={ROUTES.VAULT} className="hover:text-white">Vault</Link></li>
+                <li><Link to={ROUTES.COACHES} className="hover:text-white">Community</Link></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="dl-title mb-4 text-[11px] font-bold tracking-[0.18em] text-[var(--dl-tactical-yellow)]">Comunidade</h4>
-              <ul className="space-y-2 text-[12px] font-bold uppercase tracking-[0.08em]">
-                <li><a href="#" className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Discord</a></li>
-                <li><a href="#" className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Twitter</a></li>
-                <li><a href="#" className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-green)] transition-colors">Suporte</a></li>
+              <h4 className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Social</h4>
+              <ul className="mt-4 space-y-3 text-sm text-[var(--dl-muted-light)]">
+                <li>Discord</li>
+                <li>X / Twitter</li>
+                <li>Support</li>
               </ul>
             </div>
           </div>
-          <div className="mt-10 flex flex-col items-center justify-between border-t border-[var(--dl-tactical-line)] pt-8 md:flex-row">
-            <p className="text-[10px] tracking-[0.16em] uppercase text-[var(--dl-tactical-muted)]">
-              © 2024 Duo Loot // Underground Tactical Command Center
-            </p>
-            <span className="dl-stamp dl-stamp-yellow mt-4 md:mt-0">
-              Sistema ativo
-            </span>
+
+          <div className="flex flex-col gap-3 border-t border-[var(--dl-border)] pt-6 text-sm text-[var(--dl-muted)] md:flex-row md:items-center md:justify-between">
+            <p>© 2026 Duoloot. All rights reserved.</p>
+            <span>Red Vault experience</span>
           </div>
         </div>
       </footer>

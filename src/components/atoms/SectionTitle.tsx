@@ -16,18 +16,18 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
   ...props
 }) => {
   const titleSizes = {
-    h1: 'text-3xl md:text-4xl font-black text-content-base',
-    h2: 'text-2xl md:text-3xl font-black text-content-base',
-    h3: 'text-xl md:text-2xl font-black text-content-base',
-    h4: 'text-lg md:text-xl font-bold text-content-base',
+    h1: 'font-[Rajdhani] text-3xl md:text-4xl font-bold uppercase text-content-base',
+    h2: 'font-[Rajdhani] text-2xl md:text-3xl font-bold uppercase text-content-base',
+    h3: 'font-[Rajdhani] text-xl md:text-2xl font-bold uppercase text-content-base',
+    h4: 'font-[Rajdhani] text-lg md:text-xl font-bold uppercase text-content-base',
   };
 
   const accents = {
     orange: 'bg-brand-primary',
-    green: 'bg-success',
+    green: 'bg-brand-secondary',
     premium: 'bg-premium',
     prize: 'bg-prize',
-    info: 'bg-info',
+    info: 'bg-content-secondary',
   };
 
   return (

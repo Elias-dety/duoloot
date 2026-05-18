@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { ROUTES } from '@/constants/routes';
 import { AuthForm, AuthFormSubmission } from '@/features/auth/components/AuthForm';
 import { useAuth } from '@/features/auth/useAuth';
-import { ROUTES } from '@/constants/routes';
 import { isSupabaseConfigured } from '@/lib/supabase';
+import { DuolootButton, DuolootCard } from '@/components/duoloot';
 
 export const RegisterPage: React.FC = () => {
   const { signUp, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -43,7 +45,7 @@ export const RegisterPage: React.FC = () => {
     } catch (error: unknown) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Falha na conexão com o terminal.',
+        error: error instanceof Error ? error.message : 'Falha ao criar sua conta.',
       };
     } finally {
       setIsLoading(false);
@@ -51,46 +53,34 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="relative flex min-h-[calc(100vh-80px)] flex-col items-center justify-center overflow-hidden bg-[#07090e] px-4 py-12">
-      <div className="pointer-events-none absolute inset-0 select-none bg-[radial-gradient(ellipse_at_center,var(--dl-tactical-green)_0%,transparent_70%)] opacity-[0.03]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.02]" />
+    <div className="relative flex min-h-[calc(100vh-80px)] items-center justify-center overflow-hidden px-4 py-12">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)]" />
 
-      <div className="z-10 flex w-full justify-center">
+      <div className="relative z-10 flex w-full justify-center">
         {needsVerification ? (
-          <div className="relative w-full max-w-md space-y-6 overflow-hidden bg-black/60 p-8 text-center backdrop-blur-md [clip-path:polygon(0_0,100%_0,100%_calc(100%-15px),calc(100%-15px)_100%,0_100%)]">
-            <div className="absolute left-0 top-0 h-[2px] w-full bg-[var(--dl-tactical-green)]" />
-
-            <div className="inline-block animate-pulse rounded-full border border-[var(--dl-tactical-green)]/30 bg-[var(--dl-tactical-green)]/10 p-4">
-              <span className="text-3xl text-[var(--dl-tactical-green)]">📬</span>
+          <DuolootCard variant="elevated" className="w-full max-w-md space-y-6 rounded-[1.75rem] p-6 text-center md:p-8">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[var(--dl-border-red)] bg-[rgba(255,0,0,0.12)] text-2xl">
+              ✉
             </div>
 
             <div className="space-y-2">
-              <h2 className="font-[Chakra_Petch] text-xl font-bold uppercase tracking-widest text-[var(--dl-tactical-text)]">
-                VERIFICAÇÃO ENVIADA
-              </h2>
-              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--dl-tactical-muted)]">
-                CÓDIGO OPERACIONAL ENVIADO PARA:
+              <h2 className="font-['Rajdhani'] text-3xl font-bold uppercase text-white">Verificação enviada</h2>
+              <p className="text-sm leading-7 text-[var(--dl-muted-light)]">
+                Enviamos um link de confirmação para o e-mail abaixo.
               </p>
-              <p className="inline-block select-all border border-[var(--dl-tactical-line)] bg-black/40 px-3 py-1.5 font-[Chakra_Petch] text-sm font-bold tracking-wide text-[var(--dl-tactical-green)]">
+              <p className="rounded-[1rem] border border-[var(--dl-border)] bg-black/20 px-3 py-2 text-sm font-semibold text-white">
                 {registeredEmail}
               </p>
             </div>
 
-            <div className="space-y-3 border-t border-[var(--dl-tactical-line)] pt-4 text-xs leading-relaxed text-[var(--dl-tactical-muted)]">
-              <p>Acesse sua caixa de entrada e clique no link de validação para liberar sua conta no Duo Loot.</p>
-              <p className="text-[10px] font-semibold uppercase text-amber-500/80">
-                * Caso não encontre, verifique sua pasta de spam ou lixo eletrônico.
-              </p>
-            </div>
+            <p className="text-sm leading-7 text-[var(--dl-muted-light)]">
+              Verifique sua caixa de entrada e o spam para concluir seu acesso.
+            </p>
 
-            <button
-              type="button"
-              onClick={() => navigate(ROUTES.LOGIN)}
-              className="w-full bg-transparent py-2 text-xs font-bold uppercase tracking-widest text-[var(--dl-tactical-green)] transition-all [clip-path:polygon(0_0,100%_0,95%_100%,5%_100%)] hover:bg-[var(--dl-tactical-green)]/10 border border-[var(--dl-tactical-green)]"
-            >
-              VOLTAR PARA O LOGIN
-            </button>
-          </div>
+            <DuolootButton fullWidth variant="secondary" onClick={() => navigate(ROUTES.LOGIN)}>
+              Voltar para login
+            </DuolootButton>
+          </DuolootCard>
         ) : (
           <AuthForm
             type="register"

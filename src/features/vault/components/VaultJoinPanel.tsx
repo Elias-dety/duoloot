@@ -18,27 +18,27 @@ export const VaultJoinPanel: React.FC<VaultJoinPanelProps> = ({
   participantCount,
 }) => {
   return (
-    <div className="dl-panel flex flex-col items-center gap-4 p-6 sm:flex-row" style={{ borderColor: 'rgba(255,226,102,0.25)' }}>
+    <div className="dl-panel flex flex-col items-center gap-4 p-6 sm:flex-row">
       <div className="flex-1 text-center sm:text-left">
-        <span className="text-[var(--dl-tactical-yellow)] font-bold text-[14px] font-['Rajdhani'] uppercase">
-          OPERAÇÃO ATIVA: {event.title}
+        <span className="font-['Rajdhani'] text-xl font-bold uppercase text-white">
+          Evento ativo: {event.title}
         </span>
-        <p className="mt-1 text-[13px] text-[var(--dl-tactical-muted)]">
-          {isLoggedIn 
-            ? 'Você ainda não está participando deste Cofre. Junte-se agora para acumular pontos.' 
-            : 'Faça login para se inscrever neste Cofre e concorrer às recompensas.'}
+        <p className="mt-1 text-[13px] text-[var(--dl-muted-light)]">
+          {isLoggedIn
+            ? 'Você ainda não está participando deste Vault. Entre agora para começar a acumular pontos.'
+            : 'Faça login para participar deste Vault e disputar as próximas recompensas.'}
         </p>
-        <div className="mt-2 text-[11px] uppercase tracking-wide text-white/50">
-          <span className="font-bold text-white">{participantCount}</span> operadores na operação
+        <div className="mt-2 text-[11px] uppercase tracking-wide text-[var(--dl-muted-light)]">
+          <span className="font-bold text-white">{participantCount}</span> players ativos no evento
         </div>
       </div>
-      <Button 
-        variant="primary" 
-        className="w-full shrink-0 sm:w-auto dl-btn-yellow"
+      <Button
+        variant="primary"
+        className="w-full shrink-0 sm:w-auto"
         onClick={onJoin}
         disabled={isJoining}
       >
-        {isJoining ? 'Processando...' : isLoggedIn ? 'Participar Agora' : 'Entrar para Participar'}
+        {isJoining ? 'Processando...' : isLoggedIn ? 'Entrar no Vault' : 'Login para participar'}
       </Button>
     </div>
   );

@@ -42,7 +42,7 @@ const handleServiceError = (error: ServiceError | null | undefined, fallbackMess
   return error?.message || fallbackMessage;
 };
 
-function calculateCompatibility(
+export function calculateCompatibility(
   userGp: PlayerGameProfile | null | undefined,
   lobbyMetadata: Record<string, unknown>,
   lobbyMode: string,
@@ -219,6 +219,10 @@ export async function joinLobby(lobbyId: string) {
 
   if (error) throw new Error(handleServiceError(error, 'Erro ao entrar no lobby.'));
 
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error('Resposta inválida do servidor ao entrar no lobby.');
+  }
+
   const result = data[0];
   if (!result.success) {
     throw new Error(result.message);
@@ -235,6 +239,10 @@ export async function leaveLobby(lobbyId: string) {
   });
 
   if (error) throw new Error(handleServiceError(error, 'Erro ao sair do lobby.'));
+
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error('Resposta inválida do servidor ao sair do lobby.');
+  }
 
   const result = data[0];
   if (!result.success) {

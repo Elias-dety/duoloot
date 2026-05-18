@@ -4,6 +4,7 @@ import { useAuth } from './useAuth';
 import { ROUTES } from '@/constants/routes';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { isGameProfileComplete } from '@/services/onboarding.service';
+import logger from '@/lib/logger';
 
 interface ProtectedRouteProps {
   children?: React.ReactNode;
@@ -37,7 +38,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    console.log('Operador não autenticado. Redirecionando para login.');
+    logger.info('Operador não autenticado. Redirecionando para login.');
     return <Navigate to={ROUTES.LOGIN} replace state={{ from: location }} />;
   }
 
@@ -45,7 +46,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (isSupabaseConfigured) {
     const isComplete = isGameProfileComplete(profile);
     if (!isComplete && location.pathname !== ROUTES.ONBOARDING) {
-      console.log('Operador com perfil gamer incompleto. Redirecionando para onboarding.');
+      logger.info('Operador com perfil gamer incompleto. Redirecionando para onboarding.');
       return <Navigate to={ROUTES.ONBOARDING} replace state={{ from: location }} />;
     }
   }

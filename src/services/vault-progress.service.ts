@@ -9,6 +9,10 @@ import {
   VaultMissionProgress,
   VaultOverview,
   VaultParticipant,
+  VaultSeason,
+  VaultSeasonSchema,
+  VaultWinner,
+  VaultWinnerSchema,
 } from '@/features/vault/vault.schema';
 
 type ServiceError = {
@@ -31,15 +35,65 @@ type VaultLeaderboardRpcRow = {
   game_profile: Record<string, unknown> | null;
 };
 
-const handleServiceError = (error: ServiceError | null | undefined, fallbackMessage: string) => {
+type VaultWinnerRpcRow = {
+  winner_id: string;
+  event_id: string;
+  event_title: string | null;
+  player_id: string;
+  player_name: string | null;
+  player_nickname: string | null;
+  avatar_url: string | null;
+  trust_score: number | null;
+  rank_position: number;
+  points: number | null;
+  prize_label: string | null;
+  prize_value: number | string | null;
+  reward_status: 'pending' | 'approved' | 'paid' | 'cancelled';
+  snapshot: Record<string, unknown> | null;
+  created_at: string;
+  ended_at: string | null;
+};
+
+type VaultSeasonRpcRow = {
+  event_id: string;
+  title: string;
+  description: string | null;
+  prize_label: string | null;
+  prize_value: number | string | null;
+  status: 'draft' | 'scheduled' | 'active' | 'ended' | 'cancelled';
+  starts_at: string | null;
+  ends_at: string | null;
+  current_points: number | null;
+  goal_points: number | null;
+  participant_count: number | null;
+  winners_count: number | null;
+  top_winner_nickname: string | null;
+  top_winner_avatar_url: string | null;
+};
+
+type FinalizeVaultRpcRow = {
+  success: boolean;
+  message: string;
+  event_id: string;
+  winners_count: number;
+};
+
+const handleServiceError = (
+  error: ServiceError | null | undefined,
+  fallbackMessage: string,
+  moduleMissingMessage: string = 'Ranking do Cofre ainda não configurado.'
+) => {
   console.error(error);
 
-  if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
-  if (error?.message?.includes('JWT')) return 'Sua sessão expirou. Entre novamente.';
+  if (!isSupabaseConfigured) return 'Configuracao do Supabase ausente.';
+  if (error?.message?.includes('JWT')) return 'Sua sessao expirou. Entre novamente.';
   if (error?.message?.includes('authenticated') || error?.message?.includes('Auth session missing')) {
     return 'Entre na sua conta para continuar.';
   }
-  if (error?.code === 'PGRST202') return 'Ranking do Cofre ainda não configurado.';
+  if (error?.code === '42501' || error?.message?.toLowerCase().includes('permission')) {
+    return 'Permissao insuficiente para finalizar o Cofre.';
+  }
+  if (error?.code === 'PGRST202') return moduleMissingMessage;
   if (error?.code === 'PGRST116') return 'Nenhum registro encontrado.';
 
   return error?.message || fallbackMessage;
@@ -59,6 +113,44 @@ const mapVaultLeaderboardEntry = (row: VaultLeaderboardRpcRow): VaultLeaderboard
     missionsCompleted: row.missions_completed ?? 0,
     totalMissions: row.total_missions ?? 0,
     gameProfile: row.game_profile ?? null,
+  });
+
+const mapVaultWinner = (row: VaultWinnerRpcRow): VaultWinner =>
+  VaultWinnerSchema.parse({
+    winnerId: row.winner_id,
+    eventId: row.event_id,
+    eventTitle: row.event_title,
+    playerId: row.player_id,
+    playerName: row.player_name,
+    playerNickname: row.player_nickname,
+    avatarUrl: row.avatar_url,
+    trustScore: row.trust_score ?? 0,
+    rankPosition: row.rank_position,
+    points: row.points ?? 0,
+    prizeLabel: row.prize_label,
+    prizeValue: Number(row.prize_value ?? 0),
+    rewardStatus: row.reward_status,
+    snapshot: row.snapshot ?? {},
+    createdAt: row.created_at,
+    endedAt: row.ended_at,
+  });
+
+const mapVaultSeason = (row: VaultSeasonRpcRow): VaultSeason =>
+  VaultSeasonSchema.parse({
+    eventId: row.event_id,
+    title: row.title,
+    description: row.description,
+    prizeLabel: row.prize_label,
+    prizeValue: Number(row.prize_value ?? 0),
+    status: row.status,
+    startsAt: row.starts_at,
+    endsAt: row.ends_at,
+    currentPoints: row.current_points ?? 0,
+    goalPoints: row.goal_points ?? 0,
+    participantCount: row.participant_count ?? 0,
+    winnersCount: row.winners_count ?? 0,
+    topWinnerNickname: row.top_winner_nickname,
+    topWinnerAvatarUrl: row.top_winner_avatar_url,
   });
 
 export async function getActiveVault(): Promise<VaultEvent | null> {
@@ -102,7 +194,7 @@ export async function getVaultOverview(eventId: string): Promise<VaultOverview |
       .eq('event_id', eventId)
       .eq('status', 'active');
 
-    if (missionsError) throw new Error(handleServiceError(missionsError, 'Erro ao buscar missões.'));
+    if (missionsError) throw new Error(handleServiceError(missionsError, 'Erro ao buscar missoes.'));
 
     const { count: participantCount, error: countError } = await supabase
       .from('vault_participants')
@@ -123,7 +215,7 @@ export async function getVaultOverview(eventId: string): Promise<VaultOverview |
 }
 
 export async function joinVaultEvent(eventId: string): Promise<{ success: boolean; message: string; event_id?: string }> {
-  if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
+  if (!isSupabaseConfigured) throw new Error('Supabase nao configurado.');
 
   const {
     data: { user },
@@ -140,7 +232,7 @@ export async function joinVaultEvent(eventId: string): Promise<{ success: boolea
     return data[0];
   }
 
-  return { success: false, message: 'Resposta inválida do servidor.' };
+  return { success: false, message: 'Resposta invalida do servidor.' };
 }
 
 export async function getMyVaultProgress(eventId: string): Promise<MyVaultProgress | null> {
@@ -172,7 +264,7 @@ export async function getMyVaultProgress(eventId: string): Promise<MyVaultProgre
       .eq('status', 'active')
       .order('created_at', { ascending: true });
 
-    if (missionsError) throw new Error(handleServiceError(missionsError, 'Erro ao buscar missões.'));
+    if (missionsError) throw new Error(handleServiceError(missionsError, 'Erro ao buscar missoes.'));
     const missions = (missionsData as VaultMission[]) || [];
 
     const { data: progressData, error: progressError } = await supabase
@@ -220,7 +312,7 @@ export async function claimVaultMissionProgress(
   missionId: string,
   increment: number = 1
 ): Promise<{ success: boolean; message: string }> {
-  if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
+  if (!isSupabaseConfigured) throw new Error('Supabase nao configurado.');
 
   const {
     data: { user },
@@ -240,7 +332,7 @@ export async function claimVaultMissionProgress(
     return data[0];
   }
 
-  return { success: false, message: 'Resposta inválida do servidor.' };
+  return { success: false, message: 'Resposta invalida do servidor.' };
 }
 
 export async function getVaultLeaderboard(eventId?: string | null, limit: number = 20): Promise<VaultLeaderboardEntry[]> {
@@ -264,7 +356,7 @@ export async function getVaultLeaderboard(eventId?: string | null, limit: number
 
 export async function getMyVaultRank(eventId?: string | null): Promise<MyVaultRank | null> {
   if (!isSupabaseConfigured) {
-    throw new Error('Configuração do Supabase ausente.');
+    throw new Error('Configuracao do Supabase ausente.');
   }
 
   const {
@@ -287,8 +379,94 @@ export async function getMyVaultRank(eventId?: string | null): Promise<MyVaultRa
 
     return mapVaultLeaderboardEntry(rows[0]);
   } catch (error) {
-    throw new Error(handleServiceError(error as ServiceError, 'Erro ao carregar sua posição no Cofre.'), {
+    throw new Error(handleServiceError(error as ServiceError, 'Erro ao carregar sua posicao no Cofre.'), {
       cause: error,
     });
+  }
+}
+
+export async function getVaultWinners(eventId?: string | null, limit: number = 12): Promise<VaultWinner[]> {
+  if (!isSupabaseConfigured) return [];
+
+  try {
+    const { data, error } = await supabase.rpc('get_vault_winners', {
+      p_event_id: eventId ?? null,
+      p_limit: limit,
+    });
+
+    if (error) throw error;
+
+    return ((data ?? []) as VaultWinnerRpcRow[]).map(mapVaultWinner);
+  } catch (error) {
+    throw new Error(
+      handleServiceError(error as ServiceError, 'Erro ao carregar vencedores do Cofre.', 'Historico do Cofre ainda nao configurado.'),
+      {
+        cause: error,
+      }
+    );
+  }
+}
+
+export async function getVaultSeasons(limit: number = 10): Promise<VaultSeason[]> {
+  if (!isSupabaseConfigured) return [];
+
+  try {
+    const { data, error } = await supabase.rpc('get_vault_seasons', {
+      p_limit: limit,
+    });
+
+    if (error) throw error;
+
+    return ((data ?? []) as VaultSeasonRpcRow[]).map(mapVaultSeason);
+  } catch (error) {
+    throw new Error(
+      handleServiceError(error as ServiceError, 'Erro ao carregar temporadas do Cofre.', 'Historico do Cofre ainda nao configurado.'),
+      {
+        cause: error,
+      }
+    );
+  }
+}
+
+export async function finalizeVaultEvent(
+  eventId: string,
+  winnerLimit: number = 3
+): Promise<{ success: boolean; message: string; eventId: string; winnersCount: number }> {
+  if (!isSupabaseConfigured) throw new Error('Configuracao do Supabase ausente.');
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+  if (userError || !user) throw new Error('Entre na sua conta para continuar.');
+
+  try {
+    const { data, error } = await supabase.rpc('finalize_vault_event', {
+      p_event_id: eventId,
+      p_winner_limit: winnerLimit,
+    });
+
+    if (error) throw error;
+
+    const rows = (data ?? []) as FinalizeVaultRpcRow[];
+    const row = rows[0];
+
+    if (!row) {
+      throw new Error('Resposta invalida do servidor.');
+    }
+
+    return {
+      success: row.success,
+      message: row.message,
+      eventId: row.event_id,
+      winnersCount: row.winners_count,
+    };
+  } catch (error) {
+    throw new Error(
+      handleServiceError(error as ServiceError, 'Erro ao finalizar o Cofre.', 'Historico do Cofre ainda nao configurado.'),
+      {
+        cause: error,
+      }
+    );
   }
 }

@@ -1,19 +1,21 @@
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
-import { ROUTES } from '../constants/routes';
+
 import { useAuth } from '@/features/auth/useAuth';
 import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import type { PlayerGameProfile } from '@/services/auth.service';
+import { ROUTES } from '../constants/routes';
+import { DuolootButton, DuolootCard, DuolootLogo } from '@/components/duoloot';
 
 export default function DashboardLayout() {
   const { profile, user, signOut } = useAuth();
-  usePlayerPresence(); // Inicializa a presença online tática do operador no terminal
+  usePlayerPresence();
   const navigate = useNavigate();
 
   const navItems = [
-    { label: 'Dashboard', path: ROUTES.DASHBOARD, code: 'CMD' },
-    { label: 'Premium', path: ROUTES.PREMIUM, code: 'PRE' },
-    { label: 'Lobby', path: ROUTES.LOBBY, code: 'LBR' },
-    { label: 'Cofre', path: ROUTES.VAULT, code: 'VLT' },
+    { label: 'Dashboard', path: ROUTES.DASHBOARD, code: 'DB' },
+    { label: 'Premium', path: ROUTES.PREMIUM, code: 'PR' },
+    { label: 'Lobby', path: ROUTES.LOBBY, code: 'LB' },
+    { label: 'Vault', path: ROUTES.VAULT, code: 'VT' },
   ];
 
   const handleLogout = async () => {
@@ -21,130 +23,97 @@ export default function DashboardLayout() {
     navigate(ROUTES.HOME);
   };
 
-  const getOperatorNickname = () => {
+  const getNickname = () => {
     if (profile?.nickname) return profile.nickname;
     if (user?.email) return user.email.split('@')[0];
-    return 'Operador';
+    return 'Player';
   };
 
-  const getOperatorInitials = () => {
-    const nick = getOperatorNickname();
-    return nick.slice(0, 2).toUpperCase();
-  };
+  const getInitials = () => getNickname().slice(0, 2).toUpperCase();
 
-  const getOperatorRank = () => {
+  const getRank = () => {
     const gameProfile = profile?.game_profile as PlayerGameProfile | undefined;
     const mainGame = gameProfile?.mainGame || gameProfile?.main_game;
     const rank = gameProfile?.currentRank || gameProfile?.rank;
-
-    if (mainGame && rank) {
-      return `${mainGame.toUpperCase()} // ${rank.toUpperCase()}`;
-    }
-    return 'SEM PERFIL GAMER';
+    return mainGame && rank ? `${mainGame.toUpperCase()} • ${rank.toUpperCase()}` : 'Perfil em configuração';
   };
 
   return (
-    <div className="dl-scanlines flex min-h-screen flex-col md:flex-row" style={{ background: 'var(--dl-tactical-bg)' }}>
-      {/* Mobile Header */}
-      <header className="flex h-14 items-center justify-between border-b border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-panel)] backdrop-blur-[10px] px-4 md:hidden">
-        <Link to={ROUTES.HOME} className="dl-brand no-underline text-[18px]">
-          <span className="dl-brand-mark" style={{ width: 32, height: 32, fontSize: 12 }}>DL</span>
-          <span>Duo Loot</span>
-        </Link>
-        <div className="flex items-center gap-2">
-          <Link to={ROUTES.ONBOARDING} className="dl-btn text-[10px] font-bold tracking-wider font-[Chakra_Petch] uppercase no-underline">
-            Perfil
+    <div className="flex min-h-screen flex-col bg-[var(--dl-black)] md:flex-row">
+      <div className="border-b border-[var(--dl-border)] bg-[rgba(8,10,14,0.92)] md:hidden">
+        <header className="flex items-center justify-between gap-3 px-3 py-3">
+          <Link to={ROUTES.HOME} className="dl-brand">
+            <DuolootLogo compact subtitle="Dashboard" />
           </Link>
-          <button type="button" onClick={handleLogout} className="dl-btn text-[10px] font-bold tracking-wider font-[Chakra_Petch] uppercase">
-            Sair
-          </button>
-        </div>
-      </header>
+          <div className="flex items-center gap-2">
+            <DuolootButton variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>Perfil</DuolootButton>
+            <DuolootButton variant="secondary" size="sm" onClick={handleLogout}>
+              Sair
+            </DuolootButton>
+          </div>
+        </header>
 
-      {/* Sidebar Painel de Comando */}
-      <aside className="hidden w-64 flex-col border-r border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-panel)] backdrop-blur-[10px] md:flex">
-        {/* Brand */}
-        <div className="flex h-16 items-center border-b border-[var(--dl-tactical-line)] px-5">
-          <Link to={ROUTES.HOME} className="dl-brand no-underline text-[20px]">
-            <span className="dl-brand-mark" style={{ width: 36, height: 36, fontSize: 13 }}>DL</span>
-            <span>
-              Duo Loot
-              <small>Command Panel</small>
-            </span>
-          </Link>
-        </div>
-
-        {/* System Label */}
-        <div className="px-5 py-3 border-b border-[var(--dl-tactical-line)]">
-          <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--dl-tactical-muted)]">
-            Painel do jogador // Acesso interno
-          </span>
-        </div>
-
-        {/* Nav Links */}
-        <nav className="flex-1 p-3 space-y-1">
+        <nav className="grid grid-cols-2 gap-2 px-3 pb-3">
           {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 text-[12px] font-bold uppercase tracking-[0.08em] transition-all [clip-path:var(--dl-cut-button)] ${
-                  isActive
-                    ? 'bg-[rgba(255,226,102,0.08)] text-[var(--dl-tactical-yellow)] border border-[rgba(255,226,102,0.3)]'
-                    : 'text-[var(--dl-tactical-muted)] border border-transparent hover:text-[var(--dl-tactical-green)] hover:bg-[rgba(56,242,139,0.08)] hover:border-[rgba(56,242,139,0.28)]'
-                }`
-              }
-            >
-              <span className="w-8 h-8 grid place-items-center border border-[var(--dl-tactical-line)] bg-[rgba(255,255,255,0.04)] [clip-path:var(--dl-cut-button)] text-[10px] shrink-0">
-                {item.code}
-              </span>
-              {item.label}
+            <NavLink key={item.path} to={item.path} className="no-underline">
+              {({ isActive }) => (
+                <span className={`inline-flex min-h-9 w-full items-center justify-center rounded-full border px-3.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] ${isActive ? 'border-[var(--dl-red)] bg-[var(--dl-red)] text-white' : 'border-[var(--dl-border)] bg-white/[0.04] text-white'}`}>
+                  {item.label}
+                </span>
+              )}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+
+      <aside className="hidden w-72 flex-col border-r border-[var(--dl-border)] bg-[rgba(8,10,14,0.94)] p-4 md:flex">
+        <div className="border-b border-[var(--dl-border)] pb-5">
+          <Link to={ROUTES.HOME} className="dl-brand">
+            <DuolootLogo subtitle="Player Hub" />
+          </Link>
+        </div>
+
+        <nav className="flex-1 space-y-2 py-5">
+          {navItems.map((item) => (
+            <NavLink key={item.path} to={item.path} className="block no-underline">
+              {({ isActive }) => (
+                <div className={`flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 transition ${isActive ? 'border-[var(--dl-border-red)] bg-[rgba(255,0,0,0.12)] text-white' : 'border-transparent bg-transparent text-[var(--dl-muted-light)] hover:border-[var(--dl-border)] hover:bg-white/[0.04] hover:text-white'}`}>
+                  <span className="grid h-10 w-10 place-items-center rounded-[0.95rem] border border-[var(--dl-border)] bg-white/[0.04] text-[0.74rem] font-bold uppercase tracking-[0.12em]">
+                    {item.code}
+                  </span>
+                  <span className="font-semibold uppercase tracking-[0.1em]">{item.label}</span>
+                </div>
+              )}
             </NavLink>
           ))}
         </nav>
 
-        {/* Player Card */}
-        <div className="border-t border-[var(--dl-tactical-line)] p-4 space-y-3">
-          <div className="flex items-center gap-3 p-3 border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] [clip-path:var(--dl-cut-card)]">
-            <div className="w-10 h-10 grid place-items-center bg-[rgba(255,226,102,0.1)] border border-[rgba(255,226,102,0.3)] [clip-path:var(--dl-cut-button)] text-[var(--dl-tactical-yellow)] font-bold text-[13px] shrink-0 font-[Chakra_Petch]">
-              {getOperatorInitials()}
+        <DuolootCard variant="elevated" className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="grid h-12 w-12 place-items-center rounded-[1rem] border border-[var(--dl-border-red)] bg-[rgba(255,0,0,0.12)] font-['Rajdhani'] text-lg font-bold uppercase">
+              {getInitials()}
             </div>
-            <div className="flex-1 overflow-hidden">
-              <p className="truncate text-[13px] font-bold text-[var(--dl-tactical-text)] lowercase font-[Chakra_Petch] mb-0.5">
-                {getOperatorNickname()}
+            <div className="min-w-0">
+              <p className="truncate font-['Rajdhani'] text-lg font-bold uppercase text-white">{getNickname()}</p>
+              <p className="truncate text-xs uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
+                {profile?.is_premium ? 'Premium' : 'Standard'}
               </p>
-              <p className="truncate text-[9px] uppercase tracking-[0.12em] text-[var(--dl-tactical-muted)]">
-                Nível 1 // {profile?.is_premium ? 'PREMIUM' : 'OPERADOR'}
-              </p>
-              {profile?.game_profile && (
-                <p className="truncate text-[9.5px] font-bold tracking-[0.12em] text-[var(--dl-tactical-green)] uppercase mt-1 font-mono">
-                  {getOperatorRank()}
-                </p>
-              )}
             </div>
           </div>
-          
-          <Link
-            to={ROUTES.ONBOARDING}
-            className="w-full py-1.5 border border-[rgba(56,242,139,0.3)] bg-[rgba(56,242,139,0.04)] hover:bg-[rgba(56,242,139,0.1)] text-[var(--dl-tactical-green)] text-[10px] font-bold uppercase tracking-widest font-[Chakra_Petch] transition-all [clip-path:var(--dl-cut-button)] text-center no-underline block"
-          >
-            EDITAR PERFIL GAMER
-          </Link>
 
-          <button 
-            type="button" 
-            onClick={handleLogout}
-            className="w-full py-1.5 border border-[var(--dl-tactical-line)] hover:border-[var(--dl-tactical-red)]/50 hover:bg-[var(--dl-tactical-red)]/5 hover:text-[var(--dl-tactical-red)] text-[var(--dl-tactical-muted)] text-[10px] font-bold uppercase tracking-widest font-[Chakra_Petch] transition-all [clip-path:var(--dl-cut-button)]"
-          >
-            DESCONECTAR TERMINAL
-          </button>
-        </div>
+          <div className="rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.03] px-4 py-3 text-xs uppercase tracking-[0.12em] text-[var(--dl-muted-light)]">
+            {getRank()}
+          </div>
+
+          <DuolootButton fullWidth variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>Editar perfil</DuolootButton>
+          <DuolootButton fullWidth variant="danger" size="sm" onClick={handleLogout}>
+            Encerrar sessão
+          </DuolootButton>
+        </DuolootCard>
       </aside>
 
-      {/* Área Principal - Console Interno */}
-      <main className="flex-1 overflow-auto relative">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(56,242,139,0.06),transparent_40%),radial-gradient(circle_at_80%_90%,rgba(141,92,255,0.05),transparent_40%)]" />
-        <div className="relative z-[2] h-full p-4 md:p-6 lg:p-8">
+      <main className="relative flex-1 overflow-auto">
+        <div className="relative z-[1] h-full p-3 md:p-6 lg:p-8">
           <Outlet />
         </div>
       </main>

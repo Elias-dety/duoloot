@@ -1,6 +1,7 @@
 import React from 'react';
 import { AlertCircle, FileSearch, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
 import { Button, Card, SkeletonBlock } from '@/components/atoms';
 
 export interface PageStateProps {
@@ -23,13 +24,13 @@ export const PageState: React.FC<PageStateProps> = ({
   className = '',
 }) => {
   const navigate = useNavigate();
-  const containerClassName = `w-full max-w-5xl mx-auto px-4 ${className}`.trim();
+  const containerClassName = `mx-auto w-full max-w-5xl px-4 ${className}`.trim();
 
   if (type === 'loading') {
     return (
-      <div className={`${containerClassName} py-8 space-y-6`}>
-        {Array.from({ length: loadingBlocks }).map((_, i) => (
-          <SkeletonBlock key={i} height={120} rounded="xl" />
+      <div className={`${containerClassName} space-y-6 py-8`}>
+        {Array.from({ length: loadingBlocks }).map((_, index) => (
+          <SkeletonBlock key={index} height={120} rounded="xl" />
         ))}
       </div>
     );
@@ -40,7 +41,7 @@ export const PageState: React.FC<PageStateProps> = ({
       icon: AlertCircle,
       card: 'danger' as const,
       iconClass: 'text-danger',
-      defaultTitle: 'Ocorreu um erro',
+      defaultTitle: 'Falha ao sincronizar o módulo.',
       defaultDescription: 'Não foi possível carregar os dados no momento. Tente novamente mais tarde.',
       defaultAction: 'Tentar novamente',
     },
@@ -48,15 +49,15 @@ export const PageState: React.FC<PageStateProps> = ({
       icon: Lock,
       card: 'locked' as const,
       iconClass: 'text-premium',
-      defaultTitle: 'Conteudo bloqueado',
-      defaultDescription: 'Este recurso exige acesso premium para ser desbloqueado.',
+      defaultTitle: 'Conteúdo bloqueado',
+      defaultDescription: 'Este recurso exige acesso premium para continuar.',
       defaultAction: 'Ver planos',
     },
     empty: {
       icon: FileSearch,
       card: 'elevated' as const,
       iconClass: 'text-content-muted',
-      defaultTitle: 'Nenhum resultado',
+      defaultTitle: 'Nenhum registro encontrado.',
       defaultDescription: 'Não encontramos nenhum dado para exibir aqui no momento.',
       defaultAction: 'Voltar',
     },
@@ -78,7 +79,11 @@ export const PageState: React.FC<PageStateProps> = ({
               {actionText || stateConfig.defaultAction}
             </Button>
           )}
-          {type === 'error' && <Button variant="ghost" onClick={() => navigate(-1)}>Voltar</Button>}
+          {type === 'error' && (
+            <Button variant="ghost" onClick={() => navigate(-1)}>
+              Voltar
+            </Button>
+          )}
         </div>
       </Card>
     </div>

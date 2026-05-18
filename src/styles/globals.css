@@ -1,5 +1,5 @@
 @import url('./tokens.css');
-@import url('./tactical-theme.css');
+@import url('./red-vault.css');
 
 @tailwind base;
 @tailwind components;
@@ -7,26 +7,44 @@
 
 @layer base {
   * {
-    border-color: var(--dl-line);
+    box-sizing: border-box;
+    border-color: var(--dl-border);
   }
 
   html {
-    background: var(--dl-tactical-bg);
+    background: var(--dl-black);
+    color-scheme: dark;
   }
 
   body {
     min-height: 100vh;
     background:
-      linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px),
-      radial-gradient(circle at 14% 10%, rgba(56, 242, 139, 0.13), transparent 28rem),
-      radial-gradient(circle at 82% 12%, rgba(255, 226, 102, 0.11), transparent 25rem),
-      radial-gradient(circle at 78% 90%, rgba(141, 92, 255, 0.10), transparent 28rem),
-      var(--dl-tactical-bg);
-    background-size: 42px 42px, 42px 42px, auto, auto, auto, auto;
-    color: var(--dl-tactical-text);
-    font-family: "Chakra Petch", sans-serif;
+      radial-gradient(circle at top left, rgba(255, 42, 42, 0.16), transparent 28rem),
+      radial-gradient(circle at top right, rgba(143, 8, 8, 0.18), transparent 18rem),
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+      var(--dl-black);
+    background-size: auto, auto, 40px 40px, 40px 40px, auto;
+    color: var(--dl-text);
+    font-family: "Space Grotesk", sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  ::selection {
+    background: rgba(255, 0, 0, 0.22);
+    color: var(--dl-text);
   }
 }

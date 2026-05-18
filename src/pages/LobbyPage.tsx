@@ -8,6 +8,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { isGameProfileComplete } from '@/services/onboarding.service';
 import type { PlayerGameProfile } from '@/services/auth.service';
+import logger from '@/lib/logger';
 
 export default function LobbyPage() {
   const { isAuthenticated, profile } = useAuth();
@@ -29,13 +30,15 @@ export default function LobbyPage() {
   }, []);
 
   const fetchLobbies = useCallback(async (options?: { silent?: boolean }) => {
+    if (!isSupabaseConfigured) return;
+
     try {
       if (!options?.silent) {
         setIsLoading(true);
       }
       setIsError(false);
       const data = await getOpenLobbies();
-      setLobbies(data as unknown as Lobby[]);
+      setLobbies(data);
     } catch (error) {
       console.error('Error fetching lobbies:', error);
       setIsError(true);
@@ -47,6 +50,8 @@ export default function LobbyPage() {
   }, []);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
     fetchLobbies();
 
     // Configurar Realtime
@@ -71,7 +76,7 @@ export default function LobbyPage() {
 
   const handleCreateTestLobby = async () => {
     if (!isAuthenticated) {
-      console.log('Operador não autenticado para criar lobby. Redirecionando para login.');
+      logger.info('Operador não autenticado para criar lobby. Redirecionando para login.');
       navigate(ROUTES.LOGIN, { state: { from: location } });
       return;
     }
@@ -79,7 +84,7 @@ export default function LobbyPage() {
     if (!profile || !isGameProfileComplete(profile)) {
       setErrorMessage('Complete seu perfil gamer antes de criar um lobby.');
       setTimeout(() => {
-        navigate('/onboarding');
+        navigate(ROUTES.ONBOARDING);
       }, 1500);
       return;
     }
@@ -123,7 +128,7 @@ export default function LobbyPage() {
 
   const handleJoinLobby = async (lobbyId: string) => {
     if (!isAuthenticated) {
-      console.log('Operador não autenticado para entrar em lobby. Redirecionando para login.');
+      logger.info('Operador não autenticado para entrar em lobby. Redirecionando para login.');
       navigate(ROUTES.LOGIN, { state: { from: location } });
       return;
     }
@@ -131,7 +136,7 @@ export default function LobbyPage() {
     if (!profile || !isGameProfileComplete(profile)) {
       setErrorMessage('Complete seu perfil gamer antes de entrar em um lobby.');
       setTimeout(() => {
-        navigate('/onboarding');
+        navigate(ROUTES.ONBOARDING);
       }, 1500);
       return;
     }

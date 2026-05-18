@@ -46,14 +46,14 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ player }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:flex sm:w-auto">
-          <button type="button" className="dl-btn opacity-70 hover:opacity-100 gap-2 border border-[var(--dl-tactical-line)]">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:w-auto">
+          <button type="button" className="dl-btn gap-2 border border-[var(--dl-tactical-line)] opacity-70 hover:opacity-100" disabled>
             <MessageCircle className="h-4 w-4" />
-            Mensagem
+            Ver compatibilidade
           </button>
-          <button type="button" className="dl-btn dl-btn-green gap-2">
+          <button type="button" className="dl-btn dl-btn-green gap-2" disabled>
             <Shield className="h-4 w-4" />
-            Convidar
+            Convidar para lobby
           </button>
         </div>
       </div>

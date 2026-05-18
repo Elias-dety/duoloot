@@ -1,11 +1,13 @@
 import React from 'react';
 
+import { DuolootButton } from '@/components/duoloot';
+
 export interface LobbyFilterState {
   search: string;
   game: string;
   rank: string;
   region: string;
-  microphone: string; // 'all' | 'yes' | 'no'
+  microphone: string;
 }
 
 export interface LobbyFiltersProps {
@@ -26,120 +28,84 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
     });
   };
 
-  const hasActiveFilters = 
+  const hasActiveFilters =
     filters.search !== '' ||
     filters.game !== 'all' ||
     filters.rank !== 'all' ||
     filters.region !== 'all' ||
     filters.microphone !== 'all';
 
+  const fieldClassName = 'w-full rounded-2xl border border-[var(--dl-border)] bg-[var(--dl-surface)] px-3 py-2.5 text-sm text-[var(--dl-text)] focus:border-[var(--dl-red)] focus:outline-none';
+  const labelClassName = 'mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]';
+
   return (
-    <div 
-      className="dl-panel flex flex-col gap-4 p-5" 
-      style={{ borderColor: 'rgba(70,183,255,0.2)' }}
-    >
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        {/* Busca por texto */}
+    <div className="dl-panel flex flex-col gap-4 p-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <div className="flex flex-col">
-          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-tactical-blue)]">
-            Buscar Operador
-          </label>
+          <label className={labelClassName}>Buscar player</label>
           <input
             type="text"
-            className="dl-input w-full h-10 px-3 bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-sm text-[var(--dl-tactical-text)] focus:outline-none focus:border-[var(--dl-tactical-blue)] font-['Rajdhani'] uppercase font-bold"
-            placeholder="Ex: Jett, Neon..."
+            className={fieldClassName}
+            placeholder="Ex: Jett, controller..."
             value={filters.search}
-            onChange={(e) => handleChange('search', e.target.value)}
+            onChange={(event) => handleChange('search', event.target.value)}
           />
         </div>
 
-        {/* Jogo */}
         <div className="flex flex-col">
-          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-tactical-blue)]">
-            Jogo Principal
-          </label>
-          <select
-            className="dl-input w-full h-10 px-3 bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-sm text-[var(--dl-tactical-text)] focus:outline-none focus:border-[var(--dl-tactical-blue)] font-['Rajdhani'] uppercase font-bold cursor-pointer"
-            value={filters.game}
-            onChange={(e) => handleChange('game', e.target.value)}
-          >
-            <option value="all">TODOS OS JOGOS</option>
-            <option value="valorant">VALORANT</option>
-            <option value="league of legends">LEAGUE OF LEGENDS</option>
-            <option value="counter-strike 2">COUNTER-STRIKE 2</option>
+          <label className={labelClassName}>Jogo principal</label>
+          <select className={fieldClassName} value={filters.game} onChange={(event) => handleChange('game', event.target.value)}>
+            <option value="all">Todos os jogos</option>
+            <option value="valorant">Valorant</option>
+            <option value="league of legends">League of Legends</option>
+            <option value="counter-strike 2">Counter-Strike 2</option>
           </select>
         </div>
 
-        {/* Rank */}
         <div className="flex flex-col">
-          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-tactical-blue)]">
-            Patente / Rank
-          </label>
-          <select
-            className="dl-input w-full h-10 px-3 bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-sm text-[var(--dl-tactical-text)] focus:outline-none focus:border-[var(--dl-tactical-blue)] font-['Rajdhani'] uppercase font-bold cursor-pointer"
-            value={filters.rank}
-            onChange={(e) => handleChange('rank', e.target.value)}
-          >
-            <option value="all">QUALQUER RANK</option>
-            <option value="ferro">FERRO</option>
-            <option value="bronze">BRONZE</option>
-            <option value="prata">PRATA</option>
-            <option value="ouro">OURO</option>
-            <option value="platina">PLATINA</option>
-            <option value="diamante">DIAMANTE</option>
-            <option value="ascendente">ASCENDENTE</option>
-            <option value="imortal">IMORTAL</option>
-            <option value="radiante">RADIANTE</option>
+          <label className={labelClassName}>Patente / rank</label>
+          <select className={fieldClassName} value={filters.rank} onChange={(event) => handleChange('rank', event.target.value)}>
+            <option value="all">Qualquer rank</option>
+            <option value="ferro">Ferro</option>
+            <option value="bronze">Bronze</option>
+            <option value="prata">Prata</option>
+            <option value="ouro">Ouro</option>
+            <option value="platina">Platina</option>
+            <option value="diamante">Diamante</option>
+            <option value="ascendente">Ascendente</option>
+            <option value="imortal">Imortal</option>
+            <option value="radiante">Radiante</option>
           </select>
         </div>
 
-        {/* Região */}
         <div className="flex flex-col">
-          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-tactical-blue)]">
-            Região
-          </label>
-          <select
-            className="dl-input w-full h-10 px-3 bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-sm text-[var(--dl-tactical-text)] focus:outline-none focus:border-[var(--dl-tactical-blue)] font-['Rajdhani'] uppercase font-bold cursor-pointer"
-            value={filters.region}
-            onChange={(e) => handleChange('region', e.target.value)}
-          >
-            <option value="all">TODAS REGIÕES</option>
-            <option value="BR">BRASIL (BR)</option>
-            <option value="NA">AMÉRICA DO NORTE (NA)</option>
-            <option value="EU">EUROPA (EU)</option>
-            <option value="LATAM">LATINO AMÉRICA (LATAM)</option>
+          <label className={labelClassName}>Região</label>
+          <select className={fieldClassName} value={filters.region} onChange={(event) => handleChange('region', event.target.value)}>
+            <option value="all">Todas as regiões</option>
+            <option value="BR">Brasil (BR)</option>
+            <option value="NA">América do Norte (NA)</option>
+            <option value="EU">Europa (EU)</option>
+            <option value="LATAM">Latam</option>
           </select>
         </div>
 
-        {/* Microfone */}
         <div className="flex flex-col">
-          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-tactical-blue)]">
-            Requisito de Mic
-          </label>
-          <select
-            className="dl-input w-full h-10 px-3 bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-sm text-[var(--dl-tactical-text)] focus:outline-none focus:border-[var(--dl-tactical-blue)] font-['Rajdhani'] uppercase font-bold cursor-pointer"
-            value={filters.microphone}
-            onChange={(e) => handleChange('microphone', e.target.value)}
-          >
-            <option value="all">QUALQUER ESTADO</option>
-            <option value="yes">MICROFONE REQUERIDO</option>
-            <option value="no">SEM EXIGÊNCIA</option>
+          <label className={labelClassName}>Requisito de mic</label>
+          <select className={fieldClassName} value={filters.microphone} onChange={(event) => handleChange('microphone', event.target.value)}>
+            <option value="all">Qualquer estado</option>
+            <option value="yes">Microfone requerido</option>
+            <option value="no">Sem exigência</option>
           </select>
         </div>
       </div>
 
-      {hasActiveFilters && (
-        <div className="flex justify-end border-t border-[var(--dl-tactical-line)]/40 pt-4 mt-2">
-          <button
-            type="button"
-            onClick={onClearFilters}
-            className="dl-btn h-10 px-6 font-['Rajdhani'] uppercase font-bold text-xs"
-            style={{ color: 'var(--dl-tactical-red)', borderColor: 'rgba(255, 51, 102, 0.4)' }}
-          >
-            // ZERAR PARÂMETROS DE BUSCA
-          </button>
+      {hasActiveFilters ? (
+        <div className="mt-2 flex border-t border-[var(--dl-border)]/40 pt-4">
+          <DuolootButton type="button" onClick={onClearFilters} variant="secondary" className="w-full sm:ml-auto sm:w-auto">
+            Limpar filtros
+          </DuolootButton>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

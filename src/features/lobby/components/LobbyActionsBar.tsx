@@ -1,4 +1,5 @@
 import React from 'react';
+import { DuolootBadge, DuolootButton } from '@/components/duoloot';
 
 export interface LobbyActionsBarProps {
   totalLobbies: number;
@@ -7,16 +8,14 @@ export interface LobbyActionsBarProps {
 
 export const LobbyActionsBar: React.FC<LobbyActionsBarProps> = ({ totalLobbies, onCreateLobby }) => {
   return (
-    <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-[var(--dl-tactical-line)] py-4 md:flex-row md:items-center">
-      <h2 className="font-['Rajdhani'] text-xl font-bold uppercase text-[var(--dl-tactical-text)] flex items-center gap-3">
+    <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-[var(--dl-border)] py-4 md:flex-row md:items-center">
+      <h2 className="flex items-center gap-3 font-['Rajdhani'] text-2xl font-bold uppercase text-white">
         Lobbies disponíveis
-        <span className="dl-stamp" style={{ color: 'var(--dl-tactical-blue)', borderColor: 'rgba(70,183,255,0.3)', background: 'rgba(70,183,255,0.07)' }}>
-          {totalLobbies}
-        </span>
+        <DuolootBadge>{String(totalLobbies)}</DuolootBadge>
       </h2>
-      <button type="button" className="dl-btn dl-btn-primary" onClick={onCreateLobby}>
+      <DuolootButton type="button" onClick={onCreateLobby}>
         + Criar Lobby
-      </button>
+      </DuolootButton>
     </div>
   );
 };

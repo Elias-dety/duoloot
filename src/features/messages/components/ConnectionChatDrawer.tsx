@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { format } from 'date-fns';
+
 import { Card } from '@/components/atoms';
 import { supabase } from '@/lib/supabase';
 import {
@@ -36,46 +37,40 @@ export const ConnectionChatDrawer: React.FC<ConnectionChatDrawerProps> = ({
     }
   };
 
-  const fetchMessages = useCallback(
-    async (silent = false) => {
-      try {
-        if (!silent) setIsLoading(true);
-        const data = await getConnectionMessages(connectionId);
-        setMessages(data);
-      } catch (error: unknown) {
-        console.error('Error loading messages:', error);
-        if (!silent) setError('Falha ao carregar histórico de chat.');
-      } finally {
-        if (!silent) setIsLoading(false);
+  const fetchMessages = useCallback(async (silent = false) => {
+    try {
+      if (!silent) setIsLoading(true);
+      const data = await getConnectionMessages(connectionId);
+      setMessages(data);
+    } catch (err: unknown) {
+      console.error('Error loading messages:', err);
+      if (!silent) setError('Falha ao carregar histórico de chat.');
+    } finally {
+      if (!silent) setIsLoading(false);
+    }
+  }, [connectionId]);
+
+  const handleSendMessage = useCallback(async (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    const body = newMessage.trim();
+    if (!body || isSending) return;
+
+    try {
+      setIsSending(true);
+      const result = await sendConnectionMessage(connectionId, body);
+      if (result.success) {
+        setNewMessage('');
+        await fetchMessages(true);
+      } else {
+        setError(result.message);
       }
-    },
-    [connectionId]
-  );
-
-  const handleSendMessage = useCallback(
-    async (event?: React.FormEvent<HTMLFormElement>) => {
-      event?.preventDefault();
-
-      const body = newMessage.trim();
-      if (!body || isSending) return;
-
-      try {
-        setIsSending(true);
-        const result = await sendConnectionMessage(connectionId, body);
-        if (result.success) {
-          setNewMessage('');
-          await fetchMessages(true);
-        } else {
-          setError(result.message);
-        }
-      } catch {
-        setError('Erro ao enviar mensagem.');
-      } finally {
-        setIsSending(false);
-      }
-    },
-    [connectionId, fetchMessages, isSending, newMessage]
-  );
+    } catch {
+      setError('Erro ao enviar mensagem.');
+    } finally {
+      setIsSending(false);
+    }
+  }, [connectionId, fetchMessages, isSending, newMessage]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -100,10 +95,10 @@ export const ConnectionChatDrawer: React.FC<ConnectionChatDrawerProps> = ({
           await fetchMessages(true);
           try {
             await markConnectionMessagesAsRead(connectionId);
-          } catch (error) {
-            console.error('Erro ao marcar mensagens em tempo real:', error);
+          } catch (err) {
+            console.error('Erro ao marcar mensagens em tempo real:', err);
           }
-        }
+        },
       )
       .subscribe();
 
@@ -122,7 +117,7 @@ export const ConnectionChatDrawer: React.FC<ConnectionChatDrawerProps> = ({
     <div className="fixed inset-0 z-[100] flex justify-end">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-      <Card className="relative flex h-full w-full max-w-[400px] flex-col rounded-none border-l border-white/10 bg-[#0a0a0b] shadow-2xl animate-in slide-in-from-right duration-300">
+      <Card className="relative flex h-full w-full max-w-[420px] flex-col rounded-none border-l border-white/10 bg-[#0a0a0b] shadow-2xl animate-in slide-in-from-right duration-300">
         <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.02] p-4">
           <div className="flex items-center gap-3">
             <div className="h-2 w-2 rounded-full bg-[var(--dl-tactical-green)] shadow-[0_0_8px_rgba(56,242,139,0.5)]" />
@@ -131,7 +126,7 @@ export const ConnectionChatDrawer: React.FC<ConnectionChatDrawerProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded border border-white/10 text-white/50 transition-colors hover:bg-white/5"
+            className="flex h-8 w-8 items-center justify-center border border-white/10 text-white/50 transition-colors hover:bg-white/5"
           >
             ✕
           </button>
@@ -158,7 +153,7 @@ export const ConnectionChatDrawer: React.FC<ConnectionChatDrawerProps> = ({
               return (
                 <div key={message.id} className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
                   <div
-                    className={`max-w-[85%] rounded p-3 text-sm ${
+                    className={`max-w-[85%] break-words rounded p-3 text-sm ${
                       isMine
                         ? 'border border-[var(--dl-tactical-purple)]/30 bg-[var(--dl-tactical-purple)]/20 text-white [clip-path:polygon(0_0,100%_0,100%_calc(100%-8px),calc(100%-8px)_100%,0_100%)]'
                         : 'border border-white/10 bg-white/5 text-white/90 [clip-path:polygon(8px_0,100%_0,100%_100%,0_100%,0_8px)]'
@@ -188,7 +183,7 @@ export const ConnectionChatDrawer: React.FC<ConnectionChatDrawerProps> = ({
               onChange={(event) => setNewMessage(event.target.value.slice(0, 1000))}
               placeholder="Digite sua mensagem tática..."
               rows={2}
-              className="w-full resize-none rounded border border-white/10 bg-black/40 p-3 pr-12 text-sm text-white transition-colors placeholder:text-white/20 focus:border-[var(--dl-tactical-purple)]/50 focus:outline-none"
+              className="w-full resize-none border border-white/10 bg-black/40 p-3 pr-12 text-sm text-white transition-colors placeholder:text-white/20 focus:border-[var(--dl-tactical-purple)]/50 focus:outline-none"
               onKeyDown={(event) => {
                 if (event.key === 'Enter' && !event.shiftKey) {
                   event.preventDefault();
@@ -204,8 +199,8 @@ export const ConnectionChatDrawer: React.FC<ConnectionChatDrawerProps> = ({
               <span className="text-xs">➤</span>
             </button>
           </form>
-          <div className="mt-2 flex justify-between">
-            <span className="text-[8px] font-bold uppercase tracking-widest text-white/20">Conexão Encriptada // Ponta-a-ponta</span>
+          <div className="mt-2 flex justify-between gap-3">
+            <span className="text-[8px] font-bold uppercase tracking-widest text-white/20">Conexão encriptada // ponta a ponta</span>
             <span className={`text-[8px] font-bold ${newMessage.length > 900 ? 'text-[var(--dl-tactical-red)]' : 'text-white/20'}`}>
               {newMessage.length}/1000
             </span>

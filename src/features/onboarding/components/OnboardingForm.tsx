@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { useForm, Controller, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  OnboardingSchema,
-  OnboardingData,
-  ONBOARDING_MAIN_GAMES,
-  ONBOARDING_RANKS,
-  ONBOARDING_ROLES,
-  ONBOARDING_PLAY_STYLES,
-  ONBOARDING_SESSION_FOCUS,
-  ONBOARDING_AVAILABILITIES,
-  ONBOARDING_MODES,
-  ONBOARDING_REGIONS,
-} from '../onboarding.schema';
+
+import { Button, Input, Label } from '@/components/atoms';
 import { OnboardingStepCard } from './OnboardingStepCard';
-import { Input, Label, Button } from '@/components/atoms';
+import {
+  ONBOARDING_AVAILABILITIES,
+  ONBOARDING_MAIN_GAMES,
+  ONBOARDING_MODES,
+  ONBOARDING_PLAY_STYLES,
+  ONBOARDING_RANKS,
+  ONBOARDING_REGIONS,
+  ONBOARDING_ROLES,
+  ONBOARDING_SESSION_FOCUS,
+  OnboardingData,
+  OnboardingSchema,
+} from '../onboarding.schema';
 
 interface OnboardingFormProps {
   initialData?: Partial<OnboardingData> | null;
@@ -59,7 +60,6 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
     },
   });
 
-  // Escuta os campos para enviar as atualizações ao preview do operador
   const watchedData = useWatch({ control });
   React.useEffect(() => {
     if (onDataChange) {
@@ -67,8 +67,8 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
     }
   }, [watchedData, onDataChange]);
 
-  const handleNext = async (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleNext = async (event: React.MouseEvent) => {
+    event.preventDefault();
     let fieldsToValidate: Array<keyof OnboardingData> = [];
 
     if (step === 1) {
@@ -83,105 +83,60 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
     }
   };
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handlePrev = (event: React.MouseEvent) => {
+    event.preventDefault();
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
-  const onFormSubmit = (data: OnboardingData) => {
-    onSubmit(data);
-  };
-
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
-      {/* PASSOS DO STEPPER */}
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {step === 1 && (
         <OnboardingStepCard
-          title="Identificação Operacional"
-          description="Informe sua identidade cibernética gamer e rede de servidores."
+          title="Identificação operacional"
+          description="Informe sua identidade gamer e rede principal."
           stepNumber={1}
           totalSteps={totalSteps}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Jogo Principal */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="mainGame" required className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Jogo Principal de Operação
+              <Label htmlFor="mainGame" required className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Jogo principal
               </Label>
-              <select
-                id="mainGame"
-                {...register('mainGame')}
-                className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-sm focus:border-[var(--dl-tactical-green)] focus:outline-none uppercase"
-              >
+              <select id="mainGame" {...register('mainGame')} className="w-full border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-sm uppercase text-[var(--dl-tactical-text)] focus:border-[var(--dl-tactical-green)] focus:outline-none">
                 {ONBOARDING_MAIN_GAMES.map((game) => (
-                  <option key={game.value} value={game.value}>
-                    {game.label}
-                  </option>
+                  <option key={game.value} value={game.value}>{game.label}</option>
                 ))}
               </select>
-              {errors.mainGame && (
-                <p className="text-[10px] text-[var(--dl-tactical-red)] uppercase font-[Chakra_Petch] font-semibold">
-                  {errors.mainGame.message}
-                </p>
-              )}
+              {errors.mainGame && <p className="text-[10px] font-semibold uppercase text-[var(--dl-tactical-red)]">{errors.mainGame.message}</p>}
             </div>
 
-            {/* Região */}
             <div className="space-y-1.5">
-              <Label htmlFor="region" className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Região de Servidores
+              <Label htmlFor="region" className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Região
               </Label>
-              <select
-                id="region"
-                {...register('region')}
-                className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-sm focus:border-[var(--dl-tactical-green)] focus:outline-none uppercase"
-              >
-                {ONBOARDING_REGIONS.map((reg) => (
-                  <option key={reg.value} value={reg.value}>
-                    {reg.label}
-                  </option>
+              <select id="region" {...register('region')} className="w-full border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-sm uppercase text-[var(--dl-tactical-text)] focus:border-[var(--dl-tactical-green)] focus:outline-none">
+                {ONBOARDING_REGIONS.map((region) => (
+                  <option key={region.value} value={region.value}>{region.label}</option>
                 ))}
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Nickname */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="nickname" required className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Codinome / Nickname
+              <Label htmlFor="nickname" required className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Codinome / nickname
               </Label>
-              <Input
-                id="nickname"
-                type="text"
-                placeholder="Ex: dety_gamer"
-                {...register('nickname')}
-                className="lowercase text-sm font-[Chakra_Petch]"
-              />
-              {errors.nickname && (
-                <p className="text-[10px] text-[var(--dl-tactical-red)] uppercase font-[Chakra_Petch] font-semibold">
-                  {errors.nickname.message}
-                </p>
-              )}
+              <Input id="nickname" type="text" placeholder="Ex: dety_gamer" {...register('nickname')} className="text-sm" />
+              {errors.nickname && <p className="text-[10px] font-semibold uppercase text-[var(--dl-tactical-red)]">{errors.nickname.message}</p>}
             </div>
 
-            {/* Riot ID */}
             <div className="space-y-1.5">
-              <Label htmlFor="riotId" className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Riot ID / Conta Gamer (Opcional)
+              <Label htmlFor="riotId" className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Riot ID / conta gamer
               </Label>
-              <Input
-                id="riotId"
-                type="text"
-                placeholder="Ex: Player#BR1"
-                {...register('riotId')}
-                className="text-sm font-[Chakra_Petch]"
-              />
-              {errors.riotId && (
-                <p className="text-[10px] text-[var(--dl-tactical-red)] uppercase font-[Chakra_Petch] font-semibold">
-                  {errors.riotId.message}
-                </p>
-              )}
+              <Input id="riotId" type="text" placeholder="Ex: Player#BR1" {...register('riotId')} className="text-sm" />
+              {errors.riotId && <p className="text-[10px] font-semibold uppercase text-[var(--dl-tactical-red)]">{errors.riotId.message}</p>}
             </div>
           </div>
         </OnboardingStepCard>
@@ -189,98 +144,58 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
 
       {step === 2 && (
         <OnboardingStepCard
-          title="Habilidades e Perfil de Combate"
-          description="Especifique suas qualificações táticas e patente militar de jogo."
+          title="Perfil de combate"
+          description="Defina patente, função e estilo de jogo."
           stepNumber={2}
           totalSteps={totalSteps}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Patente / Rank */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="currentRank" required className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Patente / Rank Atual
+              <Label htmlFor="currentRank" required className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Patente / rank atual
               </Label>
-              <select
-                id="currentRank"
-                {...register('currentRank')}
-                className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-sm focus:border-[var(--dl-tactical-green)] focus:outline-none uppercase"
-              >
+              <select id="currentRank" {...register('currentRank')} className="w-full border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-sm uppercase text-[var(--dl-tactical-text)] focus:border-[var(--dl-tactical-green)] focus:outline-none">
                 {ONBOARDING_RANKS.map((rank) => (
-                  <option key={rank.value} value={rank.value}>
-                    {rank.label}
-                  </option>
+                  <option key={rank.value} value={rank.value}>{rank.label}</option>
                 ))}
               </select>
-              {errors.currentRank && (
-                <p className="text-[10px] text-[var(--dl-tactical-red)] uppercase font-[Chakra_Petch] font-semibold">
-                  {errors.currentRank.message}
-                </p>
-              )}
+              {errors.currentRank && <p className="text-[10px] font-semibold uppercase text-[var(--dl-tactical-red)]">{errors.currentRank.message}</p>}
             </div>
 
-            {/* Estilo de Jogo */}
             <div className="space-y-1.5">
-              <Label htmlFor="playStyle" required className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Estilo de Jogo
+              <Label htmlFor="playStyle" required className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Estilo de jogo
               </Label>
-              <select
-                id="playStyle"
-                {...register('playStyle')}
-                className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-sm focus:border-[var(--dl-tactical-green)] focus:outline-none uppercase"
-              >
+              <select id="playStyle" {...register('playStyle')} className="w-full border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-sm uppercase text-[var(--dl-tactical-text)] focus:border-[var(--dl-tactical-green)] focus:outline-none">
                 {ONBOARDING_PLAY_STYLES.map((style) => (
-                  <option key={style.value} value={style.value}>
-                    {style.label}
-                  </option>
+                  <option key={style.value} value={style.value}>{style.label}</option>
                 ))}
               </select>
-              {errors.playStyle && (
-                <p className="text-[10px] text-[var(--dl-tactical-red)] uppercase font-[Chakra_Petch] font-semibold">
-                  {errors.playStyle.message}
-                </p>
-              )}
+              {errors.playStyle && <p className="text-[10px] font-semibold uppercase text-[var(--dl-tactical-red)]">{errors.playStyle.message}</p>}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Função Principal */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="mainRole" required className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Função Principal (Main Role)
+              <Label htmlFor="mainRole" required className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Função principal
               </Label>
-              <select
-                id="mainRole"
-                {...register('mainRole')}
-                className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-sm focus:border-[var(--dl-tactical-green)] focus:outline-none uppercase"
-              >
+              <select id="mainRole" {...register('mainRole')} className="w-full border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-sm uppercase text-[var(--dl-tactical-text)] focus:border-[var(--dl-tactical-green)] focus:outline-none">
                 {ONBOARDING_ROLES.map((role) => (
-                  <option key={role.value} value={role.value}>
-                    {role.label}
-                  </option>
+                  <option key={role.value} value={role.value}>{role.label}</option>
                 ))}
               </select>
-              {errors.mainRole && (
-                <p className="text-[10px] text-[var(--dl-tactical-red)] uppercase font-[Chakra_Petch] font-semibold">
-                  {errors.mainRole.message}
-                </p>
-              )}
+              {errors.mainRole && <p className="text-[10px] font-semibold uppercase text-[var(--dl-tactical-red)]">{errors.mainRole.message}</p>}
             </div>
 
-            {/* Função Secundária */}
             <div className="space-y-1.5">
-              <Label htmlFor="secondaryRole" className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Função Secundária (Opcional)
+              <Label htmlFor="secondaryRole" className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Função secundária
               </Label>
-              <select
-                id="secondaryRole"
-                {...register('secondaryRole')}
-                className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-sm focus:border-[var(--dl-tactical-green)] focus:outline-none uppercase"
-              >
-                <option value="">Nenhuma / Sem preferência</option>
+              <select id="secondaryRole" {...register('secondaryRole')} className="w-full border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-sm uppercase text-[var(--dl-tactical-text)] focus:border-[var(--dl-tactical-green)] focus:outline-none">
+                <option value="">Nenhuma</option>
                 {ONBOARDING_ROLES.map((role) => (
-                  <option key={role.value} value={role.value}>
-                    {role.label}
-                  </option>
+                  <option key={role.value} value={role.value}>{role.label}</option>
                 ))}
               </select>
             </div>
@@ -290,64 +205,48 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
 
       {step === 3 && (
         <OnboardingStepCard
-          title="Social, Frequência & Conexão"
-          description="Configure sua disponibilidade operacional, canais de áudio e metas."
+          title="Social, frequência e conexão"
+          description="Configure disponibilidade, áudio e objetivo das sessões."
           stepNumber={3}
           totalSteps={totalSteps}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Disponibilidade */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="availability" required className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Disponibilidade para Jogar
+              <Label htmlFor="availability" required className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Disponibilidade
               </Label>
-              <select
-                id="availability"
-                {...register('availability')}
-                className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-sm focus:border-[var(--dl-tactical-green)] focus:outline-none uppercase"
-              >
-                {ONBOARDING_AVAILABILITIES.map((avail) => (
-                  <option key={avail.value} value={avail.value}>
-                    {avail.label}
-                  </option>
+              <select id="availability" {...register('availability')} className="w-full border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-sm uppercase text-[var(--dl-tactical-text)] focus:border-[var(--dl-tactical-green)] focus:outline-none">
+                {ONBOARDING_AVAILABILITIES.map((availability) => (
+                  <option key={availability.value} value={availability.value}>{availability.label}</option>
                 ))}
               </select>
             </div>
 
-            {/* Foco da Sessão */}
             <div className="space-y-1.5">
-              <Label htmlFor="sessionFocus" className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-                Foco Principal das Sessões
+              <Label htmlFor="sessionFocus" className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Foco das sessões
               </Label>
-              <select
-                id="sessionFocus"
-                {...register('sessionFocus')}
-                className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-sm focus:border-[var(--dl-tactical-green)] focus:outline-none uppercase"
-              >
+              <select id="sessionFocus" {...register('sessionFocus')} className="w-full border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-sm uppercase text-[var(--dl-tactical-text)] focus:border-[var(--dl-tactical-green)] focus:outline-none">
                 {ONBOARDING_SESSION_FOCUS.map((focus) => (
-                  <option key={focus.value} value={focus.value}>
-                    {focus.label}
-                  </option>
+                  <option key={focus.value} value={focus.value}>{focus.label}</option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Modos Preferidos (Chips Clicáveis) */}
           <div className="space-y-2">
-            <Label required className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-              Modos de Jogo Preferidos (Selecione pelo menos 1)
+            <Label required className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+              Modos preferidos
             </Label>
             <Controller
               control={control}
               name="preferredModes"
               render={({ field }) => {
                 const selected = field.value || [];
-                const toggleMode = (modeVal: string) => {
-                  const isSelected = selected.includes(modeVal);
-                  const updated = isSelected
-                    ? selected.filter((m) => m !== modeVal)
-                    : [...selected, modeVal];
+                const toggleMode = (modeValue: string) => {
+                  const updated = selected.includes(modeValue)
+                    ? selected.filter((mode) => mode !== modeValue)
+                    : [...selected, modeValue];
                   field.onChange(updated);
                 };
 
@@ -360,10 +259,10 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
                           key={mode.value}
                           type="button"
                           onClick={() => toggleMode(mode.value)}
-                          className={`px-3 py-1.5 border font-semibold text-xs tracking-wider uppercase font-[Chakra_Petch] transition-all rounded-sm [clip-path:polygon(0_0,100%_0,95%_100%,5%_100%)] ${
+                          className={`border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider transition-all [clip-path:polygon(0_0,100%_0,95%_100%,5%_100%)] ${
                             isSelected
-                              ? 'bg-[var(--dl-tactical-green)]/15 border-[var(--dl-tactical-green)] text-[var(--dl-tactical-green)] shadow-[0_0_12px_rgba(56,242,139,0.15)]'
-                              : 'bg-[var(--dl-tactical-metal)] border-[var(--dl-tactical-line)] text-[var(--dl-tactical-muted)] hover:border-[var(--dl-tactical-muted)]'
+                              ? 'border-[var(--dl-tactical-green)] bg-[var(--dl-tactical-green)]/15 text-[var(--dl-tactical-green)] shadow-[0_0_12px_rgba(56,242,139,0.15)]'
+                              : 'border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] text-[var(--dl-tactical-muted)] hover:border-[var(--dl-tactical-muted)]'
                           }`}
                         >
                           {mode.label}
@@ -374,21 +273,16 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
                 );
               }}
             />
-            {errors.preferredModes && (
-              <p className="text-[10px] text-[var(--dl-tactical-red)] uppercase font-[Chakra_Petch] font-semibold">
-                {errors.preferredModes.message}
-              </p>
-            )}
+            {errors.preferredModes && <p className="text-[10px] font-semibold uppercase text-[var(--dl-tactical-red)]">{errors.preferredModes.message}</p>}
           </div>
 
-          {/* Microfone Toggle */}
-          <div className="flex items-center justify-between p-3 border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)]/50 rounded">
+          <div className="flex items-center justify-between gap-4 border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)]/50 p-3">
             <div className="space-y-0.5">
-              <Label htmlFor="microphone" className="text-xs font-bold text-[var(--dl-tactical-text)] uppercase tracking-wider font-[Chakra_Petch]">
-                Possui Microfone de Combate?
+              <Label htmlFor="microphone" className="text-xs font-bold uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+                Possui microfone?
               </Label>
-              <span className="text-[10px] text-[var(--dl-tactical-muted)] uppercase tracking-wider block">
-                Comunicação por áudio ativa para coordenação e táticas.
+              <span className="block text-[10px] uppercase tracking-wider text-[var(--dl-tactical-muted)]">
+                Comunicação por áudio ativa para coordenação tática.
               </span>
             </div>
             <Controller
@@ -399,13 +293,13 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
                   type="button"
                   id="microphone"
                   onClick={() => field.onChange(!field.value)}
-                  className={`w-14 h-7 rounded-full p-1 transition-all duration-300 relative ${
-                    field.value ? 'bg-[var(--dl-tactical-green)]/20 border border-[var(--dl-tactical-green)]' : 'bg-black/60 border border-[var(--dl-tactical-line)]'
+                  className={`relative h-7 w-14 rounded-full p-1 transition-all duration-300 ${
+                    field.value ? 'border border-[var(--dl-tactical-green)] bg-[var(--dl-tactical-green)]/20' : 'border border-[var(--dl-tactical-line)] bg-black/60'
                   }`}
                 >
                   <div
-                    className={`w-4 h-4 rounded-full transition-all duration-300 ${
-                      field.value ? 'bg-[var(--dl-tactical-green)] translate-x-7 shadow-[0_0_8px_var(--dl-tactical-green)]' : 'bg-[var(--dl-tactical-muted)] translate-x-0'
+                    className={`h-4 w-4 rounded-full transition-all duration-300 ${
+                      field.value ? 'translate-x-7 bg-[var(--dl-tactical-green)] shadow-[0_0_8px_var(--dl-tactical-green)]' : 'translate-x-0 bg-[var(--dl-tactical-muted)]'
                     }`}
                   />
                 </button>
@@ -413,75 +307,45 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
             />
           </div>
 
-          {/* Biografia Curta */}
           <div className="space-y-1.5">
-            <Label htmlFor="bio" className="text-[var(--dl-tactical-text)] uppercase text-[11px] tracking-wider font-[Chakra_Petch]">
-              Anotações Adicionais / Biografia (Máx. 180 carac.)
+            <Label htmlFor="bio" className="text-[11px] uppercase tracking-wider text-[var(--dl-tactical-text)] font-[Chakra_Petch]">
+              Biografia curta
             </Label>
             <textarea
               id="bio"
               placeholder="Descreva seu estilo de jogo, agentes favoritos ou metas operacionais..."
               maxLength={180}
               {...register('bio')}
-              rows={2}
-              className="w-full bg-[var(--dl-tactical-metal)] border border-[var(--dl-tactical-line)] text-[var(--dl-tactical-text)] px-3 py-2 rounded font-[Chakra_Petch] text-xs focus:border-[var(--dl-tactical-green)] focus:outline-none placeholder-[var(--dl-tactical-muted)]/50 resize-none"
+              rows={3}
+              className="w-full resize-none border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] px-3 py-2 text-xs text-[var(--dl-tactical-text)] placeholder-[var(--dl-tactical-muted)]/50 focus:border-[var(--dl-tactical-green)] focus:outline-none"
             />
-            <div className="flex justify-between items-center text-[10px] text-[var(--dl-tactical-muted)] uppercase tracking-wider">
-              <span>* Aparece no painel de recomendações sociais.</span>
+            <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-[var(--dl-tactical-muted)]">
+              <span>Aparece no painel social.</span>
               <span>{(watchedData.bio || '').length}/180</span>
             </div>
           </div>
         </OnboardingStepCard>
       )}
 
-      {/* BOTÕES DE NAVEGAÇÃO E ENVIO */}
-      <div className="flex items-center justify-between gap-4 pt-2">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           {step > 1 && (
-            <Button
-              type="button"
-              onClick={handlePrev}
-              variant="outline"
-              className="px-4 py-2 border-[var(--dl-tactical-line)] bg-transparent hover:bg-white/5 text-[var(--dl-tactical-muted)] hover:text-white font-bold uppercase font-[Chakra_Petch] tracking-widest text-[11px] [clip-path:polygon(0_0,100%_0,90%_100%,10%_100%)] transition-all"
-            >
-              VOLTAR
+            <Button type="button" onClick={handlePrev} variant="outline" className="px-4 py-2 text-[11px]">
+              Voltar
             </Button>
           )}
-
-          <Button
-            type="button"
-            onClick={onSkip}
-            variant="ghost"
-            className="text-[var(--dl-tactical-muted)] hover:text-[var(--dl-tactical-red)] font-semibold uppercase font-[Chakra_Petch] tracking-widest text-[10px] px-3 py-2 border border-transparent hover:border-[var(--dl-tactical-red)]/10 rounded transition-all"
-          >
-            PULAR POR ENQUANTO
+          <Button type="button" onClick={onSkip} variant="ghost" className="px-3 py-2 text-[10px]">
+            Pular por enquanto
           </Button>
         </div>
 
         {step < totalSteps ? (
-          <Button
-            type="button"
-            onClick={handleNext}
-            variant="tactical-green"
-            className="px-6 py-2.5 bg-[var(--dl-tactical-green)] hover:bg-[var(--dl-tactical-green)]/90 text-black font-bold uppercase font-[Chakra_Petch] tracking-widest text-[11px] flex items-center gap-2 [clip-path:polygon(0_0,100%_0,95%_100%,5%_100%)] transition-all"
-          >
-            PRÓXIMO PASSO
+          <Button type="button" onClick={handleNext} variant="tactical-green" className="px-6 py-2.5 text-[11px]">
+            Próximo passo
           </Button>
         ) : (
-          <Button
-            type="submit"
-            disabled={isLoading}
-            variant="tactical-green"
-            className="px-8 py-2.5 bg-[var(--dl-tactical-green)] hover:bg-[var(--dl-tactical-green)]/90 text-black font-bold uppercase font-[Chakra_Petch] tracking-widest text-[11px] flex items-center gap-2 [clip-path:polygon(0_0,100%_0,95%_100%,5%_100%)] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_0_20px_rgba(56,242,139,0.3)]"
-          >
-            {isLoading ? (
-              <>
-                <span className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                SINCRONIZANDO PERFIL...
-              </>
-            ) : (
-              'SALVAR PERFIL GAMER'
-            )}
+          <Button type="submit" disabled={isLoading} variant="tactical-green" className="px-8 py-2.5 text-[11px] shadow-[0_0_20px_rgba(56,242,139,0.3)]">
+            {isLoading ? 'SINCRONIZANDO PERFIL...' : 'Salvar perfil gamer'}
           </Button>
         )}
       </div>

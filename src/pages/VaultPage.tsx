@@ -4,11 +4,14 @@ import { useAuth } from '@/features/auth/useAuth';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import {
   claimVaultMissionProgress,
+  finalizeVaultEvent,
   getActiveVault,
   getMyVaultProgress,
   getMyVaultRank,
   getVaultLeaderboard,
   getVaultOverview,
+  getVaultSeasons,
+  getVaultWinners,
   joinVaultEvent,
 } from '@/services/vault-progress.service';
 import {
@@ -18,6 +21,8 @@ import {
   VaultMission,
   VaultMissionProgress,
   VaultParticipant,
+  VaultSeason,
+  VaultWinner,
 } from '@/features/vault/vault.schema';
 
 export default function VaultPage() {
@@ -32,11 +37,16 @@ export default function VaultPage() {
   const [percentage, setPercentage] = useState(0);
   const [leaderboard, setLeaderboard] = useState<VaultLeaderboardEntry[]>([]);
   const [myRank, setMyRank] = useState<MyVaultRank | null>(null);
+  const [winners, setWinners] = useState<VaultWinner[]>([]);
+  const [seasons, setSeasons] = useState<VaultSeason[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(true);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+  const [isFinalizing, setIsFinalizing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [leaderboardError, setLeaderboardError] = useState('');
+  const [historyError, setHistoryError] = useState('');
   const [isJoining, setIsJoining] = useState(false);
   const [submittingTaskId, setSubmittingTaskId] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -75,6 +85,32 @@ export default function VaultPage() {
     [isLoggedIn, participant]
   );
 
+  const fetchHistoryData = useCallback(async (options?: { silent?: boolean; winnersEventId?: string | null }) => {
+    if (!options?.silent) {
+      setIsHistoryLoading(true);
+    }
+
+    try {
+      setHistoryError('');
+      const [winnersData, seasonsData] = await Promise.all([
+        getVaultWinners(options?.winnersEventId ?? null, 12),
+        getVaultSeasons(10),
+      ]);
+
+      setWinners(winnersData);
+      setSeasons(seasonsData);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao carregar historico do Cofre.';
+      setHistoryError(message);
+      setWinners([]);
+      setSeasons([]);
+    } finally {
+      if (!options?.silent) {
+        setIsHistoryLoading(false);
+      }
+    }
+  }, []);
+
   const fetchVaultData = useCallback(
     async (options?: { silent?: boolean }) => {
       try {
@@ -83,10 +119,14 @@ export default function VaultPage() {
         }
 
         if (!isSupabaseConfigured) {
-          setErrorMessage('Configuração do Supabase ausente.');
+          setErrorMessage('Configuracao do Supabase ausente.');
           setActiveEvent(null);
+          setMissions([]);
+          setParticipant(null);
           setLeaderboard([]);
           setMyRank(null);
+          setWinners([]);
+          setSeasons([]);
           return;
         }
 
@@ -103,6 +143,7 @@ export default function VaultPage() {
           setLeaderboard([]);
           setMyRank(null);
           setIsLeaderboardLoading(false);
+          await fetchHistoryData({ silent: options?.silent, winnersEventId: null });
           return;
         }
 
@@ -136,10 +177,13 @@ export default function VaultPage() {
           setMissions(overview.missions.map((mission) => ({ ...mission, progress: null })));
         }
 
-        await fetchLeaderboardData(eventData.id, {
-          silent: options?.silent,
-          forceMyRank: !!participantData,
-        });
+        await Promise.all([
+          fetchLeaderboardData(eventData.id, {
+            silent: options?.silent,
+            forceMyRank: !!participantData,
+          }),
+          fetchHistoryData({ silent: options?.silent, winnersEventId: null }),
+        ]);
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Erro ao carregar Cofre.';
         setErrorMessage(message);
@@ -149,7 +193,7 @@ export default function VaultPage() {
         }
       }
     },
-    [fetchLeaderboardData, isLoggedIn]
+    [fetchHistoryData, fetchLeaderboardData, isLoggedIn]
   );
 
   useEffect(() => {
@@ -168,20 +212,23 @@ export default function VaultPage() {
     const channel = supabase
       .channel('vault-realtime-channel')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_events' }, () => {
-        fetchVaultData({ silent: true });
+        void fetchVaultData({ silent: true });
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_participants' }, () => {
-        fetchVaultData({ silent: true });
+        void fetchVaultData({ silent: true });
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_mission_progress' }, () => {
-        fetchVaultData({ silent: true });
+        void fetchVaultData({ silent: true });
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'vault_winners' }, () => {
+        void fetchHistoryData({ silent: true, winnersEventId: null });
       })
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [fetchVaultData]);
+  }, [fetchHistoryData, fetchVaultData]);
 
   const handleJoinVault = async () => {
     if (!activeEvent) return;
@@ -191,7 +238,7 @@ export default function VaultPage() {
       const response = await joinVaultEvent(activeEvent.id);
       if (response.success) {
         await fetchVaultData({ silent: true });
-        setActionMessage('Operação do Cofre ativada.');
+        setActionMessage('Operacao do Cofre ativada.');
         setActionTone('success');
       } else {
         setActionMessage(response.message);
@@ -230,6 +277,30 @@ export default function VaultPage() {
     }
   };
 
+  const handleFinalizeVaultEvent = async () => {
+    if (!activeEvent) return;
+
+    try {
+      setIsFinalizing(true);
+      const response = await finalizeVaultEvent(activeEvent.id, 3);
+
+      if (response.success) {
+        await fetchVaultData({ silent: true });
+        setActionMessage(`Cofre finalizado. ${response.winnersCount} vencedores registrados.`);
+        setActionTone('success');
+      } else {
+        setActionMessage(response.message);
+        setActionTone('warning');
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao finalizar o Cofre.';
+      setActionMessage(message);
+      setActionTone('danger');
+    } finally {
+      setIsFinalizing(false);
+    }
+  };
+
   return (
     <VaultTemplate
       event={activeEvent}
@@ -240,10 +311,15 @@ export default function VaultPage() {
       percentage={percentage}
       leaderboard={leaderboard}
       myRank={myRank}
+      winners={winners}
+      seasons={seasons}
       isLoading={isLoading}
       isLeaderboardLoading={isLeaderboardLoading}
+      isHistoryLoading={isHistoryLoading}
+      isFinalizing={isFinalizing}
       errorMessage={errorMessage}
       leaderboardError={leaderboardError}
+      historyError={historyError}
       actionMessage={actionMessage}
       actionTone={actionTone}
       onDismissActionMessage={() => setActionMessage(null)}
@@ -251,6 +327,8 @@ export default function VaultPage() {
       currentUserId={user?.id ?? null}
       onJoinVault={handleJoinVault}
       onClaimTask={handleClaimTask}
+      onFinalizeVaultEvent={handleFinalizeVaultEvent}
+      showDevFinalizeButton={Boolean(import.meta.env.DEV && activeEvent?.status === 'active')}
       isJoining={isJoining}
       submittingTaskId={submittingTaskId}
     />

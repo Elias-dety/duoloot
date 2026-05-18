@@ -84,6 +84,45 @@ export const VaultLeaderboardEntrySchema = z.object({
 export type VaultLeaderboardEntry = z.infer<typeof VaultLeaderboardEntrySchema>;
 export type MyVaultRank = VaultLeaderboardEntry;
 
+export const VaultWinnerSchema = z.object({
+  winnerId: z.string().uuid(),
+  eventId: z.string().uuid(),
+  eventTitle: z.string().nullable().optional(),
+  playerId: z.string().uuid(),
+  playerName: z.string().nullable().optional(),
+  playerNickname: z.string().nullable().optional(),
+  avatarUrl: z.string().nullable().optional(),
+  trustScore: z.number().int().nullable().optional(),
+  rankPosition: z.number().int().positive(),
+  points: z.number(),
+  prizeLabel: z.string().nullable().optional(),
+  prizeValue: z.number(),
+  rewardStatus: z.enum(['pending', 'approved', 'paid', 'cancelled']),
+  snapshot: z.record(z.string(), z.unknown()).nullable().optional(),
+  createdAt: z.string(),
+  endedAt: z.string().nullable().optional(),
+});
+
+export const VaultSeasonSchema = z.object({
+  eventId: z.string().uuid(),
+  title: z.string(),
+  description: z.string().nullable().optional(),
+  prizeLabel: z.string().nullable().optional(),
+  prizeValue: z.number(),
+  status: z.enum(['draft', 'scheduled', 'active', 'ended', 'cancelled']),
+  startsAt: z.string().nullable().optional(),
+  endsAt: z.string().nullable().optional(),
+  currentPoints: z.number(),
+  goalPoints: z.number(),
+  participantCount: z.number().int(),
+  winnersCount: z.number().int(),
+  topWinnerNickname: z.string().nullable().optional(),
+  topWinnerAvatarUrl: z.string().nullable().optional(),
+});
+
+export type VaultWinner = z.infer<typeof VaultWinnerSchema>;
+export type VaultSeason = z.infer<typeof VaultSeasonSchema>;
+
 export type VaultOverview = {
   event: VaultEvent;
   missions: VaultMission[];

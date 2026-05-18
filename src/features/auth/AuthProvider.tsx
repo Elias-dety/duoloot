@@ -2,6 +2,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { ensureUserProfile, handleAuthError, PlayerProfile } from '@/services/auth.service';
 import { AuthContext } from './AuthContext';
+import logger from '@/lib/logger';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -57,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      console.log(`Evento de Auth detectado: ${event}`);
+      logger.debug(`Evento de Auth detectado: ${event}`);
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
 

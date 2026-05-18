@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import { ROUTES } from '@/constants/routes';
 import { AuthForm, AuthFormSubmission } from '@/features/auth/components/AuthForm';
 import { useAuth } from '@/features/auth/useAuth';
-import { ROUTES } from '@/constants/routes';
 import { isSupabaseConfigured } from '@/lib/supabase';
 
 type LoginPageState = {
@@ -36,7 +37,7 @@ export const LoginPage: React.FC = () => {
     } catch (error: unknown) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Falha na conexão com o terminal.',
+        error: error instanceof Error ? error.message : 'Falha ao conectar sua conta.',
       };
     } finally {
       setIsLoading(false);
@@ -44,11 +45,9 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="relative flex min-h-[calc(100vh-80px)] flex-col items-center justify-center overflow-hidden bg-[#07090e] px-4 py-12">
-      <div className="pointer-events-none absolute inset-0 select-none bg-[radial-gradient(ellipse_at_center,var(--dl-tactical-green)_0%,transparent_70%)] opacity-[0.03]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.02]" />
-
-      <div className="z-10 flex w-full justify-center">
+    <div className="relative flex min-h-[calc(100vh-80px)] items-center justify-center overflow-hidden px-4 py-12">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)]" />
+      <div className="relative z-10 flex w-full justify-center">
         <AuthForm
           type="login"
           onSubmit={handleLogin}

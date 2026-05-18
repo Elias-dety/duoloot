@@ -22,64 +22,64 @@ export const VaultMissionCard: React.FC<VaultMissionCardProps> = ({
   const percentage = Math.min(100, Math.round((currentValue / targetValue) * 100));
 
   return (
-    <div className={`dl-panel p-5 relative overflow-hidden flex flex-col justify-between ${isCompleted ? 'border-[var(--dl-tactical-green)] bg-[var(--dl-tactical-green)]/[0.02]' : ''}`}>
-      {isCompleted && (
-        <div className="absolute top-0 right-0 p-2 bg-[var(--dl-tactical-green)] text-black [clip-path:polygon(0_0,100%_0,100%_100%,20px_100%)]">
-          <CheckCircle2 className="h-4 w-4 ml-3" />
+    <div className={`dl-panel relative flex flex-col justify-between overflow-hidden p-5 ${isCompleted ? 'border-[var(--dl-border-red)] bg-[rgba(255,0,0,0.08)]' : ''}`}>
+      {isCompleted ? (
+        <div className="absolute right-0 top-0 bg-[var(--dl-red)] p-2 text-white [clip-path:polygon(0_0,100%_0,100%_100%,20px_100%)]">
+          <CheckCircle2 className="ml-3 h-4 w-4" />
         </div>
-      )}
+      ) : null}
 
       <div>
-        <div className="flex items-start justify-between mb-2 pr-6">
-          <h3 className={`font-['Rajdhani'] text-xl font-bold uppercase ${isCompleted ? 'text-[var(--dl-tactical-green)]' : 'text-white'}`}>
+        <div className="mb-2 flex items-start justify-between pr-6">
+          <h3 className={`font-['Rajdhani'] text-xl font-bold uppercase ${isCompleted ? 'text-white' : 'text-white'}`}>
             {mission.title}
           </h3>
         </div>
-        <p className="text-[12px] text-[var(--dl-tactical-muted)] mb-4 min-h-[36px]">
+        <p className="mb-4 min-h-[36px] text-[12px] text-[var(--dl-muted-light)]">
           {mission.description}
         </p>
       </div>
 
       <div className="space-y-4">
-        {participantExists && (
+        {participantExists ? (
           <div className="space-y-2">
             <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider">
-              <span className="text-[var(--dl-tactical-muted)]">Progresso</span>
+              <span className="text-[var(--dl-muted-light)]">Progresso</span>
               <span className="text-white">{currentValue} / {targetValue}</span>
             </div>
-            <div className="dl-progress h-1.5">
-              <div 
-                className={`dl-progress-bar ${isCompleted ? 'bg-[var(--dl-tactical-green)]' : 'bg-[var(--dl-tactical-yellow)]'}`} 
-                style={{ width: `${percentage}%` }} 
+            <div className="h-1.5 overflow-hidden rounded-full border border-[var(--dl-border)] bg-white/[0.06]">
+              <div
+                className={`h-full transition-all duration-300 ${isCompleted ? 'bg-[var(--dl-red)]' : 'bg-[var(--dl-red-soft)]'}`}
+                style={{ width: `${percentage}%` }}
               />
             </div>
           </div>
-        )}
+        ) : null}
 
-        <div className="flex items-center justify-between pt-3 border-t border-[var(--dl-tactical-line)]">
-          <div className="flex items-center gap-1.5 text-[var(--dl-tactical-yellow)] font-bold font-['Rajdhani'] text-lg">
+        <div className="flex items-center justify-between border-t border-[var(--dl-border)] pt-3">
+          <div className="flex items-center gap-1.5 font-['Rajdhani'] text-lg font-bold text-white">
             <Target className="h-4 w-4" />
-            +{mission.points_reward} <span className="text-[12px] text-[var(--dl-tactical-muted)] uppercase tracking-wide ml-1">pts</span>
+            +{mission.points_reward} <span className="ml-1 text-[12px] uppercase tracking-wide text-[var(--dl-muted-light)]">pts</span>
           </div>
 
-          {participantExists && !isCompleted && (
+          {participantExists && !isCompleted ? (
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               onClick={() => onClaim(mission.id)}
               disabled={isSubmitting}
-              className="h-8 text-[11px] gap-1 hover:bg-[var(--dl-tactical-yellow)] hover:text-black border border-[var(--dl-tactical-yellow)] text-[var(--dl-tactical-yellow)]"
+              className="gap-1 border-[var(--dl-border-red)] text-white"
             >
               {isSubmitting ? 'Registrando...' : 'Registrar'}
               <ChevronRight className="h-3 w-3" />
             </Button>
-          )}
+          ) : null}
 
-          {participantExists && isCompleted && (
-            <span className="text-[11px] font-bold uppercase text-[var(--dl-tactical-green)] flex items-center gap-1">
+          {participantExists && isCompleted ? (
+            <span className="flex items-center gap-1 text-[11px] font-bold uppercase text-white">
               <CheckCircle2 className="h-3 w-3" /> Concluída
             </span>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
