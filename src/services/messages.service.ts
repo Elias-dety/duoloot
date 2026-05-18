@@ -1,31 +1,29 @@
 import { supabase } from '@/lib/supabase';
 
-// Interface que define a estrutura de uma mensagem enviada entre Duos (conexões)
 export interface ConnectionMessage {
-  id: string;                // ID único da mensagem
-  connection_id: string;     // ID da conexão à qual a mensagem pertence
-  sender_id: string;         // ID do jogador que enviou a mensagem
-  sender_nickname: string;   // Nickname do remetente para exibição rápida
-  sender_avatar_url: string | null; // Avatar do remetente
-  body: string;              // Conteúdo textual da mensagem
-  created_at: string;        // Timestamp de criação
-  read_at: string | null;    // Timestamp de quando a mensagem foi lida (null se não lida)
+  id: string;
+  connection_id: string;
+  sender_id: string;
+  sender_nickname: string;
+  sender_avatar_url: string | null;
+  body: string;
+  created_at: string;
+  read_at: string | null;
 }
 
-/**
- * Busca o histórico de mensagens de uma conexão específica.
- * Retorna as mensagens em ordem cronológica para montar o chat.
- * @param connectionId ID da conexão (vínculo entre dois jogadores)
- * @param limit Quantidade máxima de mensagens a serem recuperadas (default 50)
- */
+interface SendConnectionMessageResponse {
+  success: boolean;
+  message: string;
+  message_id?: string;
+}
+
 export const getConnectionMessages = async (
-  connectionId: string, 
+  connectionId: string,
   limit: number = 50
 ): Promise<ConnectionMessage[]> => {
-  // Chama RPC no Supabase que já resolve os nomes e avatares dos remetentes
   const { data, error } = await supabase.rpc('get_connection_messages', {
     p_connection_id: connectionId,
-    p_limit: limit
+    p_limit: limit,
   });
 
   if (error) {
@@ -33,22 +31,16 @@ export const getConnectionMessages = async (
     throw error;
   }
 
-  return data || [];
+  return (data as ConnectionMessage[]) || [];
 };
 
-/**
- * Envia uma nova mensagem de texto em uma conexão ativa.
- * @param connectionId ID da conexão de destino
- * @param body Texto da mensagem
- */
 export const sendConnectionMessage = async (
-  connectionId: string, 
+  connectionId: string,
   body: string
-): Promise<{ success: boolean; message: string; message_id?: string }> => {
-  // Chama RPC que valida se o remetente faz parte da conexão e insere o registro
+): Promise<SendConnectionMessageResponse> => {
   const { data, error } = await supabase.rpc('send_connection_message', {
     p_connection_id: connectionId,
-    p_body: body
+    p_body: body,
   });
 
   if (error) {
@@ -56,7 +48,5 @@ export const sendConnectionMessage = async (
     return { success: false, message: 'Erro tático: Falha no envio da mensagem.' };
   }
 
-  // Retorna o objeto de resposta contendo o status e possivelmente o ID da nova mensagem
-  return data as any;
+  return data as SendConnectionMessageResponse;
 };
-

@@ -27,6 +27,9 @@ export interface VaultTemplateProps {
   isLeaderboardLoading: boolean;
   errorMessage?: string;
   leaderboardError?: string;
+  actionMessage?: string | null;
+  actionTone?: 'success' | 'danger' | 'warning' | 'info';
+  onDismissActionMessage: () => void;
   isLoggedIn: boolean;
   currentUserId?: string | null;
   onJoinVault: () => void;
@@ -48,6 +51,9 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
   isLeaderboardLoading,
   errorMessage,
   leaderboardError,
+  actionMessage,
+  actionTone = 'info',
+  onDismissActionMessage,
   isLoggedIn,
   currentUserId,
   onJoinVault,
@@ -82,6 +88,29 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
 
   const isParticipating = !!participant;
   const completedMissionsCount = missions.filter((mission) => mission.progress?.completed).length;
+  const actionToneStyles: Record<'success' | 'danger' | 'warning' | 'info', { border: string; bg: string; text: string }> = {
+    success: {
+      border: 'rgba(56,242,139,0.28)',
+      bg: 'rgba(56,242,139,0.08)',
+      text: 'var(--dl-tactical-green)',
+    },
+    danger: {
+      border: 'rgba(255,51,102,0.3)',
+      bg: 'rgba(255,51,102,0.08)',
+      text: 'var(--dl-tactical-red)',
+    },
+    warning: {
+      border: 'rgba(255,226,102,0.3)',
+      bg: 'rgba(255,226,102,0.08)',
+      text: 'var(--dl-tactical-yellow)',
+    },
+    info: {
+      border: 'rgba(70,183,255,0.3)',
+      bg: 'rgba(70,183,255,0.08)',
+      text: 'var(--dl-tactical-blue)',
+    },
+  };
+  const currentActionTone = actionToneStyles[actionTone];
 
   return (
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
@@ -101,6 +130,27 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
           <p className="dl-muted max-w-[600px] text-[14px] leading-[1.65]">{event.description}</p>
         </div>
       </div>
+
+      {actionMessage && (
+        <div
+          className="dl-panel flex items-start justify-between gap-4 p-4"
+          style={{ borderColor: currentActionTone.border, background: currentActionTone.bg }}
+        >
+          <div>
+            <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: currentActionTone.text }}>
+              SISTEMA // NOTIFICAÇÃO
+            </p>
+            <p className="text-sm text-white/85">{actionMessage}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onDismissActionMessage}
+            className="dl-btn h-8 shrink-0 px-3 text-[10px]"
+          >
+            FECHAR
+          </button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-6">

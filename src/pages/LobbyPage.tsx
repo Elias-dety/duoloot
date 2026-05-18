@@ -7,6 +7,7 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { isGameProfileComplete } from '@/services/onboarding.service';
+import type { PlayerGameProfile } from '@/services/auth.service';
 
 export default function LobbyPage() {
   const { isAuthenticated, profile } = useAuth();
@@ -87,7 +88,7 @@ export default function LobbyPage() {
       setIsCreating(true);
       setErrorMessage(null);
       
-      const gp = profile.game_profile;
+      const gp = (profile.game_profile || {}) as PlayerGameProfile;
       const payload = {
         slots_total: 5,
         slots_filled: 1,

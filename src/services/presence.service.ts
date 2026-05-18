@@ -1,16 +1,29 @@
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export type PlayerStatus = 'online' | 'offline' | 'in-game';
+export type PresenceState = Record<string, Array<Record<string, unknown>>>;
 
-/**
- * Atualiza o status de presença do usuário atual na tabela de perfis.
- * @param status Novo status do jogador ('online', 'offline' ou 'in-game')
- */
+type PresenceChangePayload = {
+  key: string;
+  currentPresences: Array<Record<string, unknown>>;
+  newPresences?: Array<Record<string, unknown>>;
+  leftPresences?: Array<Record<string, unknown>>;
+};
+
+interface PresenceCallbacks {
+  onSync?: (state: PresenceState) => void;
+  onJoin?: (key: string, currentPresences: Array<Record<string, unknown>>, newPresences: Array<Record<string, unknown>>) => void;
+  onLeave?: (key: string, currentPresences: Array<Record<string, unknown>>, leftPresences: Array<Record<string, unknown>>) => void;
+}
+
 export const setCurrentUserStatus = async (status: PlayerStatus) => {
   if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
 
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
   if (userError || !user) {
     throw new Error('User not authenticated');
   }
@@ -30,14 +43,7 @@ export const setCurrentUserStatus = async (status: PlayerStatus) => {
   return data;
 };
 
-/**
- * Cria e configura um canal de presença global para monitoramento em tempo real.
- * @param userId ID do usuário atual
- * @param metadata Metadados adicionais de presença
- */
-export const getOnlinePresenceChannel = (
-  userId: string
-): RealtimeChannel => {
+export const getOnlinePresenceChannel = (userId: string): RealtimeChannel => {
   if (!isSupabaseConfigured) {
     throw new Error('Supabase não configurado.');
   }
@@ -51,19 +57,6 @@ export const getOnlinePresenceChannel = (
   });
 };
 
-interface PresenceCallbacks {
-  onSync?: (state: Record<string, any>) => void;
-  onJoin?: (key: string, currentPresences: any[], newPresences: any[]) => void;
-  onLeave?: (key: string, currentPresences: any[], leftPresences: any[]) => void;
-}
-
-/**
- * Se inscreve nos eventos de presença de um canal e opcionalmente inicia o rastreamento (track).
- * @param channel Canal Supabase Realtime criado anteriormente
- * @param userId ID do usuário atual para rastreamento
- * @param metadata Metadados adicionais para o track
- * @param callbacks Funções de retorno para sincronização, entrada e saída
- */
 export const subscribeToPresence = (
   channel: RealtimeChannel,
   userId: string,
@@ -74,16 +67,15 @@ export const subscribeToPresence = (
 
   const sub = channel
     .on('presence', { event: 'sync' }, () => {
-      if (onSync) onSync(channel.presenceState());
+      onSync?.(channel.presenceState() as PresenceState);
     })
-    .on('presence', { event: 'join' }, ({ key, currentPresences, newPresences }: any) => {
-      if (onJoin) onJoin(key, currentPresences, newPresences);
+    .on('presence', { event: 'join' }, (payload: PresenceChangePayload) => {
+      onJoin?.(payload.key, payload.currentPresences, payload.newPresences || []);
     })
-    .on('presence', { event: 'leave' }, ({ key, currentPresences, leftPresences }: any) => {
-      if (onLeave) onLeave(key, currentPresences, leftPresences);
+    .on('presence', { event: 'leave' }, (payload: PresenceChangePayload) => {
+      onLeave?.(payload.key, payload.currentPresences, payload.leftPresences || []);
     });
 
-  // Realiza a inscrição e inicia o rastreamento (track) após a confirmação
   const activeChannel = sub.subscribe(async (status) => {
     if (status === 'SUBSCRIBED') {
       try {
@@ -93,18 +85,16 @@ export const subscribeToPresence = (
           online_at: new Date().toISOString(),
           ...metadata,
         });
-      } catch (err) {
-        console.error('Error tracking presence:', err);
+      } catch (error) {
+        console.error('Error tracking presence:', error);
       }
     }
   });
 
   const unsubscribe = () => {
-    try {
-      channel.untrack().catch((err) => console.error('Error untracking:', err));
-    } catch (err) {
-      // Ignorar se o canal já foi removido
-    }
+    void channel.untrack().catch((error) => {
+      console.error('Error untracking:', error);
+    });
     supabase.removeChannel(activeChannel);
   };
 

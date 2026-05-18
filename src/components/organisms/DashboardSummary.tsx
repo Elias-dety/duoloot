@@ -15,6 +15,7 @@ export const DashboardSummary: React.FC<DashboardSummaryProps> = ({ player, summ
   const matches = stats.matchesPlayed;
   const winRate = stats.winRate;
   const wins = Math.round(matches * (winRate / 100));
+  const playerRank = gameProfile?.currentRank || gameProfile?.rank || 'Sem Rank';
 
   return (
     <article className="dl-panel w-full p-6">
@@ -33,7 +34,7 @@ export const DashboardSummary: React.FC<DashboardSummaryProps> = ({ player, summ
                 {status}
               </span>
               <span className="text-[var(--dl-tactical-yellow)]">
-                {gameProfile?.currentRank || (gameProfile as any)?.rank || 'Sem Rank'}
+                {playerRank}
               </span>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   OnboardingSchema,
@@ -38,7 +38,6 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors },
     trigger,
   } = useForm<OnboardingData>({
@@ -61,7 +60,7 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
   });
 
   // Escuta os campos para enviar as atualizações ao preview do operador
-  const watchedData = watch();
+  const watchedData = useWatch({ control });
   React.useEffect(() => {
     if (onDataChange) {
       onDataChange(watchedData);

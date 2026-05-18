@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/features/auth/useAuth';
-import { OnboardingTemplate } from '@/templates/OnboardingTemplate';
-import { updateMyGameProfile, getMyGameProfile } from '@/services/onboarding.service';
-import { ROUTES } from '@/constants/routes';
 import type { OnboardingData } from '@/features/onboarding/onboarding.schema';
+import { useAuth } from '@/features/auth/useAuth';
+import { ROUTES } from '@/constants/routes';
+import { getMyGameProfile, updateMyGameProfile } from '@/services/onboarding.service';
+import { OnboardingTemplate } from '@/templates/OnboardingTemplate';
 
 export const OnboardingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +14,6 @@ export const OnboardingPage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Carrega os dados existentes do game_profile se houver
   useEffect(() => {
     let isMounted = true;
 
@@ -22,15 +21,14 @@ export const OnboardingPage: React.FC = () => {
       try {
         const data = await getMyGameProfile();
         if (isMounted) {
-          // Se já existe um nickname no perfil mas não no game_profile, coloca no fallback
           const defaultNickname = data?.nickname || profile?.nickname || '';
           setInitialData({
             ...data,
             nickname: defaultNickname,
           });
         }
-      } catch (err: any) {
-        console.error('Erro ao ler perfil gamer:', err);
+      } catch (error: unknown) {
+        console.error('Erro ao ler perfil gamer:', error);
       } finally {
         if (isMounted) {
           setLoading(false);
@@ -38,7 +36,7 @@ export const OnboardingPage: React.FC = () => {
       }
     }
 
-    loadData();
+    void loadData();
 
     return () => {
       isMounted = false;
@@ -51,38 +49,33 @@ export const OnboardingPage: React.FC = () => {
     try {
       await updateMyGameProfile(data);
       await refreshProfile();
-      // Envia o usuário logado para o painel principal
       navigate(ROUTES.DASHBOARD);
-    } catch (err: any) {
-      setError(err?.message || 'Falha ao sincronizar o perfil gamer com o servidor.');
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Falha ao sincronizar o perfil gamer com o servidor.');
     } finally {
       setSaving(false);
     }
   };
 
   const handleSkip = () => {
-    // Permite pular e ir direto ao painel
     navigate(ROUTES.DASHBOARD);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--dl-tactical-bg)] flex flex-col justify-center items-center font-[Chakra_Petch]">
-        <div className="relative w-24 h-24 mb-6">
-          {/* Radar HUD animado de carregamento */}
-          <div className="absolute inset-0 border-2 border-dashed border-[var(--dl-tactical-green)]/30 rounded-full animate-spin [animation-duration:8s]" />
-          <div className="absolute inset-2 border border-dotted border-[var(--dl-tactical-yellow)]/20 rounded-full animate-spin [animation-duration:4s] [animation-direction:reverse]" />
-          <div className="absolute inset-4 border border-[var(--dl-tactical-green)]/40 rounded-full flex items-center justify-center">
-            <span className="w-2 h-2 rounded-full bg-[var(--dl-tactical-green)] animate-ping" />
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--dl-tactical-bg)] font-[Chakra_Petch]">
+        <div className="relative mb-6 h-24 w-24">
+          <div className="absolute inset-0 animate-spin rounded-full border-2 border-dashed border-[var(--dl-tactical-green)]/30 [animation-duration:8s]" />
+          <div className="absolute inset-2 animate-spin rounded-full border border-dotted border-[var(--dl-tactical-yellow)]/20 [animation-direction:reverse] [animation-duration:4s]" />
+          <div className="absolute inset-4 flex items-center justify-center rounded-full border border-[var(--dl-tactical-green)]/40">
+            <span className="h-2 w-2 animate-ping rounded-full bg-[var(--dl-tactical-green)]" />
           </div>
         </div>
-        <div className="text-center space-y-1.5">
-          <span className="text-[10px] font-bold tracking-[0.2em] text-[var(--dl-tactical-green)] uppercase font-mono block">
+        <div className="space-y-1.5 text-center">
+          <span className="block font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--dl-tactical-green)]">
             RADAR INITIALIZATION // SCANNING PROFILE
           </span>
-          <h2 className="text-sm font-bold uppercase text-[var(--dl-tactical-text)] tracking-wider">
-            Lendo dados táticos do operador...
-          </h2>
+          <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--dl-tactical-text)]">Lendo dados táticos do operador...</h2>
         </div>
       </div>
     );

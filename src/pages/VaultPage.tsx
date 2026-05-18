@@ -39,6 +39,8 @@ export default function VaultPage() {
   const [leaderboardError, setLeaderboardError] = useState('');
   const [isJoining, setIsJoining] = useState(false);
   const [submittingTaskId, setSubmittingTaskId] = useState<string | null>(null);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [actionTone, setActionTone] = useState<'success' | 'danger' | 'warning' | 'info'>('info');
 
   const fetchLeaderboardData = useCallback(
     async (eventId: string, options?: { silent?: boolean; forceMyRank?: boolean }) => {
@@ -189,12 +191,16 @@ export default function VaultPage() {
       const response = await joinVaultEvent(activeEvent.id);
       if (response.success) {
         await fetchVaultData({ silent: true });
+        setActionMessage('Operação do Cofre ativada.');
+        setActionTone('success');
       } else {
-        alert(response.message);
+        setActionMessage(response.message);
+        setActionTone('danger');
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao se inscrever.';
-      alert(`Erro ao se inscrever: ${message}`);
+      setActionMessage(message);
+      setActionTone('danger');
     } finally {
       setIsJoining(false);
     }
@@ -209,12 +215,16 @@ export default function VaultPage() {
 
       if (response.success) {
         await fetchVaultData({ silent: true });
+        setActionMessage('Progresso registrado.');
+        setActionTone('success');
       } else {
-        alert(response.message);
+        setActionMessage(response.message);
+        setActionTone('danger');
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao registrar progresso.';
-      alert(`Erro ao registrar progresso: ${message}`);
+      setActionMessage(message);
+      setActionTone('danger');
     } finally {
       setSubmittingTaskId(null);
     }
@@ -234,6 +244,9 @@ export default function VaultPage() {
       isLeaderboardLoading={isLeaderboardLoading}
       errorMessage={errorMessage}
       leaderboardError={leaderboardError}
+      actionMessage={actionMessage}
+      actionTone={actionTone}
+      onDismissActionMessage={() => setActionMessage(null)}
       isLoggedIn={isLoggedIn}
       currentUserId={user?.id ?? null}
       onJoinVault={handleJoinVault}

@@ -1,16 +1,29 @@
-// Painel técnico temporário para validação manual do Cofre.
-// Futuramente será substituído por um dashboard admin completo.
-
 import React, { useEffect, useState } from 'react';
-import { getPendingVaultSubmissions, validateVaultSubmission } from '@/services/vault-admin.service';
+import { Avatar, Badge, Button, Card } from '@/components/atoms';
 import { SectionTitle } from '@/components/atoms/SectionTitle';
-import { Card } from '@/components/atoms/Card';
-import { Button } from '@/components/atoms/Button';
-import { Avatar } from '@/components/atoms/Avatar';
-import { Badge } from '@/components/atoms/Badge';
+import { getPendingVaultSubmissions, validateVaultSubmission } from '@/services/vault-admin.service';
+
+type VaultSubmission = {
+  id: string;
+  created_at: string;
+  payload: Record<string, unknown>;
+  event?: {
+    title?: string;
+  } | null;
+  task?: {
+    title?: string;
+    description?: string;
+  } | null;
+  player?: {
+    name?: string;
+    nickname?: string;
+    avatar_url?: string | null;
+    trust_score?: number | null;
+  } | null;
+};
 
 export default function AdminVaultPage() {
-  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [submissions, setSubmissions] = useState<VaultSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -21,27 +34,27 @@ export default function AdminVaultPage() {
       const data = await getPendingVaultSubmissions();
       setSubmissions(data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message || 'Erro ao carregar submissões.');
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Erro ao carregar submissões.');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSubmissions();
+    void fetchSubmissions();
   }, []);
 
   const handleValidate = async (id: string, isValid: boolean) => {
-    if (!confirm(`Tem certeza que deseja ${isValid ? 'APROVAR' : 'REPROVAR'} esta submissão?`)) return;
-    
+    if (!window.confirm(`Tem certeza que deseja ${isValid ? 'APROVAR' : 'REPROVAR'} esta submissão?`)) return;
+
     try {
       setProcessingId(id);
       await validateVaultSubmission(id, isValid);
-      setSubmissions(prev => prev.filter(s => s.id !== id));
-      alert(`Submissão ${isValid ? 'aprovada' : 'reprovada'} com sucesso!`);
-    } catch (err: any) {
-      alert(`Erro: ${err.message}`);
+      setSubmissions((previous) => previous.filter((submission) => submission.id !== id));
+      window.alert(`Submissão ${isValid ? 'aprovada' : 'reprovada'} com sucesso!`);
+    } catch (error: unknown) {
+      window.alert(`Erro: ${error instanceof Error ? error.message : 'Falha ao validar submissão.'}`);
     } finally {
       setProcessingId(null);
     }
@@ -52,51 +65,47 @@ export default function AdminVaultPage() {
       <div className="container mx-auto p-8">
         <SectionTitle title="Validação do Cofre" subtitle="Painel Administrativo" />
         <div className="mt-12 flex justify-center">
-          <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-brand-primary border-t-transparent" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-8 max-w-6xl">
-      <div className="flex justify-between items-end mb-8">
-        <SectionTitle 
-          title="Validação do Cofre" 
-          subtitle="Painel técnico temporário para validação manual de missões." 
+    <div className="container mx-auto max-w-6xl p-8">
+      <div className="mb-8 flex items-end justify-between">
+        <SectionTitle
+          title="Validação do Cofre"
+          subtitle="Painel técnico temporário para validação manual de missões."
           accent="info"
         />
         <Button variant="secondary" size="sm" onClick={fetchSubmissions} disabled={loading}>
           Atualizar Lista
         </Button>
       </div>
-      
+
       {error && (
-        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded text-red-400 text-sm">
+        <div className="mb-6 rounded border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
           <strong>Erro:</strong> {error}
         </div>
       )}
 
       <div className="grid gap-6">
         {submissions.length === 0 ? (
-          <Card className="p-12 flex flex-col items-center justify-center text-center bg-white/5 border-white/10">
-            <p className="text-content-secondary italic">Nenhuma submissão pendente encontrada.</p>
+          <Card className="flex flex-col items-center justify-center bg-white/5 p-12 text-center border-white/10">
+            <p className="italic text-content-secondary">Nenhuma submissão pendente encontrada.</p>
           </Card>
         ) : (
           submissions.map((submission) => (
-            <Card key={submission.id} className="p-6 bg-white/5 border-white/10 hover:border-white/20 transition-colors">
-              <div className="flex flex-col md:flex-row gap-6">
-                {/* Jogador */}
-                <div className="flex items-start gap-4 min-w-[240px]">
-                  <Avatar 
-                    src={submission.player?.avatar_url} 
-                    fallback={submission.player?.nickname?.charAt(0) || 'U'} 
-                  />
+            <Card key={submission.id} className="bg-white/5 p-6 transition-colors border-white/10 hover:border-white/20">
+              <div className="flex flex-col gap-6 md:flex-row">
+                <div className="flex min-w-[240px] items-start gap-4">
+                  <Avatar src={submission.player?.avatar_url || undefined} fallback={submission.player?.nickname?.charAt(0) || 'U'} />
                   <div className="flex flex-col">
-                    <span className="text-white font-bold text-lg leading-tight">{submission.player?.nickname}</span>
+                    <span className="text-lg font-bold leading-tight text-white">{submission.player?.nickname}</span>
                     <span className="text-xs text-content-secondary">{submission.player?.name}</span>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Badge variant="default">Score: {submission.player?.trust_score}</Badge>
+                    <div className="mt-2 flex items-center gap-2">
+                      <Badge variant="default">Score: {submission.player?.trust_score || 0}</Badge>
                       <span className="text-[10px] uppercase tracking-widest text-content-tertiary">
                         {new Date(submission.created_at).toLocaleDateString()} {new Date(submission.created_at).toLocaleTimeString()}
                       </span>
@@ -104,38 +113,36 @@ export default function AdminVaultPage() {
                   </div>
                 </div>
 
-                {/* Info Missão */}
                 <div className="flex-1 space-y-3">
                   <div>
-                    <h4 className="text-xs uppercase tracking-widest text-content-tertiary mb-1">Evento / Missão</h4>
-                    <p className="text-white font-medium">{submission.event?.title}</p>
-                    <p className="text-sm text-brand-primary font-bold">{submission.task?.title}</p>
+                    <h4 className="mb-1 text-xs uppercase tracking-widest text-content-tertiary">Evento / Missão</h4>
+                    <p className="font-medium text-white">{submission.event?.title}</p>
+                    <p className="text-sm font-bold text-brand-primary">{submission.task?.title}</p>
                   </div>
 
                   <div>
-                    <h4 className="text-xs uppercase tracking-widest text-content-tertiary mb-1">Dados Enviados (Payload)</h4>
-                    <div className="p-3 bg-black/40 rounded border border-white/5 overflow-x-auto">
-                      <pre className="text-[11px] font-mono text-content-secondary whitespace-pre-wrap">
+                    <h4 className="mb-1 text-xs uppercase tracking-widest text-content-tertiary">Dados Enviados (Payload)</h4>
+                    <div className="overflow-x-auto rounded border border-white/5 bg-black/40 p-3">
+                      <pre className="whitespace-pre-wrap text-[11px] font-mono text-content-secondary">
                         {JSON.stringify(submission.payload, null, 2)}
                       </pre>
                     </div>
                   </div>
                 </div>
 
-                {/* Ações */}
-                <div className="flex flex-row md:flex-col gap-3 min-w-[140px] justify-center">
-                  <Button 
-                    variant="success" 
-                    fullWidth 
+                <div className="flex min-w-[140px] flex-row justify-center gap-3 md:flex-col">
+                  <Button
+                    variant="success"
+                    fullWidth
                     size="sm"
                     onClick={() => handleValidate(submission.id, true)}
                     disabled={!!processingId}
                   >
                     {processingId === submission.id ? 'Aprovando...' : 'Aprovar'}
                   </Button>
-                  <Button 
-                    variant="danger" 
-                    fullWidth 
+                  <Button
+                    variant="danger"
+                    fullWidth
                     size="sm"
                     onClick={() => handleValidate(submission.id, false)}
                     disabled={!!processingId}

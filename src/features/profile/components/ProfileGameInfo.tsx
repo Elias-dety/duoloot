@@ -1,20 +1,22 @@
 import React from 'react';
-import { Player } from '@/schemas/player.schema';
 import { Crosshair, Trophy } from 'lucide-react';
+import { Player } from '@/schemas/player.schema';
 
 export interface ProfileGameInfoProps {
   player: Player;
 }
 
 export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
-  const gameProfile = player?.gameProfile || {};
-  const rank = gameProfile.currentRank || (gameProfile as any).rank || 'NÃO CONFIGURADO';
+  const gameProfile = player.gameProfile || {};
+  const rank = gameProfile.currentRank || gameProfile.rank || 'NÃO CONFIGURADO';
   const mainRole = gameProfile.mainRole || 'Não informada';
   const secondaryRole = gameProfile.secondaryRole || '';
 
   return (
     <article className="dl-panel h-full p-6">
-      <h3 className="dl-hud-label mb-6"><span className="text-[var(--dl-tactical-yellow)]">■</span> Perfil competitivo</h3>
+      <h3 className="dl-hud-label mb-6">
+        <span className="text-[var(--dl-tactical-yellow)]">■</span> Perfil competitivo
+      </h3>
 
       <div className="space-y-6">
         <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-4 [clip-path:var(--dl-cut-button)]">
@@ -34,11 +36,7 @@ export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
               <Crosshair className="h-3.5 w-3.5" />
               {mainRole}
             </span>
-            {secondaryRole && (
-              <span className="dl-chip">
-                {secondaryRole}
-              </span>
-            )}
+            {secondaryRole && <span className="dl-chip">{secondaryRole}</span>}
           </div>
         </div>
       </div>

@@ -1,9 +1,30 @@
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
-/**
- * Interface que representa o Perfil de um Jogador (Duo) no Duo Loot.
- */
+type ServiceError = {
+  code?: string;
+  message?: string;
+};
+
+export type PlayerGameProfile = {
+  mainGame?: string;
+  main_game?: string;
+  riotId?: string;
+  nickname?: string;
+  currentRank?: string;
+  rank?: string;
+  mainRole?: string;
+  secondaryRole?: string;
+  playStyle?: string;
+  sessionFocus?: string;
+  availability?: string;
+  preferredModes?: string[];
+  microphone?: boolean;
+  region?: string;
+  bio?: string;
+  [key: string]: unknown;
+};
+
 export interface PlayerProfile {
   id: string;
   name: string;
@@ -14,18 +35,15 @@ export interface PlayerProfile {
   is_premium: boolean;
   created_at: string;
   updated_at: string;
-  game_profile?: any;
-  metadata: Record<string, any>;
+  game_profile?: PlayerGameProfile;
+  metadata: Record<string, unknown>;
 }
 
-/**
- * Utilitário de tratamento de erros amigáveis para operações de autenticação.
- */
-export const handleAuthError = (error: any): string => {
+export const handleAuthError = (error: unknown): string => {
   console.error('Erro de autenticação:', error);
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
-  
-  const message = error?.message || '';
+
+  const message = error instanceof Error ? error.message : '';
   if (message.includes('Invalid login credentials')) {
     return 'Credenciais inválidas.';
   }
@@ -38,23 +56,16 @@ export const handleAuthError = (error: any): string => {
   if (message.includes('JWT') || message.includes('session expired')) {
     return 'Sua sessão expirou. Entre novamente.';
   }
-  
+
   return message || 'Ocorreu um erro no processo de autenticação.';
 };
 
-/**
- * Garante que um registro correspondente em public.profiles exista para o usuário autenticado.
- * Se não existir, cria um perfil básico inicial usando os metadados ou o email do usuário.
- * 
- * @param user Objeto de usuário retornado pelo Supabase Auth.
- */
 export async function ensureUserProfile(user: User): Promise<PlayerProfile> {
   if (!isSupabaseConfigured) {
     throw new Error('Supabase não configurado.');
   }
 
   try {
-    // 1. Verifica se já existe um perfil para este ID
     const { data: existingProfile, error: fetchError } = await supabase
       .from('profiles')
       .select('*')
@@ -70,18 +81,17 @@ export async function ensureUserProfile(user: User): Promise<PlayerProfile> {
       return existingProfile as PlayerProfile;
     }
 
-    // 2. Se não existir, monta o perfil inicial e insere
     const emailPrefix = user.email ? user.email.split('@')[0] : 'Operador';
     const fallbackName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
-    
+
     const initialProfile = {
       id: user.id,
       name: user.user_metadata?.name || fallbackName,
       nickname: user.user_metadata?.nickname || emailPrefix.toLowerCase(),
       avatar_url: user.user_metadata?.avatar_url || null,
       trust_score: 50,
-      status: 'online',
-      metadata: {}
+      status: 'online' as const,
+      metadata: {} as Record<string, unknown>,
     };
 
     const { data: newProfile, error: insertError } = await supabase
@@ -92,16 +102,18 @@ export async function ensureUserProfile(user: User): Promise<PlayerProfile> {
 
     if (insertError) {
       console.error('Erro ao criar perfil inicial:', insertError);
-      // Trata erro de RLS ou restrições de chave estrangeira
-      if (insertError.code === '42501') {
+      if ((insertError as ServiceError).code === '42501') {
         throw new Error('Permissão negada (RLS) ao registrar perfil inicial.');
       }
       throw new Error('Falha ao registrar perfil inicial no banco de dados.');
     }
 
     return newProfile as PlayerProfile;
-  } catch (err: any) {
-    console.error('Erro em ensureUserProfile:', err);
-    throw new Error(err.message || 'Erro tático ao garantir registro de perfil.');
+  } catch (error: unknown) {
+    console.error('Erro em ensureUserProfile:', error);
+    throw new Error(
+      error instanceof Error ? error.message : 'Erro tático ao garantir registro de perfil.',
+      { cause: error }
+    );
   }
 }

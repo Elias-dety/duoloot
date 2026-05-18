@@ -1,9 +1,12 @@
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import type { PlayerProfile } from './auth.service';
 
-/**
- * Utilitário de tratamento de erros específico para o serviço de perfis.
- */
-const handleServiceError = (error: any, fallbackMessage: string) => {
+type ServiceError = {
+  code?: string;
+  message?: string;
+};
+
+const handleServiceError = (error: ServiceError | null | undefined, fallbackMessage: string) => {
   console.error(error);
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
   if (error?.message?.includes('JWT')) return 'Sua sessão expirou. Entre novamente.';
@@ -12,17 +15,15 @@ const handleServiceError = (error: any, fallbackMessage: string) => {
   return error?.message || fallbackMessage;
 };
 
-/**
- * Obtém os dados do perfil do usuário autenticado no momento.
- */
-export async function getCurrentProfile() {
+export async function getCurrentProfile(): Promise<PlayerProfile> {
   if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
 
-  // Recupera o objeto de usuário da sessão ativa do Supabase Auth
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
   if (userError || !user) throw new Error('Entre na sua conta para continuar.');
 
-  // Busca o registro correspondente na tabela 'profiles' do banco de dados
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
@@ -30,14 +31,10 @@ export async function getCurrentProfile() {
     .single();
 
   if (error) throw new Error(handleServiceError(error, 'Perfil não encontrado.'));
-  return data;
+  return data as PlayerProfile;
 }
 
-/**
- * Busca informações públicas de qualquer jogador através do seu ID.
- * @param playerId UUID do jogador
- */
-export async function getProfileById(playerId: string) {
+export async function getProfileById(playerId: string): Promise<PlayerProfile> {
   if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
 
   const { data, error } = await supabase
@@ -47,20 +44,18 @@ export async function getProfileById(playerId: string) {
     .single();
 
   if (error) throw new Error(handleServiceError(error, 'Perfil não encontrado.'));
-  return data;
+  return data as PlayerProfile;
 }
 
-/**
- * Atualiza os campos do perfil do usuário logado.
- * @param payload Objeto contendo os campos a serem alterados (ex: nome, avatar, bio)
- */
-export async function updateCurrentProfile(payload: Record<string, unknown>) {
+export async function updateCurrentProfile(payload: Record<string, unknown>): Promise<PlayerProfile> {
   if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
 
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
   if (userError || !user) throw new Error('Entre na sua conta para continuar.');
 
-  // Executa o update filtrando pelo ID do usuário da sessão para garantir segurança
   const { data, error } = await supabase
     .from('profiles')
     .update({ ...payload, updated_at: new Date().toISOString() })
@@ -69,6 +64,5 @@ export async function updateCurrentProfile(payload: Record<string, unknown>) {
     .single();
 
   if (error) throw new Error(handleServiceError(error, 'Erro ao atualizar perfil.'));
-  return data;
+  return data as PlayerProfile;
 }
-

@@ -2,6 +2,7 @@ import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
 import { useAuth } from '@/features/auth/useAuth';
 import { usePlayerPresence } from '@/hooks/usePlayerPresence';
+import type { PlayerGameProfile } from '@/services/auth.service';
 
 export default function DashboardLayout() {
   const { profile, user, signOut } = useAuth();
@@ -32,9 +33,12 @@ export default function DashboardLayout() {
   };
 
   const getOperatorRank = () => {
-    const gameProfile = profile?.game_profile;
-    if (gameProfile && gameProfile.main_game && gameProfile.rank) {
-      return `${gameProfile.main_game.toUpperCase()} // ${gameProfile.rank.toUpperCase()}`;
+    const gameProfile = profile?.game_profile as PlayerGameProfile | undefined;
+    const mainGame = gameProfile?.mainGame || gameProfile?.main_game;
+    const rank = gameProfile?.currentRank || gameProfile?.rank;
+
+    if (mainGame && rank) {
+      return `${mainGame.toUpperCase()} // ${rank.toUpperCase()}`;
     }
     return 'SEM PERFIL GAMER';
   };

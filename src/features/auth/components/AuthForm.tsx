@@ -3,9 +3,16 @@ import { Link } from 'react-router-dom';
 import { Input, Label, Button, Card } from '@/components/atoms';
 import { ROUTES } from '@/constants/routes';
 
+export type AuthFormSubmission = {
+  email: string;
+  password: string;
+  name?: string;
+  nickname?: string;
+};
+
 interface AuthFormProps {
   type: 'login' | 'register';
-  onSubmit: (data: any) => Promise<{ success: boolean; error?: string }>;
+  onSubmit: (data: AuthFormSubmission) => Promise<{ success: boolean; error?: string }>;
   isLoading: boolean;
   isSupabaseConfigured: boolean;
 }

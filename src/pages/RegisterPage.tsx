@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthForm, AuthFormSubmission } from '@/features/auth/components/AuthForm';
 import { useAuth } from '@/features/auth/useAuth';
-import { AuthForm } from '@/features/auth/components/AuthForm';
-import { isSupabaseConfigured } from '@/lib/supabase';
 import { ROUTES } from '@/constants/routes';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 export const RegisterPage: React.FC = () => {
   const { signUp, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -12,19 +12,22 @@ export const RegisterPage: React.FC = () => {
   const [registeredEmail, setRegisteredEmail] = useState('');
   const navigate = useNavigate();
 
-  // Redireciona se já estiver autenticado
   useEffect(() => {
     if (isAuthenticated && !authLoading) {
       navigate(ROUTES.DASHBOARD, { replace: true });
     }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [authLoading, isAuthenticated, navigate]);
 
-  const handleRegister = async (data: any) => {
+  const handleRegister = async (data: AuthFormSubmission) => {
     setIsLoading(true);
     try {
+      if (!data.name || !data.nickname) {
+        return { success: false, error: 'Nome e nickname são obrigatórios.' };
+      }
+
       const result = await signUp(data.email, data.password, {
         name: data.name,
-        nickname: data.nickname
+        nickname: data.nickname,
       });
 
       if (result.success) {
@@ -35,56 +38,55 @@ export const RegisterPage: React.FC = () => {
           setNeedsVerification(true);
         }
       }
+
       return result;
-    } catch (err: any) {
-      return { success: false, error: err.message || 'Falha na conexão com o terminal.' };
+    } catch (error: unknown) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Falha na conexão com o terminal.',
+      };
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[calc(100vh-80px)] flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden bg-[#07090e]">
-      {/* Detalhes táticos decorativos no fundo */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03] select-none bg-[radial-gradient(ellipse_at_center,var(--dl-tactical-green)_0%,transparent_70%)]" />
-      
-      {/* Elementos de Grid Tático */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px]" />
+    <div className="relative flex min-h-[calc(100vh-80px)] flex-col items-center justify-center overflow-hidden bg-[#07090e] px-4 py-12">
+      <div className="pointer-events-none absolute inset-0 select-none bg-[radial-gradient(ellipse_at_center,var(--dl-tactical-green)_0%,transparent_70%)] opacity-[0.03]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.02]" />
 
-      <div className="w-full flex justify-center z-10">
+      <div className="z-10 flex w-full justify-center">
         {needsVerification ? (
-          <div className="w-full max-w-md border-[var(--dl-tactical-line)] bg-black/60 p-8 backdrop-blur-md relative overflow-hidden [clip-path:polygon(0_0,100%_0,100%_calc(100%-15px),calc(100%-15px)_100%,0_100%)] text-center space-y-6">
-            {/* Indicador Tático */}
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-[var(--dl-tactical-green)]" />
-            
-            <div className="inline-block p-4 bg-[var(--dl-tactical-green)]/10 border border-[var(--dl-tactical-green)]/30 rounded-full animate-pulse">
+          <div className="relative w-full max-w-md space-y-6 overflow-hidden bg-black/60 p-8 text-center backdrop-blur-md [clip-path:polygon(0_0,100%_0,100%_calc(100%-15px),calc(100%-15px)_100%,0_100%)]">
+            <div className="absolute left-0 top-0 h-[2px] w-full bg-[var(--dl-tactical-green)]" />
+
+            <div className="inline-block animate-pulse rounded-full border border-[var(--dl-tactical-green)]/30 bg-[var(--dl-tactical-green)]/10 p-4">
               <span className="text-3xl text-[var(--dl-tactical-green)]">📬</span>
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-xl font-bold uppercase text-[var(--dl-tactical-text)] font-[Chakra_Petch] tracking-widest">
+              <h2 className="font-[Chakra_Petch] text-xl font-bold uppercase tracking-widest text-[var(--dl-tactical-text)]">
                 VERIFICAÇÃO ENVIADA
               </h2>
-              <p className="text-xs text-[var(--dl-tactical-muted)] tracking-wider uppercase font-semibold">
+              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--dl-tactical-muted)]">
                 CÓDIGO OPERACIONAL ENVIADO PARA:
               </p>
-              <p className="text-sm font-bold text-[var(--dl-tactical-green)] tracking-wide select-all bg-black/40 px-3 py-1.5 border border-[var(--dl-tactical-line)] inline-block rounded font-[Chakra_Petch]">
+              <p className="inline-block select-all border border-[var(--dl-tactical-line)] bg-black/40 px-3 py-1.5 font-[Chakra_Petch] text-sm font-bold tracking-wide text-[var(--dl-tactical-green)]">
                 {registeredEmail}
               </p>
             </div>
 
-            <div className="border-t border-[var(--dl-tactical-line)] pt-4 text-xs text-[var(--dl-tactical-muted)] leading-relaxed space-y-3">
-              <p>
-                Acesse sua caixa de entrada e clique no link de validação para descriptografar e liberar sua conta no Duo Loot.
-              </p>
-              <p className="text-[10px] text-amber-500/80 uppercase font-semibold">
+            <div className="space-y-3 border-t border-[var(--dl-tactical-line)] pt-4 text-xs leading-relaxed text-[var(--dl-tactical-muted)]">
+              <p>Acesse sua caixa de entrada e clique no link de validação para liberar sua conta no Duo Loot.</p>
+              <p className="text-[10px] font-semibold uppercase text-amber-500/80">
                 * Caso não encontre, verifique sua pasta de spam ou lixo eletrônico.
               </p>
             </div>
 
             <button
+              type="button"
               onClick={() => navigate(ROUTES.LOGIN)}
-              className="w-full py-2 bg-transparent border border-[var(--dl-tactical-green)] text-[var(--dl-tactical-green)] hover:bg-[var(--dl-tactical-green)]/10 font-bold uppercase font-[Chakra_Petch] tracking-widest text-xs [clip-path:polygon(0_0,100%_0,95%_100%,5%_100%)] transition-all"
+              className="w-full bg-transparent py-2 text-xs font-bold uppercase tracking-widest text-[var(--dl-tactical-green)] transition-all [clip-path:polygon(0_0,100%_0,95%_100%,5%_100%)] hover:bg-[var(--dl-tactical-green)]/10 border border-[var(--dl-tactical-green)]"
             >
               VOLTAR PARA O LOGIN
             </button>

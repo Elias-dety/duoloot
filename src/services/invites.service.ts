@@ -1,10 +1,15 @@
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
+type ServiceError = {
+  code?: string;
+  message?: string;
+};
+
 /**
  * Função utilitária para centralizar o tratamento de erros do serviço de convites.
  * Traduz erros técnicos do Supabase/PostgreSQL para mensagens amigáveis ao usuário.
  */
-const handleServiceError = (error: any, fallbackMessage: string) => {
+const handleServiceError = (error: ServiceError | null | undefined, fallbackMessage: string) => {
   console.error(error);
   // Verifica se o Supabase foi inicializado corretamente
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
@@ -88,4 +93,3 @@ export const getMyPendingInvites = async () => {
   if (error) throw new Error(handleServiceError(error, 'Erro ao buscar convites.'));
   return data;
 };
-

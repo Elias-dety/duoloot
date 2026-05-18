@@ -15,6 +15,7 @@ const statusMap = {
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ player }) => {
   const status = statusMap[player.status];
+  const playerRank = player.gameProfile?.currentRank || player.gameProfile?.rank || 'Sem Rank';
 
   return (
     <article className={`dl-panel p-6 ${player.isPremium ? 'dl-card-purple' : ''}`}>
@@ -37,7 +38,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ player }) => {
               <span className="hidden h-1 w-1 bg-[var(--dl-tactical-line)] sm:block" />
               <span className="flex items-center gap-2 text-[var(--dl-tactical-yellow)]">
                 <Trophy className="h-4 w-4" />
-                {player.gameProfile?.currentRank || (player.gameProfile as any)?.rank || 'Sem Rank'}
+                {playerRank}
               </span>
               <span className="hidden h-1 w-1 bg-[var(--dl-tactical-line)] sm:block" />
               <span>Membro desde {new Date(player.createdAt).getFullYear()}</span>
