@@ -1,55 +1,54 @@
 import { redVaultIcons } from '@/assets/icons/red-vault';
 import { duolootIcons } from '@/assets/icons/library';
+import logoFull from '@/assets/images/logotipo-trasparente-duoloot.png';
 import horizontalFrame from '@/assets/images/moudura-orizontal-1.svg';
 import vaultClosed from '@/assets/images/vault/duoloot-vault-closed.webp';
-import vaultClosedThumb from '@/assets/images/vault/duoloot-vault-closed-thumb.webp';
 import vaultOpenRewards from '@/assets/images/vault/duoloot-vault-open-rewards.webp';
-import vaultOpenRewardsThumb from '@/assets/images/vault/duoloot-vault-open-rewards-thumb.webp';
 import vaultKey from '@/assets/images/vault/duoloot-vault-key.webp';
-import vaultKeyThumb from '@/assets/images/vault/duoloot-vault-key-thumb.webp';
 import duocoins from '@/assets/images/rewards/duoloot-duocoins-stack.webp';
-import duocoinsThumb from '@/assets/images/rewards/duoloot-duocoins-stack-thumb.webp';
 import lootBoxSmall from '@/assets/images/rewards/duoloot-loot-box-small.webp';
-import lootBoxSmallThumb from '@/assets/images/rewards/duoloot-loot-box-small-thumb.webp';
 import lobbyFinder from '@/assets/images/lobby/icon-lobby-finder.webp';
-import lobbyFinderThumb from '@/assets/images/lobby/icon-lobby-finder-thumb.webp';
-import matchmakingTrust from '@/assets/images/matchmaking/icon-matchmaking-trust.webp';
-import matchmakingTrustThumb from '@/assets/images/matchmaking/icon-matchmaking-trust-thumb.webp';
+import matchmakingTrust from '@/assets/images/matchmaking/icon-matchmaking-trust.png';
+import missionTarget from '@/assets/images/icons/icon-mission-target.webp';
+import trustScoreRating from '@/assets/images/icons/icon-trust-score-rating.webp';
+import trustScoreShield from '@/assets/images/icons/icon-trust-score-shield.webp';
 
 export const ASSETS = {
   logo: {
     mark: redVaultIcons.logoMark,
+    full: logoFull,
     frame: horizontalFrame,
   },
   vault: {
     closed: vaultClosed,
-    closedThumb: vaultClosedThumb,
+    closedThumb: vaultClosed,
     openRewards: vaultOpenRewards,
-    openRewardsThumb: vaultOpenRewardsThumb,
+    openRewardsThumb: vaultOpenRewards,
     key: vaultKey,
-    keyThumb: vaultKeyThumb,
+    keyThumb: vaultKey,
   },
   rewards: {
     duocoins,
-    duocoinsThumb,
+    duocoinsThumb: duocoins,
     lootBoxSmall,
-    lootBoxSmallThumb,
+    lootBoxSmallThumb: lootBoxSmall,
   },
   icons: {
     matchmakingTrust,
-    matchmakingTrustThumb,
+    matchmakingTrustThumb: matchmakingTrust,
     lobbyFinder,
-    lobbyFinderThumb,
-    matchmaking: redVaultIcons.matchmaking,
-    lobby: redVaultIcons.lobbyFinder,
-    trustScore: redVaultIcons.secureShield,
-    mission: redVaultIcons.missions,
+    lobbyFinderThumb: lobbyFinder,
+    matchmaking: matchmakingTrust,
+    lobby: lobbyFinder,
+    trustScore: trustScoreShield,
+    trustScoreRating,
+    mission: missionTarget,
     ranking: redVaultIcons.ranking,
     squad: duolootIcons.users,
-    vault: redVaultIcons.vault,
-    vaultKey: redVaultIcons.vaultKey,
-    lootReward: redVaultIcons.lootReward,
-    coin: duolootIcons.coin,
+    vault: vaultClosed,
+    vaultKey,
+    lootReward: lootBoxSmall,
+    coin: duocoins,
     wallet: duolootIcons.wallet,
     microphone: duolootIcons.microphone,
     search: duolootIcons.search,

@@ -1,0 +1,242 @@
+[
+  {
+    "file": "logo-mark.svg",
+    "title": "Duoloot logo mark",
+    "description": "Angular Duoloot D shield mark.",
+    "category": "brand"
+  },
+  {
+    "file": "home.svg",
+    "title": "Home",
+    "description": "Home navigation icon.",
+    "category": "navigation"
+  },
+  {
+    "file": "menu.svg",
+    "title": "Menu",
+    "description": "Menu icon.",
+    "category": "navigation"
+  },
+  {
+    "file": "search.svg",
+    "title": "Search",
+    "description": "Search icon.",
+    "category": "navigation"
+  },
+  {
+    "file": "filter.svg",
+    "title": "Filter",
+    "description": "Filter icon.",
+    "category": "navigation"
+  },
+  {
+    "file": "chevron-left.svg",
+    "title": "Chevron left",
+    "description": "Left chevron.",
+    "category": "navigation"
+  },
+  {
+    "file": "chevron-right.svg",
+    "title": "Chevron right",
+    "description": "Right chevron.",
+    "category": "navigation"
+  },
+  {
+    "file": "plus.svg",
+    "title": "Plus",
+    "description": "Plus icon.",
+    "category": "utility"
+  },
+  {
+    "file": "close.svg",
+    "title": "Close",
+    "description": "Close icon.",
+    "category": "utility"
+  },
+  {
+    "file": "calendar.svg",
+    "title": "Calendar",
+    "description": "Calendar icon.",
+    "category": "utility"
+  },
+  {
+    "file": "clock.svg",
+    "title": "Clock",
+    "description": "Clock icon.",
+    "category": "utility"
+  },
+  {
+    "file": "user.svg",
+    "title": "User",
+    "description": "Single user icon.",
+    "category": "user"
+  },
+  {
+    "file": "users.svg",
+    "title": "Users",
+    "description": "Multiple users icon.",
+    "category": "user"
+  },
+  {
+    "file": "profile-badge.svg",
+    "title": "Profile badge",
+    "description": "User profile badge icon.",
+    "category": "user"
+  },
+  {
+    "file": "login.svg",
+    "title": "Login",
+    "description": "Login icon.",
+    "category": "auth"
+  },
+  {
+    "file": "logout.svg",
+    "title": "Logout",
+    "description": "Logout icon.",
+    "category": "auth"
+  },
+  {
+    "file": "secure-shield.svg",
+    "title": "Secure shield",
+    "description": "Shield with check.",
+    "category": "auth"
+  },
+  {
+    "file": "notification-bell.svg",
+    "title": "Notification bell",
+    "description": "Bell notification icon.",
+    "category": "auth"
+  },
+  {
+    "file": "settings.svg",
+    "title": "Settings",
+    "description": "Settings cog icon.",
+    "category": "utility"
+  },
+  {
+    "file": "matchmaking.svg",
+    "title": "Matchmaking",
+    "description": "Two players linked by a Duoloot core.",
+    "category": "product"
+  },
+  {
+    "file": "lobby-finder.svg",
+    "title": "Lobby finder",
+    "description": "Search over tactical panel.",
+    "category": "product"
+  },
+  {
+    "file": "vault.svg",
+    "title": "Vault",
+    "description": "Vault chest icon.",
+    "category": "product"
+  },
+  {
+    "file": "missions.svg",
+    "title": "Missions",
+    "description": "Target mission icon.",
+    "category": "product"
+  },
+  {
+    "file": "vault-key.svg",
+    "title": "Vault key",
+    "description": "Vault key icon.",
+    "category": "product"
+  },
+  {
+    "file": "loot-reward.svg",
+    "title": "Loot reward",
+    "description": "Loot gift icon.",
+    "category": "product"
+  },
+  {
+    "file": "ranking.svg",
+    "title": "Ranking",
+    "description": "Trophy leaderboard icon.",
+    "category": "product"
+  },
+  {
+    "file": "crown-premium.svg",
+    "title": "Crown premium",
+    "description": "Premium crown icon.",
+    "category": "product"
+  },
+  {
+    "file": "gamepad.svg",
+    "title": "Gamepad",
+    "description": "Gamepad icon.",
+    "category": "product"
+  },
+  {
+    "file": "sword.svg",
+    "title": "Sword",
+    "description": "Sword icon.",
+    "category": "product"
+  },
+  {
+    "file": "star-favorite.svg",
+    "title": "Favorite star",
+    "description": "Favorite star icon.",
+    "category": "product"
+  },
+  {
+    "file": "community-chat.svg",
+    "title": "Community chat",
+    "description": "Chat bubbles icon.",
+    "category": "social"
+  },
+  {
+    "file": "microphone.svg",
+    "title": "Microphone",
+    "description": "Voice chat microphone icon.",
+    "category": "social"
+  },
+  {
+    "file": "ping-connection.svg",
+    "title": "Ping connection",
+    "description": "Signal and ping icon.",
+    "category": "social"
+  },
+  {
+    "file": "wallet.svg",
+    "title": "Wallet",
+    "description": "Wallet and credits icon.",
+    "category": "economy"
+  },
+  {
+    "file": "coin.svg",
+    "title": "Coin",
+    "description": "Coin currency icon.",
+    "category": "economy"
+  },
+  {
+    "file": "gift.svg",
+    "title": "Gift",
+    "description": "Gift icon.",
+    "category": "economy"
+  },
+  {
+    "file": "play-trailer.svg",
+    "title": "Play trailer",
+    "description": "Play video icon.",
+    "category": "media"
+  },
+  {
+    "file": "image-placeholder.svg",
+    "title": "Image placeholder",
+    "description": "Image placeholder icon.",
+    "category": "media"
+  },
+  {
+    "file": "download.svg",
+    "title": "Download",
+    "description": "Download icon.",
+    "category": "media"
+  },
+  {
+    "file": "upload.svg",
+    "title": "Upload",
+    "description": "Upload icon.",
+    "category": "media"
+  }
+]

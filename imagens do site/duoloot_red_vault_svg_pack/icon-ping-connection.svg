@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-labelledby="title desc">
+  <title>Ping and connection icon</title>
+  <desc>Low ping connection bars icon.</desc>
+  <defs>
+      <linearGradient id="dl-red" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ff2a2a"/>
+        <stop offset="100%" stop-color="#8f0808"/>
+      </linearGradient>
+      <linearGradient id="dl-white" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="100%" stop-color="#b7bac1"/>
+      </linearGradient>
+      <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="0" dy="0" stdDeviation="2.4" flood-color="#ff0000" flood-opacity="0.45"/>
+      </filter>
+    </defs>
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 46H18" stroke="url(#dl-white)" stroke-width="3.6"/>
+    <path d="M22 40H28" stroke="url(#dl-white)" stroke-width="3.6"/>
+    <path d="M32 34H38" stroke="url(#dl-red)" stroke-width="3.6" filter="url(#glow-red)"/>
+    <path d="M42 28H48" stroke="url(#dl-red)" stroke-width="3.6" filter="url(#glow-red)"/>
+    <path d="M52 22H58" stroke="url(#dl-red)" stroke-width="3.6" filter="url(#glow-red)"/>
+    <path d="M10 20C16 14 24 11 32 11C40 11 48 14 54 20" stroke="url(#dl-white)" stroke-width="2.8"/>
+
+  </g>
+</svg>

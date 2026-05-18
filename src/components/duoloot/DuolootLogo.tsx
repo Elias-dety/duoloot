@@ -8,17 +8,17 @@ interface DuolootLogoProps {
 }
 
 export const DuolootLogo: React.FC<DuolootLogoProps> = ({ compact = false, subtitle = 'Red Vault' }) => (
-  <>
-    <span className={`grid place-items-center rounded-[1rem] border border-[var(--dl-border-red)] bg-[linear-gradient(135deg,var(--dl-red-dark),var(--dl-red))] text-white shadow-[0_18px_30px_rgba(255,0,0,0.24)] ${compact ? 'h-10 w-10 p-1.5' : 'h-12 w-12 p-2'}`}>
-      <img
-        src={ASSETS.logo.mark}
-        alt="Duoloot"
-        className="h-full w-full object-contain"
-      />
-    </span>
-    <span className="dl-brand-copy">
-      <strong>Duoloot</strong>
-      <small>{subtitle}</small>
-    </span>
-  </>
+  <span className="flex flex-col items-start justify-center">
+    <img
+      src={ASSETS.logo.full}
+      alt="Duoloot Logo"
+      className={`object-contain transition-all duration-300 ${compact ? 'h-7 md:h-8' : 'h-9 md:h-11'}`}
+    />
+    {subtitle && (
+      <span className="text-[0.62rem] font-bold uppercase tracking-[0.2em] text-[var(--dl-muted-light)] mt-1.5 pl-0.5 select-none leading-none">
+        {subtitle}
+      </span>
+    )}
+  </span>
 );
+

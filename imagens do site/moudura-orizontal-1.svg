@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1050" viewBox="0 0 1400 1050" fill="none">
+  <defs>
+    <linearGradient id="metalDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5f6671"/>
+      <stop offset="18%" stop-color="#20262f"/>
+      <stop offset="50%" stop-color="#090d12"/>
+      <stop offset="82%" stop-color="#1b222b"/>
+      <stop offset="100%" stop-color="#727a85"/>
+    </linearGradient>
+
+    <linearGradient id="metalEdge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a4adb7"/>
+      <stop offset="45%" stop-color="#313843"/>
+      <stop offset="100%" stop-color="#0b0f14"/>
+    </linearGradient>
+
+    <linearGradient id="innerRed" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#220205"/>
+      <stop offset="20%" stop-color="#6a0813"/>
+      <stop offset="50%" stop-color="#ff2233"/>
+      <stop offset="80%" stop-color="#6a0813"/>
+      <stop offset="100%" stop-color="#220205"/>
+    </linearGradient>
+
+    <linearGradient id="redBarV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a0003"/>
+      <stop offset="50%" stop-color="#ff2738"/>
+      <stop offset="100%" stop-color="#1a0003"/>
+    </linearGradient>
+
+    <linearGradient id="gem" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff8ea0"/>
+      <stop offset="20%" stop-color="#ff3550"/>
+      <stop offset="50%" stop-color="#a00025"/>
+      <stop offset="100%" stop-color="#ff2f58"/>
+    </linearGradient>
+
+    <radialGradient id="gemGlow" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#ffb7c2"/>
+      <stop offset="45%" stop-color="#ff2d4e" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#ff2d4e" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="glowRed" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+
+    <pattern id="hexPattern" width="16" height="14" patternUnits="userSpaceOnUse" patternTransform="scale(1.4)">
+      <path d="M4 1H12L16 7L12 13H4L0 7L4 1Z" stroke="#202833" stroke-width="0.7" fill="none" opacity="0.45"/>
+    </pattern>
+  </defs>
+
+  <!-- Top frame -->
+  <g id="frame-top" filter="url(#softShadow)">
+    <path d="M62 98L98 60H398L426 84H978L1004 63H1306L1344 101V178L1318 204V143L1284 110H1016L989 132H413L383 109H117L94 132L95 204L62 176V98Z" fill="url(#metalDark)"/>
+    <path d="M80 111L104 86H389L415 109H984L1009 88H1298L1320 110V171L1308 182V121L1286 99H1012L985 121H418L391 98H110L98 112V179L80 161V111Z" stroke="#939ba4" stroke-opacity="0.35" stroke-width="2"/>
+    <path d="M110 138H388L410 160H985L1008 138H1287" stroke="#ff3344" stroke-opacity="0.9" stroke-width="3" filter="url(#glowRed)"/>
+    <rect x="675" y="86" width="52" height="8" rx="4" fill="url(#innerRed)" filter="url(#glowRed)"/>
+    <rect x="292" y="76" width="14" height="6" rx="3" fill="#ff3047" filter="url(#glowRed)"/>
+    <rect x="311" y="76" width="14" height="6" rx="3" fill="#ff3047" filter="url(#glowRed)"/>
+    <rect x="1078" y="76" width="14" height="6" rx="3" fill="#ff3047" filter="url(#glowRed)"/>
+    <rect x="1097" y="76" width="14" height="6" rx="3" fill="#ff3047" filter="url(#glowRed)"/>
+  </g>
+
+  <!-- Bottom frame -->
+  <g id="frame-bottom" filter="url(#softShadow)">
+    <path d="M62 948L98 990H398L426 966H978L1004 987H1306L1344 949V872L1318 846V906L1284 940H1016L989 918H413L383 941H117L94 918L95 846L62 874V948Z" fill="url(#metalDark)"/>
+    <path d="M80 937L104 962H389L415 939H984L1009 960H1298L1320 938V877L1308 866V927L1286 949H1012L985 927H418L391 950H110L98 936V869L80 887V937Z" stroke="#939ba4" stroke-opacity="0.35" stroke-width="2"/>
+    <path d="M110 908H388L410 886H985L1008 908H1287" stroke="#ff3344" stroke-opacity="0.95" stroke-width="3" filter="url(#glowRed)"/>
+    <rect x="675" y="956" width="52" height="8" rx="4" fill="url(#innerRed)" filter="url(#glowRed)"/>
+    <rect x="292" y="969" width="14" height="6" rx="3" fill="#ff3047" filter="url(#glowRed)"/>
+    <rect x="311" y="969" width="14" height="6" rx="3" fill="#ff3047" filter="url(#glowRed)"/>
+    <rect x="1078" y="969" width="14" height="6" rx="3" fill="#ff3047" filter="url(#glowRed)"/>
+    <rect x="1097" y="969" width="14" height="6" rx="3" fill="#ff3047" filter="url(#glowRed)"/>
+    <path d="M254 940H371L392 958H266L254 940Z" fill="#11161d"/>
+    <path d="M1008 958H1134L1146 940H1026L1008 958Z" fill="#11161d"/>
+    <rect x="278" y="949" width="86" height="11" rx="5.5" fill="url(#innerRed)" filter="url(#glowRed)"/>
+    <rect x="1022" y="949" width="86" height="11" rx="5.5" fill="url(#innerRed)" filter="url(#glowRed)"/>
+  </g>
+
+  <!-- Left frame -->
+  <g id="frame-left" filter="url(#softShadow)">
+    <path d="M37 235L62 207V176L95 205V845L62 873V839L37 809V235Z" fill="url(#metalDark)"/>
+    <path d="M95 205L117 183V867L95 845V205Z" fill="#0d1218"/>
+    <path d="M112 217V833" stroke="#ff3045" stroke-opacity="0.8" stroke-width="3" filter="url(#glowRed)"/>
+    <rect x="64" y="286" width="8" height="76" rx="4" fill="url(#redBarV)" filter="url(#glowRed)"/>
+    <rect x="64" y="690" width="8" height="110" rx="4" fill="url(#redBarV)" filter="url(#glowRed)"/>
+    <path d="M37 701L60 678H78L95 694V847L62 874L37 846V701Z" fill="url(#metalEdge)" fill-opacity="0.45"/>
+  </g>
+
+  <!-- Right frame -->
+  <g id="frame-right" filter="url(#softShadow)">
+    <path d="M1363 235L1338 207V176L1305 205V845L1338 873V839L1363 809V235Z" fill="url(#metalDark)"/>
+    <path d="M1305 205L1283 183V867L1305 845V205Z" fill="#0d1218"/>
+    <path d="M1288 217V833" stroke="#ff3045" stroke-opacity="0.8" stroke-width="3" filter="url(#glowRed)"/>
+    <rect x="1328" y="286" width="8" height="76" rx="4" fill="url(#redBarV)" filter="url(#glowRed)"/>
+    <rect x="1328" y="690" width="8" height="110" rx="4" fill="url(#redBarV)" filter="url(#glowRed)"/>
+    <path d="M1363 701L1340 678H1322L1305 694V847L1338 874L1363 846V701Z" fill="url(#metalEdge)" fill-opacity="0.45"/>
+  </g>
+
+  <!-- Inner accent ring -->
+  <g id="inner-accent">
+    <path d="M119 183H390L416 206H983L1010 183H1284V205H1018L991 228H408L381 205H119V183Z" fill="#181f27"/>
+    <path d="M119 867H390L416 844H983L1010 867H1284V845H1018L991 822H408L381 845H119V867Z" fill="#181f27"/>
+    <rect x="119" y="205" width="20" height="640" fill="#181f27"/>
+    <rect x="1261" y="205" width="23" height="640" fill="#181f27"/>
+    <path d="M136 205H1261V845H136V205Z" stroke="#c9d0d6" stroke-opacity="0.20" stroke-width="2"/>
+    <path d="M152 221H1244V829H152V221Z" stroke="#ff3447" stroke-opacity="0.28" stroke-width="2"/>
+  </g>
+
+  <!-- Subtle tech pattern strips -->
+  <g id="tech-pattern" opacity="0.35">
+    <rect x="436" y="73" width="540" height="34" fill="url(#hexPattern)"/>
+    <rect x="436" y="944" width="540" height="34" fill="url(#hexPattern)"/>
+    <rect x="76" y="255" width="34" height="540" fill="url(#hexPattern)"/>
+    <rect x="1290" y="255" width="34" height="540" fill="url(#hexPattern)"/>
+  </g>
+
+  <!-- Left emblem -->
+  <g id="emblem-left" transform="translate(20 0)" filter="url(#softShadow)">
+    <circle cx="55" cy="525" r="10" fill="#0f1218"/>
+    <path d="M35 525L55 485L75 525L55 565L35 525Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.65" stroke-width="2"/>
+    <path d="M20 525L55 490L90 525L55 560L20 525Z" fill="url(#gem)" filter="url(#glowRed)"/>
+    <path d="M20 525L55 490L90 525L55 560L20 525Z" stroke="#f7c2cb" stroke-opacity="0.5" stroke-width="2"/>
+    <path d="M13 525L33 505L33 545L13 525Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.6" stroke-width="2"/>
+    <path d="M97 525L77 505L77 545L97 525Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.6" stroke-width="2"/>
+    <path d="M55 483L35 503H75L55 483Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.6" stroke-width="2"/>
+    <path d="M55 567L35 547H75L55 567Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.6" stroke-width="2"/>
+    <circle cx="55" cy="525" r="38" fill="url(#gemGlow)" opacity="0.8"/>
+    <path d="M55 493L67 525L55 557L43 525L55 493Z" stroke="#ffd8df" stroke-opacity="0.55" stroke-width="1.4"/>
+    <path d="M23 525H87M55 493V557" stroke="#ffd8df" stroke-opacity="0.35" stroke-width="1.2"/>
+  </g>
+
+  <!-- Right emblem -->
+  <g id="emblem-right" transform="translate(1325 0) scale(-1 1)" filter="url(#softShadow)">
+    <circle cx="55" cy="525" r="10" fill="#0f1218"/>
+    <path d="M35 525L55 485L75 525L55 565L35 525Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.65" stroke-width="2"/>
+    <path d="M20 525L55 490L90 525L55 560L20 525Z" fill="url(#gem)" filter="url(#glowRed)"/>
+    <path d="M20 525L55 490L90 525L55 560L20 525Z" stroke="#f7c2cb" stroke-opacity="0.5" stroke-width="2"/>
+    <path d="M13 525L33 505L33 545L13 525Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.6" stroke-width="2"/>
+    <path d="M97 525L77 505L77 545L97 525Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.6" stroke-width="2"/>
+    <path d="M55 483L35 503H75L55 483Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.6" stroke-width="2"/>
+    <path d="M55 567L35 547H75L55 567Z" fill="url(#metalEdge)" stroke="#cdd4db" stroke-opacity="0.6" stroke-width="2"/>
+    <circle cx="55" cy="525" r="38" fill="url(#gemGlow)" opacity="0.8"/>
+    <path d="M55 493L67 525L55 557L43 525L55 493Z" stroke="#ffd8df" stroke-opacity="0.55" stroke-width="1.4"/>
+    <path d="M23 525H87M55 493V557" stroke="#ffd8df" stroke-opacity="0.35" stroke-width="1.2"/>
+  </g>
+
+  <!-- Optional guide IDs only; no fill in center -->
+  <g id="empty-center-guides" opacity="0">
+    <rect id="content-safe-area" x="152" y="221" width="1092" height="608" rx="0" fill="transparent"/>
+  </g>
+</svg>
