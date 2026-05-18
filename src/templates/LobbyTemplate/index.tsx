@@ -5,6 +5,7 @@ import { LobbyActionsBar } from '@/features/lobby/components/LobbyActionsBar';
 import { LobbyFilters } from '@/features/lobby/components/LobbyFilters';
 import { Lobby } from '@/schemas/lobby.schema';
 import { DuolootButton, DuolootCard, DuolootSectionTitle } from '@/components/duoloot';
+import { ASSETS } from '@/constants/assets';
 
 export interface LobbyTemplateProps {
   lobbies: Lobby[];
@@ -94,7 +95,8 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   return (
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 pt-4 md:px-6 md:pt-6">
       <DuolootCard variant="accent" className="space-y-5 px-5 py-6 md:px-8 md:py-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_260px]">
+          <div className="flex flex-wrap items-center justify-between gap-3">
           <DuolootSectionTitle
             eyebrow="Lobby Finder"
             title="Find your next squad with cleaner signals."
@@ -106,6 +108,11 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
               {isCreating ? 'Criando...' : 'DEV: criar lobby'}
             </DuolootButton>
           ) : null}
+          </div>
+          <div className="flex items-center justify-center gap-4 rounded-[1.25rem] border border-[var(--dl-border)] bg-black/20 p-4">
+            <img src={ASSETS.icons.lobbyFinderThumb} alt="Icone de busca de lobby" loading="eager" decoding="async" className="h-24 w-24 object-contain" />
+            <img src={ASSETS.icons.matchmakingTrustThumb} alt="Icone de matchmaking por confianca" loading="eager" decoding="async" className="h-20 w-20 object-contain opacity-90" />
+          </div>
         </div>
       </DuolootCard>
 

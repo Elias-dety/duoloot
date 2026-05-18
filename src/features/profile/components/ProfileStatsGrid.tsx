@@ -1,6 +1,7 @@
 import React from 'react';
 import { StatValue } from '@/components/atoms';
 import { Player } from '@/schemas/player.schema';
+import { ASSETS } from '@/constants/assets';
 
 export interface ProfileStatsGridProps {
   player: Player;
@@ -13,10 +14,12 @@ export const ProfileStatsGrid: React.FC<ProfileStatsGridProps> = ({ player }) =>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-4 [clip-path:var(--dl-cut-button)]">
+          <img src={ASSETS.icons.matchmaking} alt="" aria-hidden="true" className="mb-2 h-5 w-5 object-contain" />
           <StatValue label="Partidas" value={player.stats.matchesPlayed} />
         </div>
 
         <div className="border border-[rgba(34,197,94,0.3)] bg-[rgba(34,197,94,0.05)] p-4 [clip-path:var(--dl-cut-button)]">
+          <img src={ASSETS.icons.ranking} alt="" aria-hidden="true" className="mb-2 h-5 w-5 object-contain" />
           <StatValue label="Win rate" value={`${player.stats.winRate}%`} tone="success" />
         </div>
 
@@ -25,6 +28,7 @@ export const ProfileStatsGrid: React.FC<ProfileStatsGridProps> = ({ player }) =>
         </div>
 
         <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-4 [clip-path:var(--dl-cut-button)]">
+          <img src={ASSETS.rewards.duocoinsThumb} alt="" aria-hidden="true" className="mb-2 h-5 w-5 object-contain" />
           <StatValue label="Horas" value={`${player.stats.hoursPlayed}h`} />
         </div>
       </div>

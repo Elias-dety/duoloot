@@ -1,7 +1,8 @@
 import React from 'react';
 import { Player } from '@/schemas/player.schema';
 import { Avatar } from '@/components/atoms';
-import { MessageCircle, Shield, Trophy } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { ASSETS } from '@/constants/assets';
 
 export interface ProfileHeaderProps {
   player: Player;
@@ -37,7 +38,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ player }) => {
               </span>
               <span className="hidden h-1 w-1 bg-[var(--dl-tactical-line)] sm:block" />
               <span className="flex items-center gap-2 text-[var(--dl-tactical-yellow)]">
-                <Trophy className="h-4 w-4" />
+                <img src={ASSETS.icons.ranking} alt="" aria-hidden="true" className="h-4 w-4 object-contain" />
                 {playerRank}
               </span>
               <span className="hidden h-1 w-1 bg-[var(--dl-tactical-line)] sm:block" />
@@ -52,7 +53,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ player }) => {
             Ver compatibilidade
           </button>
           <button type="button" className="dl-btn dl-btn-green gap-2" disabled>
-            <Shield className="h-4 w-4" />
+            <img src={ASSETS.icons.squad} alt="" aria-hidden="true" className="h-4 w-4 object-contain" />
             Convidar para lobby
           </button>
         </div>

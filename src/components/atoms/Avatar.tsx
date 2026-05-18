@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { ASSETS } from '@/constants/assets';
+
 export interface AvatarProps {
   src?: string;
   alt?: string;
@@ -32,9 +34,17 @@ export const Avatar: React.FC<AvatarProps> = ({
   return (
     <div className={classes} title={showFallback ? '[Imagem pendente: avatar do jogador]' : undefined}>
       {showFallback ? (
-        <span className="select-none font-black uppercase text-brand-primary">
-          {fallback.substring(0, 2)}
-        </span>
+        <div className="relative flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.22),rgba(255,255,255,0.04)_48%,rgba(8,10,14,0.95))]">
+          <img
+            src={ASSETS.avatars.generic}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-contain p-[18%] opacity-35"
+          />
+          <span className="relative select-none font-black uppercase text-brand-primary">
+            {fallback.substring(0, 2)}
+          </span>
+        </div>
       ) : (
         <img
           src={src}

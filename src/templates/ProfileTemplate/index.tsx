@@ -7,6 +7,7 @@ import { ProfileHeader } from '@/features/profile/components/ProfileHeader';
 import { ProfilePreferencesPanel } from '@/features/profile/components/ProfilePreferencesPanel';
 import { ProfileStatsGrid } from '@/features/profile/components/ProfileStatsGrid';
 import { ProfileTrustPanel } from '@/features/profile/components/ProfileTrustPanel';
+import { ASSETS } from '@/constants/assets';
 
 export interface ProfileTemplateProps {
   player: Player | null;
@@ -62,6 +63,12 @@ export const ProfileTemplate: React.FC<ProfileTemplateProps> = ({
       {/* Header HUD de Perfil */}
       <div className="dl-panel relative overflow-hidden p-[18px] mb-6 md:p-[28px]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(70,183,255,0.14),transparent_20rem),linear-gradient(120deg,transparent,rgba(70,183,255,0.04),transparent)]" />
+        <img
+          src={ASSETS.icons.trustScore}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute right-5 top-1/2 hidden h-32 w-32 -translate-y-1/2 object-contain opacity-10 md:block"
+        />
         <div className="relative z-[2]">
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <span className="dl-hud-label" style={{ color: 'var(--dl-tactical-blue)', borderColor: 'rgba(70,183,255,0.34)', background: 'rgba(70,183,255,0.08)' }}>

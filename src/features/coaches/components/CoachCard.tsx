@@ -2,6 +2,7 @@ import React from 'react';
 import { Avatar } from '@/components/atoms';
 import { Coach } from '@/schemas/coach.schema';
 import { Clock3, Lock, Star } from 'lucide-react';
+import { ASSETS } from '@/constants/assets';
 
 export interface CoachCardProps {
   coach: Coach;
@@ -36,6 +37,7 @@ export const CoachCard: React.FC<CoachCardProps> = ({ coach }) => {
       <div className="flex flex-wrap gap-2">
         {coach.specialty.map((item) => (
           <span key={item} className="dl-chip">
+            <img src={ASSETS.icons.mission} alt="" aria-hidden="true" className="h-3.5 w-3.5 object-contain" />
             {item}
           </span>
         ))}
@@ -44,7 +46,10 @@ export const CoachCard: React.FC<CoachCardProps> = ({ coach }) => {
       <div className="grid grid-cols-2 gap-3 border border-[var(--dl-tactical-line)] bg-white/[0.02] p-4 text-sm [clip-path:var(--dl-cut-button)]">
         <div>
           <p className="text-[11px] font-bold uppercase text-[var(--dl-tactical-muted)]">Foco</p>
-          <p className="mt-1 font-bold text-[13px] text-white">{coach.focusAreas[0]}</p>
+          <p className="mt-1 flex items-center gap-2 font-bold text-[13px] text-white">
+            <img src={ASSETS.icons.ranking} alt="" aria-hidden="true" className="h-4 w-4 object-contain" />
+            {coach.focusAreas[0]}
+          </p>
         </div>
         <div>
           <p className="text-[11px] font-bold uppercase text-[var(--dl-tactical-muted)]">Idiomas</p>

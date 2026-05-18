@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button } from '@/components/atoms';
 import { VaultMission, VaultMissionProgress } from '@/features/vault/vault.schema';
-import { CheckCircle2, ChevronRight, Target } from 'lucide-react';
+import { CheckCircle2, ChevronRight } from 'lucide-react';
+import { ASSETS } from '@/constants/assets';
 
 interface VaultMissionCardProps {
   mission: VaultMission & { progress: VaultMissionProgress | null };
@@ -31,9 +32,12 @@ export const VaultMissionCard: React.FC<VaultMissionCardProps> = ({
 
       <div>
         <div className="mb-2 flex items-start justify-between pr-6">
-          <h3 className={`font-['Rajdhani'] text-xl font-bold uppercase ${isCompleted ? 'text-white' : 'text-white'}`}>
-            {mission.title}
-          </h3>
+          <div className="flex items-center gap-3">
+            <img src={isCompleted ? ASSETS.rewards.lootBoxSmallThumb : ASSETS.vault.keyThumb} alt="" aria-hidden="true" className="h-10 w-10 object-contain" />
+            <h3 className={`font-['Rajdhani'] text-xl font-bold uppercase ${isCompleted ? 'text-white' : 'text-white'}`}>
+              {mission.title}
+            </h3>
+          </div>
         </div>
         <p className="mb-4 min-h-[36px] text-[12px] text-[var(--dl-muted-light)]">
           {mission.description}
@@ -58,7 +62,7 @@ export const VaultMissionCard: React.FC<VaultMissionCardProps> = ({
 
         <div className="flex items-center justify-between border-t border-[var(--dl-border)] pt-3">
           <div className="flex items-center gap-1.5 font-['Rajdhani'] text-lg font-bold text-white">
-            <Target className="h-4 w-4" />
+            <img src={ASSETS.icons.mission} alt="" aria-hidden="true" className="h-4 w-4 object-contain" />
             +{mission.points_reward} <span className="ml-1 text-[12px] uppercase tracking-wide text-[var(--dl-muted-light)]">pts</span>
           </div>
 

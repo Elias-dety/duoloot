@@ -2,6 +2,7 @@ import React from 'react';
 import { Player } from '@/schemas/player.schema';
 import { ProgressBar } from '@/components/atoms';
 import { AlertTriangle, ThumbsUp } from 'lucide-react';
+import { ASSETS } from '@/constants/assets';
 
 export interface ProfileTrustPanelProps {
   player: Player;
@@ -16,7 +17,8 @@ export const ProfileTrustPanel: React.FC<ProfileTrustPanelProps> = ({ player }) 
   return (
     <article className="dl-panel flex h-full flex-col p-6">
       <div className="mb-6 flex items-start justify-between">
-        <h3 className="dl-hud-label mb-2">
+        <h3 className="dl-hud-label mb-2 gap-2">
+          <img src={ASSETS.icons.trustScore} alt="" aria-hidden="true" className="h-5 w-5 object-contain" />
           <span className={textColor}>■</span> Trust Score
         </h3>
         <span className={`font-['Rajdhani'] text-3xl font-bold ${textColor}`}>{player.trustScore}/100</span>

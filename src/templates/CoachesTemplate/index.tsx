@@ -2,6 +2,7 @@ import React from 'react';
 import { Coach } from '@/schemas/coach.schema';
 import { CoachCard } from '@/features/coaches/components/CoachCard';
 import { CoachesFilters } from '@/features/coaches/components/CoachesFilters';
+import { ASSETS } from '@/constants/assets';
 
 export interface CoachesTemplateProps {
   coaches: Coach[];
@@ -52,6 +53,18 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
       {/* Header HUD de Coaches */}
       <div className="dl-panel relative overflow-hidden p-[18px] mb-6 md:p-[28px]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(168,85,247,0.14),transparent_20rem),linear-gradient(120deg,transparent,rgba(168,85,247,0.04),transparent)]" />
+        <img
+          src={ASSETS.icons.ranking}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute right-6 top-6 h-24 w-24 object-contain opacity-15"
+        />
+        <img
+          src={ASSETS.icons.squad}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-4 right-32 hidden h-20 w-20 object-contain opacity-10 md:block"
+        />
         <div className="relative z-[2]">
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <span className="dl-hud-label" style={{ color: 'var(--dl-tactical-purple)', borderColor: 'rgba(168,85,247,0.34)', background: 'rgba(168,85,247,0.08)' }}>

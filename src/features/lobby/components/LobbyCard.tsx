@@ -3,6 +3,7 @@ import React from 'react';
 import { Avatar, Badge, Button, StatValue } from '@/components/atoms';
 import { CompatibilityMeter } from '@/components/molecules';
 import { Lobby } from '@/schemas/lobby.schema';
+import { ASSETS } from '@/constants/assets';
 
 export interface LobbyCardProps {
   lobby: Lobby;
@@ -50,7 +51,10 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }
         <div className="flex min-w-0 items-center gap-3">
           <Avatar src={lobby.owner?.avatarUrl} alt={ownerName} fallback={ownerName} />
           <div className="min-w-0">
-            <h3 className="truncate font-['Rajdhani'] text-lg font-bold uppercase text-white">{ownerName}</h3>
+            <div className="flex min-w-0 items-center gap-2">
+              <img src={ASSETS.icons.lobby} alt="" aria-hidden="true" className="h-5 w-5 shrink-0 object-contain" />
+              <h3 className="truncate font-['Rajdhani'] text-lg font-bold uppercase text-white">{ownerName}</h3>
+            </div>
             <p className="truncate text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--dl-muted-light)]">{lobbyMode} / {lobbyQueue}</p>
           </div>
         </div>
@@ -74,7 +78,8 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }
       ) : null}
 
       <div className="my-1 space-y-2 border-y border-[var(--dl-border)] py-3">
-        <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--dl-muted-light)]">
+        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[var(--dl-muted-light)]">
+          <img src={ASSETS.icons.matchmakingTrustThumb} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
           Perfil do lobby
         </div>
         {!hasProfile ? (

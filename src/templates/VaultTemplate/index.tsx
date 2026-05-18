@@ -18,7 +18,8 @@ import { VaultSeasonHistory } from '@/features/vault/components/VaultSeasonHisto
 import { VaultStatsPanel } from '@/features/vault/components/VaultStatsPanel';
 import { VaultUserRankPanel } from '@/features/vault/components/VaultUserRankPanel';
 import { VaultWinnersPanel } from '@/features/vault/components/VaultWinnersPanel';
-import { DuolootBadge, DuolootButton, DuolootCard, DuolootSectionTitle } from '@/components/duoloot';
+import { DuolootBadge, DuolootButton, DuolootCard, DuolootImagePlaceholder, DuolootSectionTitle } from '@/components/duoloot';
+import { ASSETS } from '@/constants/assets';
 
 export interface VaultTemplateProps {
   event: VaultEvent | null;
@@ -104,7 +105,9 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
   return (
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
       <DuolootCard variant="accent" className="space-y-5 px-5 py-6 md:px-8 md:py-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
           <DuolootSectionTitle
             eyebrow="Vault"
             title="Complete missions. Unlock the Vault."
@@ -118,6 +121,28 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
               </DuolootButton>
             ) : null}
           </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                { label: 'Chaves', icon: ASSETS.icons.vaultKey },
+                { label: 'Missoes', icon: ASSETS.icons.mission },
+                { label: 'DuoCoins', icon: ASSETS.rewards.duocoinsThumb },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-3 rounded-[1rem] border border-[var(--dl-border)] bg-black/20 px-4 py-3">
+                  <img src={item.icon} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
+                  <span className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-white">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DuolootImagePlaceholder
+            label="Imagem do Vault"
+            src={event ? ASSETS.vault.openRewards : ASSETS.icons.vault}
+            alt={event ? 'Cofre aberto com recompensas do Duo Loot' : 'Icone de cofre fechado do Duo Loot'}
+            className="min-h-[220px]"
+            imageClassName={event ? 'p-3 md:p-4' : 'p-10 md:p-12'}
+            loading="eager"
+          />
         </div>
       </DuolootCard>
 
@@ -212,6 +237,9 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
 
           <DuolootCard variant="muted" className="p-5">
             <h4 className="mb-3 font-['Rajdhani'] text-xl font-bold uppercase text-white">How it works</h4>
+            <div className="mb-4 flex justify-center">
+              <img src={ASSETS.vault.keyThumb} alt="Chave do Vault" loading="lazy" decoding="async" className="h-20 w-20 object-contain" />
+            </div>
             <ul className="space-y-3 text-sm text-[var(--dl-muted-light)]">
               <li>1. Participe do evento e entre no Vault.</li>
               <li>2. Cumpra as missões para ganhar pontos e chaves.</li>

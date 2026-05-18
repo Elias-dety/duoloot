@@ -1,6 +1,7 @@
 import React from 'react';
-import { Crosshair, Trophy } from 'lucide-react';
+import { Crosshair } from 'lucide-react';
 import { Player } from '@/schemas/player.schema';
+import { ASSETS } from '@/constants/assets';
 
 export interface ProfileGameInfoProps {
   player: Player;
@@ -23,7 +24,7 @@ export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
           <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Rank atual</p>
           <div className="mt-3 flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center border border-[var(--dl-tactical-yellow)]/[0.3] bg-[var(--dl-tactical-yellow)]/[0.1] [clip-path:var(--dl-cut-button)]">
-              <Trophy className="h-6 w-6 text-[var(--dl-tactical-yellow)]" />
+              <img src={ASSETS.icons.ranking} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
             </div>
             <span className="font-['Rajdhani'] text-3xl font-bold uppercase text-white">{rank}</span>
           </div>

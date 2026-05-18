@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/atoms';
 import { VaultEvent } from '@/features/vault/vault.schema';
+import { ASSETS } from '@/constants/assets';
 
 interface VaultJoinPanelProps {
   event: VaultEvent;
@@ -19,6 +20,13 @@ export const VaultJoinPanel: React.FC<VaultJoinPanelProps> = ({
 }) => {
   return (
     <div className="dl-panel flex flex-col items-center gap-4 p-6 sm:flex-row">
+      <img
+        src={ASSETS.icons.vault}
+        alt="Icone de cofre fechado do Duo Loot"
+        loading="lazy"
+        decoding="async"
+        className="h-24 w-24 shrink-0 object-contain"
+      />
       <div className="flex-1 text-center sm:text-left">
         <span className="font-['Rajdhani'] text-xl font-bold uppercase text-white">
           Evento ativo: {event.title}

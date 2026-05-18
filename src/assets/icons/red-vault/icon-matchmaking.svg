@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-labelledby="title desc">
+  <title>Matchmaking icon</title>
+  <desc>Two players linked by a tactical connection line and a Duoloot badge.</desc>
+  <defs>
+      <linearGradient id="dl-red" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ff2a2a"/>
+        <stop offset="100%" stop-color="#8f0808"/>
+      </linearGradient>
+      <linearGradient id="dl-white" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="100%" stop-color="#b7bac1"/>
+      </linearGradient>
+      <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="0" dy="0" stdDeviation="2.4" flood-color="#ff0000" flood-opacity="0.45"/>
+      </filter>
+    </defs>
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="20" cy="23" r="6" stroke="url(#dl-white)" stroke-width="3.2"/>
+    <circle cx="44" cy="23" r="6" stroke="url(#dl-white)" stroke-width="3.2"/>
+    <path d="M12 46C13.5 39.5 18 36 24 36C30 36 34.5 39.5 36 46" stroke="url(#dl-white)" stroke-width="3.2"/>
+    <path d="M28 46C29.5 39.5 34 36 40 36C46 36 50.5 39.5 52 46" stroke="url(#dl-white)" stroke-width="3.2"/>
+    <path d="M24 22H40" stroke="url(#dl-red)" stroke-width="3.4" filter="url(#glow-red)"/>
+    <path d="M32 16L38 22L32 28L26 22L32 16Z" stroke="url(#dl-red)" stroke-width="2.8" filter="url(#glow-red)"/>
+
+  </g>
+</svg>

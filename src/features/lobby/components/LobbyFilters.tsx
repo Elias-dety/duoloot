@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { DuolootButton } from '@/components/duoloot';
+import { ASSETS } from '@/constants/assets';
 
 export interface LobbyFilterState {
   search: string;
@@ -40,6 +41,10 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
 
   return (
     <div className="dl-panel flex flex-col gap-4 p-5">
+      <div className="flex flex-wrap items-center gap-3 border-b border-[var(--dl-border)]/40 pb-4">
+        <img src={ASSETS.icons.filter} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
+        <span className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Filtros de matchmaking</span>
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <div className="flex flex-col">
           <label className={labelClassName}>Buscar player</label>

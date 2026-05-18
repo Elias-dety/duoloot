@@ -1,6 +1,7 @@
 import React from 'react';
 import { StatValue } from '@/components/atoms';
 import { VaultEvent } from '@/features/vault/vault.schema';
+import { ASSETS } from '@/constants/assets';
 
 export interface VaultStatsPanelProps {
   event: VaultEvent;
@@ -22,7 +23,7 @@ export const VaultStatsPanel: React.FC<VaultStatsPanelProps> = ({
   return (
     <div className="dl-panel flex h-full flex-col gap-6 p-5" style={{ borderColor: 'rgba(255,226,102,0.25)' }}>
       <h3 className="font-['Rajdhani'] text-lg font-bold uppercase text-[var(--dl-tactical-yellow)] flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-[var(--dl-tactical-yellow)] animate-pulse" />
+        <img src={ASSETS.vault.openRewardsThumb} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
         Status da Operação
       </h3>
 
@@ -47,6 +48,7 @@ export const VaultStatsPanel: React.FC<VaultStatsPanelProps> = ({
           />
         </div>
         <p className="mt-4 text-center text-[11px] text-[var(--dl-tactical-muted)] leading-relaxed">
+          <img src={ASSETS.rewards.duocoinsThumb} alt="DuoCoins" loading="lazy" decoding="async" className="mx-auto mb-2 h-14 w-14 object-contain" />
           Complete os contratos para desbloquear o <span className="text-[var(--dl-tactical-yellow)]">{event.prize_label}</span> de <span className="font-bold text-white">{event.prize_value} DuoCoins</span>!
         </p>
       </div>
