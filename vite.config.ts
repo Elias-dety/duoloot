@@ -17,4 +17,20 @@ export default defineConfig({
     setupFiles: './src/test/setup.ts',
     exclude: ['tests/e2e/**', 'node_modules/**'],
   },
+  build: {
+    target: 'esnext',
+    minify: 'esbuild',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          supabase: ['@supabase/supabase-js'],
+          duoloot: ['lucide-react', 'clsx', 'tailwind-merge']
+        }
+      }
+    }
+  },
+  esbuild: {
+    drop: ['console', 'debugger'],
+  }
 })
