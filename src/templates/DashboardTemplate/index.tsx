@@ -9,7 +9,12 @@ import { RecommendedLobbies } from '@/features/dashboard/components/RecommendedL
 import { RecommendedPlayersPanel } from '@/features/recommendations/components/RecommendedPlayersPanel';
 import { PendingInvitesPanel } from '@/features/invites/components/PendingInvitesPanel';
 import { MyConnectionsPanel } from '@/features/connections/components/MyConnectionsPanel';
-import { DuolootButton, DuolootCard, DuolootSectionTitle } from '@/components/duoloot';
+import { DuolootCard, DuolootSectionTitle, DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
+import { RiotConnectPanel } from '@/features/riot/components/RiotConnectPanel';
+import { PlayerStatsOverview } from '@/features/riot/components/PlayerStatsOverview';
+import { MatchHistoryList } from '@/features/riot/components/MatchHistoryList';
+import { AgentStatsGrid } from '@/features/riot/components/AgentStatsGrid';
+import { MapStatsGrid } from '@/features/riot/components/MapStatsGrid';
 
 export interface DashboardTemplateProps {
   player: Player | null;
@@ -27,28 +32,27 @@ export default function DashboardTemplate({
   isEmpty,
 }: DashboardTemplateProps) {
   if (isLoading) {
-    return (
-      <div className="mx-auto flex min-h-[50vh] w-full max-w-[1240px] flex-col items-center justify-center space-y-6 pb-12">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-[var(--dl-red)] border-t-transparent" />
-        <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-[var(--dl-muted-light)]">Carregando dashboard...</p>
-      </div>
-    );
+    return <DuolootLoadingState message="Carregando dashboard..." />;
   }
 
   if (isError) {
     return (
-      <DuolootCard variant="danger" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
-        <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-white">Erro ao carregar o dashboard.</p>
-        <DuolootButton variant="secondary" onClick={() => window.location.reload()}>Tentar novamente</DuolootButton>
-      </DuolootCard>
+      <DuolootEmptyState 
+        icon="error" 
+        title="Erro ao carregar" 
+        description="Ocorreu um problema ao buscar os dados do seu Dashboard."
+        actionLabel="Tentar novamente"
+        onAction={() => window.location.reload()}
+      />
     );
   }
 
   if (isEmpty || !player || !summary) {
     return (
-      <DuolootCard variant="muted" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
-        <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-[var(--dl-muted-light)]">Nenhum dado encontrado.</p>
-      </DuolootCard>
+      <DuolootEmptyState 
+        title="Dashboard Vazio" 
+        description="Nenhum dado encontrado para exibir no momento."
+      />
     );
   }
 
@@ -61,6 +65,27 @@ export default function DashboardTemplate({
           subtitle="Acompanhe performance, confiança, lobbies recomendados e progresso do Vault no mesmo painel."
         />
       </DuolootCard>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
+        <div className="lg:col-span-1">
+          <RiotConnectPanel />
+        </div>
+        <div className="md:col-span-1 lg:col-span-2">
+          {/* Usando dados mockados como exemplo */}
+          <PlayerStatsOverview 
+            stats={{
+              winRate: 58.5,
+              kda: 1.45,
+              headshotRate: 22.4,
+              matchesPlayed: 45,
+              wins: 26,
+              losses: 19,
+              averageScore: 235,
+              currentRank: "Ascendente 1"
+            }} 
+          />
+        </div>
+      </div>
 
       <DashboardSummary player={player} summary={summary} />
 
@@ -87,6 +112,31 @@ export default function DashboardTemplate({
       </div>
       <div className="mt-8">
         <RecommendedPlayersPanel />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        <div className="lg:col-span-2 space-y-8">
+          <MatchHistoryList 
+            matches={[
+              { id: '1', result: 'VICTORY', agent: 'Jett', agentImageUrl: 'https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/displayicon.png', map: 'Ascent', score: '13 - 10', kda: '21/14/5', kdRatio: 1.5, combatScore: 285, date: 'Há 2 horas' },
+              { id: '2', result: 'DEFEAT', agent: 'Omen', agentImageUrl: 'https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/displayicon.png', map: 'Bind', score: '11 - 13', kda: '15/18/8', kdRatio: 0.8, combatScore: 195, date: 'Há 5 horas' },
+              { id: '3', result: 'VICTORY', agent: 'Jett', agentImageUrl: 'https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/displayicon.png', map: 'Haven', score: '13 - 6', kda: '25/9/2', kdRatio: 2.7, combatScore: 310, date: 'Ontem' },
+            ]}
+          />
+        </div>
+        <div className="lg:col-span-1 space-y-8">
+          <AgentStatsGrid 
+            stats={[
+              { agentName: 'Jett', agentRole: 'Duelist', winRate: 62.5, matchesPlayed: 24, kda: 1.8 },
+              { agentName: 'Omen', agentRole: 'Controller', winRate: 45.0, matchesPlayed: 12, kda: 1.1 },
+            ]}
+          />
+          <MapStatsGrid 
+            stats={[
+              { mapName: 'Ascent', winRate: 68.0, matchesPlayed: 15 },
+              { mapName: 'Bind', winRate: 42.0, matchesPlayed: 10 },
+            ]}
+          />
+        </div>
       </div>
     </div>
   );

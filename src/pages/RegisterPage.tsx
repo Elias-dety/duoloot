@@ -54,12 +54,12 @@ export const RegisterPage: React.FC = () => {
 
   return (
     <div className="relative flex min-h-[calc(100vh-80px)] items-center justify-center overflow-hidden px-4 py-12">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.14),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,70,85,0.14),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)]" />
 
       <div className="relative z-10 flex w-full justify-center">
         {needsVerification ? (
           <DuolootCard variant="elevated" className="w-full max-w-md space-y-6 rounded-[1.75rem] p-6 text-center md:p-8">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[var(--dl-border-red)] bg-[rgba(255,0,0,0.12)] text-2xl">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[var(--dl-border-red)] bg-[rgba(255,70,85,0.12)] text-2xl">
               ✉
             </div>
 

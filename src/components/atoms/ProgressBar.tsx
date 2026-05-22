@@ -16,8 +16,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const safeValue = Math.min(100, Math.max(0, value));
 
   const colors: Record<string, string> = {
-    primary: 'bg-gradient-to-r from-[var(--dl-red-dark)] to-[var(--dl-red)] shadow-[0_0_16px_rgba(255,0,0,0.3)]',
-    success: 'bg-[var(--dl-red)] shadow-[0_0_12px_rgba(255,0,0,0.25)]',
+    primary: 'bg-gradient-to-r from-[var(--dl-red-dark)] to-[var(--dl-red)] shadow-[0_0_16px_rgba(255,70,85,0.3)]',
+    success: 'bg-[var(--dl-string)] shadow-[0_0_12px_rgba(59,217,130,0.25)]',
     warning: 'bg-[var(--dl-muted-light)] shadow-[0_0_10px_rgba(255,255,255,0.16)]',
     error: 'bg-[var(--dl-red-dark)] shadow-[0_0_12px_rgba(143,8,8,0.3)]',
     premium: 'bg-[var(--dl-red-soft)] shadow-[0_0_12px_rgba(255,42,42,0.28)]',

@@ -18,7 +18,7 @@ import { VaultSeasonHistory } from '@/features/vault/components/VaultSeasonHisto
 import { VaultStatsPanel } from '@/features/vault/components/VaultStatsPanel';
 import { VaultUserRankPanel } from '@/features/vault/components/VaultUserRankPanel';
 import { VaultWinnersPanel } from '@/features/vault/components/VaultWinnersPanel';
-import { DuolootBadge, DuolootButton, DuolootCard, DuolootImagePlaceholder, DuolootSectionTitle } from '@/components/duoloot';
+import { DuolootBadge, DuolootButton, DuolootCard, DuolootImagePlaceholder, DuolootSectionTitle, DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
 import { ASSETS } from '@/constants/assets';
 
 export interface VaultTemplateProps {
@@ -82,20 +82,16 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
   submittingTaskId,
 }) => {
   if (isLoading) {
-    return (
-      <div className="mx-auto flex min-h-[50vh] w-full max-w-[1240px] flex-col items-center justify-center space-y-6 pb-12">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-[var(--dl-red)] border-t-transparent" />
-        <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-[var(--dl-muted-light)]">Sincronizando Vault...</p>
-      </div>
-    );
+    return <DuolootLoadingState message="Sincronizando Vault..." />;
   }
 
   if (errorMessage && !event && seasons.length === 0 && winners.length === 0) {
     return (
-      <DuolootCard variant="danger" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16 text-center">
-        <p className="mb-2 font-['Rajdhani'] text-xl font-bold uppercase text-white">{errorMessage}</p>
-        <p className="text-sm text-[var(--dl-muted-light)]">Falha ao carregar os dados do Vault.</p>
-      </DuolootCard>
+      <DuolootEmptyState 
+        icon="error"
+        title={errorMessage}
+        description="Falha ao carregar os dados do Vault."
+      />
     );
   }
 

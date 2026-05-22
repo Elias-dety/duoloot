@@ -44,7 +44,7 @@ export const DuolootImagePlaceholder: React.FC<DuolootImagePlaceholderProps> = (
     <div
       className={[
         'flex min-h-[220px] flex-col items-center justify-center gap-4 rounded-[1.5rem] border border-dashed border-[var(--dl-border-red)]',
-        'bg-[linear-gradient(180deg,rgba(255,0,0,0.12),rgba(255,255,255,0.02))] px-6 text-center',
+        'bg-[linear-gradient(180deg,rgba(255,70,85,0.12),rgba(255,255,255,0.02))] px-6 text-center',
         className,
       ]
         .filter(Boolean)

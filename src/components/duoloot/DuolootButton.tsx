@@ -16,7 +16,7 @@ export const DuolootButton = forwardRef<HTMLButtonElement, DuolootButtonProps>(
     ].join(' ');
 
     const variants: Record<NonNullable<DuolootButtonProps['variant']>, string> = {
-      primary: 'border-[var(--dl-red)] bg-[var(--dl-red)] text-white shadow-[0_18px_35px_rgba(255,0,0,0.24)] hover:bg-[var(--dl-red-soft)] hover:border-[var(--dl-red-soft)]',
+      primary: 'border-[var(--dl-red)] bg-[var(--dl-red)] text-white shadow-[0_18px_35px_rgba(255,70,85,0.24)] hover:bg-[var(--dl-red-soft)] hover:border-[var(--dl-red-soft)]',
       secondary: 'border-[var(--dl-border)] bg-white/[0.04] text-[var(--dl-text)] hover:border-[var(--dl-border-red)] hover:bg-white/[0.08]',
       ghost: 'border-transparent bg-transparent text-[var(--dl-muted-light)] hover:border-[var(--dl-border)] hover:bg-white/[0.05] hover:text-white',
       danger: 'border-[var(--dl-red-dark)] bg-[rgba(143,8,8,0.28)] text-white hover:bg-[rgba(143,8,8,0.4)]',

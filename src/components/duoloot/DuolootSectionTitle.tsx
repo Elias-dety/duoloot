@@ -26,7 +26,7 @@ export const DuolootSectionTitle: React.FC<DuolootSectionTitleProps> = ({
     {...props}
   >
     {eyebrow ? (
-      <span className="rounded-full border border-[var(--dl-border-red)] bg-[rgba(255,0,0,0.1)] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--dl-text)]">
+      <span className="rounded-full border border-[var(--dl-border-red)] bg-[rgba(255,70,85,0.1)] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--dl-text)]">
         {eyebrow}
       </span>
     ) : null}

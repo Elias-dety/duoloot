@@ -6,7 +6,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(({ className = '', error, ...props }, ref) => {
   const baseStyles =
-    'flex h-11 w-full rounded-2xl border bg-[var(--dl-surface)] px-4 py-2 text-sm text-[var(--dl-text)] font-medium placeholder:text-[var(--dl-muted)] placeholder:normal-case placeholder:tracking-normal focus-visible:outline-none focus-visible:border-[var(--dl-red)] focus-visible:ring-2 focus-visible:ring-[rgba(255,0,0,0.18)] disabled:cursor-not-allowed disabled:opacity-50 transition-all';
+    'flex h-11 w-full rounded-2xl border bg-[var(--dl-surface)] px-4 py-2 text-sm text-[var(--dl-text)] font-medium placeholder:text-[var(--dl-muted)] placeholder:normal-case placeholder:tracking-normal focus-visible:outline-none focus-visible:border-[var(--dl-red)] focus-visible:ring-2 focus-visible:ring-[rgba(255,70,85,0.18)] disabled:cursor-not-allowed disabled:opacity-50 transition-all';
   const borderStyles = error
     ? 'border-[var(--dl-red)]'
     : 'border-[var(--dl-border)]';

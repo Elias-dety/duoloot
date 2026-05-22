@@ -4,7 +4,7 @@ import { LobbyGrid } from '@/components/organisms/LobbyGrid';
 import { LobbyActionsBar } from '@/features/lobby/components/LobbyActionsBar';
 import { LobbyFilters } from '@/features/lobby/components/LobbyFilters';
 import { Lobby } from '@/schemas/lobby.schema';
-import { DuolootButton, DuolootCard, DuolootSectionTitle } from '@/components/duoloot';
+import { DuolootButton, DuolootCard, DuolootSectionTitle, DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
 import { ASSETS } from '@/constants/assets';
 
 export interface LobbyTemplateProps {
@@ -134,25 +134,20 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
         <LobbyActionsBar totalLobbies={filteredLobbies.length} />
 
         {isError ? (
-          <DuolootCard variant="danger" className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">Falha ao carregar lobbies</p>
-            <p className="mt-2 max-w-md text-sm text-[var(--dl-muted-light)]">
-              Não foi possível buscar lobbies agora. Tente novamente em instantes.
-            </p>
-            <DuolootButton variant="secondary" className="mt-6" onClick={() => window.location.reload()}>
-              Tentar novamente
-            </DuolootButton>
-          </DuolootCard>
+          <DuolootEmptyState 
+            icon="error"
+            title="Falha ao carregar lobbies"
+            description="Não foi possível buscar lobbies agora. Tente novamente em instantes."
+            actionLabel="Tentar novamente"
+            onAction={() => window.location.reload()}
+          />
         ) : !isLoading && filteredLobbies.length === 0 ? (
-          <DuolootCard variant="muted" className="flex flex-col items-center justify-center py-16 text-center">
-            <p className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">Nenhum lobby encontrado</p>
-            <p className="mt-2 max-w-md text-sm text-[var(--dl-muted-light)]">
-              Ajuste os filtros para ampliar a busca ou crie um novo lobby.
-            </p>
-            <DuolootButton variant="secondary" className="mt-6" onClick={handleClearFilters}>
-              Limpar filtros
-            </DuolootButton>
-          </DuolootCard>
+          <DuolootEmptyState 
+            title="Nenhum lobby encontrado"
+            description="Ajuste os filtros para ampliar a busca ou crie um novo lobby."
+            actionLabel="Limpar filtros"
+            onAction={handleClearFilters}
+          />
         ) : (
           <LobbyGrid items={filteredLobbies} isLoading={isLoading} onJoinLobby={onJoinLobby} joiningLobbyId={joiningLobbyId} />
         )}

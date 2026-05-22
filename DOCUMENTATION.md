@@ -1,132 +1,189 @@
-# Documentação do Projeto Duo Loot
+# Documentação Técnica — Duo Loot
 
-Bem-vindo à documentação oficial do projeto **Duo Loot**. Este documento fornece uma visão geral técnica e arquitetural do projeto, detalhando a stack tecnológica, a estrutura de pastas e o progresso atual do desenvolvimento.
+Documentação oficial do projeto **Duo Loot**. Visão geral técnica, arquitetura, design system e estado atual de implementação.
 
 ---
 
 ## 🚀 Visão Geral
-O Duo Loot é uma plataforma voltada para jogadores, focada em recompensas, lobbies competitivos, serviços de coaching e uma experiência premium para entusiastas de eSports. O projeto utiliza uma arquitetura modular e escalável baseada em **Atomic Design**.
+
+O Duo Loot é uma plataforma para jogadores de eSports focada em:
+- **Lobbies competitivos** — encontrar duos e fechar times.
+- **Vault (Cofre)** — missões gratuitas com prêmios reais.
+- **Coaches** — marketplace de treinadores high elo.
+- **Sistema Premium** — benefícios exclusivos para assinantes.
+- **Estatísticas** — dados reais da Riot Games API (em implementação).
 
 ---
 
 ## 🛠️ Stack Tecnológica
-*   **Core:** React 19 + TypeScript
-*   **Build Tool:** Vite
-*   **Estilização:** Tailwind CSS + CSS Variables (Design Tokens)
-*   **Animações:** Framer Motion
-*   **Ícones:** Lucide React
-*   **Roteamento:** React Router Dom v7
-*   **Formulários:** React Hook Form + Zod
-*   **Gráficos:** Recharts
+
+| Camada | Tecnologia |
+| :--- | :--- |
+| Frontend | React 19 + TypeScript |
+| Build | Vite 8 |
+| Estilização | Tailwind CSS + CSS Variables (Design Tokens) |
+| Backend | Supabase (Auth, Database, Edge Functions) |
+| Ícones | Lucide React |
+| Validação | Zod |
+| Roteamento | React Router 7 (lazy loading) |
+| CMS | React Bricks |
+| Testes | Vitest + Playwright |
 
 ---
 
-## 🏗️ Arquitetura e Estrutura de Pastas
-O projeto segue uma abordagem híbrida de **Atomic Design** com **Feature-based logic**.
+## 🎨 Design System: Codefire UI
 
-### Diretórios Principais
-*   `src/components/`: Componentes globais e reutilizáveis divididos por nível atômico.
-    *   `atoms/`: Componentes básicos (Button, Input, Badge, Typography).
-    *   `molecules/`: Combinação de átomos (PlayerStat, CountdownTimer, RewardCard).
-    *   `organisms/`: Blocos complexos (NavBar, SideBar, PremiumHero).
-*   `src/features/`: Lógica e componentes específicos de cada domínio de negócio.
-    *   `premium/`, `dashboard/`, `coaches/`, `profile/`, `lobby/`, `vault/`.
-*   `src/pages/`: Componentes de página que montam os templates com dados.
-*   `src/templates/`: Estruturas de layout de página (ex: `PremiumTemplate`).
-*   `src/layouts/`: Wrappers de rota (ex: `DashboardLayout`, `PublicLayout`).
-*   `src/styles/`: Configurações globais de estilo e tokens.
-*   `src/routes/`: Configuração centralizada de rotas públicas e privadas.
+O sistema visual se chama **Duo Loot Codefire UI** e é inspirado em Riot Mobile + VS Code Dark Theme.
+
+### Paleta de Cores
+
+| Token CSS | Hex | Uso |
+| :--- | :--- | :--- |
+| `--dl-black` | `#0f0f12` | Fundo principal |
+| `--dl-bg` | `#111116` | Fundo secundário |
+| `--dl-surface` | `#18181c` | Cards/painéis |
+| `--dl-surface-2` | `#202026` | Painéis elevados |
+| `--dl-border` | `#29292f` | Bordas |
+| `--dl-text` | `#ffffff` | Texto principal |
+| `--dl-muted-light` | `#a6a6ad` | Texto secundário |
+| `--dl-muted` | `#74747d` | Texto terciário |
+| `--dl-keyword` | `#ff4655` | Vermelho CTA / ação principal |
+| `--dl-number` | `#0df0ff` | Ciano / estatísticas |
+| `--dl-string` | `#3bd982` | Verde / sucesso |
+| `--dl-function` | `#b084ff` | Roxo / premium |
+| `--dl-warning` | `#ffd166` | Amarelo / recompensas |
+| `--dl-error` | `#ff5c7a` | Vermelho erro |
+
+### Arquivos de Estilo
+
+- `src/styles/tokens.css` — Tokens CSS globais e aliases de compatibilidade.
+- `src/styles/globals.css` — Estilos base, fundo, tipografia.
+- `src/styles/red-vault.css` — Classes utilitárias `.dl-*` do design system.
+- `tailwind.config.ts` — Extensão das cores/tokens para classes Tailwind.
 
 ---
 
-## 🎨 Design System & Tokens
-O sistema de design é controlado via variáveis CSS centralizadas em `src/styles/tokens.css`, integradas ao `tailwind.config.ts`.
+## 🏗️ Arquitetura
 
-### Cores Principais
-*   **Brand Primary:** Violeta vibrante (Ações principais).
-*   **Surface Dark:** Fundo escuro profundo.
-*   **Content Primary:** Texto principal (Off-white).
-*   **Success/Error/Warning:** Cores semânticas para estados.
+### Estrutura de Pastas
 
----
+```
+src/
+├── components/          # Componentes globais reutilizáveis
+│   ├── atoms/           # Botões, inputs, badges
+│   ├── molecules/       # Stat cards, timers
+│   ├── organisms/       # Hero sections, grids
+│   └── duoloot/         # Componentes Codefire UI (DuolootButton, DuolootCard, etc.)
+├── features/            # Lógica por domínio
+│   ├── auth/            # AuthProvider, ProtectedRoute, useAuth
+│   ├── premium/         # Componentes premium
+│   ├── dashboard/       # Componentes do dashboard
+│   └── ...
+├── pages/               # Páginas do app
+│   ├── HomePage.tsx
+│   ├── HomePage/components/  # Seções da Home (Hero, Lobby, Torneios, Coaches)
+│   ├── LobbyPage.tsx
+│   ├── VaultPage.tsx
+│   └── ...
+├── layouts/             # Wrappers de layout
+│   ├── PublicLayout.tsx
+│   ├── DashboardLayout.tsx
+│   └── EventLayout.tsx
+├── routes/              # Configuração de rotas (lazy loading)
+├── styles/              # tokens.css, globals.css, red-vault.css
+├── constants/           # Rotas e constantes
+├── schemas/             # Schemas Zod para validação
+├── data/mocks/          # Dados mockados para desenvolvimento
+├── services/            # Serviços (auth, lobbies, vault admin)
+└── hooks/               # Hooks customizados (usePlayerPresence, etc.)
+```
 
-## 📑 Funcionalidades Implementadas (Sprint 1)
+### Padrão de Rotas
 
-### 1. Dashboard
-Interface central para o usuário logado, exibindo:
-*   Resumo de estatísticas do jogador.
-*   Progresso de recompensas atuais.
-*   Atalhos para lobbies e cofres.
-
-### 2. Lobby & Partidas
-Sistema de visualização de salas disponíveis:
-*   Listagem de lobbies com filtros.
-*   Cards de lobby com informações de rank, jogo e prêmios.
-
-### 3. Sistema Premium
-Página dedicada à conversão de usuários:
-*   Hero section com apelo visual premium.
-*   Tabela de comparação entre planos (Free vs Pro).
-*   Seção de benefícios exclusivos.
-
-### 4. Coaches & Aprendizado
-Marketplace de treinadores:
-*   Listagem de profissionais por jogo e rank.
-*   Perfis de coaches com estatísticas e especialidades.
-
-### 5. Player Profile
-Página de identidade do jogador:
-*   Exibição de conquistas e reputação.
-*   Histórico de partidas e estatísticas detalhadas.
-
-### 6. Vault (Cofre)
-Área de recompensas e loot boxes:
-*   Visualização de itens coletados.
-*   Sistema de abertura de caixas (mock).
+Todas as páginas usam **lazy loading** para code-splitting automático:
+- Rotas públicas: `src/routes/public-routes.tsx`
+- Rotas privadas: `src/routes/private-routes.tsx`
 
 ---
 
 ## 🚦 Rotas do Sistema
 
-| Rota | Descrição | Acesso |
-| :--- | :--- | :--- |
-| `/` | Landing Page | Público |
-| `/dashboard` | Painel Geral | Privado |
-| `/lobby` | Busca de Partidas | Público |
-| `/coaches` | Lista de Treinadores | Público |
-| `/premium` | Planos e Assinaturas | Privado |
-| `/profile` | Perfil do Jogador | Público |
-| `/vault` | Recompensas e Loot | Público |
+| Rota | Descrição | Acesso | Layout |
+| :--- | :--- | :--- | :--- |
+| `/` | Home — Hero, Lobbies, Torneios, Coaches | Público | PublicLayout |
+| `/lobby` | Busca de lobbies | Público | PublicLayout |
+| `/cofre` | Vault — Missões e recompensas | Público | EventLayout |
+| `/coaches` | Marketplace de coaches | Público | PublicLayout |
+| `/perfil/:playerId` | Perfil público do jogador | Público | PublicLayout |
+| `/login` | Login | Público | PublicLayout |
+| `/cadastro` | Cadastro | Público | PublicLayout |
+| `/dashboard` | Painel do jogador logado | Privado | DashboardLayout |
+| `/premium` | Planos Premium | Privado | DashboardLayout |
+| `/onboarding` | Configuração de perfil gamer | Privado | ProtectedRoute |
+| `/admin/cofre` | Admin do Vault | Privado | DashboardLayout |
 
 ---
 
-### 7. Validação e Tipagem (Zod + TypeScript)
-Recentemente, implementamos uma camada rigorosa de validação:
-*   **Schemas:** Localizados em `src/schemas/`, definem a estrutura de dados (ex: `PlayerSchema`, `CoachSchema`).
-*   **Mock Data:** Localizados em `src/data/mocks/`, garantem que o desenvolvimento da UI ocorra de forma independente do backend, mas respeitando os contratos de dados.
+## 📑 Funcionalidades Implementadas
+
+### Home
+- Hero com busca e texto syntax highlight.
+- Preview de lobbies (3 cards mockados).
+- Seção de torneios grátis com missões e placeholder de imagem.
+- Seção de coaches high elo com cards detalhados.
+
+### Lobby
+- Listagem de lobbies com filtros.
+- Cards de lobby com informações de rank, tamanho e vagas.
+- Criação de lobby (mockado).
+
+### Vault (Cofre)
+- Missões ativas com progresso.
+- Ranking de jogadores.
+- Sistema de temporadas.
+- Abertura de loot boxes (mockado).
+
+### Dashboard
+- Resumo de estatísticas do jogador.
+- Progresso de recompensas.
+- Atalhos para lobbies e cofre.
+
+### Premium
+- Landing page com comparativo de planos.
+- Benefícios exclusivos.
+
+### Coaches
+- Marketplace com cards de treinadores.
+- Filtros por jogo e rank.
+
+### Autenticação
+- Login/Cadastro com Supabase Auth.
+- ProtectedRoute com redirecionamento.
+- Onboarding de perfil gamer.
+- Hooks: `useAuth`, `usePlayerPresence`.
 
 ---
 
-## 🚦 Rotas do Sistema
+## 🔮 Próximos Passos
 
-| Rota | Descrição | Acesso |
-| :--- | :--- | :--- |
-| `/` | Landing Page | Público |
-| `/dashboard` | Painel Geral | Privado |
-| `/lobby` | Busca de Partidas | Público |
-| `/coaches` | Lista de Treinadores | Público |
-| `/premium` | Planos e Assinaturas | Privado |
-| `/profile` | Perfil do Jogador | Público |
-| `/vault` | Recompensas e Loot | Público |
+### Prioridade 1: Integração Riot Games API
+- Criar Edge Functions no Supabase para chamadas à Riot API.
+- Buscar PUUID, matchlist e detalhes de partida.
+- Salvar estatísticas no banco.
+
+### Prioridade 2: Componentes de Estatísticas
+- MatchHistoryList, AgentStatsGrid, MapStatsGrid.
+- RankedProgressPanel, PerformanceCharts.
+
+### Prioridade 3: Integração com Lobby e Cofre
+- Usar estatísticas reais para matchmaking.
+- Validar missões com dados reais da Riot.
+
+### Prioridade 4: Polish e Deploy
+- Responsividade final.
+- Empty states, loading e erros.
+- Deploy para produção.
 
 ---
 
-## 📝 Próximos Passos (Roadmap)
-1.  **Integração com Supabase:** Implementação de autenticação e banco de dados real.
-2.  **Sistema de Chat:** Mensageria em tempo real para lobbies.
-3.  **Checkout Premium:** Integração com gateway de pagamentos.
-4.  **Notificações em Real-time:** Alertas de convites e conquistas.
-
----
-
-*Documentação atualizada em: 13 de Maio de 2026*
+*Documentação atualizada em: 22 de Maio de 2026*

@@ -9,19 +9,14 @@ import { ProfileStatsGrid } from '@/features/profile/components/ProfileStatsGrid
 import { ProfileTrustPanel } from '@/features/profile/components/ProfileTrustPanel';
 import { ASSETS } from '@/constants/assets';
 
+import { DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
+
 export interface ProfileTemplateProps {
   player: Player | null;
   isLoading?: boolean;
   isError?: boolean;
   isPlayerNotFound?: boolean;
 }
-
-const ProfileLoadingState = () => (
-  <div className="mx-auto flex min-h-[50vh] w-full max-w-[1240px] flex-col items-center justify-center space-y-6 pb-12">
-    <div className="w-10 h-10 border-2 border-[var(--dl-tactical-blue)] border-t-transparent rounded-full animate-spin" />
-    <p className="text-[var(--dl-tactical-muted)] text-[12px] font-bold uppercase tracking-[0.12em]">Escaneando alvo...</p>
-  </div>
-);
 
 export const ProfileTemplate: React.FC<ProfileTemplateProps> = ({
   player,
@@ -32,25 +27,29 @@ export const ProfileTemplate: React.FC<ProfileTemplateProps> = ({
   const navigate = useNavigate();
 
   if (isLoading) {
-    return <ProfileLoadingState />;
+    return <DuolootLoadingState message="Escaneando alvo..." />;
   }
 
   if (isError) {
     return (
-      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16" style={{ borderColor: 'rgba(255,51,102,0.3)' }}>
-        <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-red)] font-['Rajdhani'] uppercase">Erro ao carregar perfil</p>
-        <p className="text-sm text-[var(--dl-tactical-muted)]">Não foi possível carregar os dados deste jogador agora.</p>
-      </div>
+      <DuolootEmptyState 
+        icon="error" 
+        title="Erro ao carregar perfil" 
+        description="Não foi possível carregar os dados deste jogador agora."
+        actionLabel="Tentar novamente"
+        onAction={() => window.location.reload()}
+      />
     );
   }
 
   if (isPlayerNotFound || !player) {
     return (
-      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
-        <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-muted)] font-['Rajdhani'] uppercase">Jogador não encontrado</p>
-        <p className="mb-6 text-sm text-[var(--dl-tactical-muted)]">Esse perfil não existe ou foi removido.</p>
-        <button type="button" className="dl-btn" onClick={() => navigate(-1)}>Voltar</button>
-      </div>
+      <DuolootEmptyState 
+        title="Jogador não encontrado" 
+        description="Esse perfil não existe ou foi removido."
+        actionLabel="Voltar"
+        onAction={() => navigate(-1)}
+      />
     );
   }
 

@@ -34,7 +34,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   return (
     <div className={classes} title={showFallback ? '[Imagem pendente: avatar do jogador]' : undefined}>
       {showFallback ? (
-        <div className="relative flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.22),rgba(255,255,255,0.04)_48%,rgba(8,10,14,0.95))]">
+        <div className="relative flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(255,70,85,0.22),rgba(255,255,255,0.04)_48%,rgba(15,15,18,0.95))]">
           <img
             src={ASSETS.avatars.generic}
             alt=""

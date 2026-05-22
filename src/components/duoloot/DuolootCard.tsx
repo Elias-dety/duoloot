@@ -15,7 +15,7 @@ export const DuolootCard: React.FC<DuolootCardProps> = ({
     default: 'border-[var(--dl-border)] bg-[var(--dl-bg)]',
     elevated: 'border-[var(--dl-border)] bg-[var(--dl-surface)] shadow-[var(--shadow-md)]',
     interactive: 'border-[var(--dl-border)] bg-[var(--dl-bg)] transition duration-200 hover:-translate-y-1 hover:border-[var(--dl-border-red)] hover:shadow-[var(--shadow-lg)]',
-    accent: 'border-[var(--dl-border-red)] bg-[linear-gradient(180deg,rgba(255,0,0,0.12),rgba(255,0,0,0.03))]',
+    accent: 'border-[var(--dl-border-red)] bg-[linear-gradient(180deg,rgba(255,70,85,0.12),rgba(255,70,85,0.03))]',
     danger: 'border-[rgba(143,8,8,0.5)] bg-[rgba(143,8,8,0.18)]',
     muted: 'border-[var(--dl-border)] bg-white/[0.03]',
   };
