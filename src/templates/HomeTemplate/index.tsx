@@ -147,8 +147,8 @@ export const HomeTemplate = ({ activeEvent, recentWinners }: HomeTemplateProps) 
               <div className="grid gap-4">
                 {heroHighlights.map(({ eyebrow, title, icon }) => (
                   <div key={title} className="flex items-center gap-4 rounded-[1.35rem] border border-[var(--dl-border)] bg-white/[0.04] p-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-[1rem] border border-[var(--dl-border-red)] bg-[rgba(255,0,0,0.1)]">
-                      <img src={icon} alt="" aria-hidden="true" className="h-10 w-10 object-contain" />
+                    <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.04]">
+                      <img src={icon} alt="" aria-hidden="true" className="h-20 w-20 object-contain" />
                     </div>
                     <div>
                       <p className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">{eyebrow}</p>
@@ -164,8 +164,8 @@ export const HomeTemplate = ({ activeEvent, recentWinners }: HomeTemplateProps) 
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map((metric) => (
-          <div key={metric.label} className="relative overflow-hidden rounded-[1.35rem] border border-[var(--dl-border)] bg-white/[0.03] p-5">
-            <img src={metric.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute right-4 top-4 h-12 w-12 object-contain opacity-25" />
+          <div key={metric.label} className="relative overflow-hidden rounded-[1.35rem] border border-[var(--dl-border)] bg-white/[0.03] p-5 min-h-[120px]">
+            <img src={metric.icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute right-4 bottom-4 h-24 w-24 object-contain opacity-85 pointer-events-none" />
             <p className="text-[0.72rem] font-bold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">{metric.label}</p>
             <p className="mt-3 font-['Rajdhani'] text-4xl font-bold uppercase text-[var(--dl-text)]">{metric.value}</p>
           </div>
@@ -182,8 +182,8 @@ export const HomeTemplate = ({ activeEvent, recentWinners }: HomeTemplateProps) 
         <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {features.map(({ title, text, icon }) => (
             <DuolootCard key={title} variant="interactive" className="space-y-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-[1rem] border border-[var(--dl-border-red)] bg-[rgba(255,0,0,0.12)]">
-                <img src={icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="h-10 w-10 object-contain" />
+              <div className="flex h-28 w-28 items-center justify-center rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.04]">
+                <img src={icon} alt="" aria-hidden="true" loading="lazy" decoding="async" className="h-20 w-20 object-contain" />
               </div>
               <h3 className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">{title}</h3>
               <p className="text-sm leading-7 text-[var(--dl-muted-light)]">{text}</p>

@@ -22,20 +22,19 @@ export const DuolootImagePlaceholder: React.FC<DuolootImagePlaceholderProps> = (
     return (
       <div
         className={[
-          'relative overflow-hidden rounded-[1.5rem] border border-[var(--dl-border-red)]',
-          'bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.18),rgba(255,255,255,0.03)_50%,rgba(8,10,14,0.96))]',
+          'relative overflow-hidden rounded-[1.5rem] border border-[var(--dl-border)]',
+          'bg-black/35 backdrop-blur-[2px]',
           className,
         ]
           .filter(Boolean)
           .join(' ')}
       >
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,0,0,0.1),transparent_45%,rgba(0,0,0,0.38))]" aria-hidden="true" />
         <img
           src={src}
           alt={alt ?? label}
           loading={loading}
           decoding="async"
-          className={['relative h-full w-full object-contain p-8', imageClassName].filter(Boolean).join(' ')}
+          className={['relative h-full w-full object-contain p-4', imageClassName].filter(Boolean).join(' ')}
         />
       </div>
     );
