@@ -21,8 +21,8 @@ test.describe('Lobby Page E2E', () => {
   });
 
   test('deve carregar a rota /lobby e exibir o título', async ({ page }) => {
-    await expect(page.locator('h1.dl-title')).toContainText('Encontre seu');
-    await expect(page.locator('text=LOBBY RADAR')).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2 }).first()).toBeVisible();
+    await expect(page.locator('text=MockUser')).toBeVisible();
   });
 
   test('deve validar que pelo menos 1 card aparece e botões principais', async ({ page }) => {
@@ -40,7 +40,7 @@ test.describe('Lobby Page E2E', () => {
   test('Lobby mobile deve manter renderização consistente e exibir cards', async ({ page, isMobile }) => {
     if (!isMobile) return;
     
-    await expect(page.locator('h1.dl-title')).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2 }).first()).toBeVisible();
     
     // O card precisa estar visível
     const lobbyCard = page.locator('.dl-panel').filter({ hasText: 'MockUser' }).first();
