@@ -1,78 +1,103 @@
 @layer base {
   :root {
-    --dl-red: #ff0000;
-    --dl-red-soft: #ff2a2a;
-    --dl-red-dark: #8f0808;
-    --dl-black: #080a0e;
-    --dl-bg: #0e1117;
-    --dl-surface: #2c2f36;
-    --dl-muted: #85888f;
-    --dl-muted-light: #b7bac1;
+    /* Duo Loot Codefire UI - base palette */
+    --dl-black: #0f0f12;
+    --dl-bg: #111116;
+    --dl-surface: #18181c;
+    --dl-surface-2: #202026;
+    --dl-muted: #74747d;
+    --dl-muted-light: #a6a6ad;
     --dl-text: #ffffff;
-    --dl-border: rgba(255, 255, 255, 0.1);
-    --dl-border-red: rgba(255, 0, 0, 0.34);
-    --dl-shadow: 0 34px 90px rgba(0, 0, 0, 0.45);
+    --dl-border: #29292f;
 
+    /* Syntax-inspired accents */
+    --dl-keyword: #ff4655;
+    --dl-string: #3bd982;
+    --dl-number: #0df0ff;
+    --dl-function: #b084ff;
+    --dl-warning: #ffd166;
+    --dl-error: #ff5c7a;
+    --dl-comment: #74747d;
+
+    /* Backward-compatible brand aliases */
+    --dl-red: var(--dl-keyword);
+    --dl-red-soft: var(--dl-error);
+    --dl-red-dark: #9b1c2b;
+    --dl-border-red: rgba(255, 70, 85, 0.38);
+    --dl-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+
+    /* Legacy tactical aliases mapped to Codefire semantics */
     --dl-line: var(--dl-border);
     --dl-tactical-bg: var(--dl-black);
-    --dl-tactical-panel: rgba(14, 17, 23, 0.9);
-    --dl-tactical-panel-2: rgba(18, 22, 29, 0.96);
+    --dl-tactical-panel: rgba(24, 24, 28, 0.94);
+    --dl-tactical-panel-2: rgba(32, 32, 38, 0.96);
     --dl-tactical-metal: var(--dl-surface);
-    --dl-tactical-metal-2: var(--dl-surface);
+    --dl-tactical-metal-2: var(--dl-surface-2);
     --dl-tactical-text: var(--dl-text);
     --dl-tactical-muted: var(--dl-muted-light);
     --dl-tactical-line: var(--dl-border);
-    --dl-tactical-green: var(--dl-red);
-    --dl-tactical-orange: var(--dl-red-soft);
-    --dl-tactical-red: var(--dl-red);
-    --dl-tactical-blue: var(--dl-muted-light);
-    --dl-tactical-yellow: var(--dl-red-soft);
-    --dl-tactical-purple: var(--dl-red-dark);
+    --dl-tactical-green: var(--dl-string);
+    --dl-tactical-orange: var(--dl-warning);
+    --dl-tactical-red: var(--dl-error);
+    --dl-tactical-blue: var(--dl-number);
+    --dl-tactical-yellow: var(--dl-warning);
+    --dl-tactical-purple: var(--dl-function);
 
-    --dl-black-rgb: 8 10 14;
-    --dl-bg-rgb: 14 17 23;
-    --dl-surface-rgb: 44 47 54;
-    --dl-red-rgb: 255 0 0;
-    --dl-red-soft-rgb: 255 42 42;
-    --dl-red-dark-rgb: 143 8 8;
-    --dl-muted-rgb: 133 136 143;
-    --dl-muted-light-rgb: 183 186 193;
+    /* RGB tokens for Tailwind opacity support */
+    --dl-black-rgb: 15 15 18;
+    --dl-bg-rgb: 17 17 22;
+    --dl-surface-rgb: 24 24 28;
+    --dl-surface-2-rgb: 32 32 38;
+    --dl-red-rgb: 255 70 85;
+    --dl-red-soft-rgb: 255 92 122;
+    --dl-red-dark-rgb: 155 28 43;
+    --dl-muted-rgb: 116 116 125;
+    --dl-muted-light-rgb: 166 166 173;
     --dl-text-rgb: 255 255 255;
+    --dl-string-rgb: 59 217 130;
+    --dl-number-rgb: 13 240 255;
+    --dl-function-rgb: 176 132 255;
+    --dl-warning-rgb: 255 209 102;
+    --dl-error-rgb: 255 92 122;
 
-    --brand-primary: var(--dl-red);
-    --brand-secondary: var(--dl-red-soft);
+    /* Semantic tokens */
+    --brand-primary: var(--dl-keyword);
+    --brand-secondary: var(--dl-error);
     --surface-dark: var(--dl-black);
     --surface-base: var(--dl-bg);
-    --surface-highlight: var(--dl-surface);
+    --surface-highlight: var(--dl-surface-2);
     --content-base: var(--dl-text);
     --content-primary: var(--dl-text);
     --content-secondary: var(--dl-muted-light);
     --content-muted: var(--dl-muted);
     --content-highlight: var(--dl-text);
-    --success: var(--dl-red-soft);
-    --warning: var(--dl-muted-light);
-    --error: var(--dl-red);
-    --danger: var(--dl-red-dark);
-    --info: var(--dl-muted-light);
-    --premium: var(--dl-red-dark);
-    --prize: var(--dl-red-soft);
+    --success: var(--dl-string);
+    --warning: var(--dl-warning);
+    --error: var(--dl-error);
+    --danger: var(--dl-error);
+    --info: var(--dl-number);
+    --premium: var(--dl-function);
+    --prize: var(--dl-warning);
     --background: var(--dl-black);
     --foreground: var(--dl-text);
     --border: var(--dl-border);
     --input: var(--dl-border);
 
+    /* Radius */
     --radius-sm: 0.5rem;
     --radius-md: 0.875rem;
     --radius-lg: 1.25rem;
     --radius-xl: 1.5rem;
     --radius-2xl: 2rem;
 
+    /* Shadows */
     --shadow-sm: 0 10px 24px rgb(var(--dl-black-rgb) / 0.28);
     --shadow-md: 0 18px 38px rgb(var(--dl-black-rgb) / 0.36);
     --shadow-lg: 0 24px 56px rgb(var(--dl-red-rgb) / 0.14);
-    --shadow-premium: 0 24px 64px rgb(var(--dl-red-dark-rgb) / 0.18);
-    --shadow-prize: 0 20px 48px rgb(var(--dl-red-soft-rgb) / 0.16);
+    --shadow-premium: 0 24px 64px rgb(var(--dl-function-rgb) / 0.16);
+    --shadow-prize: 0 20px 48px rgb(var(--dl-warning-rgb) / 0.12);
 
+    /* Spacing */
     --space-1: 0.25rem;
     --space-2: 0.5rem;
     --space-3: 0.75rem;
@@ -82,6 +107,7 @@
     --space-12: 3rem;
     --space-16: 4rem;
 
+    /* Typography */
     --font-xs: 0.75rem;
     --font-sm: 0.875rem;
     --font-base: 1rem;
@@ -90,6 +116,7 @@
     --font-2xl: 1.5rem;
     --font-3xl: 1.875rem;
 
+    /* Layers */
     --z-base: 0;
     --z-dropdown: 50;
     --z-sticky: 100;
@@ -97,6 +124,7 @@
     --z-modal: 300;
     --z-toast: 400;
 
+    /* States */
     --state-hover: 0.8;
     --state-active: 0.9;
     --state-disabled: 0.5;
