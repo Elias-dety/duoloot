@@ -214,7 +214,10 @@ function extractPlayerFromMatch(matchData: any, puuid: string) {
 Deno.serve(async (req: Request) => {
   // CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', {
+      status: 200,
+      headers: corsHeaders,
+    });
   }
 
   if (req.method !== 'POST') {
