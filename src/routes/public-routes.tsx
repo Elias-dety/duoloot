@@ -9,6 +9,7 @@ const HomePage = lazy(() => import('@/pages/HomePage'));
 const LobbyPage = lazy(() => import('@/pages/LobbyPage'));
 const CoachesPage = lazy(() => import('@/pages/CoachesPage'));
 const PlayerProfilePage = lazy(() => import('@/pages/PlayerProfilePage'));
+const RiotProfilePage = lazy(() => import('@/pages/RiotProfilePage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'));
 const VaultPage = lazy(() => import('@/pages/VaultPage'));
@@ -35,6 +36,7 @@ export const publicRoutes: RouteObject[] = [
       { path: ROUTES.LOBBY, element: <Lazy><LobbyPage /></Lazy> },
       { path: ROUTES.COACHES, element: <Lazy><CoachesPage /></Lazy> },
       { path: ROUTES.PLAYER_PROFILE, element: <Lazy><PlayerProfilePage /></Lazy> },
+      { path: ROUTES.RIOT_PROFILE, element: <Lazy><RiotProfilePage /></Lazy> },
       { path: ROUTES.LOGIN, element: <Lazy><LoginPage /></Lazy> },
       { path: ROUTES.REGISTER, element: <Lazy><RegisterPage /></Lazy> },
     ],

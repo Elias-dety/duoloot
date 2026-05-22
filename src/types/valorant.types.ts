@@ -101,6 +101,38 @@ export interface ValorantMatchPlayerStats {
   score: number;
   /** Rounds jogados */
   roundsPlayed: number;
+  /** Headshots contabilizados */
+  headshots: number;
+}
+
+// ---------------------------------------------------------------------------
+// Match normalizado para exibição no frontend
+// ---------------------------------------------------------------------------
+
+/**
+ * Partida normalizada retornada pela Edge Function, pronta para uso no UI.
+ */
+export interface RiotMatchDisplay {
+  /** Match ID */
+  id: string;
+  /** Resultado da partida */
+  result: 'VICTORY' | 'DEFEAT' | 'DRAW';
+  /** Nome do agente jogado (já resolvido) */
+  agent: string;
+  /** URL da imagem do agente (opcional) */
+  agentImageUrl?: string;
+  /** Nome do mapa (já resolvido) */
+  map: string;
+  /** Placar de rounds (ex: "13-7") */
+  score: string;
+  /** KDA formatado (ex: "20/5/8") */
+  kda: string;
+  /** Razão K/D */
+  kdRatio: number;
+  /** Combat score médio */
+  combatScore: number;
+  /** Data formatada (pt-BR) */
+  date: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -108,20 +140,52 @@ export interface ValorantMatchPlayerStats {
 // ---------------------------------------------------------------------------
 
 /**
+ * Estatísticas de um agente específico.
+ */
+export interface AgentStat {
+  agentName: string;
+  agentRole: string;
+  winRate: number;
+  matchesPlayed: number;
+  kda: number;
+}
+
+/**
+ * Estatísticas de um mapa específico.
+ */
+export interface MapStat {
+  mapName: string;
+  winRate: number;
+  matchesPlayed: number;
+}
+
+/**
  * Estatísticas agregadas calculadas a partir do histórico de partidas.
  * Usadas para exibição no perfil do jogador.
  */
 export interface ValorantPlayerStats {
-  /** Total de partidas jogadas */
+  /** Total de partidas analisadas */
   matchesPlayed: number;
   /** Taxa de vitória (0-100) */
   winRate: number;
   /** KDA médio */
   averageKda: number;
+  /** Taxa de headshot (0-100) */
+  headshotRate: number;
+  /** Combat score médio por round */
+  averageScore: number;
+  /** Vitórias */
+  wins: number;
+  /** Derrotas */
+  losses: number;
   /** Rank atual (ex: "Diamond 2") — pode ser null se não ranqueado */
   rank: string | null;
   /** Último agente mais jogado */
-  topAgent: string | null;
+  topAgent?: string | null;
+  /** Estatísticas por agente */
+  agentStats: AgentStat[];
+  /** Estatísticas por mapa */
+  mapStats: MapStat[];
 }
 
 // ---------------------------------------------------------------------------
@@ -130,7 +194,7 @@ export interface ValorantPlayerStats {
 
 /**
  * Payload retornado pela Edge Function `valorant-profile-lookup`.
- * Combina dados da conta Riot com estatísticas iniciais.
+ * Combina dados da conta Riot com estatísticas reais.
  */
 export interface ValorantProfileLookupResult {
   /** Dados da conta Riot */
@@ -139,12 +203,16 @@ export interface ValorantProfileLookupResult {
   region: RiotRegion;
   /** Plataforma VALORANT */
   platform: ValorantPlatform;
-  /** IDs das partidas recentes (pode ser vazio inicialmente) */
+  /** IDs das partidas recentes */
   matchIds: string[];
-  /** Estatísticas agregadas (pode ser null até primeiro sync) */
+  /** Estatísticas agregadas reais */
   stats: ValorantPlayerStats | null;
+  /** Partidas normalizadas para exibição */
+  matches: RiotMatchDisplay[];
   /** ISO 8601 timestamp da última sincronização */
   lastSyncAt: string;
+  /** Se os dados vieram do cache */
+  cached: boolean;
 }
 
 // ---------------------------------------------------------------------------

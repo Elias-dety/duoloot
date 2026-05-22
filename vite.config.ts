@@ -33,7 +33,6 @@ export default defineConfig({
     }
   },
   esbuild: {
-    // @ts-ignore: pure é suportado pelo esbuild mas falta na tipagem do Vite
     pure: ['console.log', 'console.info', 'console.debug'],
   }
 })

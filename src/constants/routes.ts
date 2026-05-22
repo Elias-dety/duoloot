@@ -6,6 +6,7 @@ export const ROUTES = {
   PREMIUM: '/premium',
   COACHES: '/coaches',
   PLAYER_PROFILE: '/perfil/:playerId',
+  RIOT_PROFILE: '/riot/:gameName/:tagLine',
   ADMIN_VAULT: '/admin/cofre',
   LOGIN: '/login',
   REGISTER: '/cadastro',

@@ -89,14 +89,15 @@ async function handleErrorResponse(response: Response): Promise<ValorantApiError
  *
  * Chama a Edge Function `valorant-profile-lookup` que faz a busca
  * real na Riot API de forma segura (server-side).
+ * Retorna dados completos: conta, stats, partidas, agentes, mapas.
  *
  * @throws {ValorantApiError} Erro tipado com código e mensagem.
  *
  * @example
  * ```ts
  * const result = await lookupValorantProfile({
- *   gameName: 'Jett',
- *   tagLine: 'BR1',
+ *   gameName: 'DÉTY',
+ *   tagLine: '2269',
  *   region: 'americas',
  *   platform: 'br',
  * });
@@ -149,34 +150,62 @@ export async function lookupValorantProfile(
 }
 
 /**
- * Sincroniza dados do perfil VALORANT (matchlist, stats) para um jogador.
+ * Sincroniza dados do perfil VALORANT (matchlist, stats) para o usuário
+ * autenticado.
  *
- * Essa função está preparada para quando a Edge Function de sync estiver
- * implementada. Por enquanto, chama a mesma Edge Function de lookup
- * com uma flag de sync.
+ * Chama a Edge Function `riot-sync-stats` que faz a sincronização
+ * real na Riot API de forma segura (server-side).
+ * Requer que o usuário tenha vinculado sua conta Riot previamente.
  *
+ * @param authToken - Token JWT do usuário autenticado
  * @throws {ValorantApiError} Erro tipado com código e mensagem.
- *
- * @example
- * ```ts
- * const result = await syncValorantProfile({
- *   gameName: 'Jett',
- *   tagLine: 'BR1',
- * });
- * ```
  */
 export async function syncValorantProfile(
-  params: ValorantProfileLookupParams,
-): Promise<ValorantProfileLookupResult> {
-  // TODO: Quando existir uma Edge Function dedicada de sync,
-  // chamar `valorant-profile-sync` ao invés de `valorant-profile-lookup`.
-  // A Edge Function de sync deve:
-  // - Buscar matchlist por PUUID
-  // - Calcular estatísticas reais
-  // - Salvar/atualizar dados no Supabase
-  // - Retornar o perfil atualizado
+  authToken: string,
+): Promise<{ message: string; matchesProcessed?: number; cached?: boolean }> {
+  if (!authToken) {
+    throw {
+      code: 'VALIDATION_ERROR',
+      message: 'Token de autenticação é obrigatório.',
+    } satisfies ValorantApiError;
+  }
 
-  return lookupValorantProfile(params);
+  try {
+    const response = await fetch(
+      `${EDGE_FUNCTION_BASE}/riot-sync-stats`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({}),
+      },
+    );
+
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw {
+        code: 'RIOT_API_ERROR',
+        message: body?.error || `Erro na sincronização (status ${response.status})`,
+        riotStatus: response.status,
+      } satisfies ValorantApiError;
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (isValorantApiError(error)) {
+      throw error;
+    }
+
+    throw {
+      code: 'NETWORK_ERROR',
+      message:
+        error instanceof Error
+          ? `Falha de rede: ${error.message}`
+          : 'Não foi possível conectar ao servidor.',
+    } satisfies ValorantApiError;
+  }
 }
 
 // ---------------------------------------------------------------------------
