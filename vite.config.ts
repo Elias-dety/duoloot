@@ -22,15 +22,18 @@ export default defineConfig({
     minify: 'esbuild',
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          supabase: ['@supabase/supabase-js'],
-          duoloot: ['lucide-react', 'clsx', 'tailwind-merge']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@supabase')) return 'supabase'
+            if (id.includes('react') || id.includes('react-dom')) return 'vendor'
+            return 'vendor'
+          }
         }
       }
     }
   },
   esbuild: {
-    drop: ['console', 'debugger'],
+    // @ts-ignore: pure é suportado pelo esbuild mas falta na tipagem do Vite
+    pure: ['console.log', 'console.info', 'console.debug'],
   }
 })
