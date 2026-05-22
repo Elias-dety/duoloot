@@ -85,7 +85,7 @@ export default function AdminVaultPage() {
       </div>
 
       {error && (
-        <div className="mb-6 rounded border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+        <div className="mb-6 rounded-[1rem] border border-[var(--dl-error)] bg-[var(--dl-error)]/10 p-4 text-sm text-[var(--dl-error)]">
           <strong>Erro:</strong> {error}
         </div>
       )}

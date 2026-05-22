@@ -33,16 +33,16 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }
   const micVal = (gp.microphone !== undefined ? gp.microphone : lobby.metadata?.microphone) ? 'SIM' : 'NÃO';
   const regionVal = String(gp.region || lobby.metadata?.region || '---');
 
-  const borderColor = isClosed || isFull ? 'rgba(143,8,8,0.5)' : isRecommended ? 'rgba(255,70,85,0.34)' : 'var(--dl-border)';
+  const borderColor = isClosed || isFull ? 'rgb(var(--dl-error-rgb)/0.5)' : isRecommended ? 'rgb(var(--dl-string-rgb)/0.34)' : 'var(--dl-border)';
 
   const statusLabel = isClosed ? 'Fechado' : isFull ? 'Cheio' : lobby.status === 'open' ? 'Ativo' : 'Em jogo';
   const statusVariant = isClosed || isFull ? 'danger' : 'default';
 
   const getCompatibilityDetails = (score: number) => {
-    if (score >= 85) return { label: 'Match ideal', tone: 'text-white bg-[rgba(255,70,85,0.16)] border-[var(--dl-border-red)]' };
+    if (score >= 85) return { label: 'Match ideal', tone: 'text-white bg-[rgb(var(--dl-string-rgb)/0.16)] border-[var(--dl-string)]' };
     if (score >= 65) return { label: 'Compatível', tone: 'text-white bg-white/[0.05] border-[var(--dl-border)]' };
     if (score >= 40) return { label: 'Neutro', tone: 'text-[var(--dl-muted-light)] bg-white/[0.03] border-[var(--dl-border)]' };
-    return { label: 'Baixa sinergia', tone: 'text-white bg-[rgba(143,8,8,0.24)] border-[rgba(143,8,8,0.55)]' };
+    return { label: 'Baixa sinergia', tone: 'text-[var(--dl-error)] bg-[rgb(var(--dl-error-rgb)/0.15)] border-[var(--dl-error)]' };
   };
 
   return (

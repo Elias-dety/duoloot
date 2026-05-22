@@ -4,7 +4,7 @@ import { LobbyGrid } from '@/components/organisms/LobbyGrid';
 import { LobbyActionsBar } from '@/features/lobby/components/LobbyActionsBar';
 import { LobbyFilters } from '@/features/lobby/components/LobbyFilters';
 import { Lobby } from '@/schemas/lobby.schema';
-import { DuolootButton, DuolootCard, DuolootSectionTitle, DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
+import { DuolootButton, DuolootCard, DuolootSectionTitle, DuolootEmptyState } from '@/components/duoloot';
 import { ASSETS } from '@/constants/assets';
 
 export interface LobbyTemplateProps {

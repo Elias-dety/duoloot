@@ -2,7 +2,7 @@ import { RichText, Text, types } from 'react-bricks/frontend';
 
 const Hero: types.Brick = () => {
   return (
-    <div className="py-12 bg-gray-900 text-white text-center">
+    <div className="py-12 bg-[var(--dl-surface)] border-b border-[var(--dl-border)] text-white text-center">
       <Text
         propName="title"
         renderBlock={(props) => (

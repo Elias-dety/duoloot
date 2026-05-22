@@ -23,9 +23,9 @@ export const VaultMissionCard: React.FC<VaultMissionCardProps> = ({
   const percentage = Math.min(100, Math.round((currentValue / targetValue) * 100));
 
   return (
-    <div className={`dl-panel relative flex flex-col justify-between overflow-hidden p-5 ${isCompleted ? 'border-[var(--dl-border-red)] bg-[rgba(255,70,85,0.08)]' : ''}`}>
+    <div className={`dl-panel relative flex flex-col justify-between overflow-hidden p-5 ${isCompleted ? 'border-[var(--dl-warning)] bg-[rgb(var(--dl-warning-rgb)/0.08)]' : ''}`}>
       {isCompleted ? (
-        <div className="absolute right-0 top-0 bg-[var(--dl-red)] p-2 text-white [clip-path:polygon(0_0,100%_0,100%_100%,20px_100%)]">
+        <div className="absolute right-0 top-0 bg-[var(--dl-keyword)] p-2 text-white [clip-path:polygon(0_0,100%_0,100%_100%,20px_100%)]">
           <CheckCircle2 className="ml-3 h-4 w-4" />
         </div>
       ) : null}
@@ -53,7 +53,7 @@ export const VaultMissionCard: React.FC<VaultMissionCardProps> = ({
             </div>
             <div className="h-1.5 overflow-hidden rounded-full border border-[var(--dl-border)] bg-white/[0.06]">
               <div
-                className={`h-full transition-all duration-300 ${isCompleted ? 'bg-[var(--dl-red)]' : 'bg-[var(--dl-red-soft)]'}`}
+                className={`h-full transition-all duration-300 ${isCompleted ? 'bg-[var(--dl-keyword)]' : 'bg-[var(--dl-error)]'}`}
                 style={{ width: `${percentage}%` }}
               />
             </div>
@@ -72,7 +72,7 @@ export const VaultMissionCard: React.FC<VaultMissionCardProps> = ({
               size="sm"
               onClick={() => onClaim(mission.id)}
               disabled={isSubmitting}
-              className="gap-1 border-[var(--dl-border-red)] text-white"
+              className="gap-1 border-[var(--dl-warning)] text-white"
             >
               {isSubmitting ? 'Registrando...' : 'Registrar'}
               <ChevronRight className="h-3 w-3" />

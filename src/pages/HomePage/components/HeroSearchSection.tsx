@@ -19,7 +19,7 @@ export function HeroSearchSection() {
     <section className="relative flex min-h-screen flex-col items-center justify-center px-5 py-16 text-center sm:px-6 sm:py-20">
       {/* Badge Superior */}
       <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[var(--dl-muted-light)]">
-        <span className="h-2 w-2 rounded-full bg-[var(--dl-keyword)] shadow-[0_0_8px_rgba(255,70,85,0.8)]"></span>
+        <span className="h-2 w-2 rounded-full bg-[var(--dl-keyword)] shadow-[0_0_8px_rgb(var(--dl-red-rgb)/0.8)]"></span>
         Duo Loot Codefire UI
       </div>
 

@@ -14,9 +14,9 @@ export const DuolootCard: React.FC<DuolootCardProps> = ({
   const variants: Record<NonNullable<DuolootCardProps['variant']>, string> = {
     default: 'border-[var(--dl-border)] bg-[var(--dl-bg)]',
     elevated: 'border-[var(--dl-border)] bg-[var(--dl-surface)] shadow-[var(--shadow-md)]',
-    interactive: 'border-[var(--dl-border)] bg-[var(--dl-bg)] transition duration-200 hover:-translate-y-1 hover:border-[var(--dl-border-red)] hover:shadow-[var(--shadow-lg)]',
-    accent: 'border-[var(--dl-border-red)] bg-[linear-gradient(180deg,rgba(255,70,85,0.12),rgba(255,70,85,0.03))]',
-    danger: 'border-[rgba(143,8,8,0.5)] bg-[rgba(143,8,8,0.18)]',
+    interactive: 'border-[var(--dl-border)] bg-[var(--dl-bg)] transition duration-200 hover:-translate-y-1 hover:border-[var(--dl-keyword)] hover:shadow-[var(--shadow-lg)]',
+    accent: 'border-[var(--dl-keyword)] bg-[linear-gradient(180deg,rgb(var(--dl-red-rgb)/0.12),rgb(var(--dl-red-rgb)/0.03))]',
+    danger: 'border-[var(--dl-error)] bg-[rgb(var(--dl-error-rgb)/0.18)]',
     muted: 'border-[var(--dl-border)] bg-white/[0.03]',
   };
 

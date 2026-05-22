@@ -77,7 +77,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   return (
     <Card variant="elevated" className="w-full max-w-md rounded-[1.75rem] border-[var(--dl-border)] bg-[rgba(14,17,23,0.96)] p-6 md:p-8">
       <div className="mb-6 space-y-3 text-center">
-        <div className="inline-flex items-center justify-center rounded-full border border-[var(--dl-border-red)] bg-[rgba(255,70,85,0.12)] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white">
+        <div className="inline-flex items-center justify-center rounded-full border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white">
           {type === 'login' ? 'Red Vault Login' : 'Create your Duoloot access'}
         </div>
         <h2 className="font-['Rajdhani'] text-3xl font-bold uppercase tracking-[0.04em] text-white">
@@ -99,7 +99,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       )}
 
       {formError && (
-        <div className="mb-6 rounded-[1rem] border border-[var(--dl-border-red)] bg-[rgba(255,70,85,0.12)] p-4">
+        <div className="mb-6 rounded-[1rem] border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] p-4">
           <p className="text-sm font-semibold text-white">{formError}</p>
         </div>
       )}
@@ -205,7 +205,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         </p>
         <Link
           to={type === 'login' ? ROUTES.REGISTER : ROUTES.LOGIN}
-          className="inline-block font-semibold uppercase tracking-[0.14em] text-white hover:text-[var(--dl-red-soft)]"
+          className="inline-block font-semibold uppercase tracking-[0.14em] text-white hover:text-[var(--dl-error)]"
         >
           {type === 'login' ? 'Criar conta' : 'Fazer login'}
         </Link>

@@ -65,14 +65,14 @@ export const OnboardingPage: React.FC = () => {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--dl-black)]">
         <div className="relative mb-6 h-24 w-24">
-          <div className="absolute inset-0 animate-spin rounded-full border-2 border-dashed border-[var(--dl-red)]/30 [animation-duration:8s]" />
+          <div className="absolute inset-0 animate-spin rounded-full border-2 border-dashed border-[var(--dl-keyword)]/30 [animation-duration:8s]" />
           <div className="absolute inset-2 animate-spin rounded-full border border-dotted border-white/20 [animation-direction:reverse] [animation-duration:4s]" />
-          <div className="absolute inset-4 flex items-center justify-center rounded-full border border-[var(--dl-red)]/40">
-            <span className="h-2 w-2 animate-ping rounded-full bg-[var(--dl-red)]" />
+          <div className="absolute inset-4 flex items-center justify-center rounded-full border border-[var(--dl-keyword)]/40">
+            <span className="h-2 w-2 animate-ping rounded-full bg-[var(--dl-keyword)]" />
           </div>
         </div>
         <div className="space-y-1.5 text-center">
-          <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--dl-red-soft)]">
+          <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--dl-error)]">
             Red Vault profile sync
           </span>
           <h2 className="text-sm font-bold uppercase tracking-wider text-white">Lendo dados do perfil...</h2>

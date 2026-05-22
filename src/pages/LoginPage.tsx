@@ -46,7 +46,7 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="relative flex min-h-[calc(100vh-80px)] items-center justify-center overflow-hidden px-4 py-12">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,70,85,0.14),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgb(var(--dl-red-rgb)/0.14),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)]" />
       <div className="relative z-10 flex w-full justify-center">
         <AuthForm
           type="login"

@@ -33,7 +33,7 @@ export function MatchHistoryList({ matches }: { matches?: RiotMatchMock[] }) {
         <DuolootCard 
           key={match.id} 
           variant="default" 
-          className="flex items-center justify-between p-3 sm:p-4 hover:border-[var(--dl-border-red)] transition-colors cursor-pointer group"
+          className="flex items-center justify-between p-3 sm:p-4 hover:border-[var(--dl-keyword)] transition-colors cursor-pointer group"
         >
           {/* Left Side: Agent + Map + Result */}
           <div className="flex items-center gap-4">

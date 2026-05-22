@@ -75,7 +75,7 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
                     {previewData.nickname || 'PLAYER_X'}
                   </h3>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-[var(--dl-border-red)] bg-[rgba(255,70,85,0.12)] font-['Rajdhani'] text-sm font-bold uppercase text-white">
+                <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] font-['Rajdhani'] text-sm font-bold uppercase text-white">
                   {previewData.region?.toUpperCase() || 'BR'}
                 </div>
               </div>

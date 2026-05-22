@@ -124,7 +124,7 @@ export const HomeTemplate = ({ activeEvent, recentWinners }: HomeTemplateProps) 
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[1.8rem] border border-[var(--dl-border-red)] bg-[radial-gradient(circle_at_top,rgba(255,0,0,0.18),rgba(255,255,255,0.04)_48%,rgba(8,10,14,0.98))] p-5 shadow-[0_28px_65px_rgba(255,0,0,0.16)]">
+          <div className="relative overflow-hidden rounded-[1.8rem] border border-[var(--dl-keyword)] bg-[radial-gradient(circle_at_top,rgb(var(--dl-red-rgb)/0.18),rgba(255,255,255,0.04)_48%,rgba(8,10,14,0.98))] p-5 shadow-[0_28px_65px_rgb(var(--dl-red-rgb)/0.16)]">
             <div className="grid gap-4 md:grid-cols-[1.15fr_0.85fr]">
               <div className="rounded-[1.4rem] border border-[var(--dl-border)] bg-black/25 p-4">
                 <div className="mb-4 flex items-center justify-between gap-3">
@@ -253,7 +253,7 @@ export const HomeTemplate = ({ activeEvent, recentWinners }: HomeTemplateProps) 
                 alt="Icone de busca de lobby"
                 loading="lazy"
                 decoding="async"
-                className="h-24 w-24 object-contain drop-shadow-[0_0_24px_rgba(255,0,0,0.2)]"
+                className="h-24 w-24 object-contain drop-shadow-[0_0_24px_rgb(var(--dl-red-rgb)/0.2)]"
               />
             </div>
             <div className="flex items-center justify-between gap-3">

@@ -36,7 +36,7 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
     filters.region !== 'all' ||
     filters.microphone !== 'all';
 
-  const fieldClassName = 'w-full rounded-2xl border border-[var(--dl-border)] bg-[var(--dl-surface)] px-3 py-2.5 text-sm text-[var(--dl-text)] focus:border-[var(--dl-red)] focus:outline-none';
+  const fieldClassName = 'w-full rounded-2xl border border-[var(--dl-border)] bg-[var(--dl-surface)] px-3 py-2.5 text-sm text-[var(--dl-text)] focus:border-[var(--dl-keyword)] focus:outline-none';
   const labelClassName = 'mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]';
 
   return (

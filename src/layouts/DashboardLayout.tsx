@@ -57,7 +57,7 @@ export default function DashboardLayout() {
           {navItems.map((item) => (
             <NavLink key={item.path} to={item.path} className="no-underline">
               {({ isActive }) => (
-                <span className={`inline-flex min-h-9 w-full items-center justify-center rounded-full border px-3.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] ${isActive ? 'border-[var(--dl-red)] bg-[var(--dl-red)] text-white' : 'border-[var(--dl-border)] bg-white/[0.04] text-white'}`}>
+                <span className={`inline-flex min-h-9 w-full items-center justify-center rounded-full border px-3.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] ${isActive ? 'border-[var(--dl-keyword)] bg-[var(--dl-keyword)] text-white' : 'border-[var(--dl-border)] bg-white/[0.04] text-white'}`}>
                   {item.label}
                 </span>
               )}
@@ -77,7 +77,7 @@ export default function DashboardLayout() {
           {navItems.map((item) => (
             <NavLink key={item.path} to={item.path} className="block no-underline">
               {({ isActive }) => (
-                <div className={`flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 transition ${isActive ? 'border-[var(--dl-border-red)] bg-[rgba(255,70,85,0.12)] text-white' : 'border-transparent bg-transparent text-[var(--dl-muted-light)] hover:border-[var(--dl-border)] hover:bg-white/[0.04] hover:text-white'}`}>
+                <div className={`flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 transition ${isActive ? 'border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] text-white' : 'border-transparent bg-transparent text-[var(--dl-muted-light)] hover:border-[var(--dl-border)] hover:bg-white/[0.04] hover:text-white'}`}>
                   <span className="grid h-10 w-10 place-items-center rounded-[0.95rem] border border-[var(--dl-border)] bg-white/[0.04] text-[0.74rem] font-bold uppercase tracking-[0.12em]">
                     {item.code}
                   </span>
@@ -90,7 +90,7 @@ export default function DashboardLayout() {
 
         <DuolootCard variant="elevated" className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="grid h-12 w-12 place-items-center rounded-[1rem] border border-[var(--dl-border-red)] bg-[rgba(255,70,85,0.12)] font-['Rajdhani'] text-lg font-bold uppercase">
+            <div className="grid h-12 w-12 place-items-center rounded-[1rem] border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] font-['Rajdhani'] text-lg font-bold uppercase">
               {getInitials()}
             </div>
             <div className="min-w-0">

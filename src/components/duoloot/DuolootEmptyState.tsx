@@ -27,9 +27,9 @@ export const DuolootEmptyState: React.FC<DuolootEmptyStateProps> = ({
       variant={isError ? 'danger' : 'muted'} 
       className={`flex min-h-[300px] w-full flex-col items-center justify-center p-8 text-center ${className}`}
     >
-      <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-full border ${isError ? 'border-[rgba(143,8,8,0.5)] bg-[rgba(143,8,8,0.2)]' : 'border-[var(--dl-border)] bg-[var(--dl-surface)]'}`}>
+      <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-full border ${isError ? 'border-[rgb(var(--dl-error-rgb)/0.5)] bg-[rgb(var(--dl-error-rgb)/0.2)]' : 'border-[var(--dl-border)] bg-[var(--dl-surface)]'}`}>
         {isError ? (
-          <AlertCircle className="h-8 w-8 text-[var(--dl-red)]" />
+          <AlertCircle className="h-8 w-8 text-[var(--dl-keyword)]" />
         ) : (
           <FileX2 className="h-8 w-8 text-[var(--dl-muted)]" />
         )}
