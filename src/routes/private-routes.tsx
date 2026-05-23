@@ -9,6 +9,8 @@ const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
 const PremiumPage = lazy(() => import('@/pages/PremiumPage'));
 const AdminVaultPage = lazy(() => import('@/pages/AdminVaultPage'));
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
+const RiotConnectPage = lazy(() => import('@/pages/RiotConnectPage'));
+const RiotCallbackPage = lazy(() => import('@/pages/RiotCallbackPage'));
 
 import { DuolootLoadingState } from '@/components/duoloot';
 
@@ -35,6 +37,8 @@ export const privateRoutes: RouteObject[] = [
       { path: ROUTES.DASHBOARD, element: <Lazy><DashboardPage /></Lazy> },
       { path: ROUTES.PREMIUM, element: <Lazy><PremiumPage /></Lazy> },
       { path: ROUTES.ADMIN_VAULT, element: <Lazy><AdminVaultPage /></Lazy> },
+      { path: ROUTES.RIOT_CONNECT, element: <Lazy><RiotConnectPage /></Lazy> },
+      { path: ROUTES.RIOT_CALLBACK, element: <Lazy><RiotCallbackPage /></Lazy> },
     ],
   },
   {

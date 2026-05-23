@@ -227,11 +227,18 @@ export default function RiotProfilePage() {
           <p className="text-sm font-semibold uppercase tracking-wider text-[var(--dl-warning)] mb-2">
             Conta Riot encontrada
           </p>
-          <p className="text-xs text-[var(--dl-muted-light)] text-center max-w-md">
+          <p className="text-xs text-[var(--dl-muted-light)] text-center max-w-md mb-6">
             O Riot ID <strong>{riotId}</strong> foi localizado, mas os dados de partidas podem não
-            estar disponíveis. Isso pode ocorrer se a chave de API não tiver acesso ao endpoint de
-            match history do Valorant, ou se o jogador não tem partidas recentes.
+            estar disponíveis. Isso ocorre porque precisamos de sua permissão explícita (Riot Sign-On)
+            para buscar suas partidas.
           </p>
+          <button
+            type="button"
+            className="dl-btn dl-btn-blue h-[40px] px-6"
+            onClick={() => navigate('/riot/connect')}
+          >
+            Conectar conta Riot para liberar estatísticas completas
+          </button>
         </DuolootCard>
       )}
 

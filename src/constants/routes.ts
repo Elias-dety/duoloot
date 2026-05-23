@@ -7,6 +7,8 @@ export const ROUTES = {
   COACHES: '/coaches',
   PLAYER_PROFILE: '/perfil/:playerId',
   RIOT_PROFILE: '/riot/:gameName/:tagLine',
+  RIOT_CONNECT: '/riot/connect',
+  RIOT_CALLBACK: '/riot/callback',
   ADMIN_VAULT: '/admin/cofre',
   LOGIN: '/login',
   REGISTER: '/cadastro',
