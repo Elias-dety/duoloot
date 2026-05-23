@@ -67,7 +67,7 @@ export default function RiotProfilePage() {
         icon={isNotFound ? undefined : 'error'}
         title={isNotFound ? 'Jogador não encontrado' : 'Erro ao buscar perfil'}
         description={error}
-        actionLabel="Voltar"
+        actionLabel="Buscar outro jogador"
         onAction={() => navigate('/')}
       />
     );
@@ -78,7 +78,7 @@ export default function RiotProfilePage() {
       <DuolootEmptyState
         title="Perfil não encontrado"
         description="Nenhum dado disponível para este Riot ID."
-        actionLabel="Voltar"
+        actionLabel="Buscar outro jogador"
         onAction={() => navigate('/')}
       />
     );
@@ -138,7 +138,7 @@ export default function RiotProfilePage() {
         className="dl-btn dl-btn-blue mb-4 flex h-[40px] items-center gap-2 px-6"
         onClick={() => navigate('/')}
       >
-        <span className="text-[14px]">◄</span> Voltar
+        <span className="text-[14px]">◄</span> Buscar outro jogador
       </button>
 
       {/* Header HUD */}
@@ -232,6 +232,16 @@ export default function RiotProfilePage() {
             estar disponíveis. Isso pode ocorrer se a chave de API não tiver acesso ao endpoint de
             match history do Valorant, ou se o jogador não tem partidas recentes.
           </p>
+        </DuolootCard>
+      )}
+
+      {/* Debug Block */}
+      {import.meta.env.DEV && (
+        <DuolootCard className="mt-8 p-4 bg-black/50 border-[var(--dl-keyword)]/30">
+          <h3 className="text-sm font-bold text-[var(--dl-keyword)] mb-2">🔧 Debug Mode (Apenas DEV)</h3>
+          <pre className="text-[10px] text-[var(--dl-string)] overflow-x-auto whitespace-pre-wrap max-h-96">
+            {JSON.stringify(profile, null, 2)}
+          </pre>
         </DuolootCard>
       )}
     </div>
