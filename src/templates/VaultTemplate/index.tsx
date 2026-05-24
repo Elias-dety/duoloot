@@ -21,6 +21,7 @@ import { VaultWinnersPanel } from '@/features/vault/components/VaultWinnersPanel
 import { Badge, Button, Card, ImagePlaceholder, SectionTitle } from '@/components/atoms';
 import { LoadingState, EmptyState } from '@/components/molecules';
 import { ASSETS } from '@/constants/assets';
+import { useLanguage } from '@/i18n';
 
 export interface VaultTemplateProps {
   event: VaultEvent | null;
@@ -82,8 +83,10 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
   isJoining,
   submittingTaskId,
 }) => {
+  const { messages: copy } = useLanguage();
+
   if (isLoading) {
-    return <LoadingState message="Sincronizando Vault..." />;
+    return <LoadingState message={copy.vault.loading} />;
   }
 
   if (errorMessage && !event && seasons.length === 0 && winners.length === 0) {
@@ -91,7 +94,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
       <EmptyState 
         icon="error"
         title={errorMessage}
-        description="Falha ao carregar os dados do Vault."
+        description={copy.vault.loadError}
       />
     );
   }
@@ -106,12 +109,12 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
           <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
           <SectionTitle
-            eyebrow="RED VAULT // LIVE EVENT"
-            title="Complete missions. Unlock the Vault."
-            subtitle={event?.description || 'Nenhum Vault ativo no momento. Assim que um novo evento abrir, você verá missões, ranking e progresso aqui.'}
+            eyebrow={copy.vault.eyebrow}
+            title={copy.vault.title}
+            subtitle={event?.description || copy.vault.emptyDescription}
           />
           <div className="flex flex-wrap gap-3">
-            <Badge variant="accent">{event ? 'Vault aberto' : 'Arquivo do Vault'}</Badge>
+            <Badge variant="accent">{event ? copy.vault.open : copy.vault.archive}</Badge>
             {showDevFinalizeButton && onFinalizeVaultEvent ? (
               <Button variant="secondary" size="sm" onClick={onFinalizeVaultEvent} disabled={isFinalizing}>
                 {isFinalizing ? 'Finalizando...' : 'DEV: finalizar Vault'}
@@ -121,8 +124,8 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
               {[
-                { label: 'Chaves', icon: ASSETS.icons.vaultKey },
-                { label: 'Missoes', icon: ASSETS.icons.mission },
+                { label: copy.vault.keys, icon: ASSETS.icons.vaultKey },
+                { label: copy.vault.missions, icon: ASSETS.icons.mission },
                 { label: 'DuoCoins', icon: ASSETS.rewards.duocoinsThumb },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3 rounded-[1rem] border border-[var(--dl-border)] bg-black/20 px-4 py-3">
@@ -133,9 +136,9 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
             </div>
           </div>
           <ImagePlaceholder
-            label="Imagem do Vault"
+            label={copy.vault.vaultImage}
             src={event ? ASSETS.vault.openRewards : ASSETS.icons.vault}
-            alt={event ? 'Cofre aberto com recompensas do Duo Loot' : 'Icone de cofre fechado do Duo Loot'}
+            alt={event ? copy.vault.openAlt : copy.vault.closedAlt}
             className="min-h-[220px]"
             imageClassName={event ? 'p-3 md:p-4' : 'p-10 md:p-12'}
             loading="eager"
@@ -146,18 +149,18 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
       {actionMessage ? (
         <Card variant="muted" className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white">Atualização do Vault</p>
+            <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white">{copy.vault.update}</p>
             <p className="text-sm text-[var(--dl-muted-light)]">{actionMessage}</p>
           </div>
           <Button variant="secondary" size="sm" onClick={onDismissActionMessage}>
-            Fechar
+            {copy.common.close}
           </Button>
         </Card>
       ) : null}
 
       {!event ? (
         <Card variant="muted" className="mx-auto flex w-full flex-col items-center justify-center py-10 text-center">
-          <p className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Nenhuma operação de Vault ativa.</p>
+          <p className="font-['Rajdhani'] text-lg font-bold uppercase text-white">{copy.vault.noActive}</p>
         </Card>
       ) : null}
 
@@ -202,12 +205,12 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
           {event ? (
             <section id="vault-missions" className="space-y-4">
               <div className="flex flex-wrap items-center gap-3 border-b border-[var(--dl-border)] pb-4">
-                <h2 className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">Missões ativas</h2>
-                <Badge>{missions.length} missões</Badge>
+                <h2 className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">{copy.vault.activeMissions}</h2>
+                <Badge>{missions.length} {copy.vault.missionCount}</Badge>
               </div>
               {missions.length === 0 ? (
                 <Card variant="muted" className="p-8 text-center">
-                  <span className="text-[13px] text-[var(--dl-muted-light)]">Nenhuma missão disponível no momento.</span>
+                  <span className="text-[13px] text-[var(--dl-muted-light)]">{copy.vault.noMissions}</span>
                 </Card>
               ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -233,15 +236,14 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
           {event ? <VaultStatsPanel event={event} participantCount={participantCount} /> : null}
 
           <Card variant="muted" className="p-5">
-            <h4 className="mb-3 font-['Rajdhani'] text-xl font-bold uppercase text-white">How it works</h4>
+            <h4 className="mb-3 font-['Rajdhani'] text-xl font-bold uppercase text-white">{copy.vault.howItWorks}</h4>
             <div className="mb-4 flex justify-center">
               <img src={ASSETS.vault.keyThumb} alt="Chave do Vault" loading="lazy" decoding="async" className="h-20 w-20 object-contain" />
             </div>
             <ul className="space-y-3 text-sm text-[var(--dl-muted-light)]">
-              <li>1. Participe do evento e entre no Vault.</li>
-              <li>2. Cumpra as missões para ganhar pontos e chaves.</li>
-              <li>3. Suba no ranking e abra espaço para recompensas.</li>
-              <li>4. O loot final acompanha sua performance no evento.</li>
+              {copy.vault.steps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
             </ul>
           </Card>
 

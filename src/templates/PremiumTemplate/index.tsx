@@ -75,20 +75,17 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
       <PremiumHero />
 
-      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <PremiumPlanCard 
-          plan={freePlan} 
-          isActive={activePlanId === freePlan.id}
-          isProcessing={isProcessing}
-          onSelect={() => onSelectPlan?.(freePlan.id)}
-        />
-        <PremiumPlanCard 
-          plan={premiumPlan} 
-          highlighted 
-          isActive={activePlanId === premiumPlan.id}
-          isProcessing={isProcessing}
-          onSelect={() => onSelectPlan?.(premiumPlan.id)}
-        />
+      <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {plans.map((plan) => (
+          <PremiumPlanCard 
+            key={plan.id}
+            plan={plan} 
+            highlighted={plan.isPopular}
+            isActive={activePlanId === plan.id}
+            isProcessing={isProcessing}
+            onSelect={() => onSelectPlan?.(plan.id)}
+          />
+        ))}
       </section>
 
       <PremiumComparison freePlan={freePlan} premiumPlan={premiumPlan} />

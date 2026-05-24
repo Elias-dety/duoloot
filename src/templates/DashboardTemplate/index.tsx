@@ -18,6 +18,7 @@ import { PlayerStatsOverview } from '@/features/riot/components/PlayerStatsOverv
 import { MatchHistoryList } from '@/features/riot/components/MatchHistoryList';
 import { AgentStatsGrid } from '@/features/riot/components/AgentStatsGrid';
 import { MapStatsGrid } from '@/features/riot/components/MapStatsGrid';
+import { useLanguage } from '@/i18n';
 
 export interface DashboardTemplateProps {
   player: Player | null;
@@ -36,17 +37,19 @@ export default function DashboardTemplate({
   isError,
   isEmpty,
 }: DashboardTemplateProps) {
+  const { messages: copy } = useLanguage();
+
   if (isLoading) {
-    return <LoadingState message="Carregando dashboard..." />;
+    return <LoadingState message={copy.dashboard.loading} />;
   }
 
   if (isError) {
     return (
-      <EmptyState 
-        icon="error" 
-        title="Erro ao carregar" 
-        description="Ocorreu um problema ao buscar os dados do seu Dashboard."
-        actionLabel="Tentar novamente"
+      <EmptyState
+        icon="error"
+        title={copy.dashboard.errorTitle}
+        description={copy.dashboard.errorDescription}
+        actionLabel={copy.common.tryAgain}
         onAction={() => window.location.reload()}
       />
     );
@@ -54,9 +57,9 @@ export default function DashboardTemplate({
 
   if (isEmpty || !player || !summary) {
     return (
-      <EmptyState 
-        title="Dashboard Vazio" 
-        description="Nenhum dado encontrado para exibir no momento."
+      <EmptyState
+        title={copy.dashboard.emptyTitle}
+        description={copy.dashboard.emptyDescription}
       />
     );
   }
@@ -65,9 +68,9 @@ export default function DashboardTemplate({
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
       <Card variant="accent" className="mb-6 px-5 py-6 md:px-8 md:py-8">
         <SectionTitle
-          eyebrow="Dashboard"
-          title="Seu hub Red Vault."
-          subtitle="Acompanhe performance, confiança, lobbies recomendados e progresso do Vault no mesmo painel."
+          eyebrow={copy.common.dashboard}
+          title={copy.dashboard.title}
+          subtitle={copy.dashboard.subtitle}
         />
       </Card>
 
@@ -77,7 +80,7 @@ export default function DashboardTemplate({
         </div>
         <div className="md:col-span-1 lg:col-span-2">
           {valorantUser ? (
-            <PlayerStatsOverview 
+            <PlayerStatsOverview
               stats={{
                 winRate: valorantUser.overviewStats?.winRate || 0,
                 kda: valorantUser.overviewStats?.kdaRatio || 0,
@@ -86,11 +89,11 @@ export default function DashboardTemplate({
                 wins: valorantUser.overviewStats?.wins || 0,
                 losses: valorantUser.overviewStats?.losses || 0,
                 averageScore: valorantUser.overviewStats?.averageCombatScore || 0,
-                currentRank: valorantUser.rank?.label || 'Unranked'
-              }} 
+                currentRank: valorantUser.rank?.label || copy.dashboard.unranked,
+              }}
             />
           ) : (
-            <PlayerStatsOverview 
+            <PlayerStatsOverview
               stats={{
                 winRate: 58.5,
                 kda: 1.45,
@@ -99,8 +102,8 @@ export default function DashboardTemplate({
                 wins: 26,
                 losses: 19,
                 averageScore: 235,
-                currentRank: "Ascendente 1"
-              }} 
+                currentRank: 'Ascendente 1',
+              }}
             />
           )}
         </div>
@@ -137,7 +140,7 @@ export default function DashboardTemplate({
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
         <div className="lg:col-span-2 space-y-8">
-          <MatchHistoryList 
+          <MatchHistoryList
             matches={valorantUser ? (valorantUser.recentMatches || []).map(m => ({
               id: m.matchId,
               result: m.result === 'win' ? 'VICTORY' : m.result === 'loss' ? 'DEFEAT' : 'DRAW',
@@ -148,25 +151,25 @@ export default function DashboardTemplate({
               kda: `${m.kills}/${m.deaths}/${m.assists}`,
               kdRatio: m.kdRatio,
               combatScore: m.averageCombatScore,
-              date: new Date(m.startedAt).toLocaleDateString()
+              date: new Date(m.startedAt).toLocaleDateString(),
             })) : []}
           />
         </div>
         <div className="lg:col-span-1 space-y-8">
-          <AgentStatsGrid 
+          <AgentStatsGrid
             stats={valorantUser ? (valorantUser.agentStats || []).map(a => ({
               agentName: a.agent,
               agentRole: a.role,
               winRate: a.winRate,
               matchesPlayed: a.matches,
-              kda: a.kdaRatio
+              kda: a.kdaRatio,
             })) : []}
           />
-          <MapStatsGrid 
+          <MapStatsGrid
             stats={valorantUser ? (valorantUser.mapStats || []).map(m => ({
               mapName: m.map,
               winRate: m.winRate,
-              matchesPlayed: m.matches
+              matchesPlayed: m.matches,
             })) : []}
           />
         </div>

@@ -4,9 +4,12 @@ import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/features/auth/useAuth';
 import { ROUTES } from '../constants/routes';
 import { Button, Logo } from '@/components/atoms';
+import { LanguageSwitcher } from '@/components/molecules/LanguageSwitcher';
+import { useLanguage } from '@/i18n';
 
 export default function PublicLayout() {
   const { isAuthenticated, profile, user, signOut } = useAuth();
+  const { messages: copy } = useLanguage();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -24,10 +27,10 @@ export default function PublicLayout() {
   }, []);
 
   const menuItems = [
-    { label: 'Home', path: ROUTES.HOME },
-    { label: 'Features', path: ROUTES.LOBBY },
-    { label: 'Vault', path: ROUTES.VAULT },
-    { label: 'Community', path: ROUTES.COACHES },
+    { label: copy.layout.nav.home, path: ROUTES.HOME },
+    { label: copy.layout.nav.features, path: ROUTES.LOBBY },
+    { label: copy.layout.nav.vault, path: ROUTES.VAULT },
+    { label: copy.layout.nav.community, path: ROUTES.COACHES },
   ];
 
   const handleLogout = async () => {
@@ -43,7 +46,7 @@ export default function PublicLayout() {
   const getProfileName = () => {
     if (profile?.nickname) return profile.nickname;
     if (user?.email) return user.email.split('@')[0];
-    return 'Player';
+    return copy.common.playerFallback;
   };
 
   const r = Math.round(8 + (18 - 8) * scrollProgress);
@@ -56,15 +59,15 @@ export default function PublicLayout() {
   return (
     <div className="dl-grid-bg flex min-h-screen flex-col bg-[var(--dl-black)]">
       <div className="dl-top-strip">
-        <span>Duoloot Red Vault</span>
-        <span>Matchmaking live • Vault rewards active</span>
+        <span>{copy.layout.topStripBrand}</span>
+        <span>{copy.layout.topStripStatus}</span>
       </div>
 
-      <header 
+      <header
         className="dl-header sticky top-0 z-50 backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300"
-        style={{ 
+        style={{
           backgroundColor: headerBg,
-          borderBottom: `1px solid rgba(255,255,255,${borderOpacity})`
+          borderBottom: `1px solid rgba(255,255,255,${borderOpacity})`,
         }}
       >
         <Link to={ROUTES.HOME} className="dl-brand">
@@ -80,22 +83,23 @@ export default function PublicLayout() {
         </nav>
 
         <div className="dl-actions">
+          <LanguageSwitcher />
           {isAuthenticated ? (
             <>
               <span className="rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
                 {getProfileName()}
               </span>
               <Button size="sm" onClick={() => navigate(ROUTES.DASHBOARD)}>
-                Dashboard
+                {copy.common.dashboard}
               </Button>
               <Button variant="secondary" size="sm" onClick={handleLogout}>
-                Sair
+                {copy.common.logout}
               </Button>
             </>
           ) : (
             <>
-              <Button variant="ghost" size="sm" onClick={() => navigate(ROUTES.LOGIN)}>Login</Button>
-              <Button size="sm" onClick={() => navigate(ROUTES.REGISTER)}>Get Duoloot</Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate(ROUTES.LOGIN)}>{copy.common.login}</Button>
+              <Button size="sm" onClick={() => navigate(ROUTES.REGISTER)}>{copy.layout.getDuoloot}</Button>
             </>
           )}
         </div>
@@ -109,7 +113,7 @@ export default function PublicLayout() {
           aria-expanded={isMobileMenuOpen}
           aria-controls="public-mobile-nav"
         >
-          {isMobileMenuOpen ? 'Fechar' : 'Menu'}
+          {isMobileMenuOpen ? copy.common.close : copy.common.menu}
         </Button>
       </header>
 
@@ -130,24 +134,26 @@ export default function PublicLayout() {
             ))}
           </div>
 
+          <LanguageSwitcher fullWidth />
+
           {isAuthenticated ? (
             <div className="space-y-3">
               <div className="rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.04] px-4 py-3 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
-                Perfil ativo: {getProfileName()}
+                {copy.layout.activeProfile}: {getProfileName()}
               </div>
               <div className="dl-mobile-nav-grid">
                 <Button fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.DASHBOARD); }}>
-                  Dashboard
+                  {copy.common.dashboard}
                 </Button>
                 <Button variant="secondary" size="sm" fullWidth onClick={handleLogout}>
-                  Sair
+                  {copy.common.logout}
                 </Button>
               </div>
             </div>
           ) : (
             <div className="dl-mobile-nav-grid">
-              <Button variant="secondary" fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.LOGIN); }}>Login</Button>
-              <Button fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.REGISTER); }}>Get Duoloot</Button>
+              <Button variant="secondary" fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.LOGIN); }}>{copy.common.login}</Button>
+              <Button fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.REGISTER); }}>{copy.layout.getDuoloot}</Button>
             </div>
           )}
         </div>
@@ -165,32 +171,32 @@ export default function PublicLayout() {
                 <Logo compact subtitle="Red Vault" />
               </Link>
               <p className="mt-4 max-w-sm text-sm leading-7 text-[var(--dl-muted-light)]">
-                Plataforma para encontrar duos, melhorar lobbies e destravar recompensas do Vault com uma identidade única.
+                {copy.layout.footerDescription}
               </p>
             </div>
 
             <div>
-              <h4 className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Produto</h4>
+              <h4 className="font-['Rajdhani'] text-lg font-bold uppercase text-white">{copy.layout.product}</h4>
               <ul className="mt-4 space-y-3 text-sm text-[var(--dl-muted-light)]">
                 <li><Link to={ROUTES.LOBBY} className="hover:text-white">Lobby</Link></li>
-                <li><Link to={ROUTES.VAULT} className="hover:text-white">Vault</Link></li>
-                <li><Link to={ROUTES.COACHES} className="hover:text-white">Community</Link></li>
+                <li><Link to={ROUTES.VAULT} className="hover:text-white">{copy.layout.nav.vault}</Link></li>
+                <li><Link to={ROUTES.COACHES} className="hover:text-white">{copy.layout.nav.community}</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Social</h4>
+              <h4 className="font-['Rajdhani'] text-lg font-bold uppercase text-white">{copy.layout.social}</h4>
               <ul className="mt-4 space-y-3 text-sm text-[var(--dl-muted-light)]">
                 <li>Discord</li>
                 <li>X / Twitter</li>
-                <li>Support</li>
+                <li>{copy.layout.support}</li>
               </ul>
             </div>
           </div>
 
           <div className="flex flex-col gap-3 border-t border-[var(--dl-border)] pt-6 text-sm text-[var(--dl-muted)] md:flex-row md:items-center md:justify-between">
-            <p>© 2026 Duoloot. All rights reserved.</p>
-            <span>Red Vault experience</span>
+            <p>{copy.layout.rights}</p>
+            <span>{copy.layout.experience}</span>
           </div>
         </div>
       </footer>

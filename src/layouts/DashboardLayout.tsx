@@ -5,17 +5,20 @@ import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import type { PlayerGameProfile } from '@/services/auth.service';
 import { ROUTES } from '../constants/routes';
 import { Button, Card, Logo } from '@/components/atoms';
+import { LanguageSwitcher } from '@/components/molecules/LanguageSwitcher';
+import { useLanguage } from '@/i18n';
 
 export default function DashboardLayout() {
   const { profile, user, signOut } = useAuth();
+  const { messages: copy } = useLanguage();
   usePlayerPresence();
   const navigate = useNavigate();
 
   const navItems = [
-    { label: 'Dashboard', path: ROUTES.DASHBOARD, code: 'DB' },
-    { label: 'Premium', path: ROUTES.PREMIUM, code: 'PR' },
+    { label: copy.common.dashboard, path: ROUTES.DASHBOARD, code: 'DB' },
+    { label: copy.common.premium, path: ROUTES.PREMIUM, code: 'PR' },
     { label: 'Lobby', path: ROUTES.LOBBY, code: 'LB' },
-    { label: 'Vault', path: ROUTES.VAULT, code: 'VT' },
+    { label: copy.layout.nav.vault, path: ROUTES.VAULT, code: 'VT' },
   ];
 
   const handleLogout = async () => {
@@ -26,7 +29,7 @@ export default function DashboardLayout() {
   const getNickname = () => {
     if (profile?.nickname) return profile.nickname;
     if (user?.email) return user.email.split('@')[0];
-    return 'Player';
+    return copy.common.playerFallback;
   };
 
   const getInitials = () => getNickname().slice(0, 2).toUpperCase();
@@ -35,7 +38,7 @@ export default function DashboardLayout() {
     const gameProfile = profile?.game_profile as PlayerGameProfile | undefined;
     const mainGame = gameProfile?.mainGame || gameProfile?.main_game;
     const rank = gameProfile?.currentRank || gameProfile?.rank;
-    return mainGame && rank ? `${mainGame.toUpperCase()} • ${rank.toUpperCase()}` : 'Perfil em configuração';
+    return mainGame && rank ? `${mainGame.toUpperCase()} • ${rank.toUpperCase()}` : copy.layout.profileSetup;
   };
 
   return (
@@ -43,12 +46,13 @@ export default function DashboardLayout() {
       <div className="border-b border-[var(--dl-border)] bg-[rgba(15,15,18,0.92)] md:hidden">
         <header className="flex items-center justify-between gap-3 px-3 py-3">
           <Link to={ROUTES.HOME} className="dl-brand">
-            <Logo compact subtitle="Dashboard" />
+            <Logo compact subtitle={copy.common.dashboard} />
           </Link>
           <div className="flex items-center gap-2">
-            <Button variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>Perfil</Button>
+            <LanguageSwitcher />
+            <Button variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>{copy.common.profile}</Button>
             <Button variant="secondary" size="sm" onClick={handleLogout}>
-              Sair
+              {copy.common.logout}
             </Button>
           </div>
         </header>
@@ -69,7 +73,7 @@ export default function DashboardLayout() {
       <aside className="hidden w-72 flex-col border-r border-[var(--dl-border)] bg-[rgba(15,15,18,0.94)] p-4 md:flex">
         <div className="border-b border-[var(--dl-border)] pb-5">
           <Link to={ROUTES.HOME} className="dl-brand">
-            <Logo subtitle="Player Hub" />
+            <Logo subtitle={copy.layout.playerHub} />
           </Link>
         </div>
 
@@ -96,7 +100,7 @@ export default function DashboardLayout() {
             <div className="min-w-0">
               <p className="truncate font-['Rajdhani'] text-lg font-bold uppercase text-white">{getNickname()}</p>
               <p className="truncate text-xs uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
-                {profile?.is_premium ? 'Premium' : 'Standard'}
+                {profile?.is_premium ? copy.common.premium : copy.common.standard}
               </p>
             </div>
           </div>
@@ -105,9 +109,10 @@ export default function DashboardLayout() {
             {getRank()}
           </div>
 
-          <Button fullWidth variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>Editar perfil</Button>
+          <LanguageSwitcher fullWidth />
+          <Button fullWidth variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>{copy.common.editProfile}</Button>
           <Button fullWidth variant="danger" size="sm" onClick={handleLogout}>
-            Encerrar sessão
+            {copy.common.endSession}
           </Button>
         </Card>
       </aside>

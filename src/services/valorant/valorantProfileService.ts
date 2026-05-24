@@ -13,7 +13,9 @@ import type {
   ValorantProfileLookupResult,
   ValorantApiError,
   ValorantErrorCode,
+  RiotRegion,
 } from '@/types/valorant.types';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 // ---------------------------------------------------------------------------
 // Configuração
@@ -106,7 +108,7 @@ export async function handleErrorResponse(response: Response): Promise<ValorantA
 export async function lookupValorantProfile(
   params: ValorantProfileLookupParams,
 ): Promise<ValorantProfileLookupResult> {
-  const { gameName, tagLine } = params;
+  const { gameName, tagLine, region = 'americas', platform = 'br' } = params;
 
   // Validação local antes de chamar o servidor
   if (!gameName?.trim() || !tagLine?.trim()) {
@@ -116,78 +118,95 @@ export async function lookupValorantProfile(
     } satisfies ValorantApiError;
   }
 
-  // TODO: Chamadas reais da Riot devem passar pela Edge Function server-side do Supabase
-  // que é a única camada com acesso à RIOT_API_KEY. Não expor chaves no front-end.
-  
-  // Mocking network delay
-  await new Promise(r => setTimeout(r, 1000));
+  // Se o Supabase não estiver configurado ou se for um usuário de teste local,
+  // fazemos um fallback para a base fake de mocks.
+  const isTestMock = ['noobmaster', 'midplayer', 'tryhard', 'godmode', 'tilted'].includes(gameName.toLowerCase().trim());
+  if (!isSupabaseConfigured || isTestMock) {
+    await new Promise(r => setTimeout(r, 600));
 
-  // If gameName is "Not Found", simulate a 404
-  if (gameName.toLowerCase() === 'not found') {
-    throw {
-      code: 'PLAYER_NOT_FOUND',
-      message: 'Jogador não encontrado.',
-      riotStatus: 404
-    } satisfies ValorantApiError;
+    if (gameName.toLowerCase() === 'not found') {
+      throw {
+        code: 'PLAYER_NOT_FOUND',
+        message: 'Jogador não encontrado.',
+        riotStatus: 404
+      } satisfies ValorantApiError;
+    }
+
+    const { mockValorantUsers } = await import('@/data/mocks/valorantUsers.mock');
+    const matchedMock = mockValorantUsers.find(
+      u => u.profile.gameName.toLowerCase() === gameName.toLowerCase().trim()
+    ) || mockValorantUsers[2]; // Default: Tryhard (main user)
+
+    return {
+      account: {
+        puuid: matchedMock.profile.puuid,
+        gameName: matchedMock.profile.gameName,
+        tagLine: matchedMock.profile.tagLine,
+      },
+      region: matchedMock.profile.region as RiotRegion,
+      platform: matchedMock.profile.platform,
+      matchIds: matchedMock.recentMatches.map(m => m.matchId),
+      lastSyncAt: new Date().toISOString(),
+      cached: true,
+      stats: {
+        rank: matchedMock.rank.label,
+        matchesPlayed: matchedMock.overviewStats.matchesPlayed,
+        wins: matchedMock.overviewStats.wins,
+        losses: matchedMock.overviewStats.losses,
+        winRate: matchedMock.overviewStats.winRate,
+        averageKda: matchedMock.overviewStats.kdaRatio,
+        headshotRate: matchedMock.overviewStats.headshotPercent,
+        averageScore: matchedMock.overviewStats.averageCombatScore,
+        agentStats: matchedMock.agentStats.map(a => ({
+          agentName: a.agent,
+          agentRole: a.role,
+          winRate: a.winRate,
+          matchesPlayed: a.matches,
+          kda: a.kdaRatio
+        })),
+        mapStats: matchedMock.mapStats.map(m => ({
+          mapName: m.map,
+          winRate: m.winRate,
+          matchesPlayed: m.matches
+        }))
+      },
+      matches: matchedMock.recentMatches.map(m => ({
+        id: m.matchId,
+        result: m.result === 'win' ? 'VICTORY' : m.result === 'loss' ? 'DEFEAT' : 'DRAW',
+        agent: m.agent,
+        agentImageUrl: m.agentImageUrl,
+        map: m.map,
+        score: m.scoreText,
+        kda: `${m.kills}/${m.deaths}/${m.assists}`,
+        kdRatio: m.kdRatio,
+        combatScore: m.averageCombatScore,
+        date: new Date(m.startedAt).toLocaleDateString()
+      }))
+    };
   }
 
-  // Mock standard data
-  return {
-    account: {
-      puuid: 'mock-puuid-1234',
-      gameName: gameName,
-      tagLine: tagLine,
-    },
-    region: 'americas',
-    platform: 'br',
-    matchIds: ['match-1', 'match-2'],
-    lastSyncAt: new Date().toISOString(),
-    cached: true,
-    stats: {
-      rank: 'Diamond 2',
-      matchesPlayed: 42,
-      wins: 24,
-      losses: 18,
-      winRate: 57.1,
-      averageKda: 1.45,
-      headshotRate: 22.5,
-      averageScore: 245,
-      agentStats: [
-        { agentName: 'Jett', agentRole: 'Duelist', matchesPlayed: 20, winRate: 60, kda: 1.5 },
-        { agentName: 'Omen', agentRole: 'Controller', matchesPlayed: 15, winRate: 53.3, kda: 1.2 },
-      ],
-      mapStats: [
-        { mapName: 'Ascent', matchesPlayed: 10, winRate: 70 },
-        { mapName: 'Bind', matchesPlayed: 8, winRate: 50 },
-      ]
-    },
-    matches: [
-      {
-        id: 'match-1',
-        map: 'Ascent',
-        agent: 'Jett',
-        agentImageUrl: '',
-        result: 'VICTORY',
-        score: '13-9',
-        kda: '24/12/5',
-        kdRatio: 2.0,
-        combatScore: 310,
-        date: new Date().toISOString()
-      },
-      {
-        id: 'match-2',
-        map: 'Bind',
-        agent: 'Omen',
-        agentImageUrl: '',
-        result: 'DEFEAT',
-        score: '11-13',
-        kda: '14/15/8',
-        kdRatio: 0.93,
-        combatScore: 195,
-        date: new Date(Date.now() - 86400000).toISOString()
-      }
-    ]
-  };
+  // CHAMADA REAL À EDGE FUNCTION DO SUPABASE
+  try {
+    const response = await fetch(`${EDGE_FUNCTION_BASE}/valorant-profile-lookup`, {
+      method: 'POST',
+      headers: createHeaders(),
+      body: JSON.stringify({ gameName, tagLine, region, platform }),
+    });
+
+    if (!response.ok) {
+      throw await handleErrorResponse(response);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (isValorantApiError(error)) {
+      throw error;
+    }
+    throw {
+      code: 'NETWORK_ERROR',
+      message: error instanceof Error ? error.message : 'Erro na requisição para a Edge Function.',
+    } satisfies ValorantApiError;
+  }
 }
 
 

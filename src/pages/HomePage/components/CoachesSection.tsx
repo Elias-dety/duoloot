@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button } from '@/components/atoms';
-import { MissingImagePlaceholder } from '@/components/atoms';
+import { Button, MissingImagePlaceholder } from '@/components/atoms';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
+import { useLanguage } from '@/i18n';
 
 const MOCK_COACHES = [
   {
@@ -48,25 +48,25 @@ const MOCK_COACHES = [
 
 export function CoachesSection() {
   const navigate = useNavigate();
+  const { messages: copy } = useLanguage();
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-20">
       <div className="mb-12 text-center">
         <div className="mb-4 inline-flex items-center rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[var(--dl-function)]">
-          Coaches High Elo
+          {copy.home.coachesBadge}
         </div>
         <h2 className="font-['Rajdhani'] text-3xl font-bold uppercase tracking-wide text-white md:text-5xl">
-          Aprenda com quem já joga no alto nível
+          {copy.home.coachesTitle}
         </h2>
         <p className="mt-4 mx-auto max-w-2xl text-[var(--dl-muted-light)]">
-          Veja perfis de jogadores experientes, contrate aulas, receba análise de partida e evolua com dicas práticas para subir de elo.
+          {copy.home.coachesSubtitle}
         </p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {MOCK_COACHES.map((coach, index) => (
           <div key={index} className="dl-app-card flex flex-col p-6 transition-transform hover:translate-y-[-2px]">
-            {/* Cabeçalho Coach */}
             <div className="mb-5 flex gap-4">
               <MissingImagePlaceholder className="h-16 w-16 shrink-0 p-2" text="" />
               <div>
@@ -80,10 +80,9 @@ export function CoachesSection() {
               {coach.description}
             </p>
 
-            {/* Stats */}
             <div className="mb-5 flex gap-4 text-sm font-semibold">
               <div className="flex flex-col">
-                <span className="text-[0.65rem] uppercase tracking-wider text-[var(--dl-muted)]">Win Rate</span>
+                <span className="text-[0.65rem] uppercase tracking-wider text-[var(--dl-muted)]">{copy.home.winRate}</span>
                 <span className="text-[var(--dl-string)]">{coach.winRate}</span>
               </div>
               <div className="flex flex-col">
@@ -91,18 +90,16 @@ export function CoachesSection() {
                 <span className="text-[var(--dl-number)]">{coach.kda}</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-[0.65rem] uppercase tracking-wider text-[var(--dl-muted)]">Aulas</span>
+                <span className="text-[0.65rem] uppercase tracking-wider text-[var(--dl-muted)]">{copy.home.classes}</span>
                 <span className="text-white">{coach.classes}</span>
               </div>
             </div>
 
-            {/* Plan */}
             <div className="mb-6 flex-1 rounded-xl bg-[var(--dl-surface-2)] border border-[var(--dl-border)] p-4">
               <div className="font-bold text-[var(--dl-warning)] mb-1">{coach.plan}</div>
               <div className="text-xs text-[var(--dl-muted-light)] leading-relaxed">{coach.planDesc}</div>
             </div>
 
-            {/* Tags */}
             <div className="mb-6 flex flex-wrap gap-2">
               {coach.tags.map((tag, idx) => (
                 <span key={idx} className="inline-flex rounded-full bg-white/[0.04] border border-[var(--dl-border)] px-3 py-1 text-xs font-medium text-[var(--dl-muted-light)]">
@@ -111,10 +108,9 @@ export function CoachesSection() {
               ))}
             </div>
 
-            {/* Ações */}
             <div className="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-[var(--dl-border)]">
-              <Button variant="secondary" size="sm" className="w-full" onClick={() => navigate(ROUTES.COACHES)}>Ver Perfil</Button>
-              <Button variant="primary" size="sm" className="w-full border-[var(--dl-function)] bg-[var(--dl-function)] shadow-[0_4px_14px_rgba(176,132,255,0.2)]" onClick={() => navigate(ROUTES.COACHES)}>Agendar</Button>
+              <Button variant="secondary" size="sm" className="w-full" onClick={() => navigate(ROUTES.COACHES)}>{copy.home.viewProfile}</Button>
+              <Button variant="primary" size="sm" className="w-full border-[var(--dl-function)] bg-[var(--dl-function)] shadow-[0_4px_14px_rgba(176,132,255,0.2)]" onClick={() => navigate(ROUTES.COACHES)}>{copy.home.schedule}</Button>
             </div>
           </div>
         ))}

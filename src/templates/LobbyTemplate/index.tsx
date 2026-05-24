@@ -7,6 +7,7 @@ import { Lobby } from '@/schemas/lobby.schema';
 import { Button, Card, SectionTitle } from '@/components/atoms';
 import { EmptyState } from '@/components/molecules';
 import { ASSETS } from '@/constants/assets';
+import { useLanguage } from '@/i18n';
 
 export interface LobbyTemplateProps {
   lobbies: Lobby[];
@@ -37,6 +38,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   errorMessage,
   invitedLobbyIds,
 }) => {
+  const { messages: copy } = useLanguage();
   const [filters, setFilters] = React.useState({
     search: '',
     game: 'all',
@@ -101,9 +103,9 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
         <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_260px]">
           <div className="flex flex-wrap items-center justify-between gap-3">
           <SectionTitle
-            eyebrow="Lobby Finder"
-            title="Find your next squad with cleaner signals."
-            subtitle="Filtre por jogo, rank, região e microfone para entrar em lobbies melhores com menos atrito."
+            eyebrow={copy.lobby.eyebrow}
+            title={copy.lobby.title}
+            subtitle={copy.lobby.subtitle}
           />
 
           {onCreateTestLobby && import.meta.env.DEV ? (
@@ -122,11 +124,11 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
       {errorMessage ? (
         <Card variant="danger" className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white">Erro de sincronização</p>
+            <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white">{copy.lobby.syncError}</p>
             <p className="mt-1 text-sm text-[var(--dl-muted-light)]">{errorMessage}</p>
           </div>
           <Button variant="secondary" size="sm" onClick={() => window.location.reload()}>
-            Recarregar
+            {copy.common.reload}
           </Button>
         </Card>
       ) : null}
@@ -139,16 +141,16 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
         {isError ? (
           <EmptyState 
             icon="error"
-            title="Falha ao carregar lobbies"
-            description="Não foi possível buscar lobbies agora. Tente novamente em instantes."
-            actionLabel="Tentar novamente"
+            title={copy.lobby.loadingErrorTitle}
+            description={copy.lobby.loadingErrorDescription}
+            actionLabel={copy.common.tryAgain}
             onAction={() => window.location.reload()}
           />
         ) : !isLoading && filteredLobbies.length === 0 ? (
           <EmptyState 
-            title="Nenhum lobby encontrado"
-            description="Ajuste os filtros para ampliar a busca ou crie um novo lobby."
-            actionLabel="Limpar filtros"
+            title={copy.lobby.emptyTitle}
+            description={copy.lobby.emptyDescription}
+            actionLabel={copy.lobby.clearFilters}
             onAction={handleClearFilters}
           />
         ) : (

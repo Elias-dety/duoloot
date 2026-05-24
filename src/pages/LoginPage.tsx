@@ -5,6 +5,7 @@ import { ROUTES } from '@/constants/routes';
 import { AuthForm, AuthFormSubmission } from '@/features/auth/components/AuthForm';
 import { useAuth } from '@/features/auth/useAuth';
 import { isSupabaseConfigured } from '@/lib/supabase';
+import { useLanguage } from '@/i18n';
 
 type LoginPageState = {
   from?: {
@@ -14,6 +15,7 @@ type LoginPageState = {
 
 const LoginPage: React.FC = () => {
   const { signIn, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { messages: copy } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,7 +39,7 @@ const LoginPage: React.FC = () => {
     } catch (error: unknown) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Falha ao conectar sua conta.',
+        error: error instanceof Error ? error.message : copy.auth.loginFailure,
       };
     } finally {
       setIsLoading(false);

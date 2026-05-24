@@ -6,9 +6,11 @@ import { AuthForm, AuthFormSubmission } from '@/features/auth/components/AuthFor
 import { useAuth } from '@/features/auth/useAuth';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { Button, Card } from '@/components/atoms';
+import { useLanguage } from '@/i18n';
 
 const RegisterPage: React.FC = () => {
   const { signUp, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { messages: copy } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState('');
@@ -24,7 +26,7 @@ const RegisterPage: React.FC = () => {
     setIsLoading(true);
     try {
       if (!data.name || !data.nickname) {
-        return { success: false, error: 'Nome e nickname são obrigatórios.' };
+        return { success: false, error: copy.auth.nameNicknameRequired };
       }
 
       const result = await signUp(data.email, data.password, {
@@ -45,7 +47,7 @@ const RegisterPage: React.FC = () => {
     } catch (error: unknown) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Falha ao criar sua conta.',
+        error: error instanceof Error ? error.message : copy.auth.registerFailure,
       };
     } finally {
       setIsLoading(false);
@@ -64,9 +66,9 @@ const RegisterPage: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <h2 className="font-['Rajdhani'] text-3xl font-bold uppercase text-white">Verificação enviada</h2>
+              <h2 className="font-['Rajdhani'] text-3xl font-bold uppercase text-white">{copy.auth.verificationSent}</h2>
               <p className="text-sm leading-7 text-[var(--dl-muted-light)]">
-                Enviamos um link de confirmação para o e-mail abaixo.
+                {copy.auth.verificationDescription}
               </p>
               <p className="rounded-[1rem] border border-[var(--dl-border)] bg-black/20 px-3 py-2 text-sm font-semibold text-white">
                 {registeredEmail}
@@ -74,11 +76,11 @@ const RegisterPage: React.FC = () => {
             </div>
 
             <p className="text-sm leading-7 text-[var(--dl-muted-light)]">
-              Verifique sua caixa de entrada e o spam para concluir seu acesso.
+              {copy.auth.verificationInstructions}
             </p>
 
             <Button fullWidth variant="secondary" onClick={() => navigate(ROUTES.LOGIN)}>
-              Voltar para login
+              {copy.auth.backToLogin}
             </Button>
           </Card>
         ) : (

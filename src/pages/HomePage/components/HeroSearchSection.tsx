@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/atoms';
 import { lookupValorantProfile, isValorantApiError } from '@/services/valorant';
+import { useLanguage } from '@/i18n';
 
 export function HeroSearchSection() {
+  const { messages: copy } = useLanguage();
   const [searchValue, setSearchValue] = useState('');
   const [feedback, setFeedback] = useState('');
   const [feedbackType, setFeedbackType] = useState<'info' | 'error' | 'success'>('info');
@@ -15,15 +17,14 @@ export function HeroSearchSection() {
 
     const trimmed = searchValue.trim();
     if (!trimmed) {
-      setFeedback('Digite um Riot ID para buscar.');
+      setFeedback(copy.home.feedbackRequired);
       setFeedbackType('error');
       return;
     }
 
-    // Parsear Riot ID (Nome#Tag)
     const hashIndex = trimmed.lastIndexOf('#');
     if (hashIndex === -1 || hashIndex === 0 || hashIndex === trimmed.length - 1) {
-      setFeedback('Formato inválido. Use: Nome#Tag (ex: DÉTY#2269)');
+      setFeedback(copy.home.feedbackInvalid);
       setFeedbackType('error');
       return;
     }
@@ -32,17 +33,16 @@ export function HeroSearchSection() {
     const tagLine = trimmed.substring(hashIndex + 1).trim();
 
     if (!gameName || !tagLine) {
-      setFeedback('Formato inválido. Use: Nome#Tag (ex: DÉTY#2269)');
+      setFeedback(copy.home.feedbackInvalid);
       setFeedbackType('error');
       return;
     }
 
     setIsSearching(true);
-    setFeedback('Buscando perfil na Riot API...');
+    setFeedback(copy.home.feedbackSearching);
     setFeedbackType('info');
 
     try {
-      // Chamar a Edge Function real
       await lookupValorantProfile({
         gameName,
         tagLine,
@@ -50,10 +50,9 @@ export function HeroSearchSection() {
         platform: 'br',
       });
 
-      setFeedback('Perfil encontrado! Redirecionando...');
+      setFeedback(copy.home.feedbackFound);
       setFeedbackType('success');
 
-      // Navegar para a página de perfil Riot
       setTimeout(() => {
         navigate(`/riot/${encodeURIComponent(gameName)}/${encodeURIComponent(tagLine)}`);
       }, 500);
@@ -61,22 +60,22 @@ export function HeroSearchSection() {
       if (isValorantApiError(err)) {
         switch (err.code) {
           case 'PLAYER_NOT_FOUND':
-            setFeedback(`Jogador "${gameName}#${tagLine}" não encontrado na Riot.`);
+            setFeedback(copy.home.feedbackNotFound.replace('{riotId}', `${gameName}#${tagLine}`));
             break;
           case 'RATE_LIMITED':
-            setFeedback('Muitas buscas seguidas. Aguarde alguns segundos.');
+            setFeedback(copy.home.feedbackRateLimited);
             break;
           case 'RIOT_API_KEY_MISSING':
-            setFeedback('Serviço temporariamente indisponível. Tente novamente mais tarde.');
+            setFeedback(copy.home.feedbackUnavailable);
             break;
           case 'NETWORK_ERROR':
-            setFeedback('Erro de conexão. Verifique sua internet.');
+            setFeedback(copy.home.feedbackNetwork);
             break;
           default:
-            setFeedback(err.message || 'Erro ao buscar perfil.');
+            setFeedback(err.message || copy.home.feedbackGeneric);
         }
       } else {
-        setFeedback('Erro inesperado. Tente novamente.');
+        setFeedback(copy.home.feedbackUnexpected);
       }
       setFeedbackType('error');
       setIsSearching(false);
@@ -91,21 +90,20 @@ export function HeroSearchSection() {
 
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center px-5 py-16 text-center sm:px-6 sm:py-20">
-      {/* Badge Superior */}
       <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[var(--dl-muted-light)]">
         <span className="h-2 w-2 rounded-full bg-[var(--dl-keyword)] shadow-[0_0_8px_rgb(var(--dl-red-rgb)/0.8)]"></span>
-        Duo Loot Codefire UI
+        {copy.home.heroBadge}
       </div>
 
       <h1 className="mb-8 font-['Rajdhani'] text-4xl font-bold uppercase tracking-wide text-white md:text-6xl lg:text-7xl">
-        Busque suas estatísticas
+        {copy.home.heroTitle}
       </h1>
 
       <form onSubmit={handleSearch} className="relative z-10 w-full max-w-2xl">
         <div className="flex w-full flex-col gap-3 sm:flex-row">
           <input
             type="text"
-            placeholder="Digite seu Riot ID (Ex: DÉTY#2269)"
+            placeholder={copy.home.riotPlaceholder}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             disabled={isSearching}
@@ -120,10 +118,10 @@ export function HeroSearchSection() {
             {isSearching ? (
               <span className="flex items-center gap-2">
                 <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                Buscando...
+                {copy.home.searching}
               </span>
             ) : (
-              'Buscar'
+              copy.home.search
             )}
           </Button>
         </div>
@@ -134,16 +132,15 @@ export function HeroSearchSection() {
         )}
       </form>
 
-      {/* Syntax Highlight Text */}
       <div className="mt-12 text-sm font-semibold tracking-wider text-[var(--dl-muted-light)] md:text-base">
         <p className="mb-1">
-          <span className="text-[var(--dl-number)]">busque</span> suas <span className="text-[var(--dl-number)]">estatísticas</span>
+          <span className="text-[var(--dl-number)]">{copy.home.syntaxOneA}</span> {copy.home.syntaxOneB} <span className="text-[var(--dl-number)]">{copy.home.syntaxOneC}</span>
         </p>
         <p className="mb-1">
-          <span className="text-[var(--dl-number)]">encontre</span> <span className="text-[var(--dl-warning)]">jogadores</span> para fechar <span className="text-[var(--dl-function)]">lobby</span>
+          <span className="text-[var(--dl-number)]">{copy.home.syntaxTwoA}</span> <span className="text-[var(--dl-warning)]">{copy.home.syntaxTwoB}</span> {copy.home.syntaxTwoC} <span className="text-[var(--dl-function)]">{copy.home.syntaxTwoD}</span>
         </p>
         <p>
-          <span className="text-[var(--dl-string)]">ganhe dinheiro</span> participando dos <span className="text-[var(--dl-keyword)]">torneios</span>
+          <span className="text-[var(--dl-string)]">{copy.home.syntaxThreeA}</span> {copy.home.syntaxThreeB} <span className="text-[var(--dl-keyword)]">{copy.home.syntaxThreeC}</span>
         </p>
       </div>
     </section>
