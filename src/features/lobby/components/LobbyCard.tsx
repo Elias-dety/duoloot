@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 import { Avatar, Badge, Button, StatValue } from '@/components/atoms';
 import { CompatibilityMeter } from '@/components/molecules';
@@ -12,6 +14,7 @@ export interface LobbyCardProps {
 }
 
 export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }) => {
+  const navigate = useNavigate();
   const slotsTotal = Number(lobby.slotsTotal) || 0;
   const slotsFilled = Number(lobby.slotsFilled) || 0;
   const openSlots = Math.max(0, slotsTotal - slotsFilled);
@@ -121,14 +124,23 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }
       </div>
 
       <div className="mt-auto border-t border-[var(--dl-border)] pt-4">
-        <Button
-          variant={isFull || isClosed ? 'secondary' : 'primary'}
-          className="w-full"
-          disabled={isFull || isClosed || isJoining}
-          onClick={() => onJoin && onJoin(lobby.id)}
-        >
-          {isJoining ? 'Sincronizando...' : isClosed ? 'Fechado' : isFull ? 'Lobby cheio' : 'Entrar no Lobby'}
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            variant="secondary"
+            className="w-full"
+            onClick={() => navigate(ROUTES.PLAYER_PROFILE.replace(':playerId', lobby.owner?.id || ''))}
+          >
+            Ver Perfil
+          </Button>
+          <Button
+            variant={isFull || isClosed ? 'secondary' : 'primary'}
+            className="w-full"
+            disabled={isFull || isClosed || isJoining}
+            onClick={() => onJoin && onJoin(lobby.id)}
+          >
+            {isJoining ? 'Sincronizando...' : isClosed ? 'Fechado' : isFull ? 'Lobby cheio' : 'Entrar no Lobby'}
+          </Button>
+        </div>
       </div>
     </div>
   );

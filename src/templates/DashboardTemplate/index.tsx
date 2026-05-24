@@ -1,5 +1,6 @@
 import React from 'react';
 import { Player } from '@/schemas/player.schema';
+import { ValorantMockUser } from '@/types/valorant.types';
 import { DashboardSummary as DashboardSummaryType } from '@/schemas/dashboardSummary.schema';
 import { DashboardSummary } from '@/components/organisms/DashboardSummary';
 import { TrustScorePanel } from '@/features/dashboard/components/TrustScorePanel';
@@ -20,6 +21,7 @@ import { MapStatsGrid } from '@/features/riot/components/MapStatsGrid';
 export interface DashboardTemplateProps {
   player: Player | null;
   summary: DashboardSummaryType | null;
+  valorantUser?: ValorantMockUser;
   isLoading?: boolean;
   isError?: boolean;
   isEmpty?: boolean;
@@ -28,6 +30,7 @@ export interface DashboardTemplateProps {
 export default function DashboardTemplate({
   player,
   summary,
+  valorantUser,
   isLoading,
   isError,
   isEmpty,
@@ -72,19 +75,33 @@ export default function DashboardTemplate({
           <RiotConnectPanel />
         </div>
         <div className="md:col-span-1 lg:col-span-2">
-          {/* Usando dados mockados como exemplo */}
-          <PlayerStatsOverview 
-            stats={{
-              winRate: 58.5,
-              kda: 1.45,
-              headshotRate: 22.4,
-              matchesPlayed: 45,
-              wins: 26,
-              losses: 19,
-              averageScore: 235,
-              currentRank: "Ascendente 1"
-            }} 
-          />
+          {valorantUser ? (
+            <PlayerStatsOverview 
+              stats={{
+                winRate: valorantUser.overviewStats.winRate,
+                kda: valorantUser.overviewStats.kdaRatio,
+                headshotRate: valorantUser.overviewStats.headshotPercent,
+                matchesPlayed: valorantUser.overviewStats.matchesPlayed,
+                wins: valorantUser.overviewStats.wins,
+                losses: valorantUser.overviewStats.losses,
+                averageScore: valorantUser.overviewStats.averageCombatScore,
+                currentRank: valorantUser.rank.label
+              }} 
+            />
+          ) : (
+            <PlayerStatsOverview 
+              stats={{
+                winRate: 58.5,
+                kda: 1.45,
+                headshotRate: 22.4,
+                matchesPlayed: 45,
+                wins: 26,
+                losses: 19,
+                averageScore: 235,
+                currentRank: "Ascendente 1"
+              }} 
+            />
+          )}
         </div>
       </div>
 
@@ -117,25 +134,36 @@ export default function DashboardTemplate({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
         <div className="lg:col-span-2 space-y-8">
           <MatchHistoryList 
-            matches={[
-              { id: '1', result: 'VICTORY', agent: 'Jett', agentImageUrl: 'https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/displayicon.png', map: 'Ascent', score: '13 - 10', kda: '21/14/5', kdRatio: 1.5, combatScore: 285, date: 'Há 2 horas' },
-              { id: '2', result: 'DEFEAT', agent: 'Omen', agentImageUrl: 'https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/displayicon.png', map: 'Bind', score: '11 - 13', kda: '15/18/8', kdRatio: 0.8, combatScore: 195, date: 'Há 5 horas' },
-              { id: '3', result: 'VICTORY', agent: 'Jett', agentImageUrl: 'https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/displayicon.png', map: 'Haven', score: '13 - 6', kda: '25/9/2', kdRatio: 2.7, combatScore: 310, date: 'Ontem' },
-            ]}
+            matches={valorantUser ? valorantUser.recentMatches.map(m => ({
+              id: m.matchId,
+              result: m.result === 'win' ? 'VICTORY' : m.result === 'loss' ? 'DEFEAT' : 'DRAW',
+              agent: m.agent,
+              agentImageUrl: m.agentImageUrl,
+              map: m.map,
+              score: m.scoreText,
+              kda: `${m.kills}/${m.deaths}/${m.assists}`,
+              kdRatio: m.kdRatio,
+              combatScore: m.averageCombatScore,
+              date: new Date(m.startedAt).toLocaleDateString()
+            })) : []}
           />
         </div>
         <div className="lg:col-span-1 space-y-8">
           <AgentStatsGrid 
-            stats={[
-              { agentName: 'Jett', agentRole: 'Duelist', winRate: 62.5, matchesPlayed: 24, kda: 1.8 },
-              { agentName: 'Omen', agentRole: 'Controller', winRate: 45.0, matchesPlayed: 12, kda: 1.1 },
-            ]}
+            stats={valorantUser ? valorantUser.agentStats.map(a => ({
+              agentName: a.agent,
+              agentRole: a.role,
+              winRate: a.winRate,
+              matchesPlayed: a.matches,
+              kda: a.kdaRatio
+            })) : []}
           />
           <MapStatsGrid 
-            stats={[
-              { mapName: 'Ascent', winRate: 68.0, matchesPlayed: 15 },
-              { mapName: 'Bind', winRate: 42.0, matchesPlayed: 10 },
-            ]}
+            stats={valorantUser ? valorantUser.mapStats.map(m => ({
+              mapName: m.map,
+              winRate: m.winRate,
+              matchesPlayed: m.matches
+            })) : []}
           />
         </div>
       </div>

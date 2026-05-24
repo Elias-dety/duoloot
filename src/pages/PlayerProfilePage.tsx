@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { mockPlayers } from '@/data/mocks/players.mock';
 import { Player } from '@/schemas/player.schema';
+import { getValorantUserById, mapValorantUserToPlayer } from '@/data/mocks';
 import { ProfileTemplate } from '@/templates/ProfileTemplate';
 
 export default function PlayerProfilePage() {
@@ -25,9 +25,14 @@ export default function PlayerProfilePage() {
           return;
         }
 
-        const foundPlayer = mockPlayers.find((item) => item.id === playerId) ?? null;
-        setPlayer(foundPlayer);
-        setIsPlayerNotFound(!foundPlayer);
+        const valUser = getValorantUserById(playerId);
+        if (!valUser) {
+          setPlayer(null);
+          setIsPlayerNotFound(true);
+        } else {
+          setPlayer(mapValorantUserToPlayer(valUser));
+          setIsPlayerNotFound(false);
+        }
       } catch {
         setIsError(true);
       } finally {

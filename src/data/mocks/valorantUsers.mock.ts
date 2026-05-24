@@ -13,6 +13,7 @@ import {
   ValorantMatchmakingProfile,
   ValorantTrendStats
 } from '@/types/valorant.types';
+import { Player } from '@/schemas/player.schema';
 
 // ==========================================
 // FUNÇÕES AUXILIARES PARA GERAR MOCKS
@@ -869,3 +870,68 @@ const user5: ValorantMockUser = {
 };
 
 export const mockValorantUsers: ValorantMockUser[] = [user1, user2, user3, user4, user5];
+
+// ==========================================
+// HELPERS
+// ==========================================
+
+export function getValorantUserById(id: string): ValorantMockUser | undefined {
+  return mockValorantUsers.find((u) => u.id === id);
+}
+
+export function getMainValorantUser(): ValorantMockUser {
+  // Retorna o Tryhard (Diamond/Ascendant) como usuário principal para demonstração
+  return user3;
+}
+
+export function getAvailableDuoUsers(): ValorantMockUser[] {
+  const mainId = getMainValorantUser().id;
+  return mockValorantUsers.filter((u) => u.id !== mainId);
+}
+
+export function mapValorantUserToPlayer(user: ValorantMockUser): Player {
+  return {
+    id: user.id,
+    name: user.profile.gameName,
+    nickname: user.profile.riotId,
+    avatarUrl: user.profile.avatarUrl,
+    trustScore: user.matchmakingProfile.reliabilityScore,
+    status: 'online',
+    isPremium: false,
+    gameProfile: {
+      mainGame: 'Valorant',
+      riotId: user.profile.riotId,
+      nickname: user.profile.gameName,
+      currentRank: user.rank.label,
+      rank: user.rank.label,
+      mainRole: user.matchmakingProfile.preferredRole,
+      secondaryRole: user.matchmakingProfile.secondaryRole,
+      playStyle: user.matchmakingProfile.playStyle,
+      sessionFocus: 'Ranked Push',
+      availability: 'Noturno',
+      preferredModes: [user.matchmakingProfile.preferredQueue],
+      microphone: user.matchmakingProfile.communicationStyle !== 'quiet',
+      region: user.profile.region,
+      bio: 'Buscando duo focado para subir de rank.',
+    },
+    stats: {
+      matchesPlayed: user.overviewStats.matchesPlayed,
+      winRate: user.overviewStats.winRate,
+      averageKda: user.overviewStats.kdaRatio,
+      hoursPlayed: user.overviewStats.playtimeHours,
+      commendations: Math.floor(user.overviewStats.wins / 10),
+      abandons: 0,
+    },
+    preferences: {
+      micRequired: user.matchmakingProfile.communicationStyle !== 'quiet',
+      playStyle: user.matchmakingProfile.playStyle,
+      sessionFocus: 'Competitive',
+      availability: 'Noturno',
+    },
+    metadata: {
+      valorantStats: user,
+    },
+    createdAt: user.profile.createdAt,
+    updatedAt: user.profile.updatedAt,
+  };
+}
