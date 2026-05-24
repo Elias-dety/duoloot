@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DuolootCard, DuolootButton, DuolootSectionTitle, DuolootBadge } from '@/components/duoloot';
+import { Card, Button, SectionTitle, Badge } from '@/components/atoms';;
 import { getPendingVaultSubmissions, validateVaultSubmission } from '@/services/vault-admin.service';
 
 type VaultSubmission = {
@@ -62,7 +62,7 @@ export default function AdminVaultPage() {
   if (loading && submissions.length === 0) {
     return (
       <div className="container mx-auto p-8 border-t-4 border-[var(--dl-error)] bg-[var(--dl-error-rgb)]/5 min-h-screen">
-        <DuolootSectionTitle title="Validação do Cofre" subtitle="Painel Administrativo" />
+        <SectionTitle title="Validação do Cofre" subtitle="Painel Administrativo" />
         <div className="mt-12 flex justify-center">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-brand-primary border-t-transparent" />
         </div>
@@ -73,14 +73,14 @@ export default function AdminVaultPage() {
   return (
     <div className="container mx-auto max-w-6xl p-8 border-t-4 border-[var(--dl-error)] bg-black min-h-screen">
       <div className="mb-8 flex items-end justify-between">
-        <DuolootSectionTitle
+        <SectionTitle
           title="Validação do Cofre (ADMIN)"
           subtitle="Painel técnico temporário para validação manual de missões."
           eyebrow="DANGER ZONE"
         />
-        <DuolootButton variant="secondary" size="sm" onClick={fetchSubmissions} disabled={loading}>
+        <Button variant="secondary" size="sm" onClick={fetchSubmissions} disabled={loading}>
           Atualizar Lista
-        </DuolootButton>
+        </Button>
       </div>
 
       {error && (
@@ -91,12 +91,12 @@ export default function AdminVaultPage() {
 
       <div className="grid gap-6">
         {submissions.length === 0 ? (
-          <DuolootCard variant="muted" className="flex flex-col items-center justify-center p-12 text-center border-[var(--dl-error)]/20">
+          <Card variant="muted" className="flex flex-col items-center justify-center p-12 text-center border-[var(--dl-error)]/20">
             <p className="italic text-[var(--dl-muted-light)]">Nenhuma submissão pendente encontrada.</p>
-          </DuolootCard>
+          </Card>
         ) : (
           submissions.map((submission) => (
-            <DuolootCard key={submission.id} variant="accent" className="p-6 transition-colors border-[var(--dl-error)]/30 hover:border-[var(--dl-error)]/60">
+            <Card key={submission.id} variant="accent" className="p-6 transition-colors border-[var(--dl-error)]/30 hover:border-[var(--dl-error)]/60">
               <div className="flex flex-col gap-6 md:flex-row">
                 <div className="flex min-w-[240px] items-start gap-4">
                   {submission.player?.avatar_url ? (
@@ -110,7 +110,7 @@ export default function AdminVaultPage() {
                     <span className="text-lg font-bold leading-tight text-[var(--dl-error)]">{submission.player?.nickname}</span>
                     <span className="text-xs text-[var(--dl-muted-light)]">{submission.player?.name}</span>
                     <div className="mt-2 flex items-center gap-2">
-                      <DuolootBadge variant="accent">Score: {submission.player?.trust_score || 0}</DuolootBadge>
+                      <Badge variant="accent">Score: {submission.player?.trust_score || 0}</Badge>
                       <span className="text-[10px] uppercase tracking-widest text-[var(--dl-muted)]">
                         {new Date(submission.created_at).toLocaleDateString()} {new Date(submission.created_at).toLocaleTimeString()}
                       </span>
@@ -136,7 +136,7 @@ export default function AdminVaultPage() {
                 </div>
 
                 <div className="flex min-w-[140px] flex-row justify-center gap-3 md:flex-col">
-                  <DuolootButton
+                  <Button
                     variant="primary"
                     size="sm"
                     className="!bg-[var(--dl-success)]"
@@ -144,8 +144,8 @@ export default function AdminVaultPage() {
                     disabled={!!processingId}
                   >
                     {processingId === submission.id ? 'Aprovando...' : 'Aprovar'}
-                  </DuolootButton>
-                  <DuolootButton
+                  </Button>
+                  <Button
                     variant="primary"
                     size="sm"
                     className="!bg-[var(--dl-error)]"
@@ -153,10 +153,10 @@ export default function AdminVaultPage() {
                     disabled={!!processingId}
                   >
                     {processingId === submission.id ? 'Reprovando...' : 'Reprovar'}
-                  </DuolootButton>
+                  </Button>
                 </div>
               </div>
-            </DuolootCard>
+            </Card>
           ))
         )}
       </div>

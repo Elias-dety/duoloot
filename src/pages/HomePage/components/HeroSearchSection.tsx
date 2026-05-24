@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DuolootButton } from '@/components/duoloot';
+import { Button } from '@/components/atoms';;
 import { lookupValorantProfile, isValorantApiError } from '@/services/valorant';
 
 export function HeroSearchSection() {
@@ -111,7 +111,7 @@ export function HeroSearchSection() {
             disabled={isSearching}
             className="h-14 w-full flex-1 rounded-full border border-[var(--dl-border)] bg-[var(--dl-surface)] px-6 text-[var(--dl-text)] placeholder-[var(--dl-muted)] focus:border-[var(--dl-number)] focus:outline-none disabled:opacity-50"
           />
-          <DuolootButton
+          <Button
             type="submit"
             variant="primary"
             className="h-14 rounded-full px-8 text-sm sm:w-auto"
@@ -125,7 +125,7 @@ export function HeroSearchSection() {
             ) : (
               'Buscar'
             )}
-          </DuolootButton>
+          </Button>
         </div>
         {feedback && (
           <div className={`mt-4 text-sm font-semibold ${feedbackColors[feedbackType]}`}>

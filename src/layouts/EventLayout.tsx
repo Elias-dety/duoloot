@@ -1,6 +1,6 @@
 import { Outlet, Link } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
-import { DuolootBadge, DuolootButton, DuolootLogo } from '@/components/duoloot';
+import { Badge, Button, Logo } from '@/components/atoms';;
 
 export default function EventLayout() {
   return (
@@ -8,17 +8,17 @@ export default function EventLayout() {
       <header className="sticky top-0 z-20 border-b border-[var(--dl-border)] bg-[rgba(8,10,14,0.9)] backdrop-blur-[14px]">
         <div className="mx-auto flex max-w-[1240px] flex-col gap-4 px-3 py-4 md:flex-row md:items-center md:justify-between md:px-6">
           <div className="flex min-w-0 items-center gap-3 md:gap-4">
-            <DuolootButton variant="secondary" size="sm" onClick={() => window.history.back()}>
+            <Button variant="secondary" size="sm" onClick={() => window.history.back()}>
               Voltar
-            </DuolootButton>
+            </Button>
             <Link to={ROUTES.HOME} className="dl-brand min-w-0">
-              <DuolootLogo compact subtitle="Vault" />
+              <Logo compact subtitle="Vault" />
             </Link>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <DuolootBadge variant="accent">Evento ativo</DuolootBadge>
-            <DuolootBadge>Vault online</DuolootBadge>
+            <Badge variant="accent">Evento ativo</Badge>
+            <Badge>Vault online</Badge>
           </div>
         </div>
       </header>

@@ -9,7 +9,7 @@ import { ProfileStatsGrid } from '@/features/profile/components/ProfileStatsGrid
 import { ProfileTrustPanel } from '@/features/profile/components/ProfileTrustPanel';
 import { ASSETS } from '@/constants/assets';
 
-import { DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
+import { LoadingState, EmptyState } from '@/components/molecules';;
 
 export interface ProfileTemplateProps {
   player: Player | null;
@@ -27,12 +27,12 @@ export const ProfileTemplate: React.FC<ProfileTemplateProps> = ({
   const navigate = useNavigate();
 
   if (isLoading) {
-    return <DuolootLoadingState message="Escaneando alvo..." />;
+    return <LoadingState message="Escaneando alvo..." />;
   }
 
   if (isError) {
     return (
-      <DuolootEmptyState 
+      <EmptyState 
         icon="error" 
         title="Erro ao carregar perfil" 
         description="Não foi possível carregar os dados deste jogador agora."
@@ -44,7 +44,7 @@ export const ProfileTemplate: React.FC<ProfileTemplateProps> = ({
 
   if (isPlayerNotFound || !player) {
     return (
-      <DuolootEmptyState 
+      <EmptyState 
         title="Jogador não encontrado" 
         description="Esse perfil não existe ou foi removido."
         actionLabel="Voltar"

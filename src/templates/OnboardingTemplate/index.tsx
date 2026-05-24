@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { OnboardingForm } from '@/features/onboarding/components/OnboardingForm';
 import type { OnboardingData } from '@/features/onboarding/onboarding.schema';
-import { DuolootCard, DuolootFrame, DuolootSectionTitle } from '@/components/duoloot';
+import { Card, Frame, SectionTitle } from '@/components/atoms';;
 
 interface OnboardingTemplateProps {
   initialData?: Partial<OnboardingData> | null;
@@ -32,7 +32,7 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
   });
 
   return (
-    <DuolootFrame className="flex flex-col">
+    <Frame className="flex flex-col">
       <div className="dl-top-strip">
         <span>Duoloot profile setup</span>
         <span>Red Vault onboarding</span>
@@ -40,7 +40,7 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
 
       <div className="mx-auto flex-1 w-full max-w-[1240px] px-4 py-6 md:px-8 md:py-10">
         <div className="mb-8 md:mb-10">
-          <DuolootSectionTitle
+          <SectionTitle
             eyebrow="Onboarding"
             title="Configure seu perfil gamer"
             subtitle="Esses dados alimentam lobby, recomendações e compatibilidade dentro do Duoloot."
@@ -48,9 +48,9 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
         </div>
 
         {error ? (
-          <DuolootCard variant="danger" className="mb-6 p-4">
+          <Card variant="danger" className="mb-6 p-4">
             <p className="text-sm font-semibold text-white">{error}</p>
-          </DuolootCard>
+          </Card>
         ) : null}
 
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
@@ -65,7 +65,7 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
           </div>
 
           <div className="lg:sticky lg:top-8 lg:col-span-5 xl:col-span-4">
-            <DuolootCard variant="elevated" className="space-y-6 p-6 overflow-hidden relative">
+            <Card variant="elevated" className="space-y-6 p-6 overflow-hidden relative">
               {/* Glow decorativo */}
               <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-[var(--dl-error)]/10 blur-[40px]" />
 
@@ -100,11 +100,11 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
                   </div>
                 ))}
               </div>
-            </DuolootCard>
+            </Card>
           </div>
         </div>
       </div>
-    </DuolootFrame>
+    </Frame>
   );
 };
 

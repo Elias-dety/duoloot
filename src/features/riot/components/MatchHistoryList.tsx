@@ -1,5 +1,5 @@
 import React from 'react';
-import { DuolootCard } from '@/components/duoloot';
+import { Card } from '@/components/atoms';;
 
 export interface RiotMatchMock {
   id: string;
@@ -17,11 +17,11 @@ export interface RiotMatchMock {
 export function MatchHistoryList({ matches }: { matches?: RiotMatchMock[] }) {
   if (!matches || matches.length === 0) {
     return (
-      <DuolootCard variant="muted" className="w-full flex items-center justify-center p-8 h-40">
+      <Card variant="muted" className="w-full flex items-center justify-center p-8 h-40">
         <p className="text-[var(--dl-muted-light)] text-sm font-semibold uppercase tracking-wider">
           Nenhuma partida encontrada.
         </p>
-      </DuolootCard>
+      </Card>
     );
   }
 
@@ -30,7 +30,7 @@ export function MatchHistoryList({ matches }: { matches?: RiotMatchMock[] }) {
       <h3 className="text-lg font-bold uppercase tracking-wider text-white mb-4">Últimas Partidas</h3>
       
       {matches.map((match) => (
-        <DuolootCard 
+        <Card 
           key={match.id} 
           variant="default" 
           className="flex items-center justify-between p-3 sm:p-4 hover:border-[var(--dl-keyword)] transition-colors cursor-pointer group"
@@ -82,7 +82,7 @@ export function MatchHistoryList({ matches }: { matches?: RiotMatchMock[] }) {
               </svg>
             </div>
           </div>
-        </DuolootCard>
+        </Card>
       ))}
     </div>
   );

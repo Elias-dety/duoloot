@@ -4,7 +4,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import type { PlayerGameProfile } from '@/services/auth.service';
 import { ROUTES } from '../constants/routes';
-import { DuolootButton, DuolootCard, DuolootLogo } from '@/components/duoloot';
+import { Button, Card, Logo } from '@/components/atoms';;
 
 export default function DashboardLayout() {
   const { profile, user, signOut } = useAuth();
@@ -43,13 +43,13 @@ export default function DashboardLayout() {
       <div className="border-b border-[var(--dl-border)] bg-[rgba(15,15,18,0.92)] md:hidden">
         <header className="flex items-center justify-between gap-3 px-3 py-3">
           <Link to={ROUTES.HOME} className="dl-brand">
-            <DuolootLogo compact subtitle="Dashboard" />
+            <Logo compact subtitle="Dashboard" />
           </Link>
           <div className="flex items-center gap-2">
-            <DuolootButton variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>Perfil</DuolootButton>
-            <DuolootButton variant="secondary" size="sm" onClick={handleLogout}>
+            <Button variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>Perfil</Button>
+            <Button variant="secondary" size="sm" onClick={handleLogout}>
               Sair
-            </DuolootButton>
+            </Button>
           </div>
         </header>
 
@@ -69,7 +69,7 @@ export default function DashboardLayout() {
       <aside className="hidden w-72 flex-col border-r border-[var(--dl-border)] bg-[rgba(15,15,18,0.94)] p-4 md:flex">
         <div className="border-b border-[var(--dl-border)] pb-5">
           <Link to={ROUTES.HOME} className="dl-brand">
-            <DuolootLogo subtitle="Player Hub" />
+            <Logo subtitle="Player Hub" />
           </Link>
         </div>
 
@@ -88,7 +88,7 @@ export default function DashboardLayout() {
           ))}
         </nav>
 
-        <DuolootCard variant="elevated" className="space-y-4">
+        <Card variant="elevated" className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="grid h-12 w-12 place-items-center rounded-[1rem] border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] font-['Rajdhani'] text-lg font-bold uppercase">
               {getInitials()}
@@ -105,11 +105,11 @@ export default function DashboardLayout() {
             {getRank()}
           </div>
 
-          <DuolootButton fullWidth variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>Editar perfil</DuolootButton>
-          <DuolootButton fullWidth variant="danger" size="sm" onClick={handleLogout}>
+          <Button fullWidth variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>Editar perfil</Button>
+          <Button fullWidth variant="danger" size="sm" onClick={handleLogout}>
             Encerrar sessão
-          </DuolootButton>
-        </DuolootCard>
+          </Button>
+        </Card>
       </aside>
 
       <main className="relative flex-1 overflow-auto">

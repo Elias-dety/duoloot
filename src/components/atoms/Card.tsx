@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from 'react';
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'elevated' | 'interactive' | 'premium' | 'prize' | 'danger' | 'locked' | 'tactical' | 'tactical-blue' | 'tactical-yellow' | 'tactical-green' | 'tactical-red';
+  variant?: 'default' | 'elevated' | 'interactive' | 'premium' | 'prize' | 'danger' | 'locked' | 'tactical' | 'tactical-blue' | 'tactical-yellow' | 'tactical-green' | 'tactical-red' | 'muted' | 'accent';
 }
 
 export const Card: React.FC<CardProps> = ({ variant = 'default', className = '', children, ...props }) => {
@@ -27,6 +27,8 @@ export const Card: React.FC<CardProps> = ({ variant = 'default', className = '',
     'tactical-yellow': accentStyles,
     'tactical-green': accentStyles,
     'tactical-red': dangerStyles,
+    muted: mutedStyles,
+    accent: accentStyles,
   };
 
   return (

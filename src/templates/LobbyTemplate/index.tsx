@@ -4,7 +4,8 @@ import { LobbyGrid } from '@/components/organisms/LobbyGrid';
 import { LobbyActionsBar } from '@/features/lobby/components/LobbyActionsBar';
 import { LobbyFilters } from '@/features/lobby/components/LobbyFilters';
 import { Lobby } from '@/schemas/lobby.schema';
-import { DuolootButton, DuolootCard, DuolootSectionTitle, DuolootEmptyState } from '@/components/duoloot';
+import { Button, Card, SectionTitle } from '@/components/atoms';
+import { EmptyState } from '@/components/molecules';;
 import { ASSETS } from '@/constants/assets';
 
 export interface LobbyTemplateProps {
@@ -94,19 +95,19 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
 
   return (
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 pt-4 md:px-6 md:pt-6">
-      <DuolootCard variant="accent" className="space-y-5 px-5 py-6 md:px-8 md:py-8">
+      <Card variant="accent" className="space-y-5 px-5 py-6 md:px-8 md:py-8">
         <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_260px]">
           <div className="flex flex-wrap items-center justify-between gap-3">
-          <DuolootSectionTitle
+          <SectionTitle
             eyebrow="Lobby Finder"
             title="Find your next squad with cleaner signals."
             subtitle="Filtre por jogo, rank, região e microfone para entrar em lobbies melhores com menos atrito."
           />
 
           {onCreateTestLobby && import.meta.env.DEV ? (
-            <DuolootButton variant="secondary" size="sm" onClick={onCreateTestLobby} disabled={isCreating}>
+            <Button variant="secondary" size="sm" onClick={onCreateTestLobby} disabled={isCreating}>
               {isCreating ? 'Criando...' : 'DEV: criar lobby'}
-            </DuolootButton>
+            </Button>
           ) : null}
           </div>
           <div className="flex items-center justify-center gap-4 rounded-[1.25rem] border border-[var(--dl-border)] bg-black/20 p-4">
@@ -114,18 +115,18 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
             <img src={ASSETS.icons.matchmakingTrustThumb} alt="Icone de matchmaking por confianca" loading="eager" decoding="async" className="h-20 w-20 object-contain opacity-90" />
           </div>
         </div>
-      </DuolootCard>
+      </Card>
 
       {errorMessage ? (
-        <DuolootCard variant="danger" className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <Card variant="danger" className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white">Erro de sincronização</p>
             <p className="mt-1 text-sm text-[var(--dl-muted-light)]">{errorMessage}</p>
           </div>
-          <DuolootButton variant="secondary" size="sm" onClick={() => window.location.reload()}>
+          <Button variant="secondary" size="sm" onClick={() => window.location.reload()}>
             Recarregar
-          </DuolootButton>
-        </DuolootCard>
+          </Button>
+        </Card>
       ) : null}
 
       <LobbyFilters filters={filters} onFiltersChange={setFilters} onClearFilters={handleClearFilters} />
@@ -134,7 +135,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
         <LobbyActionsBar totalLobbies={filteredLobbies.length} />
 
         {isError ? (
-          <DuolootEmptyState 
+          <EmptyState 
             icon="error"
             title="Falha ao carregar lobbies"
             description="Não foi possível buscar lobbies agora. Tente novamente em instantes."
@@ -142,7 +143,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
             onAction={() => window.location.reload()}
           />
         ) : !isLoading && filteredLobbies.length === 0 ? (
-          <DuolootEmptyState 
+          <EmptyState 
             title="Nenhum lobby encontrado"
             description="Ajuste os filtros para ampliar a busca ou crie um novo lobby."
             actionLabel="Limpar filtros"

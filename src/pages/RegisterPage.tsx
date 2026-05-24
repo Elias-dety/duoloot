@@ -5,7 +5,7 @@ import { ROUTES } from '@/constants/routes';
 import { AuthForm, AuthFormSubmission } from '@/features/auth/components/AuthForm';
 import { useAuth } from '@/features/auth/useAuth';
 import { isSupabaseConfigured } from '@/lib/supabase';
-import { DuolootButton, DuolootCard } from '@/components/duoloot';
+import { Button, Card } from '@/components/atoms';;
 
 export const RegisterPage: React.FC = () => {
   const { signUp, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -58,7 +58,7 @@ export const RegisterPage: React.FC = () => {
 
       <div className="relative z-10 flex w-full justify-center">
         {needsVerification ? (
-          <DuolootCard variant="elevated" className="w-full max-w-md space-y-6 rounded-[1.75rem] p-6 text-center md:p-8">
+          <Card variant="elevated" className="w-full max-w-md space-y-6 rounded-[1.75rem] p-6 text-center md:p-8">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] text-2xl">
               ✉
             </div>
@@ -77,10 +77,10 @@ export const RegisterPage: React.FC = () => {
               Verifique sua caixa de entrada e o spam para concluir seu acesso.
             </p>
 
-            <DuolootButton fullWidth variant="secondary" onClick={() => navigate(ROUTES.LOGIN)}>
+            <Button fullWidth variant="secondary" onClick={() => navigate(ROUTES.LOGIN)}>
               Voltar para login
-            </DuolootButton>
-          </DuolootCard>
+            </Button>
+          </Card>
         ) : (
           <AuthForm
             type="register"

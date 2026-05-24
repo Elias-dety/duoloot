@@ -5,7 +5,8 @@ import { PlayerStatsOverview } from '@/features/riot/components/PlayerStatsOverv
 import { MatchHistoryList } from '@/features/riot/components/MatchHistoryList';
 import { AgentStatsGrid } from '@/features/riot/components/AgentStatsGrid';
 import { MapStatsGrid } from '@/features/riot/components/MapStatsGrid';
-import { DuolootLoadingState, DuolootEmptyState, DuolootCard } from '@/components/duoloot';
+import { Card } from '@/components/atoms';
+import { LoadingState, EmptyState } from '@/components/molecules';;
 import type { ValorantProfileLookupResult } from '@/types/valorant.types';
 
 export default function RiotProfilePage() {
@@ -56,14 +57,14 @@ export default function RiotProfilePage() {
 
   // --- Loading state ---
   if (isLoading) {
-    return <DuolootLoadingState message="Escaneando perfil Riot..." />;
+    return <LoadingState message="Escaneando perfil Riot..." />;
   }
 
   // --- Error states ---
   if (error) {
     const isNotFound = errorCode === 'PLAYER_NOT_FOUND';
     return (
-      <DuolootEmptyState
+      <EmptyState
         icon={isNotFound ? undefined : 'error'}
         title={isNotFound ? 'Jogador não encontrado' : 'Erro ao buscar perfil'}
         description={error}
@@ -75,7 +76,7 @@ export default function RiotProfilePage() {
 
   if (!profile) {
     return (
-      <DuolootEmptyState
+      <EmptyState
         title="Perfil não encontrado"
         description="Nenhum dado disponível para este Riot ID."
         actionLabel="Buscar outro jogador"
@@ -142,7 +143,7 @@ export default function RiotProfilePage() {
       </button>
 
       {/* Header HUD */}
-      <DuolootCard variant="elevated" className="relative overflow-hidden p-[18px] md:p-[28px]">
+      <Card variant="elevated" className="relative overflow-hidden p-[18px] md:p-[28px]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(255,70,85,0.12),transparent_20rem),linear-gradient(120deg,transparent,rgba(255,70,85,0.04),transparent)]" />
         <div className="relative z-[2]">
           <div className="mb-4 flex flex-wrap items-center gap-3">
@@ -207,7 +208,7 @@ export default function RiotProfilePage() {
             {profile.stats?.matchesPlayed || 0} partidas.
           </p>
         </div>
-      </DuolootCard>
+      </Card>
 
       {/* Stats Overview */}
       <PlayerStatsOverview stats={statsForOverview} />
@@ -223,7 +224,7 @@ export default function RiotProfilePage() {
 
       {/* Info banner when no match data */}
       {(!profile.matches || profile.matches.length === 0) && profile.account && (
-        <DuolootCard variant="muted" className="flex flex-col items-center justify-center p-8">
+        <Card variant="muted" className="flex flex-col items-center justify-center p-8">
           <p className="text-sm font-semibold uppercase tracking-wider text-[var(--dl-warning)] mb-2">
             Conta Riot encontrada
           </p>
@@ -239,17 +240,17 @@ export default function RiotProfilePage() {
           >
             Conectar conta Riot para liberar estatísticas completas
           </button>
-        </DuolootCard>
+        </Card>
       )}
 
       {/* Debug Block */}
       {import.meta.env.DEV && (
-        <DuolootCard className="mt-8 p-4 bg-black/50 border-[var(--dl-keyword)]/30">
+        <Card className="mt-8 p-4 bg-black/50 border-[var(--dl-keyword)]/30">
           <h3 className="text-sm font-bold text-[var(--dl-keyword)] mb-2">🔧 Debug Mode (Apenas DEV)</h3>
           <pre className="text-[10px] text-[var(--dl-string)] overflow-x-auto whitespace-pre-wrap max-h-96">
             {JSON.stringify(profile, null, 2)}
           </pre>
-        </DuolootCard>
+        </Card>
       )}
     </div>
   );

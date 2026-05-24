@@ -1,5 +1,5 @@
 import React from 'react';
-import { DuolootCard } from '@/components/duoloot';
+import { Card } from '@/components/atoms';;
 
 export interface MapStatMock {
   mapName: string;
@@ -17,7 +17,7 @@ export function MapStatsGrid({ stats }: { stats?: MapStatMock[] }) {
       <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--dl-muted-light)]">Top Mapas</h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {stats.map((stat, idx) => (
-          <DuolootCard key={idx} variant="elevated" className="p-4 flex flex-col items-center text-center">
+          <Card key={idx} variant="elevated" className="p-4 flex flex-col items-center text-center">
             <span className="text-sm font-bold text-white mb-2">{stat.mapName}</span>
             <span className={`text-lg font-bold mb-1 ${stat.winRate >= 50 ? 'text-[var(--dl-string)]' : 'text-[var(--dl-warning)]'}`}>
               {stat.winRate}%
@@ -25,7 +25,7 @@ export function MapStatsGrid({ stats }: { stats?: MapStatMock[] }) {
             <span className="text-[10px] font-semibold text-[var(--dl-muted-light)] uppercase tracking-wider">
               {stat.matchesPlayed} Partidas
             </span>
-          </DuolootCard>
+          </Card>
         ))}
       </div>
     </div>

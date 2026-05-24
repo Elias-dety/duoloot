@@ -1,6 +1,6 @@
 import React from 'react';
-import { DuolootButton } from '@/components/duoloot';
-import { MissingImagePlaceholder } from '@/components/duoloot/MissingImagePlaceholder';
+import { Button } from '@/components/atoms';;
+import { MissingImagePlaceholder } from '@/components/atoms';;
 
 export function FreeTournamentsSection() {
   return (
@@ -35,8 +35,8 @@ export function FreeTournamentsSection() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-            <DuolootButton variant="primary">Participar Grátis</DuolootButton>
-            <DuolootButton variant="secondary">Ver Regras</DuolootButton>
+            <Button variant="primary">Participar Grátis</Button>
+            <Button variant="secondary">Ver Regras</Button>
           </div>
         </div>
 

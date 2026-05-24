@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, FileX2 } from 'lucide-react';
-import { DuolootCard, DuolootButton } from '@/components/duoloot';
+import { Card, Button } from '@/components/atoms';;
 
 interface EmptyStateProps {
   title?: string;
@@ -22,7 +22,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   const isError = icon === 'error';
   
   return (
-    <DuolootCard 
+    <Card 
       variant={isError ? 'danger' : 'muted'} 
       className={`flex min-h-[300px] w-full flex-col items-center justify-center p-8 text-center ${className}`}
     >
@@ -43,13 +43,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </p>
 
       {actionLabel && onAction && (
-        <DuolootButton 
+        <Button 
           variant={isError ? 'secondary' : 'primary'} 
           onClick={onAction}
         >
           {actionLabel}
-        </DuolootButton>
+        </Button>
       )}
-    </DuolootCard>
+    </Card>
   );
 };

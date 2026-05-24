@@ -3,7 +3,7 @@ import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/features/auth/useAuth';
 import { ROUTES } from '../constants/routes';
-import { DuolootButton, DuolootLogo } from '@/components/duoloot';
+import { Button, Logo } from '@/components/atoms';;
 
 export default function PublicLayout() {
   const { isAuthenticated, profile, user, signOut } = useAuth();
@@ -42,7 +42,7 @@ export default function PublicLayout() {
 
       <header className="dl-header">
         <Link to={ROUTES.HOME} className="dl-brand">
-          <DuolootLogo subtitle="Red Vault" />
+          <Logo subtitle="Red Vault" />
         </Link>
 
         <nav className="dl-nav">
@@ -59,22 +59,22 @@ export default function PublicLayout() {
               <span className="rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
                 {getProfileName()}
               </span>
-              <DuolootButton size="sm" onClick={() => navigate(ROUTES.DASHBOARD)}>
+              <Button size="sm" onClick={() => navigate(ROUTES.DASHBOARD)}>
                 Dashboard
-              </DuolootButton>
-              <DuolootButton variant="secondary" size="sm" onClick={handleLogout}>
+              </Button>
+              <Button variant="secondary" size="sm" onClick={handleLogout}>
                 Sair
-              </DuolootButton>
+              </Button>
             </>
           ) : (
             <>
-              <DuolootButton variant="ghost" size="sm" onClick={() => navigate(ROUTES.LOGIN)}>Login</DuolootButton>
-              <DuolootButton size="sm" onClick={() => navigate(ROUTES.REGISTER)}>Get Duoloot</DuolootButton>
+              <Button variant="ghost" size="sm" onClick={() => navigate(ROUTES.LOGIN)}>Login</Button>
+              <Button size="sm" onClick={() => navigate(ROUTES.REGISTER)}>Get Duoloot</Button>
             </>
           )}
         </div>
 
-        <DuolootButton
+        <Button
           type="button"
           variant="secondary"
           size="sm"
@@ -84,7 +84,7 @@ export default function PublicLayout() {
           aria-controls="public-mobile-nav"
         >
           {isMobileMenuOpen ? 'Fechar' : 'Menu'}
-        </DuolootButton>
+        </Button>
       </header>
 
       {isMobileMenuOpen && (
@@ -110,18 +110,18 @@ export default function PublicLayout() {
                 Perfil ativo: {getProfileName()}
               </div>
               <div className="dl-mobile-nav-grid">
-                <DuolootButton fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.DASHBOARD); }}>
+                <Button fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.DASHBOARD); }}>
                   Dashboard
-                </DuolootButton>
-                <DuolootButton variant="secondary" size="sm" fullWidth onClick={handleLogout}>
+                </Button>
+                <Button variant="secondary" size="sm" fullWidth onClick={handleLogout}>
                   Sair
-                </DuolootButton>
+                </Button>
               </div>
             </div>
           ) : (
             <div className="dl-mobile-nav-grid">
-              <DuolootButton variant="secondary" fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.LOGIN); }}>Login</DuolootButton>
-              <DuolootButton fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.REGISTER); }}>Get Duoloot</DuolootButton>
+              <Button variant="secondary" fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.LOGIN); }}>Login</Button>
+              <Button fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.REGISTER); }}>Get Duoloot</Button>
             </div>
           )}
         </div>
@@ -136,7 +136,7 @@ export default function PublicLayout() {
           <div className="grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
             <div>
               <Link to={ROUTES.HOME} className="dl-brand">
-                <DuolootLogo compact subtitle="Red Vault" />
+                <Logo compact subtitle="Red Vault" />
               </Link>
               <p className="mt-4 max-w-sm text-sm leading-7 text-[var(--dl-muted-light)]">
                 Plataforma para encontrar duos, melhorar lobbies e destravar recompensas do Vault com uma identidade única.

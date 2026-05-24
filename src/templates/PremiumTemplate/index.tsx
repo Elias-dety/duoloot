@@ -5,7 +5,7 @@ import { PremiumComparison } from '@/features/premium/components/PremiumComparis
 import { PremiumHero } from '@/features/premium/components/PremiumHero';
 import { PremiumPlanCard } from '@/features/premium/components/PremiumPlanCard';
 import { PremiumPlan } from '@/schemas/premiumPlan.schema';
-import { DuolootButton, DuolootCard } from '@/components/duoloot';
+import { Button, Card } from '@/components/atoms';;
 
 export interface PremiumTemplateProps {
   plans: PremiumPlan[];
@@ -29,29 +29,29 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
 
   if (isError) {
     return (
-      <DuolootCard variant="danger" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+      <Card variant="danger" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
         <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-white">Erro ao carregar planos</p>
         <p className="mb-6 text-sm text-[var(--dl-muted-light)]">Não foi possível carregar os planos premium neste momento.</p>
-      </DuolootCard>
+      </Card>
     );
   }
 
   if (isPremiumLocked) {
     return (
-      <DuolootCard variant="muted" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+      <Card variant="muted" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
         <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-white">Pagamento em breve</p>
         <p className="mb-6 text-sm text-[var(--dl-muted-light)]">O acesso premium está temporariamente indisponível enquanto finalizamos a ativação.</p>
-        <DuolootButton variant="secondary">Entender benefícios</DuolootButton>
-      </DuolootCard>
+        <Button variant="secondary">Entender benefícios</Button>
+      </Card>
     );
   }
 
   if (!plans.length || !freePlan || !premiumPlan) {
     return (
-      <DuolootCard variant="muted" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+      <Card variant="muted" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
         <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-[var(--dl-muted-light)]">Nenhum plano disponível</p>
         <p className="mb-6 text-sm text-[var(--dl-muted-light)]">Os planos ainda não foram configurados para exibição.</p>
-      </DuolootCard>
+      </Card>
     );
   }
 
@@ -66,13 +66,13 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
 
       <PremiumComparison freePlan={freePlan} premiumPlan={premiumPlan} />
 
-      <DuolootCard variant="accent" className="mt-6 p-8 text-center">
+      <Card variant="accent" className="mt-6 p-8 text-center">
         <h3 className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">Pronto para ativar o modo Elite?</h3>
         <p className="mx-auto mb-6 mt-3 max-w-2xl text-sm text-[var(--dl-muted-light)]">
           Entre na lista para desbloquear prioridade no lobby, bônus no Vault e vantagens premium.
         </p>
-        <DuolootButton className="mt-2 w-full sm:w-auto">Ativar Premium</DuolootButton>
-      </DuolootCard>
+        <Button className="mt-2 w-full sm:w-auto">Ativar Premium</Button>
+      </Card>
     </div>
   );
 };

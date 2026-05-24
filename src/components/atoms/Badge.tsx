@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from 'react';
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'success' | 'premium' | 'danger' | 'warning' | 'gold' | 'info' | 'muted' | 'error';
+  variant?: 'default' | 'success' | 'premium' | 'danger' | 'warning' | 'gold' | 'info' | 'muted' | 'error' | 'accent';
 }
 
 export const Badge: React.FC<BadgeProps> = ({ children, variant = 'default', className = '', ...props }) => {
@@ -22,6 +22,7 @@ export const Badge: React.FC<BadgeProps> = ({ children, variant = 'default', cla
     gold: accentStyles,
     info: mutedStyles,
     muted: mutedStyles,
+    accent: accentStyles,
   };
 
   return (

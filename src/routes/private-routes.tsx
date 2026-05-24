@@ -12,12 +12,12 @@ const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
 const RiotConnectPage = lazy(() => import('@/pages/RiotConnectPage'));
 const RiotCallbackPage = lazy(() => import('@/pages/RiotCallbackPage'));
 
-import { DuolootLoadingState } from '@/components/duoloot';
+import { LoadingState } from '@/components/molecules';;
 
 function LazyFallback() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <DuolootLoadingState message="Acessando vault..." />
+      <LoadingState message="Acessando vault..." />
     </div>
   );
 }

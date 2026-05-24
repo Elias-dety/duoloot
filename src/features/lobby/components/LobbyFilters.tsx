@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { DuolootButton } from '@/components/duoloot';
+import { Button } from '@/components/atoms';;
 import { ASSETS } from '@/constants/assets';
 
 export interface LobbyFilterState {
@@ -106,9 +106,9 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
 
       {hasActiveFilters ? (
         <div className="mt-2 flex border-t border-[var(--dl-border)]/40 pt-4">
-          <DuolootButton type="button" onClick={onClearFilters} variant="secondary" className="w-full sm:ml-auto sm:w-auto">
+          <Button type="button" onClick={onClearFilters} variant="secondary" className="w-full sm:ml-auto sm:w-auto">
             Limpar filtros
-          </DuolootButton>
+          </Button>
         </div>
       ) : null}
     </div>

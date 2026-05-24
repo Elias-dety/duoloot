@@ -1,5 +1,5 @@
 import React from 'react';
-import { DuolootButton } from '@/components/duoloot';
+import { Button } from '@/components/atoms';;
 
 const MOCK_LOBBIES = [
   {
@@ -103,7 +103,7 @@ export function LobbyPreviewSection() {
                 <span className="h-2 w-2 rounded-full bg-[var(--dl-string)] shadow-[0_0_6px_rgba(59,217,130,0.6)]"></span>
                 Online
               </div>
-              <DuolootButton size="sm" variant="secondary" className="px-6">Pedir Vaga</DuolootButton>
+              <Button size="sm" variant="secondary" className="px-6">Pedir Vaga</Button>
             </div>
           </div>
         ))}

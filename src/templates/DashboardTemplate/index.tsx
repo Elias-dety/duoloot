@@ -9,7 +9,8 @@ import { RecommendedLobbies } from '@/features/dashboard/components/RecommendedL
 import { RecommendedPlayersPanel } from '@/features/recommendations/components/RecommendedPlayersPanel';
 import { PendingInvitesPanel } from '@/features/invites/components/PendingInvitesPanel';
 import { MyConnectionsPanel } from '@/features/connections/components/MyConnectionsPanel';
-import { DuolootCard, DuolootSectionTitle, DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
+import { Card, SectionTitle } from '@/components/atoms';
+import { LoadingState, EmptyState } from '@/components/molecules';;
 import { RiotConnectPanel } from '@/features/riot/components/RiotConnectPanel';
 import { PlayerStatsOverview } from '@/features/riot/components/PlayerStatsOverview';
 import { MatchHistoryList } from '@/features/riot/components/MatchHistoryList';
@@ -32,12 +33,12 @@ export default function DashboardTemplate({
   isEmpty,
 }: DashboardTemplateProps) {
   if (isLoading) {
-    return <DuolootLoadingState message="Carregando dashboard..." />;
+    return <LoadingState message="Carregando dashboard..." />;
   }
 
   if (isError) {
     return (
-      <DuolootEmptyState 
+      <EmptyState 
         icon="error" 
         title="Erro ao carregar" 
         description="Ocorreu um problema ao buscar os dados do seu Dashboard."
@@ -49,7 +50,7 @@ export default function DashboardTemplate({
 
   if (isEmpty || !player || !summary) {
     return (
-      <DuolootEmptyState 
+      <EmptyState 
         title="Dashboard Vazio" 
         description="Nenhum dado encontrado para exibir no momento."
       />
@@ -58,13 +59,13 @@ export default function DashboardTemplate({
 
   return (
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
-      <DuolootCard variant="accent" className="mb-6 px-5 py-6 md:px-8 md:py-8">
-        <DuolootSectionTitle
+      <Card variant="accent" className="mb-6 px-5 py-6 md:px-8 md:py-8">
+        <SectionTitle
           eyebrow="Dashboard"
           title="Seu hub Red Vault."
           subtitle="Acompanhe performance, confiança, lobbies recomendados e progresso do Vault no mesmo painel."
         />
-      </DuolootCard>
+      </Card>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
         <div className="lg:col-span-1">

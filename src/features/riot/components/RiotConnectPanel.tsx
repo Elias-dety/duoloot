@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DuolootCard, DuolootButton } from '@/components/duoloot';
+import { Card, Button } from '@/components/atoms';;
 
 export function RiotConnectPanel() {
   const navigate = useNavigate();
 
   return (
-    <DuolootCard variant="elevated" className="max-w-md w-full mx-auto">
+    <Card variant="elevated" className="max-w-md w-full mx-auto">
       <div className="mb-6 text-center">
         <h3 className="text-xl font-bold uppercase tracking-wide text-white mb-2">Conectar Conta Riot</h3>
         <p className="text-sm text-[var(--dl-muted-light)]">
@@ -15,14 +15,14 @@ export function RiotConnectPanel() {
       </div>
 
       <div className="space-y-4">
-        <DuolootButton
+        <Button
           type="button"
           variant="primary"
           fullWidth
           onClick={() => navigate('/riot/connect')}
         >
           Conectar via Riot Sign-On
-        </DuolootButton>
+        </Button>
       </div>
 
       <div className="mt-4 text-center">
@@ -30,6 +30,6 @@ export function RiotConnectPanel() {
           Ao conectar, você autoriza o Duo Loot a ler suas estatísticas e partidas do VALORANT através da API oficial da Riot Games.
         </p>
       </div>
-    </DuolootCard>
+    </Card>
   );
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
-import { DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
+import { LoadingState, EmptyState } from '@/components/molecules';;
 
 export default function RiotCallbackPage() {
   const [searchParams] = useSearchParams();
@@ -58,7 +58,7 @@ export default function RiotCallbackPage() {
   if (status === 'error') {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
-        <DuolootEmptyState
+        <EmptyState
           icon="error"
           title="Falha na Conexão"
           description={errorMessage}
@@ -85,7 +85,7 @@ export default function RiotCallbackPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <DuolootLoadingState message="Vinculando sua conta Riot..." />
+      <LoadingState message="Vinculando sua conta Riot..." />
     </div>
   );
 }

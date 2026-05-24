@@ -15,12 +15,12 @@ const RegisterPage = lazy(() => import('@/pages/RegisterPage'));
 const VaultPage = lazy(() => import('@/pages/VaultPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
-import { DuolootLoadingState } from '@/components/duoloot';
+import { LoadingState } from '@/components/molecules';;
 
 function LazyFallback() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <DuolootLoadingState message="Inicializando módulo..." />
+      <LoadingState message="Inicializando módulo..." />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
-import { DuolootButton } from '@/components/duoloot';
-import { MissingImagePlaceholder } from '@/components/duoloot/MissingImagePlaceholder';
+import { Button } from '@/components/atoms';;
+import { MissingImagePlaceholder } from '@/components/atoms';;
 
 const MOCK_COACHES = [
   {
@@ -109,8 +109,8 @@ export function CoachesSection() {
 
             {/* Ações */}
             <div className="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-[var(--dl-border)]">
-              <DuolootButton variant="secondary" size="sm" className="w-full">Ver Perfil</DuolootButton>
-              <DuolootButton variant="primary" size="sm" className="w-full border-[var(--dl-function)] bg-[var(--dl-function)] shadow-[0_4px_14px_rgba(176,132,255,0.2)]">Agendar</DuolootButton>
+              <Button variant="secondary" size="sm" className="w-full">Ver Perfil</Button>
+              <Button variant="primary" size="sm" className="w-full border-[var(--dl-function)] bg-[var(--dl-function)] shadow-[0_4px_14px_rgba(176,132,255,0.2)]">Agendar</Button>
             </div>
           </div>
         ))}

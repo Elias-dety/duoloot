@@ -1,5 +1,5 @@
 import React from 'react';
-import { DuolootCard } from '@/components/duoloot';
+import { Card } from '@/components/atoms';;
 import { ProgressBar } from '@/components/atoms';
 
 // Mock types for now
@@ -17,16 +17,16 @@ export interface RiotPlayerStats {
 export function PlayerStatsOverview({ stats }: { stats?: RiotPlayerStats }) {
   if (!stats) {
     return (
-      <DuolootCard variant="muted" className="w-full flex items-center justify-center p-8 h-40">
+      <Card variant="muted" className="w-full flex items-center justify-center p-8 h-40">
         <p className="text-[var(--dl-muted-light)] text-sm font-semibold uppercase tracking-wider">
           Estatísticas não disponíveis. Sincronize sua conta Riot.
         </p>
-      </DuolootCard>
+      </Card>
     );
   }
 
   return (
-    <DuolootCard variant="default" className="w-full p-6">
+    <Card variant="default" className="w-full p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold uppercase tracking-wider text-white">Visão Geral de Performance</h3>
         <div className="px-3 py-1 rounded-full bg-white/[0.04] border border-[var(--dl-border)] text-xs font-bold text-[var(--dl-muted-light)] uppercase tracking-wider">
@@ -74,6 +74,6 @@ export function PlayerStatsOverview({ stats }: { stats?: RiotPlayerStats }) {
           <ProgressBar value={Math.min((stats.averageScore / 300) * 100, 100)} color="premium" size="sm" className="mt-1" />
         </div>
       </div>
-    </DuolootCard>
+    </Card>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DuolootBadge, DuolootButton } from '@/components/duoloot';
+import { Badge, Button } from '@/components/atoms';;
 
 export interface LobbyActionsBarProps {
   totalLobbies: number;
@@ -11,11 +11,11 @@ export const LobbyActionsBar: React.FC<LobbyActionsBarProps> = ({ totalLobbies, 
     <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-[var(--dl-border)] py-4 md:flex-row md:items-center">
       <h2 className="flex items-center gap-3 font-['Rajdhani'] text-2xl font-bold uppercase text-white">
         Lobbies disponíveis
-        <DuolootBadge>{String(totalLobbies)}</DuolootBadge>
+        <Badge>{String(totalLobbies)}</Badge>
       </h2>
-      <DuolootButton type="button" onClick={onCreateLobby} className="w-full md:w-auto">
+      <Button type="button" onClick={onCreateLobby} className="w-full md:w-auto">
         + Criar Lobby
-      </DuolootButton>
+      </Button>
     </div>
   );
 };

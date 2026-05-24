@@ -1,5 +1,5 @@
 import React from 'react';
-import { DuolootCard } from '@/components/duoloot';
+import { Card } from '@/components/atoms';;
 
 export interface AgentStatMock {
   agentName: string;
@@ -19,7 +19,7 @@ export function AgentStatsGrid({ stats }: { stats?: AgentStatMock[] }) {
       <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--dl-muted-light)]">Top Agentes</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {stats.map((stat, idx) => (
-          <DuolootCard key={idx} variant="elevated" className="flex items-center gap-4 p-4">
+          <Card key={idx} variant="elevated" className="flex items-center gap-4 p-4">
             <div className="w-10 h-10 rounded-lg bg-[var(--dl-surface-2)] border border-[var(--dl-border)] flex items-center justify-center shrink-0">
               <span className="text-[10px] font-bold text-[var(--dl-muted)]">{stat.agentName.substring(0,3).toUpperCase()}</span>
             </div>
@@ -36,7 +36,7 @@ export function AgentStatsGrid({ stats }: { stats?: AgentStatMock[] }) {
                 <span>{stat.kda.toFixed(2)} KDA</span>
               </div>
             </div>
-          </DuolootCard>
+          </Card>
         ))}
       </div>
     </div>

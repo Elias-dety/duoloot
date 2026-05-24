@@ -18,7 +18,8 @@ import { VaultSeasonHistory } from '@/features/vault/components/VaultSeasonHisto
 import { VaultStatsPanel } from '@/features/vault/components/VaultStatsPanel';
 import { VaultUserRankPanel } from '@/features/vault/components/VaultUserRankPanel';
 import { VaultWinnersPanel } from '@/features/vault/components/VaultWinnersPanel';
-import { DuolootBadge, DuolootButton, DuolootCard, DuolootImagePlaceholder, DuolootSectionTitle, DuolootLoadingState, DuolootEmptyState } from '@/components/duoloot';
+import { Badge, Button, Card, ImagePlaceholder, SectionTitle } from '@/components/atoms';
+import { LoadingState, EmptyState } from '@/components/molecules';;
 import { ASSETS } from '@/constants/assets';
 
 export interface VaultTemplateProps {
@@ -82,12 +83,12 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
   submittingTaskId,
 }) => {
   if (isLoading) {
-    return <DuolootLoadingState message="Sincronizando Vault..." />;
+    return <LoadingState message="Sincronizando Vault..." />;
   }
 
   if (errorMessage && !event && seasons.length === 0 && winners.length === 0) {
     return (
-      <DuolootEmptyState 
+      <EmptyState 
         icon="error"
         title={errorMessage}
         description="Falha ao carregar os dados do Vault."
@@ -100,21 +101,21 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
 
   return (
     <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
-      <DuolootCard variant="accent" className="space-y-5 px-5 py-6 md:px-8 md:py-8">
+      <Card variant="accent" className="space-y-5 px-5 py-6 md:px-8 md:py-8">
         <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-          <DuolootSectionTitle
+          <SectionTitle
             eyebrow="RED VAULT // LIVE EVENT"
             title="Complete missions. Unlock the Vault."
             subtitle={event?.description || 'Nenhum Vault ativo no momento. Assim que um novo evento abrir, você verá missões, ranking e progresso aqui.'}
           />
           <div className="flex flex-wrap gap-3">
-            <DuolootBadge variant="accent">{event ? 'Vault aberto' : 'Arquivo do Vault'}</DuolootBadge>
+            <Badge variant="accent">{event ? 'Vault aberto' : 'Arquivo do Vault'}</Badge>
             {showDevFinalizeButton && onFinalizeVaultEvent ? (
-              <DuolootButton variant="secondary" size="sm" onClick={onFinalizeVaultEvent} disabled={isFinalizing}>
+              <Button variant="secondary" size="sm" onClick={onFinalizeVaultEvent} disabled={isFinalizing}>
                 {isFinalizing ? 'Finalizando...' : 'DEV: finalizar Vault'}
-              </DuolootButton>
+              </Button>
             ) : null}
           </div>
             </div>
@@ -131,7 +132,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
               ))}
             </div>
           </div>
-          <DuolootImagePlaceholder
+          <ImagePlaceholder
             label="Imagem do Vault"
             src={event ? ASSETS.vault.openRewards : ASSETS.icons.vault}
             alt={event ? 'Cofre aberto com recompensas do Duo Loot' : 'Icone de cofre fechado do Duo Loot'}
@@ -140,24 +141,24 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
             loading="eager"
           />
         </div>
-      </DuolootCard>
+      </Card>
 
       {actionMessage ? (
-        <DuolootCard variant="muted" className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:justify-between">
+        <Card variant="muted" className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white">Atualização do Vault</p>
             <p className="text-sm text-[var(--dl-muted-light)]">{actionMessage}</p>
           </div>
-          <DuolootButton variant="secondary" size="sm" onClick={onDismissActionMessage}>
+          <Button variant="secondary" size="sm" onClick={onDismissActionMessage}>
             Fechar
-          </DuolootButton>
-        </DuolootCard>
+          </Button>
+        </Card>
       ) : null}
 
       {!event ? (
-        <DuolootCard variant="muted" className="mx-auto flex w-full flex-col items-center justify-center py-10 text-center">
+        <Card variant="muted" className="mx-auto flex w-full flex-col items-center justify-center py-10 text-center">
           <p className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Nenhuma operação de Vault ativa.</p>
-        </DuolootCard>
+        </Card>
       ) : null}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
@@ -202,12 +203,12 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
             <section id="vault-missions" className="space-y-4">
               <div className="flex flex-wrap items-center gap-3 border-b border-[var(--dl-border)] pb-4">
                 <h2 className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">Missões ativas</h2>
-                <DuolootBadge>{missions.length} missões</DuolootBadge>
+                <Badge>{missions.length} missões</Badge>
               </div>
               {missions.length === 0 ? (
-                <DuolootCard variant="muted" className="p-8 text-center">
+                <Card variant="muted" className="p-8 text-center">
                   <span className="text-[13px] text-[var(--dl-muted-light)]">Nenhuma missão disponível no momento.</span>
-                </DuolootCard>
+                </Card>
               ) : (
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {missions.map((mission) => (
@@ -231,7 +232,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
         <div className="space-y-6">
           {event ? <VaultStatsPanel event={event} participantCount={participantCount} /> : null}
 
-          <DuolootCard variant="muted" className="p-5">
+          <Card variant="muted" className="p-5">
             <h4 className="mb-3 font-['Rajdhani'] text-xl font-bold uppercase text-white">How it works</h4>
             <div className="mb-4 flex justify-center">
               <img src={ASSETS.vault.keyThumb} alt="Chave do Vault" loading="lazy" decoding="async" className="h-20 w-20 object-contain" />
@@ -242,7 +243,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
               <li>3. Suba no ranking e abra espaço para recompensas.</li>
               <li>4. O loot final acompanha sua performance no evento.</li>
             </ul>
-          </DuolootCard>
+          </Card>
 
           <VaultSeasonHistory seasons={seasons} isLoading={isHistoryLoading} error={historyError} />
         </div>
