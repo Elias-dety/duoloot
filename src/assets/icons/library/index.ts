@@ -82,4 +82,5 @@ export const duolootIcons = {
   wallet: walletIcon,
 } as const;
 
-type DuolootIconName = keyof typeof duolootIcons;
+export type DuolootIconName = keyof typeof duolootIcons;
+
