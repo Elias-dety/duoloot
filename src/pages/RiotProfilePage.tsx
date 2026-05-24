@@ -6,7 +6,7 @@ import { MatchHistoryList } from '@/features/riot/components/MatchHistoryList';
 import { AgentStatsGrid } from '@/features/riot/components/AgentStatsGrid';
 import { MapStatsGrid } from '@/features/riot/components/MapStatsGrid';
 import { Card } from '@/components/atoms';
-import { LoadingState, EmptyState } from '@/components/molecules';;
+import { LoadingState, EmptyState } from '@/components/molecules';
 import type { ValorantProfileLookupResult } from '@/types/valorant.types';
 
 export default function RiotProfilePage() {

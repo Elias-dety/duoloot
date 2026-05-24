@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, SectionTitle, Badge } from '@/components/atoms';;
+import { Card, Button, SectionTitle, Badge } from '@/components/atoms';
 import { getPendingVaultSubmissions, validateVaultSubmission } from '@/services/vault-admin.service';
 
 type VaultSubmission = {

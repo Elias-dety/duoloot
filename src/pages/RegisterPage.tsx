@@ -5,7 +5,7 @@ import { ROUTES } from '@/constants/routes';
 import { AuthForm, AuthFormSubmission } from '@/features/auth/components/AuthForm';
 import { useAuth } from '@/features/auth/useAuth';
 import { isSupabaseConfigured } from '@/lib/supabase';
-import { Button, Card } from '@/components/atoms';;
+import { Button, Card } from '@/components/atoms';
 
 export const RegisterPage: React.FC = () => {
   const { signUp, isAuthenticated, isLoading: authLoading } = useAuth();

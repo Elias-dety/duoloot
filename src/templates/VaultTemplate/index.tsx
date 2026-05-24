@@ -19,7 +19,7 @@ import { VaultStatsPanel } from '@/features/vault/components/VaultStatsPanel';
 import { VaultUserRankPanel } from '@/features/vault/components/VaultUserRankPanel';
 import { VaultWinnersPanel } from '@/features/vault/components/VaultWinnersPanel';
 import { Badge, Button, Card, ImagePlaceholder, SectionTitle } from '@/components/atoms';
-import { LoadingState, EmptyState } from '@/components/molecules';;
+import { LoadingState, EmptyState } from '@/components/molecules';
 import { ASSETS } from '@/constants/assets';
 
 export interface VaultTemplateProps {

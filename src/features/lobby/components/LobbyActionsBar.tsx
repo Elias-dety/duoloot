@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Button } from '@/components/atoms';;
+import { Badge, Button } from '@/components/atoms';
 
 export interface LobbyActionsBarProps {
   totalLobbies: number;

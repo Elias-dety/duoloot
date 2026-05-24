@@ -1,6 +1,6 @@
 import { Outlet, Link } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
-import { Badge, Button, Logo } from '@/components/atoms';;
+import { Badge, Button, Logo } from '@/components/atoms';
 
 export default function EventLayout() {
   return (

@@ -9,7 +9,7 @@ import { ProfileStatsGrid } from '@/features/profile/components/ProfileStatsGrid
 import { ProfileTrustPanel } from '@/features/profile/components/ProfileTrustPanel';
 import { ASSETS } from '@/constants/assets';
 
-import { LoadingState, EmptyState } from '@/components/molecules';;
+import { LoadingState, EmptyState } from '@/components/molecules';
 
 export interface ProfileTemplateProps {
   player: Player | null;

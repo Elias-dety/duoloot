@@ -12,7 +12,7 @@ const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
 const RiotConnectPage = lazy(() => import('@/pages/RiotConnectPage'));
 const RiotCallbackPage = lazy(() => import('@/pages/RiotCallbackPage'));
 
-import { LoadingState } from '@/components/molecules';;
+import { LoadingState } from '@/components/molecules';
 
 function LazyFallback() {
   return (

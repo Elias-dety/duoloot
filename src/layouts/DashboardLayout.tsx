@@ -4,7 +4,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import type { PlayerGameProfile } from '@/services/auth.service';
 import { ROUTES } from '../constants/routes';
-import { Button, Card, Logo } from '@/components/atoms';;
+import { Button, Card, Logo } from '@/components/atoms';
 
 export default function DashboardLayout() {
   const { profile, user, signOut } = useAuth();

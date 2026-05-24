@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '@/components/atoms';;
-import { MissingImagePlaceholder } from '@/components/atoms';;
+import { Button } from '@/components/atoms';
+import { MissingImagePlaceholder } from '@/components/atoms';
 
 const MOCK_COACHES = [
   {

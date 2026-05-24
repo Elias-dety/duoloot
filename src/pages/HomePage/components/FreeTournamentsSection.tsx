@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '@/components/atoms';;
-import { MissingImagePlaceholder } from '@/components/atoms';;
+import { Button } from '@/components/atoms';
+import { MissingImagePlaceholder } from '@/components/atoms';
 
 export function FreeTournamentsSection() {
   return (

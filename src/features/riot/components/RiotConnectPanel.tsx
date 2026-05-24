@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button } from '@/components/atoms';;
+import { Card, Button } from '@/components/atoms';
 
 export function RiotConnectPanel() {
   const navigate = useNavigate();

@@ -15,7 +15,7 @@ const RegisterPage = lazy(() => import('@/pages/RegisterPage'));
 const VaultPage = lazy(() => import('@/pages/VaultPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
-import { LoadingState } from '@/components/molecules';;
+import { LoadingState } from '@/components/molecules';
 
 function LazyFallback() {
   return (

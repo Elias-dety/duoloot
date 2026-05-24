@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
-import { LoadingState, EmptyState } from '@/components/molecules';;
+import { LoadingState, EmptyState } from '@/components/molecules';
 
 export default function RiotCallbackPage() {
   const [searchParams] = useSearchParams();

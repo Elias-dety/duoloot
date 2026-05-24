@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { OnboardingForm } from '@/features/onboarding/components/OnboardingForm';
 import type { OnboardingData } from '@/features/onboarding/onboarding.schema';
-import { Card, Frame, SectionTitle } from '@/components/atoms';;
+import { Card, Frame, SectionTitle } from '@/components/atoms';
 
 interface OnboardingTemplateProps {
   initialData?: Partial<OnboardingData> | null;

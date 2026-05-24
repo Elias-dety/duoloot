@@ -1,4 +1,3 @@
-import { redVaultIcons } from '@/assets/icons/red-vault';
 import { duolootIcons } from '@/assets/icons/library';
 import logoFull from '@/assets/images/logotipo-trasparente-duoloot.png';
 import horizontalFrame from '@/assets/images/moudura-orizontal-1.svg';
@@ -15,7 +14,7 @@ import trustScoreShield from '@/assets/images/icons/icon-trust-score-shield.webp
 
 export const ASSETS = {
   logo: {
-    mark: redVaultIcons.logoMark,
+    mark: duolootIcons.logoMark,
     full: logoFull,
     frame: horizontalFrame,
   },
@@ -43,7 +42,7 @@ export const ASSETS = {
     trustScore: trustScoreShield,
     trustScoreRating: trustScoreRating,
     mission: missionTarget,
-    ranking: redVaultIcons.ranking,
+    ranking: duolootIcons.ranking,
     squad: duolootIcons.users,
     vault: vaultClosed,
     vaultKey: vaultKey,

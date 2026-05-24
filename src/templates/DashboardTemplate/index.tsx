@@ -10,7 +10,7 @@ import { RecommendedPlayersPanel } from '@/features/recommendations/components/R
 import { PendingInvitesPanel } from '@/features/invites/components/PendingInvitesPanel';
 import { MyConnectionsPanel } from '@/features/connections/components/MyConnectionsPanel';
 import { Card, SectionTitle } from '@/components/atoms';
-import { LoadingState, EmptyState } from '@/components/molecules';;
+import { LoadingState, EmptyState } from '@/components/molecules';
 import { RiotConnectPanel } from '@/features/riot/components/RiotConnectPanel';
 import { PlayerStatsOverview } from '@/features/riot/components/PlayerStatsOverview';
 import { MatchHistoryList } from '@/features/riot/components/MatchHistoryList';

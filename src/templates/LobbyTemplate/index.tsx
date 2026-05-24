@@ -5,7 +5,7 @@ import { LobbyActionsBar } from '@/features/lobby/components/LobbyActionsBar';
 import { LobbyFilters } from '@/features/lobby/components/LobbyFilters';
 import { Lobby } from '@/schemas/lobby.schema';
 import { Button, Card, SectionTitle } from '@/components/atoms';
-import { EmptyState } from '@/components/molecules';;
+import { EmptyState } from '@/components/molecules';
 import { ASSETS } from '@/constants/assets';
 
 export interface LobbyTemplateProps {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@/components/atoms';;
+import { Card } from '@/components/atoms';
 import { ProgressBar } from '@/components/atoms';
 
 // Mock types for now

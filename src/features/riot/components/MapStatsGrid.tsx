@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@/components/atoms';;
+import { Card } from '@/components/atoms';
 
 export interface MapStatMock {
   mapName: string;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button } from '@/components/atoms';;
+import { Button } from '@/components/atoms';
 import { ASSETS } from '@/constants/assets';
 
 export interface LobbyFilterState {

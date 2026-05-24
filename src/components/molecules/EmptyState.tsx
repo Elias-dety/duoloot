@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, FileX2 } from 'lucide-react';
-import { Card, Button } from '@/components/atoms';;
+import { Card, Button } from '@/components/atoms';
 
 interface EmptyStateProps {
   title?: string;

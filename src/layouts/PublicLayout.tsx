@@ -3,7 +3,7 @@ import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/features/auth/useAuth';
 import { ROUTES } from '../constants/routes';
-import { Button, Logo } from '@/components/atoms';;
+import { Button, Logo } from '@/components/atoms';
 
 export default function PublicLayout() {
   const { isAuthenticated, profile, user, signOut } = useAuth();

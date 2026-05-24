@@ -5,7 +5,7 @@ import { PremiumComparison } from '@/features/premium/components/PremiumComparis
 import { PremiumHero } from '@/features/premium/components/PremiumHero';
 import { PremiumPlanCard } from '@/features/premium/components/PremiumPlanCard';
 import { PremiumPlan } from '@/schemas/premiumPlan.schema';
-import { Button, Card } from '@/components/atoms';;
+import { Button, Card } from '@/components/atoms';
 
 export interface PremiumTemplateProps {
   plans: PremiumPlan[];

@@ -28,7 +28,5 @@ supabase/.env.local
 # Testing
 playwright-report/
 test-results/
-t m p - * . p n g  
+tmp-*.png
 supabase/.temp/
- 
- 
