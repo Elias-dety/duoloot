@@ -6,7 +6,7 @@
 
 const isDev = import.meta.env.DEV;
 
-export const logger = {
+const logger = {
   /** Logs detalhados de desenvolvimento — silenciados em produção. */
   debug: (...args: unknown[]): void => {
     if (isDev) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
-export const NotFoundPage: React.FC = () => {
+const NotFoundPage: React.FC = () => {
   return (
     <div className="relative flex min-h-[calc(100vh-80px)] items-center justify-center overflow-hidden px-4 py-12">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgb(var(--dl-error-rgb)/0.15),transparent_40%),linear-gradient(180deg,rgba(255,255,255,0.02),transparent)]" />

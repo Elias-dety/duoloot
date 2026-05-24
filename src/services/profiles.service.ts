@@ -34,35 +34,6 @@ export async function getCurrentProfile(): Promise<PlayerProfile> {
   return data as PlayerProfile;
 }
 
-export async function getProfileById(playerId: string): Promise<PlayerProfile> {
-  if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
 
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', playerId)
-    .single();
 
-  if (error) throw new Error(handleServiceError(error, 'Perfil não encontrado.'));
-  return data as PlayerProfile;
-}
 
-export async function updateCurrentProfile(payload: Record<string, unknown>): Promise<PlayerProfile> {
-  if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
-
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-  if (userError || !user) throw new Error('Entre na sua conta para continuar.');
-
-  const { data, error } = await supabase
-    .from('profiles')
-    .update({ ...payload, updated_at: new Date().toISOString() })
-    .eq('id', user.id)
-    .select()
-    .single();
-
-  if (error) throw new Error(handleServiceError(error, 'Erro ao atualizar perfil.'));
-  return data as PlayerProfile;
-}

@@ -7,7 +7,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { Button, Card } from '@/components/atoms';
 
-export const RegisterPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const { signUp, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);

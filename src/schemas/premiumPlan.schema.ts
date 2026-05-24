@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
-export const PremiumFeatureSchema = z.object({
+const PremiumFeatureSchema = z.object({
   name: z.string(),
   included: z.union([z.boolean(), z.string()]),
   description: z.string().optional(),
 });
 
-export const PremiumPlanSchema = z.object({
+const PremiumPlanSchema = z.object({
   id: z.string().uuid(),
   tier: z.enum(['free', 'premium']),
   name: z.string(),
@@ -20,5 +20,5 @@ export const PremiumPlanSchema = z.object({
   features: z.array(PremiumFeatureSchema),
 });
 
-export type PremiumFeature = z.infer<typeof PremiumFeatureSchema>;
+
 export type PremiumPlan = z.infer<typeof PremiumPlanSchema>;

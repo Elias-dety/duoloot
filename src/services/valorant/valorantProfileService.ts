@@ -149,64 +149,7 @@ export async function lookupValorantProfile(
   }
 }
 
-/**
- * Sincroniza dados do perfil VALORANT (matchlist, stats) para o usuário
- * autenticado.
- *
- * Chama a Edge Function `riot-sync-stats` que faz a sincronização
- * real na Riot API de forma segura (server-side).
- * Requer que o usuário tenha vinculado sua conta Riot previamente.
- *
- * @param authToken - Token JWT do usuário autenticado
- * @throws {ValorantApiError} Erro tipado com código e mensagem.
- */
-export async function syncValorantProfile(
-  authToken: string,
-): Promise<{ message: string; matchesProcessed?: number; cached?: boolean }> {
-  if (!authToken) {
-    throw {
-      code: 'VALIDATION_ERROR',
-      message: 'Token de autenticação é obrigatório.',
-    } satisfies ValorantApiError;
-  }
 
-  try {
-    const response = await fetch(
-      `${EDGE_FUNCTION_BASE}/riot-sync-stats`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({}),
-      },
-    );
-
-    if (!response.ok) {
-      const body = await response.json().catch(() => ({}));
-      throw {
-        code: 'RIOT_API_ERROR',
-        message: body?.error || `Erro na sincronização (status ${response.status})`,
-        riotStatus: response.status,
-      } satisfies ValorantApiError;
-    }
-
-    return await response.json();
-  } catch (error) {
-    if (isValorantApiError(error)) {
-      throw error;
-    }
-
-    throw {
-      code: 'NETWORK_ERROR',
-      message:
-        error instanceof Error
-          ? `Falha de rede: ${error.message}`
-          : 'Não foi possível conectar ao servidor.',
-    } satisfies ValorantApiError;
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Type guards

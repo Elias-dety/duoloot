@@ -177,14 +177,6 @@ export async function getOpenLobbies(): Promise<Lobby[]> {
   });
 }
 
-export async function getLobbyById(lobbyId: string) {
-  if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
-
-  const { data, error } = await supabase.from('lobbies').select('*, lobby_members(*)').eq('id', lobbyId).single();
-
-  if (error) throw new Error(handleServiceError(error, 'Lobby não encontrado.'));
-  return data;
-}
 
 export async function createLobby(payload: Record<string, unknown>) {
   if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
@@ -231,23 +223,3 @@ export async function joinLobby(lobbyId: string) {
   return result;
 }
 
-export async function leaveLobby(lobbyId: string) {
-  if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
-
-  const { data, error } = await supabase.rpc('leave_lobby', {
-    p_lobby_id: lobbyId,
-  });
-
-  if (error) throw new Error(handleServiceError(error, 'Erro ao sair do lobby.'));
-
-  if (!Array.isArray(data) || data.length === 0) {
-    throw new Error('Resposta inválida do servidor ao sair do lobby.');
-  }
-
-  const result = data[0];
-  if (!result.success) {
-    throw new Error(result.message);
-  }
-
-  return result;
-}

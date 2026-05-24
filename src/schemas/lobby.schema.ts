@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { PlayerSchema } from './player.schema';
 
-export const LobbyOwnerSnapshotSchema = PlayerSchema.pick({
+const LobbyOwnerSnapshotSchema = PlayerSchema.pick({
   id: true,
   name: true,
   avatarUrl: true,
@@ -10,7 +10,7 @@ export const LobbyOwnerSnapshotSchema = PlayerSchema.pick({
   gameProfile: true,
 });
 
-export const LobbySchema = z.object({
+const LobbySchema = z.object({
   id: z.string().uuid(),
   owner: LobbyOwnerSnapshotSchema,
   slotsTotal: z.number().int().min(2),
@@ -25,5 +25,5 @@ export const LobbySchema = z.object({
   createdAt: z.string().datetime(),
 });
 
-export type LobbyOwnerSnapshot = z.infer<typeof LobbyOwnerSnapshotSchema>;
+
 export type Lobby = z.infer<typeof LobbySchema>;

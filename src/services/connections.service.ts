@@ -13,23 +13,7 @@ export interface PlayerConnection {
   unread_count: number;    // Quantidade de mensagens não lidas nesta conversa
 }
 
-/**
- * Busca todas as conexões ativas do usuário atual (Duos/Amigos).
- * Utiliza uma RPC (Remote Procedure Call) definida no Supabase para filtrar apenas as conexões válidas.
- */
-export const getMyConnections = async (): Promise<PlayerConnection[]> => {
-  // Chama a função SQL 'get_my_connections' via cliente Supabase
-  const { data, error } = await supabase.rpc('get_my_connections');
-  
-  // Trata erros de rede ou permissão (RLS)
-  if (error) {
-    console.error('Error fetching connections:', error);
-    throw error;
-  }
-  
-  // Retorna a lista de conexões ou um array vazio por segurança
-  return data || [];
-};
+
 
 /**
  * Busca todas as conexões ativas integrando a contagem de mensagens não lidas.

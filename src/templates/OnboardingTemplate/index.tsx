@@ -108,4 +108,3 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
   );
 };
 
-export default OnboardingTemplate;

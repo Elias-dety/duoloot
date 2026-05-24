@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/atoms';
 import { ASSETS } from '@/constants/assets';
 
-export interface LobbyFilterState {
+interface LobbyFilterState {
   search: string;
   game: string;
   rank: string;

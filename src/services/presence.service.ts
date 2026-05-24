@@ -2,7 +2,7 @@ import { RealtimeChannel } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export type PlayerStatus = 'online' | 'offline' | 'in-game';
-export type PresenceState = Record<string, Array<Record<string, unknown>>>;
+type PresenceState = Record<string, Array<Record<string, unknown>>>;
 
 type PresenceChangePayload = {
   key: string;

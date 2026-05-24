@@ -2,7 +2,7 @@
 import { lazy, Suspense } from 'react';
 import type { RouteObject } from 'react-router-dom';
 import DashboardLayout from '@/layouts/DashboardLayout';
-import ProtectedRoute from '@/features/auth/ProtectedRoute';
+import { ProtectedRoute } from '@/features/auth/ProtectedRoute';
 import { ROUTES } from '@/constants/routes';
 
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'));

@@ -6,7 +6,7 @@ import { ROUTES } from '@/constants/routes';
 import { getMyGameProfile, updateMyGameProfile } from '@/services/onboarding.service';
 import { OnboardingTemplate } from '@/templates/OnboardingTemplate';
 
-export const OnboardingPage: React.FC = () => {
+const OnboardingPage: React.FC = () => {
   const navigate = useNavigate();
   const { profile, refreshProfile } = useAuth();
   const [initialData, setInitialData] = useState<Partial<OnboardingData> | null>(null);

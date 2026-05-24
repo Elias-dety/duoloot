@@ -12,7 +12,7 @@ type LoginPageState = {
   };
 };
 
-export const LoginPage: React.FC = () => {
+const LoginPage: React.FC = () => {
   const { signIn, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
