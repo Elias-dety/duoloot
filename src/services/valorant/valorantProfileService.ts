@@ -22,7 +22,7 @@ import type {
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const EDGE_FUNCTION_BASE = `${SUPABASE_URL}/functions/v1`;
+export const EDGE_FUNCTION_BASE = `${SUPABASE_URL}/functions/v1`;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -48,7 +48,7 @@ function mapErrorCode(status: number): ValorantErrorCode {
  * Cria headers padrão para chamadas à Edge Function.
  * Usa a anon key do Supabase como Bearer token.
  */
-function createHeaders(): HeadersInit {
+export function createHeaders(): HeadersInit {
   return {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
@@ -58,7 +58,7 @@ function createHeaders(): HeadersInit {
 /**
  * Trata resposta de erro da Edge Function de forma padronizada.
  */
-async function handleErrorResponse(response: Response): Promise<ValorantApiError> {
+export async function handleErrorResponse(response: Response): Promise<ValorantApiError> {
   try {
     const body = await response.json();
     // Se a Edge Function retornou um erro estruturado, usa-o
@@ -106,7 +106,7 @@ async function handleErrorResponse(response: Response): Promise<ValorantApiError
 export async function lookupValorantProfile(
   params: ValorantProfileLookupParams,
 ): Promise<ValorantProfileLookupResult> {
-  const { gameName, tagLine, region = 'americas', platform = 'br' } = params;
+  const { gameName, tagLine } = params;
 
   // Validação local antes de chamar o servidor
   if (!gameName?.trim() || !tagLine?.trim()) {
@@ -116,37 +116,78 @@ export async function lookupValorantProfile(
     } satisfies ValorantApiError;
   }
 
-  try {
-    const response = await fetch(
-      `${EDGE_FUNCTION_BASE}/valorant-profile-lookup`,
-      {
-        method: 'POST',
-        headers: createHeaders(),
-        body: JSON.stringify({ gameName, tagLine, region, platform }),
-      },
-    );
+  // TODO: Chamadas reais da Riot devem passar pela Edge Function server-side do Supabase
+  // que é a única camada com acesso à RIOT_API_KEY. Não expor chaves no front-end.
+  
+  // Mocking network delay
+  await new Promise(r => setTimeout(r, 1000));
 
-    if (!response.ok) {
-      throw await handleErrorResponse(response);
-    }
-
-    const data: ValorantProfileLookupResult = await response.json();
-    return data;
-  } catch (error) {
-    // Se já é um ValorantApiError tipado, repassa
-    if (isValorantApiError(error)) {
-      throw error;
-    }
-
-    // Erro de rede (offline, DNS, CORS, etc.)
+  // If gameName is "Not Found", simulate a 404
+  if (gameName.toLowerCase() === 'not found') {
     throw {
-      code: 'NETWORK_ERROR',
-      message:
-        error instanceof Error
-          ? `Falha de rede: ${error.message}`
-          : 'Não foi possível conectar ao servidor.',
+      code: 'PLAYER_NOT_FOUND',
+      message: 'Jogador não encontrado.',
+      riotStatus: 404
     } satisfies ValorantApiError;
   }
+
+  // Mock standard data
+  return {
+    account: {
+      puuid: 'mock-puuid-1234',
+      gameName: gameName,
+      tagLine: tagLine,
+    },
+    region: 'americas',
+    platform: 'br',
+    matchIds: ['match-1', 'match-2'],
+    lastSyncAt: new Date().toISOString(),
+    cached: true,
+    stats: {
+      rank: 'Diamond 2',
+      matchesPlayed: 42,
+      wins: 24,
+      losses: 18,
+      winRate: 57.1,
+      averageKda: 1.45,
+      headshotRate: 22.5,
+      averageScore: 245,
+      agentStats: [
+        { agentName: 'Jett', agentRole: 'Duelist', matchesPlayed: 20, winRate: 60, kda: 1.5 },
+        { agentName: 'Omen', agentRole: 'Controller', matchesPlayed: 15, winRate: 53.3, kda: 1.2 },
+      ],
+      mapStats: [
+        { mapName: 'Ascent', matchesPlayed: 10, winRate: 70 },
+        { mapName: 'Bind', matchesPlayed: 8, winRate: 50 },
+      ]
+    },
+    matches: [
+      {
+        id: 'match-1',
+        map: 'Ascent',
+        agent: 'Jett',
+        agentImageUrl: '',
+        result: 'VICTORY',
+        score: '13-9',
+        kda: '24/12/5',
+        kdRatio: 2.0,
+        combatScore: 310,
+        date: new Date().toISOString()
+      },
+      {
+        id: 'match-2',
+        map: 'Bind',
+        agent: 'Omen',
+        agentImageUrl: '',
+        result: 'DEFEAT',
+        score: '11-13',
+        kda: '14/15/8',
+        kdRatio: 0.93,
+        combatScore: 195,
+        date: new Date(Date.now() - 86400000).toISOString()
+      }
+    ]
+  };
 }
 
 

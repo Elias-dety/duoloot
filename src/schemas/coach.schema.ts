@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const CoachSchema = z.object({
+export const CoachSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
   avatarUrl: z.string().url().optional(),

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PageState } from '@/components/molecules';
+import { PageState, EmptyState } from '@/components/molecules';
 import { PremiumComparison } from '@/features/premium/components/PremiumComparison';
 import { PremiumHero } from '@/features/premium/components/PremiumHero';
 import { PremiumPlanCard } from '@/features/premium/components/PremiumPlanCard';
@@ -12,6 +12,9 @@ export interface PremiumTemplateProps {
   isLoading?: boolean;
   isError?: boolean;
   isPremiumLocked?: boolean;
+  activePlanId?: string | null;
+  isProcessing?: boolean;
+  onSelectPlan?: (planId: string) => void;
 }
 
 export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
@@ -19,6 +22,9 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
   isLoading,
   isError,
   isPremiumLocked,
+  activePlanId,
+  isProcessing,
+  onSelectPlan,
 }) => {
   const freePlan = plans.find((plan) => plan.tier === 'free');
   const premiumPlan = plans.find((plan) => plan.tier === 'premium');
@@ -29,32 +35,39 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
 
   if (isError) {
     return (
-      <Card variant="danger" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
-        <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-white">Erro ao carregar planos</p>
-        <p className="mb-6 text-sm text-[var(--dl-muted-light)]">Não foi possível carregar os planos premium neste momento.</p>
-      </Card>
+      <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+        <EmptyState 
+          icon="error"
+          title="Erro ao carregar planos"
+          description="Não foi possível carregar os planos premium neste momento."
+        />
+      </div>
     );
   }
 
   if (isPremiumLocked) {
     return (
-      <Card variant="muted" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
-        <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-white">Pagamento em breve</p>
-        <p className="mb-6 text-sm text-[var(--dl-muted-light)]">O acesso premium está temporariamente indisponível enquanto finalizamos a ativação.</p>
-        {/* TODO: Integrar modal de explicação / pricing */}
-        <Button variant="secondary" disabled title="Em breve">
-          Entender benefícios
-        </Button>
-      </Card>
+      <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+        <EmptyState 
+          icon="empty"
+          title="Pagamento em breve"
+          description="O acesso premium está temporariamente indisponível enquanto finalizamos a ativação."
+          actionLabel="Entender benefícios"
+          onAction={() => {}}
+        />
+      </div>
     );
   }
 
   if (!plans.length || !freePlan || !premiumPlan) {
     return (
-      <Card variant="muted" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
-        <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-[var(--dl-muted-light)]">Nenhum plano disponível</p>
-        <p className="mb-6 text-sm text-[var(--dl-muted-light)]">Os planos ainda não foram configurados para exibição.</p>
-      </Card>
+      <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+        <EmptyState 
+          icon="empty"
+          title="Nenhum plano disponível"
+          description="Os planos ainda não foram configurados para exibição."
+        />
+      </div>
     );
   }
 
@@ -63,8 +76,19 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
       <PremiumHero />
 
       <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <PremiumPlanCard plan={freePlan} />
-        <PremiumPlanCard plan={premiumPlan} highlighted />
+        <PremiumPlanCard 
+          plan={freePlan} 
+          isActive={activePlanId === freePlan.id}
+          isProcessing={isProcessing}
+          onSelect={() => onSelectPlan?.(freePlan.id)}
+        />
+        <PremiumPlanCard 
+          plan={premiumPlan} 
+          highlighted 
+          isActive={activePlanId === premiumPlan.id}
+          isProcessing={isProcessing}
+          onSelect={() => onSelectPlan?.(premiumPlan.id)}
+        />
       </section>
 
       <PremiumComparison freePlan={freePlan} premiumPlan={premiumPlan} />
@@ -75,8 +99,12 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
           Entre na lista para desbloquear prioridade no lobby, bônus no Vault e vantagens premium.
         </p>
         {/* TODO: Integrar checkout de pagamentos (ex: Stripe) */}
-        <Button className="mt-2 w-full sm:w-auto" disabled title="Em breve">
-          Ativar Premium
+        <Button 
+          className="mt-2 w-full sm:w-auto" 
+          onClick={() => onSelectPlan?.(premiumPlan.id)}
+          disabled={activePlanId === premiumPlan.id || isProcessing}
+        >
+          {isProcessing ? 'Processando...' : activePlanId === premiumPlan.id ? 'Premium Ativo' : 'Ativar Premium'}
         </Button>
       </Card>
     </div>

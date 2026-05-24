@@ -11,7 +11,8 @@ export const mockLobbies: Lobby[] = availableUsers.map((user, index) => {
 
   return {
     id: `lobby-${user.id}`,
-    owner: player as any, // TypeScript compatibility if needed
+    owner: player as unknown as Lobby['owner'],
+
     slotsTotal,
     slotsFilled,
     mode: 'Competitivo',

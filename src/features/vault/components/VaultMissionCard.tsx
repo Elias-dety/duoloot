@@ -77,12 +77,16 @@ export const VaultMissionCard: React.FC<VaultMissionCardProps> = ({
               {isSubmitting ? 'Registrando...' : 'Registrar'}
               <ChevronRight className="h-3 w-3" />
             </Button>
-          ) : null}
-
-          {participantExists && isCompleted ? (
-            <span className="flex items-center gap-1 text-[11px] font-bold uppercase text-white">
-              <CheckCircle2 className="h-3 w-3" /> Concluída
-            </span>
+          ) : participantExists && isCompleted ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled
+              className="gap-1 opacity-60"
+            >
+              <CheckCircle2 className="h-3 w-3" />
+              Resgatado
+            </Button>
           ) : null}
         </div>
       </div>

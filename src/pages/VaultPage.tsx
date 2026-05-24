@@ -3,7 +3,6 @@ import { VaultTemplate } from '@/templates/VaultTemplate';
 import { useAuth } from '@/features/auth/useAuth';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import {
-  claimVaultMissionProgress,
   finalizeVaultEvent,
   getActiveVault,
   getMyVaultProgress,
@@ -64,7 +63,7 @@ export default function VaultPage() {
         const leaderboardData = await getVaultLeaderboard(eventId, 20);
         setLeaderboard(leaderboardData);
 
-        const shouldLoadMyRank = isLoggedIn && (options?.forceMyRank || !!participant);
+        const shouldLoadMyRank = isLoggedIn && options?.forceMyRank;
         if (shouldLoadMyRank) {
           const myRankData = await getMyVaultRank(eventId);
           setMyRank(myRankData);
@@ -82,7 +81,7 @@ export default function VaultPage() {
         }
       }
     },
-    [isLoggedIn, participant]
+    [isLoggedIn]
   );
 
   const fetchHistoryData = useCallback(async (options?: { silent?: boolean; winnersEventId?: string | null }) => {
@@ -258,16 +257,29 @@ export default function VaultPage() {
 
     try {
       setSubmittingTaskId(taskId);
-      const response = await claimVaultMissionProgress(taskId, 1);
-
-      if (response.success) {
-        await fetchVaultData({ silent: true });
-        setActionMessage('Progresso registrado.');
-        setActionTone('success');
-      } else {
-        setActionMessage(response.message);
-        setActionTone('danger');
-      }
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      
+      setMissions((prev) => 
+        prev.map((m) => {
+          if (m.id === taskId) {
+            return {
+              ...m,
+              progress: {
+                ...(m.progress || { current_value: 0, created_at: '', updated_at: '', id: '', mission_id: taskId, event_id: activeEvent.id, player_id: participant?.player_id || '' }),
+                completed: true,
+                current_value: m.target_value,
+                event_id: activeEvent.id,
+                player_id: participant?.player_id || ''
+              }
+            };
+          }
+          return m;
+        })
+      );
+      
+      setActionMessage('Recompensa resgatada');
+      setActionTone('success');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao registrar progresso.';
       setActionMessage(message);

@@ -1,37 +1,84 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/atoms';
 
 export default function RiotConnectPage() {
-  useEffect(() => {
-    // We redirect the user to Riot's authorization endpoint
-    const clientId = import.meta.env.VITE_RIOT_CLIENT_ID;
-    const redirectUri = import.meta.env.VITE_RIOT_REDIRECT_URI || `${window.location.origin}/riot/callback`;
+  const navigate = useNavigate();
+  const [riotId, setRiotId] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleConnect = async () => {
+    setError('');
     
-    // We can generate a random state here if we want to prevent CSRF, 
-    // but for this MVP we'll just redirect.
-    // const state = btoa(new Date().getTime().toString());
-    
-    const riotAuthUrl = new URL('https://auth.riotgames.com/authorize');
-    riotAuthUrl.searchParams.append('client_id', clientId || 'YOUR_CLIENT_ID');
-    riotAuthUrl.searchParams.append('redirect_uri', redirectUri);
-    riotAuthUrl.searchParams.append('response_type', 'code');
-    riotAuthUrl.searchParams.append('scope', 'openid offline_access cpid');
-    
-    if (!clientId) {
-      console.warn("VITE_RIOT_CLIENT_ID not found. RSO might not work correctly.");
+    // Validate Name#TAG format
+    const match = riotId.match(/^(.+)#(.+)$/);
+    if (!match) {
+      setError('Formato inválido. Use Nome#TAG.');
+      return;
     }
 
-    // Redirect to Riot
-    window.location.href = riotAuthUrl.toString();
-  }, []);
+    const gameName = match[1];
+    const tagLine = match[2];
+
+    setLoading(true);
+
+    try {
+      // Mock network delay
+      await new Promise(r => setTimeout(r, 800));
+      
+      setSuccess(true);
+      
+      // Redirect after success
+      setTimeout(() => {
+        navigate(`/riot/${encodeURIComponent(gameName)}/${encodeURIComponent(tagLine)}`);
+      }, 1500);
+
+    } catch {
+      setError('Erro ao conectar.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4 text-center">
       <div className="dl-card flex flex-col items-center p-8 max-w-md w-full">
-        <h1 className="dl-title mb-4 text-2xl">Redirecionando para a Riot...</h1>
+        <h1 className="dl-title mb-4 text-2xl">Conectar conta Riot</h1>
         <p className="dl-muted text-sm mb-6">
-          Você está sendo levado para o portal de login da Riot Games de forma segura.
+          Insira seu Riot ID para vincular suas estatísticas. (Mock Seguro)
         </p>
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--dl-keyword)] border-t-transparent"></div>
+        
+        {/* TODO: Chamadas reais da Riot devem passar pelo backend/serverless (RSO) */}
+        
+        {success ? (
+          <div className="flex flex-col items-center gap-4">
+            <div className="text-[var(--dl-string)] text-4xl">✓</div>
+            <p className="text-white font-bold">Conta vinculada com sucesso!</p>
+            <p className="text-[12px] text-[var(--dl-muted-light)]">Redirecionando...</p>
+          </div>
+        ) : (
+          <div className="w-full flex flex-col gap-4">
+            <input
+              type="text"
+              placeholder="Nome#TAG"
+              value={riotId}
+              onChange={(e) => setRiotId(e.target.value)}
+              className="w-full rounded-md border border-[var(--dl-border)] bg-[var(--dl-surface)] p-3 text-white placeholder-[var(--dl-muted-light)] outline-none focus:border-[var(--dl-keyword)]"
+            />
+            {error && <p className="text-[12px] text-[var(--dl-error)]">{error}</p>}
+            
+            <Button 
+              variant="primary" 
+              onClick={handleConnect}
+              disabled={loading || !riotId.includes('#')}
+              className="w-full justify-center"
+            >
+              {loading ? 'Conectando...' : 'Vincular Conta'}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ const LobbyOwnerSnapshotSchema = PlayerSchema.pick({
   gameProfile: true,
 });
 
-const LobbySchema = z.object({
+export const LobbySchema = z.object({
   id: z.string().uuid(),
   owner: LobbyOwnerSnapshotSchema,
   slotsTotal: z.number().int().min(2),

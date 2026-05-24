@@ -5,6 +5,7 @@ import { useAuth } from '@/features/auth/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { getMyGameProfile, updateMyGameProfile } from '@/services/onboarding.service';
 import { OnboardingTemplate } from '@/templates/OnboardingTemplate';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 const OnboardingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -82,13 +83,20 @@ const OnboardingPage: React.FC = () => {
   }
 
   return (
-    <OnboardingTemplate
-      initialData={initialData}
-      onSubmit={handleSubmit}
-      onSkip={handleSkip}
-      isLoading={saving}
-      error={error}
-    />
+    <>
+      {!isSupabaseConfigured && (
+        <div className="fixed top-0 z-50 w-full bg-[var(--dl-error)] px-4 py-2 text-center text-xs font-bold uppercase text-white shadow-md">
+          Aviso: Supabase não está configurado. O salvamento do perfil será simulado e os dados não serão persistidos no servidor.
+        </div>
+      )}
+      <OnboardingTemplate
+        initialData={initialData}
+        onSubmit={handleSubmit}
+        onSkip={handleSkip}
+        isLoading={saving}
+        error={error}
+      />
+    </>
   );
 };
 

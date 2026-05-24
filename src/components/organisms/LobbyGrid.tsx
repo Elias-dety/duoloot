@@ -8,13 +8,15 @@ export interface LobbyGridProps {
   isLoading?: boolean;
   onJoinLobby?: (id: string) => void;
   joiningLobbyId?: string | null;
+  invitedLobbyIds?: string[];
 }
 
 export const LobbyGrid: React.FC<LobbyGridProps> = ({ 
   items, 
   isLoading = false,
   onJoinLobby,
-  joiningLobbyId
+  joiningLobbyId,
+  invitedLobbyIds = []
 }) => {
   if (isLoading) {
     return (
@@ -45,6 +47,7 @@ export const LobbyGrid: React.FC<LobbyGridProps> = ({
           lobby={lobby} 
           onJoin={onJoinLobby} 
           isJoining={joiningLobbyId === lobby.id}
+          isInvited={invitedLobbyIds.includes(lobby.id)}
         />
       ))}
     </div>

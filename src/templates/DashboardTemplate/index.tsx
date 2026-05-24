@@ -10,6 +10,7 @@ import { RecommendedLobbies } from '@/features/dashboard/components/RecommendedL
 import { RecommendedPlayersPanel } from '@/features/recommendations/components/RecommendedPlayersPanel';
 import { PendingInvitesPanel } from '@/features/invites/components/PendingInvitesPanel';
 import { MyConnectionsPanel } from '@/features/connections/components/MyConnectionsPanel';
+import { QuickActionsPanel } from '@/features/dashboard/components/QuickActionsPanel';
 import { Card, SectionTitle } from '@/components/atoms';
 import { LoadingState, EmptyState } from '@/components/molecules';
 import { RiotConnectPanel } from '@/features/riot/components/RiotConnectPanel';
@@ -78,14 +79,14 @@ export default function DashboardTemplate({
           {valorantUser ? (
             <PlayerStatsOverview 
               stats={{
-                winRate: valorantUser.overviewStats.winRate,
-                kda: valorantUser.overviewStats.kdaRatio,
-                headshotRate: valorantUser.overviewStats.headshotPercent,
-                matchesPlayed: valorantUser.overviewStats.matchesPlayed,
-                wins: valorantUser.overviewStats.wins,
-                losses: valorantUser.overviewStats.losses,
-                averageScore: valorantUser.overviewStats.averageCombatScore,
-                currentRank: valorantUser.rank.label
+                winRate: valorantUser.overviewStats?.winRate || 0,
+                kda: valorantUser.overviewStats?.kdaRatio || 0,
+                headshotRate: valorantUser.overviewStats?.headshotPercent || 0,
+                matchesPlayed: valorantUser.overviewStats?.matchesPlayed || 0,
+                wins: valorantUser.overviewStats?.wins || 0,
+                losses: valorantUser.overviewStats?.losses || 0,
+                averageScore: valorantUser.overviewStats?.averageCombatScore || 0,
+                currentRank: valorantUser.rank?.label || 'Unranked'
               }} 
             />
           ) : (
@@ -107,7 +108,7 @@ export default function DashboardTemplate({
 
       <DashboardSummary player={player} summary={summary} />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <div className="lg:col-span-1 xl:col-span-1">
           <TrustScorePanel trustScore={player.trustScore} />
         </div>
@@ -116,6 +117,9 @@ export default function DashboardTemplate({
         </div>
         <div className="lg:col-span-1 xl:col-span-1">
           <DashboardVaultProgress />
+        </div>
+        <div className="lg:col-span-1 xl:col-span-1">
+          <QuickActionsPanel player={player} />
         </div>
         <div className="md:col-span-2 lg:col-span-3 xl:col-span-1">
           <RecommendedLobbies />
@@ -134,7 +138,7 @@ export default function DashboardTemplate({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
         <div className="lg:col-span-2 space-y-8">
           <MatchHistoryList 
-            matches={valorantUser ? valorantUser.recentMatches.map(m => ({
+            matches={valorantUser ? (valorantUser.recentMatches || []).map(m => ({
               id: m.matchId,
               result: m.result === 'win' ? 'VICTORY' : m.result === 'loss' ? 'DEFEAT' : 'DRAW',
               agent: m.agent,
@@ -150,7 +154,7 @@ export default function DashboardTemplate({
         </div>
         <div className="lg:col-span-1 space-y-8">
           <AgentStatsGrid 
-            stats={valorantUser ? valorantUser.agentStats.map(a => ({
+            stats={valorantUser ? (valorantUser.agentStats || []).map(a => ({
               agentName: a.agent,
               agentRole: a.role,
               winRate: a.winRate,
@@ -159,7 +163,7 @@ export default function DashboardTemplate({
             })) : []}
           />
           <MapStatsGrid 
-            stats={valorantUser ? valorantUser.mapStats.map(m => ({
+            stats={valorantUser ? (valorantUser.mapStats || []).map(m => ({
               mapName: m.map,
               winRate: m.winRate,
               matchesPlayed: m.matches

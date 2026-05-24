@@ -5,6 +5,9 @@ import { Check } from 'lucide-react';
 export interface PremiumPlanCardProps {
   plan: PremiumPlan;
   highlighted?: boolean;
+  isActive?: boolean;
+  isProcessing?: boolean;
+  onSelect?: () => void;
 }
 
 const formatPrice = (plan: PremiumPlan) => {
@@ -15,9 +18,9 @@ const formatPrice = (plan: PremiumPlan) => {
   return `R$ ${plan.price.toFixed(2).replace('.', ',')}/mês`;
 };
 
-export const PremiumPlanCard: React.FC<PremiumPlanCardProps> = ({ plan, highlighted = false }) => {
+export const PremiumPlanCard: React.FC<PremiumPlanCardProps> = ({ plan, highlighted = false, isActive = false, isProcessing = false, onSelect }) => {
   return (
-    <article className={`dl-panel flex h-full flex-col p-6 ${highlighted ? 'dl-card-purple' : ''}`}>
+    <article className={`dl-panel flex h-full flex-col p-6 ${highlighted ? 'dl-card-purple' : ''} ${isActive ? 'ring-2 ring-[var(--dl-string)]' : ''}`}>
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--dl-muted)]">{plan.tagline}</p>
@@ -44,8 +47,13 @@ export const PremiumPlanCard: React.FC<PremiumPlanCardProps> = ({ plan, highligh
         ))}
       </div>
 
-      <button type="button" className={`dl-btn mt-auto w-full ${highlighted ? 'dl-btn-purple' : ''}`}>
-        {plan.ctaLabel}
+      <button 
+        type="button" 
+        onClick={onSelect}
+        disabled={isActive || isProcessing}
+        className={`dl-btn mt-auto w-full ${highlighted ? 'dl-btn-purple' : ''}`}
+      >
+        {isProcessing ? 'Processando...' : isActive ? 'Plano Ativo' : plan.ctaLabel}
       </button>
     </article>
   );

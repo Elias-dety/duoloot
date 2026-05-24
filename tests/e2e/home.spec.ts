@@ -7,9 +7,9 @@ test.describe('Home Page E2E', () => {
   });
 
   test('deve carregar a Home sem erros e exibir título principal', async ({ page }) => {
-    // Instead of h1.dl-title with specific text, look for a heading or the scanner
-    await expect(page.getByRole('heading', { level: 2 })).toBeVisible();
-    await expect(page.locator('#scanner')).toBeVisible();
+    // Busca o H1 principal e o input de busca
+    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible();
+    await expect(page.locator('input[placeholder*="Riot ID"]')).toBeVisible();
   });
 
   test('deve exibir CTA principal e navegar para Vault', async ({ page }) => {
@@ -30,14 +30,33 @@ test.describe('Home Page E2E', () => {
     await page.route('**/rest/v1/vault_winners*', async route => {
       await route.fulfill({ json: [] });
     });
+    await page.route('**/rest/v1/rpc/get_vault_leaderboard*', async route => {
+      await route.fulfill({ json: [] });
+    });
+    await page.route('**/rest/v1/rpc/get_my_vault_rank*', async route => {
+      await route.fulfill({ json: [] });
+    });
+    await page.route('**/rest/v1/rpc/get_vault_winners*', async route => {
+      await route.fulfill({ json: [] });
+    });
+    await page.route('**/rest/v1/rpc/get_vault_seasons*', async route => {
+      await route.fulfill({ json: [] });
+    });
 
-    const vaultLink = page.locator('a[href="/cofre"]').first();
+    const isMobile = page.viewportSize()?.width && page.viewportSize()!.width < 768;
+    if (isMobile) {
+      const menuBtn = page.getByRole('button', { name: /Menu|Fechar/i });
+      if (await menuBtn.isVisible()) {
+        await menuBtn.click();
+      }
+    }
+
+    const vaultLink = page.locator('a[href="/cofre"]').filter({ visible: true }).first();
     await expect(vaultLink).toBeVisible();
-    
     await vaultLink.click();
     
     await expect(page).toHaveURL(/\/cofre/);
-    await expect(page.getByRole('heading', { level: 2 })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2 }).first()).toBeVisible();
   });
 
   test('responsividade horizontal (Mobile)', async ({ page, isMobile }) => {
@@ -47,8 +66,8 @@ test.describe('Home Page E2E', () => {
     const box = await body.boundingBox();
     expect(box?.width).toBeGreaterThan(0);
     
-    const scannerPanel = page.locator('#scanner');
-    await expect(scannerPanel).toBeVisible();
+    const searchInput = page.locator('input[placeholder*="Riot ID"]');
+    await expect(searchInput).toBeVisible();
   });
 
 });

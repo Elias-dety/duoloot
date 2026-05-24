@@ -17,6 +17,7 @@ export interface LobbyTemplateProps {
   isCreating?: boolean;
   joiningLobbyId?: string | null;
   errorMessage?: string | null;
+  invitedLobbyIds?: string[];
 }
 
 const readMetadataString = (metadata: Record<string, unknown> | undefined, key: string) =>
@@ -34,6 +35,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   isCreating,
   joiningLobbyId,
   errorMessage,
+  invitedLobbyIds,
 }) => {
   const [filters, setFilters] = React.useState({
     search: '',
@@ -150,7 +152,13 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
             onAction={handleClearFilters}
           />
         ) : (
-          <LobbyGrid items={filteredLobbies} isLoading={isLoading} onJoinLobby={onJoinLobby} joiningLobbyId={joiningLobbyId} />
+          <LobbyGrid 
+            items={filteredLobbies} 
+            isLoading={isLoading} 
+            onJoinLobby={onJoinLobby} 
+            joiningLobbyId={joiningLobbyId} 
+            invitedLobbyIds={invitedLobbyIds}
+          />
         )}
       </section>
     </div>

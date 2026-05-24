@@ -6,7 +6,7 @@ const PremiumFeatureSchema = z.object({
   description: z.string().optional(),
 });
 
-const PremiumPlanSchema = z.object({
+export const PremiumPlanSchema = z.object({
   id: z.string().uuid(),
   tier: z.enum(['free', 'premium']),
   name: z.string(),

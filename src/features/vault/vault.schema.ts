@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const VaultEventSchema = z.object({
+export const VaultEventSchema = z.object({
   id: z.string().uuid(),
   title: z.string(),
   description: z.string().nullable().optional(),
@@ -22,7 +22,7 @@ const VaultEventSchema = z.object({
 
 export type VaultEvent = z.infer<typeof VaultEventSchema>;
 
-const VaultMissionSchema = z.object({
+export const VaultMissionSchema = z.object({
   id: z.string().uuid(),
   event_id: z.string().uuid(),
   title: z.string(),
@@ -38,7 +38,7 @@ const VaultMissionSchema = z.object({
 
 export type VaultMission = z.infer<typeof VaultMissionSchema>;
 
-const VaultParticipantSchema = z.object({
+export const VaultParticipantSchema = z.object({
   id: z.string().uuid(),
   event_id: z.string().uuid(),
   player_id: z.string().uuid(),
@@ -50,7 +50,7 @@ const VaultParticipantSchema = z.object({
 
 export type VaultParticipant = z.infer<typeof VaultParticipantSchema>;
 
-const VaultMissionProgressSchema = z.object({
+export const VaultMissionProgressSchema = z.object({
   id: z.string().uuid(),
   mission_id: z.string().uuid(),
   event_id: z.string().uuid(),

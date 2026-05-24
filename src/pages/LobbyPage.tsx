@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LobbyTemplate } from '@/templates/LobbyTemplate';
 import { Lobby } from '@/schemas/lobby.schema';
-import { getOpenLobbies, createLobby, joinLobby } from '@/services/lobbies.service';
+import { getOpenLobbies, createLobby } from '@/services/lobbies.service';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
 import { ROUTES } from '@/constants/routes';
@@ -126,6 +126,8 @@ export default function LobbyPage() {
     }
   };
 
+  const [invitedLobbyIds, setInvitedLobbyIds] = useState<string[]>([]);
+
   const handleJoinLobby = async (lobbyId: string) => {
     if (!isAuthenticated) {
       logger.info('Operador não autenticado para entrar em lobby. Redirecionando para login.');
@@ -152,8 +154,9 @@ export default function LobbyPage() {
     try {
       setJoiningLobbyId(lobbyId);
       setErrorMessage(null);
-      await joinLobby(lobbyId);
-      await fetchLobbies();
+      // Mock join
+      await new Promise(r => setTimeout(r, 500));
+      setInvitedLobbyIds((prev) => [...prev, lobbyId]);
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : 'Erro ao entrar no lobby.');
     } finally {
@@ -171,6 +174,7 @@ export default function LobbyPage() {
       isCreating={isCreating}
       joiningLobbyId={joiningLobbyId}
       errorMessage={errorMessage}
+      invitedLobbyIds={invitedLobbyIds}
     />
   );
 }

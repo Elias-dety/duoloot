@@ -42,6 +42,22 @@ test.describe('Vault Page E2E', () => {
       await route.fulfill({ json: isSingle ? obj : [obj] });
     });
 
+    await page.route('**/rest/v1/rpc/get_vault_leaderboard*', async route => {
+      await route.fulfill({ json: [] });
+    });
+
+    await page.route('**/rest/v1/rpc/get_my_vault_rank*', async route => {
+      await route.fulfill({ json: [] });
+    });
+
+    await page.route('**/rest/v1/rpc/get_vault_winners*', async route => {
+      await route.fulfill({ json: [] });
+    });
+
+    await page.route('**/rest/v1/rpc/get_vault_seasons*', async route => {
+      await route.fulfill({ json: [] });
+    });
+
     await page.goto('/vault');
   });
 
