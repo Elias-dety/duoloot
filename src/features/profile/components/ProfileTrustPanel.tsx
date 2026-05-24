@@ -12,7 +12,7 @@ export const ProfileTrustPanel: React.FC<ProfileTrustPanelProps> = ({ player }) 
   const isHighTrust = player.trustScore >= 80;
   const isMediumTrust = player.trustScore >= 50 && player.trustScore < 80;
   const color = isHighTrust ? 'success' : isMediumTrust ? 'warning' : 'error';
-  const textColor = isHighTrust ? 'text-[var(--dl-tactical-green)]' : isMediumTrust ? 'text-[var(--dl-tactical-yellow)]' : 'text-[var(--dl-tactical-red)]';
+  const textColor = isHighTrust ? 'text-[var(--dl-success)]' : isMediumTrust ? 'text-[var(--dl-keyword)]' : 'text-[var(--dl-error)]';
 
   return (
     <article className="dl-panel flex h-full flex-col p-6">
@@ -26,7 +26,7 @@ export const ProfileTrustPanel: React.FC<ProfileTrustPanelProps> = ({ player }) 
 
       <div className="mb-6">
         <ProgressBar value={player.trustScore} color={color} size="lg" className="mb-2" />
-        <p className="text-[13px] text-[var(--dl-tactical-muted)]">
+        <p className="text-[13px] text-[var(--dl-muted)]">
           {isHighTrust
             ? 'Jogador altamente confiável e bem avaliado.'
             : isMediumTrust
@@ -36,23 +36,23 @@ export const ProfileTrustPanel: React.FC<ProfileTrustPanelProps> = ({ player }) 
       </div>
 
       <div className="mt-auto grid grid-cols-2 gap-4">
-        <div className="flex items-center gap-3 border border-[rgba(34,197,94,0.3)] bg-[rgba(34,197,94,0.05)] p-3 [clip-path:var(--dl-cut-button)]">
-          <div className="flex h-8 w-8 items-center justify-center bg-[rgba(34,197,94,0.1)] [clip-path:var(--dl-cut-button)]">
-            <ThumbsUp className="h-4 w-4 text-[var(--dl-tactical-green)]" />
+        <div className="flex items-center gap-3 border border-[rgba(var(--dl-success-rgb),0.3)] bg-[rgba(var(--dl-success-rgb),0.05)] p-3 rounded-[1rem]">
+          <div className="flex h-8 w-8 items-center justify-center bg-[rgba(var(--dl-success-rgb),0.1)] rounded-[1rem]">
+            <ThumbsUp className="h-4 w-4 text-[var(--dl-success)]" />
           </div>
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Elogios</p>
-            <p className="font-['Rajdhani'] text-xl font-bold text-[var(--dl-tactical-green)]">{player.stats.commendations}</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--dl-muted)]">Elogios</p>
+            <p className="font-['Rajdhani'] text-xl font-bold text-[var(--dl-success)]">{player.stats.commendations}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 border border-[rgba(239,68,68,0.3)] bg-[rgba(239,68,68,0.05)] p-3 [clip-path:var(--dl-cut-button)]">
-          <div className="flex h-8 w-8 items-center justify-center bg-[rgba(239,68,68,0.1)] [clip-path:var(--dl-cut-button)]">
-            <AlertTriangle className="h-4 w-4 text-[var(--dl-tactical-red)]" />
+        <div className="flex items-center gap-3 border border-[rgba(var(--dl-error-rgb),0.3)] bg-[rgba(var(--dl-error-rgb),0.05)] p-3 rounded-[1rem]">
+          <div className="flex h-8 w-8 items-center justify-center bg-[rgba(var(--dl-error-rgb),0.1)] rounded-[1rem]">
+            <AlertTriangle className="h-4 w-4 text-[var(--dl-error)]" />
           </div>
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Abandonos</p>
-            <p className="font-['Rajdhani'] text-xl font-bold text-[var(--dl-tactical-red)]">{player.stats.abandons}</p>
+            <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--dl-muted)]">Abandonos</p>
+            <p className="font-['Rajdhani'] text-xl font-bold text-[var(--dl-error)]">{player.stats.abandons}</p>
           </div>
         </div>
       </div>

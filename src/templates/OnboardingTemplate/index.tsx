@@ -65,33 +65,38 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
           </div>
 
           <div className="lg:sticky lg:top-8 lg:col-span-5 xl:col-span-4">
-            <DuolootCard variant="elevated" className="space-y-5 p-6">
-              <div className="flex items-center justify-between border-b border-[var(--dl-border)] pb-4">
+            <DuolootCard variant="elevated" className="space-y-6 p-6 overflow-hidden relative">
+              {/* Glow decorativo */}
+              <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-[var(--dl-error)]/10 blur-[40px]" />
+
+              <div className="flex items-center justify-between border-b border-[var(--dl-border)] pb-5 relative z-10">
                 <div>
-                  <span className="block text-[10px] uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
-                    Preview
+                  <span className="block text-[10px] uppercase tracking-[0.2em] text-[var(--dl-muted-light)] mb-1">
+                    Preview do Perfil
                   </span>
-                  <h3 className="font-['Rajdhani'] text-xl font-bold uppercase text-white">
+                  <h3 className="font-['Rajdhani'] text-2xl font-bold uppercase tracking-wide text-white">
                     {previewData.nickname || 'PLAYER_X'}
                   </h3>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-[1rem] border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] font-['Rajdhani'] text-sm font-bold uppercase text-white">
+                <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] shadow-[0_0_15px_rgba(var(--dl-keyword-rgb),0.15)] font-['Rajdhani'] text-base font-bold uppercase text-white">
                   {previewData.region?.toUpperCase() || 'BR'}
                 </div>
               </div>
 
-              <div className="space-y-3 text-sm">
+              <div className="space-y-3 text-sm relative z-10">
                 {[
-                  ['Jogo', previewData.mainGame === 'league-of-legends' ? 'LOL' : previewData.mainGame === 'teamfight-tactics' ? 'TFT' : previewData.mainGame || 'VALORANT'],
-                  ['Rank', previewData.currentRank || 'UNRANKED'],
-                  ['Função', previewData.mainRole || 'FLEX'],
-                  ['Estilo', previewData.playStyle || 'TÁTICO'],
-                  ['Período', previewData.availability || 'VARIÁVEL'],
-                  ['Microfone', previewData.microphone ? 'Ativo' : 'Inativo'],
-                ].map(([label, value]) => (
-                  <div key={label} className="flex items-center justify-between rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.03] px-4 py-3">
-                    <span className="text-[var(--dl-muted-light)]">{label}</span>
-                    <span className="font-semibold uppercase text-white">{value}</span>
+                  { label: 'Jogo', value: previewData.mainGame === 'league-of-legends' ? 'LOL' : previewData.mainGame === 'teamfight-tactics' ? 'TFT' : previewData.mainGame || 'VALORANT', colorClass: 'text-[var(--dl-function)] border-[var(--dl-function)]/30 bg-[var(--dl-function)]/5' },
+                  { label: 'Rank', value: previewData.currentRank || 'UNRANKED', colorClass: 'text-[var(--dl-keyword)] border-[var(--dl-keyword)]/30 bg-[var(--dl-keyword)]/5' },
+                  { label: 'Função', value: previewData.mainRole || 'FLEX', colorClass: 'text-[var(--dl-string)] border-[var(--dl-string)]/30 bg-[var(--dl-string)]/5' },
+                  { label: 'Estilo', value: previewData.playStyle || 'TÁTICO', colorClass: 'text-white border-[var(--dl-border)] bg-white/[0.03]' },
+                  { label: 'Período', value: previewData.availability || 'VARIÁVEL', colorClass: 'text-[var(--dl-muted-light)] border-[var(--dl-border)] bg-white/[0.03]' },
+                  { label: 'Microfone', value: previewData.microphone ? 'ATIVO' : 'INATIVO', colorClass: previewData.microphone ? 'text-[var(--dl-warning)] border-[var(--dl-warning)]/30 bg-[var(--dl-warning)]/5' : 'text-[var(--dl-error)] border-[var(--dl-error)]/30 bg-[var(--dl-error)]/5' },
+                ].map(({ label, value, colorClass }) => (
+                  <div key={label} className="flex items-center justify-between rounded-[0.75rem] border border-[var(--dl-border)] bg-white/[0.02] px-4 py-3">
+                    <span className="text-[var(--dl-muted-light)] font-medium">{label}</span>
+                    <span className={`rounded px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider border ${colorClass}`}>
+                      {value}
+                    </span>
                   </div>
                 ))}
               </div>

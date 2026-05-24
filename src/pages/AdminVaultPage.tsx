@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Badge, Button, Card } from '@/components/atoms';
-import { SectionTitle } from '@/components/atoms/SectionTitle';
+import { DuolootCard, DuolootButton, DuolootSectionTitle, DuolootBadge } from '@/components/duoloot';
 import { getPendingVaultSubmissions, validateVaultSubmission } from '@/services/vault-admin.service';
 
 type VaultSubmission = {
@@ -62,8 +61,8 @@ export default function AdminVaultPage() {
 
   if (loading && submissions.length === 0) {
     return (
-      <div className="container mx-auto p-8">
-        <SectionTitle title="Validação do Cofre" subtitle="Painel Administrativo" />
+      <div className="container mx-auto p-8 border-t-4 border-[var(--dl-error)] bg-[var(--dl-error-rgb)]/5 min-h-screen">
+        <DuolootSectionTitle title="Validação do Cofre" subtitle="Painel Administrativo" />
         <div className="mt-12 flex justify-center">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-brand-primary border-t-transparent" />
         </div>
@@ -72,16 +71,16 @@ export default function AdminVaultPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-6xl p-8">
+    <div className="container mx-auto max-w-6xl p-8 border-t-4 border-[var(--dl-error)] bg-black min-h-screen">
       <div className="mb-8 flex items-end justify-between">
-        <SectionTitle
-          title="Validação do Cofre"
+        <DuolootSectionTitle
+          title="Validação do Cofre (ADMIN)"
           subtitle="Painel técnico temporário para validação manual de missões."
-          accent="info"
+          eyebrow="DANGER ZONE"
         />
-        <Button variant="secondary" size="sm" onClick={fetchSubmissions} disabled={loading}>
+        <DuolootButton variant="secondary" size="sm" onClick={fetchSubmissions} disabled={loading}>
           Atualizar Lista
-        </Button>
+        </DuolootButton>
       </div>
 
       {error && (
@@ -92,21 +91,27 @@ export default function AdminVaultPage() {
 
       <div className="grid gap-6">
         {submissions.length === 0 ? (
-          <Card className="flex flex-col items-center justify-center bg-white/5 p-12 text-center border-white/10">
-            <p className="italic text-content-secondary">Nenhuma submissão pendente encontrada.</p>
-          </Card>
+          <DuolootCard variant="muted" className="flex flex-col items-center justify-center p-12 text-center border-[var(--dl-error)]/20">
+            <p className="italic text-[var(--dl-muted-light)]">Nenhuma submissão pendente encontrada.</p>
+          </DuolootCard>
         ) : (
           submissions.map((submission) => (
-            <Card key={submission.id} className="bg-white/5 p-6 transition-colors border-white/10 hover:border-white/20">
+            <DuolootCard key={submission.id} variant="accent" className="p-6 transition-colors border-[var(--dl-error)]/30 hover:border-[var(--dl-error)]/60">
               <div className="flex flex-col gap-6 md:flex-row">
                 <div className="flex min-w-[240px] items-start gap-4">
-                  <Avatar src={submission.player?.avatar_url || undefined} fallback={submission.player?.nickname?.charAt(0) || 'U'} />
+                  {submission.player?.avatar_url ? (
+                    <img src={submission.player.avatar_url} alt="Avatar" className="w-12 h-12 rounded-full border border-[var(--dl-border)]" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-white border border-[var(--dl-border)]">
+                      {submission.player?.nickname?.charAt(0) || 'U'}
+                    </div>
+                  )}
                   <div className="flex flex-col">
-                    <span className="text-lg font-bold leading-tight text-white">{submission.player?.nickname}</span>
-                    <span className="text-xs text-content-secondary">{submission.player?.name}</span>
+                    <span className="text-lg font-bold leading-tight text-[var(--dl-error)]">{submission.player?.nickname}</span>
+                    <span className="text-xs text-[var(--dl-muted-light)]">{submission.player?.name}</span>
                     <div className="mt-2 flex items-center gap-2">
-                      <Badge variant="default">Score: {submission.player?.trust_score || 0}</Badge>
-                      <span className="text-[10px] uppercase tracking-widest text-content-tertiary">
+                      <DuolootBadge variant="accent">Score: {submission.player?.trust_score || 0}</DuolootBadge>
+                      <span className="text-[10px] uppercase tracking-widest text-[var(--dl-muted)]">
                         {new Date(submission.created_at).toLocaleDateString()} {new Date(submission.created_at).toLocaleTimeString()}
                       </span>
                     </div>
@@ -115,15 +120,15 @@ export default function AdminVaultPage() {
 
                 <div className="flex-1 space-y-3">
                   <div>
-                    <h4 className="mb-1 text-xs uppercase tracking-widest text-content-tertiary">Evento / Missão</h4>
+                    <h4 className="mb-1 text-xs uppercase tracking-widest text-[var(--dl-muted)]">Evento / Missão</h4>
                     <p className="font-medium text-white">{submission.event?.title}</p>
-                    <p className="text-sm font-bold text-brand-primary">{submission.task?.title}</p>
+                    <p className="text-sm font-bold text-[var(--dl-error)]">{submission.task?.title}</p>
                   </div>
 
                   <div>
-                    <h4 className="mb-1 text-xs uppercase tracking-widest text-content-tertiary">Dados Enviados (Payload)</h4>
-                    <div className="overflow-x-auto rounded border border-white/5 bg-black/40 p-3">
-                      <pre className="whitespace-pre-wrap text-[11px] font-mono text-content-secondary">
+                    <h4 className="mb-1 text-xs uppercase tracking-widest text-[var(--dl-muted)]">Dados Enviados (Payload)</h4>
+                    <div className="overflow-x-auto rounded border border-[var(--dl-border)] bg-black/40 p-3">
+                      <pre className="whitespace-pre-wrap text-[11px] font-mono text-[var(--dl-muted-light)]">
                         {JSON.stringify(submission.payload, null, 2)}
                       </pre>
                     </div>
@@ -131,27 +136,27 @@ export default function AdminVaultPage() {
                 </div>
 
                 <div className="flex min-w-[140px] flex-row justify-center gap-3 md:flex-col">
-                  <Button
-                    variant="success"
-                    fullWidth
+                  <DuolootButton
+                    variant="primary"
                     size="sm"
+                    className="!bg-[var(--dl-success)]"
                     onClick={() => handleValidate(submission.id, true)}
                     disabled={!!processingId}
                   >
                     {processingId === submission.id ? 'Aprovando...' : 'Aprovar'}
-                  </Button>
-                  <Button
-                    variant="danger"
-                    fullWidth
+                  </DuolootButton>
+                  <DuolootButton
+                    variant="primary"
                     size="sm"
+                    className="!bg-[var(--dl-error)]"
                     onClick={() => handleValidate(submission.id, false)}
                     disabled={!!processingId}
                   >
                     {processingId === submission.id ? 'Reprovando...' : 'Reprovar'}
-                  </Button>
+                  </DuolootButton>
                 </div>
               </div>
-            </Card>
+            </DuolootCard>
           ))
         )}
       </div>

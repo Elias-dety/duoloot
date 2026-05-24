@@ -291,17 +291,39 @@ export interface ValorantRank {
   label: string;
   rr: number;
   order: number;
+  currentTier: string;
+  currentTierNumber: number;
+  currentRankImage: string;
+  rankedRating: number;
+  peakTier: string;
+  peakTierNumber: number;
+  peakAct: string;
+  leaderboardRank: number | null;
+  numberOfWins: number;
+  actId: string;
+  seasonName: string;
 }
 
 export interface ValorantProfile {
+  id: string;
   userId: string;
+  puuid: string;
   riotId: string;
   gameName: string;
   tagLine: string;
-  region: RiotRegion;
+  region: string;
+  shard: ValorantPlatform;
   platform: ValorantPlatform;
+  country: string;
+  language: string;
   level: number;
+  accountLevel: number;
   avatarUrl: string;
+  playerCard: string;
+  playerTitle: string;
+  isFakeUser: boolean;
+  createdAt: string;
+  updatedAt: string;
   currentRank: ValorantRank;
   peakRank: ValorantRank;
 }
@@ -349,20 +371,28 @@ export interface ValorantRecentMatch {
   map: string;
   mapId: string;
   mapImageUrl: string;
+  gameMode: string;
   agent: string;
   agentId: string;
   agentRole: ValorantRole;
   agentImageUrl: string;
   queue: ValorantQueue;
+  queueId: ValorantQueue;
+  seasonId: string;
+  teamId: 'Blue' | 'Red';
   result: ValorantMatchResult;
   teamScore: number;
   enemyScore: number;
+  roundsWon: number;
+  roundsLost: number;
+  scoreText: string;
   kills: number;
   deaths: number;
   assists: number;
   kdRatio: number;
   averageCombatScore: number;
   averageDamagePerRound: number;
+  headshotPercent: number;
   headshots: number;
   bodyshots: number;
   legshots: number;
@@ -373,9 +403,13 @@ export interface ValorantRecentMatch {
   aces: number;
   clutches: number;
   rrChange: number;
-  rankBefore: ValorantRank;
-  rankAfter: ValorantRank;
+  rankBefore: string;
+  rankAfter: string;
+  rankBeforeDetails: ValorantRank;
+  rankAfterDetails: ValorantRank;
+  gameStart: string;
   startedAt: string;
+  gameLengthMillis: number;
   durationMillis: number;
   attack: ValorantRoundSideStats;
   defense: ValorantRoundSideStats;
@@ -399,6 +433,10 @@ export interface ValorantOverviewStats {
   kdaRatio: number;
   averageCombatScore: number;
   averageDamagePerRound: number;
+  score: number;
+  headshots: number;
+  bodyshots: number;
+  legshots: number;
   headshotPercent: number;
   bodyshotPercent: number;
   legshotPercent: number;
@@ -408,6 +446,7 @@ export interface ValorantOverviewStats {
   defuses: number;
   aces: number;
   clutches: number;
+  flawlessRounds: number;
   playtimeMillis: number;
   playtimeHours: number;
   mainAgent: string | null;
@@ -490,6 +529,44 @@ export interface ValorantTrendStats {
   rrTrend: number;
 }
 
+export type ValorantRecentPerformance = ValorantTrendStats;
+
+export interface ValorantRoundStats {
+  matchId: string;
+  roundNumber: number;
+  winningTeam: string;
+  roundResult: string;
+  playerTeam: string;
+  playerSurvived: boolean;
+  playerKills: number;
+  playerDamage: number;
+  playerHeadshots: number;
+  economySpent: number;
+  loadoutValue: number;
+  weapon: string;
+  armor: string;
+  plantedSpike: boolean;
+  defusedSpike: boolean;
+}
+
+export interface ValorantEconomyStats {
+  averageLoadoutValue: number;
+  averageSpentPerRound: number;
+  ecoRoundWins: number;
+  forceBuyWins: number;
+  pistolRoundWins: number;
+  fullBuyRoundWins: number;
+}
+
+export interface ValorantAbilityStats {
+  grenadeCasts: number;
+  ability1Casts: number;
+  ability2Casts: number;
+  ultimateCasts: number;
+  averageAbilitiesPerRound: number;
+  ultimateKills: number;
+}
+
 export interface ValorantInsight {
   type: ValorantInsightType;
   title: string;
@@ -507,14 +584,20 @@ export interface ValorantBadge {
 
 export interface ValorantMatchmakingProfile {
   userId: string;
-  primaryRole: ValorantRole;
+  preferredRole: ValorantRole;
   secondaryRole: ValorantRole;
+  primaryRole: ValorantRole;
   playStyle: 'aggressive' | 'balanced' | 'supportive' | 'lurker';
   communicationStyle: 'quiet' | 'balanced' | 'shotcaller';
+  preferredQueue: ValorantQueue;
   preferredMaps: string[];
+  avoidedMaps: string[];
   preferredAgents: string[];
+  lookingForDuo: boolean;
   aggressionScore: number;
   reliabilityScore: number;
+  teamplayScore: number;
+  clutchScore: number;
   consistencyScore: number;
   toxicityScore: number;
 }
@@ -524,13 +607,18 @@ export interface ValorantStatsBundle {
   agentStats: ValorantAgentStats[];
   mapStats: ValorantMapStats[];
   weaponStats: ValorantWeaponStats[];
+  recentPerformance: ValorantRecentPerformance;
   trendStats: ValorantTrendStats;
 }
 
 export interface ValorantMockUser extends ValorantStatsBundle {
   id: string;
   profile: ValorantProfile;
+  rank: ValorantRank;
   recentMatches: ValorantRecentMatch[];
+  roundStats: ValorantRoundStats[];
+  economyStats: ValorantEconomyStats;
+  abilityStats: ValorantAbilityStats;
   matchmakingProfile: ValorantMatchmakingProfile;
   insights: ValorantInsight[];
   badges: ValorantBadge[];

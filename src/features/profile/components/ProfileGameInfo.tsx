@@ -16,14 +16,14 @@ export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
   return (
     <article className="dl-panel h-full p-6">
       <h3 className="dl-hud-label mb-6">
-        <span className="text-[var(--dl-tactical-yellow)]">■</span> Perfil competitivo
+        <span className="text-[var(--dl-keyword)]">■</span> Perfil competitivo
       </h3>
 
       <div className="space-y-6">
-        <div className="border border-[var(--dl-tactical-line)] bg-white/[0.02] p-4 [clip-path:var(--dl-cut-button)]">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Rank atual</p>
+        <div className="border border-[var(--dl-border)] bg-white/[0.02] p-4 rounded-[1rem]">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[var(--dl-muted)]">Rank atual</p>
           <div className="mt-3 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center border border-[var(--dl-tactical-yellow)]/[0.3] bg-[var(--dl-tactical-yellow)]/[0.1] [clip-path:var(--dl-cut-button)]">
+            <div className="flex h-12 w-12 items-center justify-center border border-[var(--dl-keyword)]/[0.3] bg-[var(--dl-keyword)]/[0.1] rounded-[1rem]">
               <img src={ASSETS.icons.ranking} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
             </div>
             <span className="font-['Rajdhani'] text-3xl font-bold uppercase text-white">{rank}</span>
@@ -31,7 +31,7 @@ export const ProfileGameInfo: React.FC<ProfileGameInfoProps> = ({ player }) => {
         </div>
 
         <div>
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-tactical-muted)]">Funções principais</p>
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-[var(--dl-muted)]">Funções principais</p>
           <div className="flex flex-wrap gap-2">
             <span className="dl-chip dl-chip-yellow gap-1">
               <Crosshair className="h-3.5 w-3.5" />

@@ -49,6 +49,30 @@ export const valorantAgentsMock: ValorantAgentDefinition[] = [
     role: 'Controller',
     imageUrl: '/assets/valorant/agents/brimstone.png',
   },
+  {
+    agentId: 'reyna',
+    name: 'Reyna',
+    role: 'Duelist',
+    imageUrl: '/assets/valorant/agents/reyna.png',
+  },
+  {
+    agentId: 'phoenix',
+    name: 'Phoenix',
+    role: 'Duelist',
+    imageUrl: '/assets/valorant/agents/phoenix.png',
+  },
+  {
+    agentId: 'cypher',
+    name: 'Cypher',
+    role: 'Sentinel',
+    imageUrl: '/assets/valorant/agents/cypher.png',
+  },
+  {
+    agentId: 'viper',
+    name: 'Viper',
+    role: 'Controller',
+    imageUrl: '/assets/valorant/agents/viper.png',
+  },
 ];
 
 export function getValorantAgentMock(agentId: string): ValorantAgentDefinition {

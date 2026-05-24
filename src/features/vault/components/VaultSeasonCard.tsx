@@ -8,10 +8,10 @@ interface VaultSeasonCardProps {
 
 const seasonStatusTone: Record<VaultSeason['status'], string> = {
   draft: 'text-white/60',
-  scheduled: 'text-[var(--dl-tactical-blue)]',
-  active: 'text-[var(--dl-tactical-green)]',
-  ended: 'text-[var(--dl-tactical-yellow)]',
-  cancelled: 'text-[var(--dl-tactical-red)]',
+  scheduled: 'text-[var(--dl-function)]',
+  active: 'text-[var(--dl-success)]',
+  ended: 'text-[var(--dl-keyword)]',
+  cancelled: 'text-[var(--dl-error)]',
 };
 
 export const VaultSeasonCard: React.FC<VaultSeasonCardProps> = ({ season }) => {
@@ -31,41 +31,41 @@ export const VaultSeasonCard: React.FC<VaultSeasonCardProps> = ({ season }) => {
 
       <div className="mb-4 space-y-2">
         <div className="flex justify-between text-[11px] font-bold uppercase tracking-wide">
-          <span className="text-[var(--dl-tactical-muted)]">Progresso</span>
-          <span className="text-[var(--dl-tactical-yellow)]">{season.currentPoints} / {season.goalPoints}</span>
+          <span className="text-[var(--dl-muted)]">Progresso</span>
+          <span className="text-[var(--dl-keyword)]">{season.currentPoints} / {season.goalPoints}</span>
         </div>
         <div className="dl-progress h-2">
-          <div className="dl-progress-bar bg-[var(--dl-tactical-yellow)]" style={{ width: `${progress}%` }} />
+          <div className="dl-progress-bar bg-[var(--dl-keyword)]" style={{ width: `${progress}%` }} />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-4">
-        <div className="border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] p-3">
-          <div className="mb-1 flex items-center gap-1 text-[var(--dl-tactical-blue)]">
+        <div className="border border-[var(--dl-border)] bg-[var(--dl-surface)] p-3">
+          <div className="mb-1 flex items-center gap-1 text-[var(--dl-function)]">
             <Users className="h-3.5 w-3.5" />
             <span className="font-bold uppercase">Participantes</span>
           </div>
-          <p className="font-['Rajdhani'] text-xl font-bold text-[var(--dl-tactical-blue)]">{season.participantCount}</p>
+          <p className="font-['Rajdhani'] text-xl font-bold text-[var(--dl-function)]">{season.participantCount}</p>
         </div>
 
-        <div className="border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] p-3">
-          <div className="mb-1 flex items-center gap-1 text-[var(--dl-tactical-yellow)]">
+        <div className="border border-[var(--dl-border)] bg-[var(--dl-surface)] p-3">
+          <div className="mb-1 flex items-center gap-1 text-[var(--dl-keyword)]">
             <Trophy className="h-3.5 w-3.5" />
             <span className="font-bold uppercase">Premio</span>
           </div>
-          <p className="font-['Rajdhani'] text-xl font-bold text-[var(--dl-tactical-yellow)]">{season.prizeValue}</p>
+          <p className="font-['Rajdhani'] text-xl font-bold text-[var(--dl-keyword)]">{season.prizeValue}</p>
           <p className="text-[10px] uppercase text-white/60">{season.prizeLabel || 'Loot'}</p>
         </div>
 
-        <div className="border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] p-3">
-          <p className="mb-1 font-bold uppercase text-[var(--dl-tactical-muted)]">Top winner</p>
-          <p className="font-['Rajdhani'] text-lg font-bold uppercase text-[var(--dl-tactical-purple)]">
+        <div className="border border-[var(--dl-border)] bg-[var(--dl-surface)] p-3">
+          <p className="mb-1 font-bold uppercase text-[var(--dl-muted)]">Top winner</p>
+          <p className="font-['Rajdhani'] text-lg font-bold uppercase text-[var(--dl-string)]">
             {season.topWinnerNickname || 'Sem vencedor'}
           </p>
         </div>
 
-        <div className="border border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-metal)] p-3">
-          <div className="mb-1 flex items-center gap-1 text-[var(--dl-tactical-muted)]">
+        <div className="border border-[var(--dl-border)] bg-[var(--dl-surface)] p-3">
+          <div className="mb-1 flex items-center gap-1 text-[var(--dl-muted)]">
             <CalendarDays className="h-3.5 w-3.5" />
             <span className="font-bold uppercase">Periodo</span>
           </div>

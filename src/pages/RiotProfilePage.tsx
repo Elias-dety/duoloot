@@ -149,9 +149,9 @@ export default function RiotProfilePage() {
             <span
               className="dl-hud-label"
               style={{
-                color: 'var(--dl-keyword)',
-                borderColor: 'rgba(255,70,85,0.34)',
-                background: 'rgba(255,70,85,0.08)',
+                color: 'var(--dl-error)',
+                borderColor: 'rgba(var(--dl-error-rgb),0.34)',
+                background: 'rgba(var(--dl-error-rgb),0.08)',
               }}
             >
               RIOT PROFILE SCANNER // LIVE DATA
@@ -161,8 +161,8 @@ export default function RiotProfilePage() {
                 className="dl-hud-label"
                 style={{
                   color: 'var(--dl-warning)',
-                  borderColor: 'rgba(255,200,60,0.34)',
-                  background: 'rgba(255,200,60,0.08)',
+                  borderColor: 'rgba(var(--dl-warning-rgb),0.34)',
+                  background: 'rgba(var(--dl-warning-rgb),0.08)',
                 }}
               >
                 CACHED
@@ -171,7 +171,7 @@ export default function RiotProfilePage() {
           </div>
 
           <h1 className="dl-title mb-3 text-[clamp(28px,5vw,48px)] leading-[0.9]">
-            <span className="text-[var(--dl-keyword)] drop-shadow-[0_0_24px_rgba(255,70,85,0.3)]">
+            <span className="text-[var(--dl-error)] drop-shadow-[0_0_24px_rgba(var(--dl-error-rgb),0.3)]">
               {profile.account.gameName}
             </span>
             <span className="text-[var(--dl-muted-light)]">#{profile.account.tagLine}</span>

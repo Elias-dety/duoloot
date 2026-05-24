@@ -20,6 +20,7 @@ export function calculateOverviewStats(
   const bodyshots = sum(matches, (match) => match.bodyshots);
   const legshots = sum(matches, (match) => match.legshots);
   const playtimeMillis = sum(matches, (match) => match.durationMillis);
+  const score = sum(matches, (match) => Math.round(match.averageCombatScore * (match.roundsWon + match.roundsLost)));
 
   return {
     riotId: profile.riotId,
@@ -38,6 +39,10 @@ export function calculateOverviewStats(
     kdaRatio: round(deaths === 0 ? kills + assists : (kills + assists) / deaths, 2),
     averageCombatScore: average(sum(matches, (match) => match.averageCombatScore), matchesPlayed),
     averageDamagePerRound: average(sum(matches, (match) => match.averageDamagePerRound), matchesPlayed),
+    score,
+    headshots,
+    bodyshots,
+    legshots,
     headshotPercent: percent(headshots, totalShots(headshots, bodyshots, legshots)),
     bodyshotPercent: percent(bodyshots, totalShots(headshots, bodyshots, legshots)),
     legshotPercent: percent(legshots, totalShots(headshots, bodyshots, legshots)),
@@ -47,6 +52,7 @@ export function calculateOverviewStats(
     defuses: sum(matches, (match) => match.defuses),
     aces: sum(matches, (match) => match.aces),
     clutches: sum(matches, (match) => match.clutches),
+    flawlessRounds: Math.max(Math.round(wins * 1.8), wins > 0 ? 1 : 0),
     playtimeMillis,
     playtimeHours: round(playtimeMillis / 1000 / 60 / 60, 1),
     mainAgent: getMostFrequent(matches, (match) => match.agent),

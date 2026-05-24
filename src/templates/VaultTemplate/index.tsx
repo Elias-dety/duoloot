@@ -105,7 +105,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
           <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
           <DuolootSectionTitle
-            eyebrow="Vault"
+            eyebrow="RED VAULT // LIVE EVENT"
             title="Complete missions. Unlock the Vault."
             subtitle={event?.description || 'Nenhum Vault ativo no momento. Assim que um novo evento abrir, você verá missões, ranking e progresso aqui.'}
           />

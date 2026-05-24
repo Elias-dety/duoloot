@@ -16,32 +16,32 @@ export const OnboardingStepCard: React.FC<OnboardingStepCardProps> = ({
   children,
 }) => {
   return (
-    <div className="dl-panel p-6 border-[var(--dl-tactical-line)] bg-[var(--dl-tactical-panel)] relative overflow-hidden transition-all duration-300">
-      {/* Indicador visual de progresso neon */}
+    <div className="dl-panel p-6 border-[var(--dl-border)] bg-[var(--dl-surface)] relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--dl-error-rgb),0.1)]">
+      {/* Indicador visual de progresso */}
       <div 
-        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[var(--dl-tactical-green)] to-[var(--dl-tactical-yellow)] transition-all duration-500"
+        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[var(--dl-error)] to-[var(--dl-keyword)] transition-all duration-500"
         style={{ width: `${(stepNumber / totalSteps) * 100}%` }}
       />
 
       {/* Canto decorativo HUD */}
-      <div className="absolute top-2 right-2 flex items-center gap-1.5 px-2 py-0.5 border border-[var(--dl-tactical-green)]/20 bg-[var(--dl-tactical-green)]/5 rounded-sm">
-        <span className="w-1.5 h-1.5 rounded-full bg-[var(--dl-tactical-green)] animate-pulse" />
-        <span className="text-[10px] font-bold text-[var(--dl-tactical-green)] uppercase tracking-wider font-[Chakra_Petch]">
-          SECURE STAGE {stepNumber}/{totalSteps}
+      <div className="absolute top-4 right-4 flex items-center gap-2 px-2 py-1 border border-[var(--dl-border)] bg-white/[0.02] rounded text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
+        <span className="w-1.5 h-1.5 rounded-full bg-[var(--dl-error)] animate-pulse" />
+        <span>
+          STEP {stepNumber}/{totalSteps}
         </span>
       </div>
 
-      <div className="mb-6 space-y-1 mt-2">
-        <h3 className="text-lg font-bold text-[var(--dl-tactical-text)] uppercase font-[Chakra_Petch] tracking-widest flex items-center gap-2">
-          <span className="text-[var(--dl-tactical-yellow)] font-bold font-mono">0{stepNumber}.</span>
+      <div className="mb-8 space-y-1 mt-2">
+        <h3 className="font-['Rajdhani'] text-2xl font-bold uppercase tracking-wide text-white flex items-center gap-2">
+          <span className="text-[var(--dl-error)] text-xl">0{stepNumber}.</span>
           {title}
         </h3>
-        <p className="text-xs text-[var(--dl-tactical-muted)] tracking-wider">
+        <p className="text-sm text-[var(--dl-muted-light)]">
           {description}
         </p>
       </div>
 
-      <div className="space-y-4 font-[Chakra_Petch]">
+      <div className="space-y-6">
         {children}
       </div>
     </div>

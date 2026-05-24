@@ -70,27 +70,27 @@ export const ProfileTemplate: React.FC<ProfileTemplateProps> = ({
         />
         <div className="relative z-[2]">
           <div className="mb-4 flex flex-wrap items-center gap-3">
-            <span className="dl-hud-label" style={{ color: 'var(--dl-tactical-blue)', borderColor: 'rgba(70,183,255,0.34)', background: 'rgba(70,183,255,0.08)' }}>
-              PLAYER SCANNER // PUBLIC REPORT
+            <span className="dl-hud-label" style={{ color: 'var(--dl-error)', borderColor: 'rgba(var(--dl-error-rgb),0.34)', background: 'rgba(var(--dl-error-rgb),0.08)' }}>
+              PLAYER PROFILE // DUO LOOT REPORT
             </span>
           </div>
           <h1 className="dl-title mb-3 text-[clamp(28px,5vw,48px)] leading-[0.9]">
-            Relatório de{' '}
-            <span className="text-[var(--dl-tactical-blue)] drop-shadow-[0_0_24px_rgba(70,183,255,0.3)]">
-              Alvo
+            Perfil do{' '}
+            <span className="text-[var(--dl-error)] drop-shadow-[0_0_24px_rgba(var(--dl-error-rgb),0.3)]">
+              Jogador
             </span>
           </h1>
           <p className="dl-muted max-w-[600px] text-[14px] leading-[1.65]">
-            Dados públicos do jogador, histórico de comportamento e preferências de lobby.
+            Este relatório reúne reputação, estilo de jogo e sinais de compatibilidade para ajudar na escolha do duo.
           </p>
         </div>
       </div>
 
       <ProfileHeader player={player} />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <ProfileGameInfo player={player} />
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 items-start">
         <ProfileTrustPanel player={player} />
+        <ProfileGameInfo player={player} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

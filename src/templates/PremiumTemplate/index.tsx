@@ -67,9 +67,9 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
       <PremiumComparison freePlan={freePlan} premiumPlan={premiumPlan} />
 
       <DuolootCard variant="accent" className="mt-6 p-8 text-center">
-        <h3 className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">Pronto para subir de nível?</h3>
+        <h3 className="font-['Rajdhani'] text-2xl font-bold uppercase text-white">Pronto para ativar o modo Elite?</h3>
         <p className="mx-auto mb-6 mt-3 max-w-2xl text-sm text-[var(--dl-muted-light)]">
-          Entre na lista de espera para destravar ganho extra no Vault, prioridade no lobby e acesso premium aos coaches.
+          Entre na lista para desbloquear prioridade no lobby, bônus no Vault e vantagens premium.
         </p>
         <DuolootButton className="mt-2 w-full sm:w-auto">Ativar Premium</DuolootButton>
       </DuolootCard>

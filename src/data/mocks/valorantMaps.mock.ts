@@ -31,6 +31,16 @@ export const valorantMapsMock: ValorantMapDefinition[] = [
     name: 'Sunset',
     imageUrl: '/assets/valorant/maps/sunset.png',
   },
+  {
+    mapId: 'icebox',
+    name: 'Icebox',
+    imageUrl: '/assets/valorant/maps/icebox.png',
+  },
+  {
+    mapId: 'breeze',
+    name: 'Breeze',
+    imageUrl: '/assets/valorant/maps/breeze.png',
+  },
 ];
 
 export function getValorantMapMock(mapId: string): ValorantMapDefinition {

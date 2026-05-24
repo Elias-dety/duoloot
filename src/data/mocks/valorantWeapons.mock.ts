@@ -37,6 +37,24 @@ export const valorantWeaponsMock: ValorantWeaponDefinition[] = [
     category: 'Heavy',
     imageUrl: '/assets/valorant/weapons/odin.png',
   },
+  {
+    weaponId: 'ghost',
+    name: 'Ghost',
+    category: 'Sidearm',
+    imageUrl: '/assets/valorant/weapons/ghost.png',
+  },
+  {
+    weaponId: 'guardian',
+    name: 'Guardian',
+    category: 'Rifle',
+    imageUrl: '/assets/valorant/weapons/guardian.png',
+  },
+  {
+    weaponId: 'marshal',
+    name: 'Marshal',
+    category: 'Sniper',
+    imageUrl: '/assets/valorant/weapons/marshal.png',
+  },
 ];
 
 export function getValorantWeaponMock(weaponId: string): ValorantWeaponDefinition {

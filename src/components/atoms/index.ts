@@ -8,4 +8,7 @@ export * from './ProgressBar';
 export * from './StatValue';
 export * from './SkeletonBlock';
 export * from './Card';
-export * from '../duoloot';
+export * from './Logo';
+export * from './ImagePlaceholder';
+export * from './MissingImagePlaceholder';
+export * from './Frame';

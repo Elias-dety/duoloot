@@ -4,6 +4,7 @@ import type {
   ValorantQueue,
   ValorantRank,
   ValorantRecentMatch,
+  ValorantRoundStats,
   ValorantRoundSideStats,
 } from '@/types/valorant.types';
 import { getValorantAgentMock } from './valorantAgents.mock';
@@ -50,14 +51,47 @@ export const mockRanks = {
   immortal3: rank('Immortal', 3, 211, 24),
 } satisfies Record<string, ValorantRank>;
 
+const MOCK_ACT_ID = 'duoloot-act-2026-e01-a03';
+const MOCK_SEASON_NAME = 'Episode 10: Act 3';
+
 function rank(tier: ValorantRank['tier'], division: number, rr: number, order: number): ValorantRank {
+  const label = `${tier} ${division}`;
+
   return {
     tier,
     division,
-    label: `${tier} ${division}`,
+    label,
     rr,
     order,
+    currentTier: label,
+    currentTierNumber: order,
+    currentRankImage: `/assets/badges/elos/${rankImageSlug(tier, division)}.png`,
+    rankedRating: rr,
+    peakTier: label,
+    peakTierNumber: order,
+    peakAct: 'Episode 10: Act 2',
+    leaderboardRank: tier === 'Immortal' ? 1842 - order * 37 : null,
+    numberOfWins: 24 + order * 9,
+    actId: MOCK_ACT_ID,
+    seasonName: MOCK_SEASON_NAME,
   };
+}
+
+function rankImageSlug(tier: ValorantRank['tier'], division: number | null): string {
+  const tierMap: Record<ValorantRank['tier'], string> = {
+    Unranked: 'unranked',
+    Iron: 'ferro',
+    Bronze: 'bronze',
+    Silver: 'prata',
+    Gold: 'ouro',
+    Platinum: 'platina',
+    Diamond: 'diamante',
+    Ascendant: 'ascendente',
+    Immortal: 'imortal',
+    Radiant: 'radiante',
+  };
+
+  return division ? `${tierMap[tier]}-${division}` : tierMap[tier];
 }
 
 function deriveScore(result: ValorantMatchResult, index: number): { teamScore: number; enemyScore: number } {
@@ -126,6 +160,10 @@ function createMatch(preset: UserMatchPreset, seed: MatchSeed, index: number): V
   const map = getValorantMapMock(seed.mapId);
   const score = deriveScore(seed.result, index);
   const sideStats = deriveSideStats(score.teamScore, score.enemyScore, index);
+  const shots = seed.headshots + seed.bodyshots + seed.legshots;
+  const startedAt = new Date(Date.UTC(2026, 4, 22 - index, 21, (index * 7) % 60)).toISOString();
+  const durationMillis = (31 + (index % 12)) * 60 * 1000;
+  const queue = preset.queue ?? 'competitive';
 
   return {
     matchId: `${preset.userId}-match-${String(index + 1).padStart(2, '0')}`,
@@ -133,20 +171,28 @@ function createMatch(preset: UserMatchPreset, seed: MatchSeed, index: number): V
     map: map.name,
     mapId: map.mapId,
     mapImageUrl: map.imageUrl,
+    gameMode: 'Bomb',
     agent: agent.name,
     agentId: agent.agentId,
     agentRole: agent.role,
     agentImageUrl: agent.imageUrl,
-    queue: preset.queue ?? 'competitive',
+    queue,
+    queueId: queue,
+    seasonId: MOCK_ACT_ID,
+    teamId: index % 2 === 0 ? 'Blue' : 'Red',
     result: seed.result,
     teamScore: score.teamScore,
     enemyScore: score.enemyScore,
+    roundsWon: score.teamScore,
+    roundsLost: score.enemyScore,
+    scoreText: `${score.teamScore}-${score.enemyScore}`,
     kills: seed.kills,
     deaths: seed.deaths,
     assists: seed.assists,
     kdRatio: seed.deaths > 0 ? Number((seed.kills / seed.deaths).toFixed(2)) : seed.kills,
     averageCombatScore: seed.acs,
     averageDamagePerRound: seed.adr,
+    headshotPercent: shots > 0 ? Number(((seed.headshots / shots) * 100).toFixed(1)) : 0,
     headshots: seed.headshots,
     bodyshots: seed.bodyshots,
     legshots: seed.legshots,
@@ -157,10 +203,14 @@ function createMatch(preset: UserMatchPreset, seed: MatchSeed, index: number): V
     aces: seed.aces,
     clutches: seed.clutches,
     rrChange: seed.rrChange,
-    rankBefore: preset.rank,
-    rankAfter: preset.rank,
-    startedAt: new Date(Date.UTC(2026, 4, 22 - index, 21, (index * 7) % 60)).toISOString(),
-    durationMillis: (31 + (index % 12)) * 60 * 1000,
+    rankBefore: preset.rank.label,
+    rankAfter: preset.rank.label,
+    rankBeforeDetails: preset.rank,
+    rankAfterDetails: preset.rank,
+    gameStart: startedAt,
+    startedAt,
+    gameLengthMillis: durationMillis,
+    durationMillis,
     attack: sideStats.attack,
     defense: sideStats.defense,
     weapons: createWeaponStats(seed),
@@ -298,10 +348,50 @@ export const valorantMatchesMock: ValorantRecentMatch[] = userMatchPresets.flatM
   preset.seeds.map((matchSeed, index) => createMatch(preset, matchSeed, index)),
 );
 
+export const valorantRoundStatsMock: ValorantRoundStats[] = valorantMatchesMock.flatMap((match) =>
+  createRoundStats(match),
+);
+
 export function getRecentMatches(userId: string, limit?: number): ValorantRecentMatch[] {
   const matches = valorantMatchesMock
     .filter((match) => match.userId === userId)
     .sort((a, b) => Date.parse(b.startedAt) - Date.parse(a.startedAt));
 
   return typeof limit === 'number' ? matches.slice(0, limit) : matches;
+}
+
+export function getRoundStats(userId: string): ValorantRoundStats[] {
+  const matchIds = new Set(getRecentMatches(userId).map((match) => match.matchId));
+  return valorantRoundStatsMock.filter((round) => matchIds.has(round.matchId));
+}
+
+function createRoundStats(match: ValorantRecentMatch): ValorantRoundStats[] {
+  const roundsToMock = Math.min(6, match.roundsWon + match.roundsLost);
+  const primaryWeapon = match.weapons[0]?.weapon ?? 'Vandal';
+
+  return Array.from({ length: roundsToMock }, (_, index) => {
+    const roundNumber = index + 1;
+    const playerWonRound = roundNumber <= Math.ceil((match.roundsWon / (match.roundsWon + match.roundsLost)) * roundsToMock);
+    const playerKills = Math.max(Math.min(Math.round(match.kills / roundsToMock + (index % 3 === 0 ? 1 : 0)), 4), 0);
+    const playerHeadshots = Math.min(playerKills, index % 2 === 0 ? 1 : 0);
+    const loadoutValue = index === 0 ? 800 : 2900 + (index % 3) * 1000;
+
+    return {
+      matchId: match.matchId,
+      roundNumber,
+      winningTeam: playerWonRound ? match.teamId : match.teamId === 'Blue' ? 'Red' : 'Blue',
+      roundResult: index === 0 ? 'Pistol' : playerWonRound ? 'Eliminated' : 'Detonated',
+      playerTeam: match.teamId,
+      playerSurvived: playerWonRound && index % 3 !== 1,
+      playerKills,
+      playerDamage: Math.round(match.averageDamagePerRound * (0.75 + index * 0.08)),
+      playerHeadshots,
+      economySpent: index === 0 ? 800 : 2200 + (index % 4) * 700,
+      loadoutValue,
+      weapon: index === 0 ? 'Ghost' : primaryWeapon,
+      armor: index === 0 ? 'Light' : loadoutValue >= 3900 ? 'Heavy' : 'Light',
+      plantedSpike: match.plants > 0 && index % 4 === 0,
+      defusedSpike: match.defuses > 0 && index % 5 === 0,
+    };
+  });
 }

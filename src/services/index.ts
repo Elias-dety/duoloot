@@ -11,3 +11,4 @@ export * from './auth.service';
 export * from './presence.service';
 export * from './onboarding.service';
 export * from './vault-progress.service';
+export * from './global-races/globalRaceService';
