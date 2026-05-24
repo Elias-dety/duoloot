@@ -4,12 +4,13 @@ import {
   ValorantRank,
   ValorantRankTier,
   ValorantWeaponStats,
-  ValorantMapStats,
-  ValorantRecentMatch,
-  ValorantRoundStats,
-  ValorantRole
+  ValorantMapStats
 } from '@/types/valorant.types';
 import { Player } from '@/schemas/player.schema';
+import { VALORANT_AGENTS } from './valorantAgents.mock';
+import { VALORANT_MAPS } from './valorantMaps.mock';
+import { VALORANT_WEAPONS } from './valorantWeapons.mock';
+import { generateRounds, generateRecentMatches } from './valorantMatches.mock';
 
 // ==========================================
 // FUNÇÕES AUXILIARES PARA GERAR MOCKS
@@ -58,32 +59,10 @@ const createProfile = (name: string, tag: string, level: number, rank: ValorantR
   peakRank: rank
 });
 
-const generateRounds = (matchId: string, mainWeapon: string): ValorantRoundStats[] => 
-  Array.from({ length: 12 }, (_, i) => ({
-    matchId,
-    roundNumber: i + 1,
-    winningTeam: i % 2 === 0 ? 'Blue' : 'Red',
-    roundResult: i % 3 === 0 ? 'Elimination' : i % 3 === 1 ? 'BombDetonated' : 'BombDefused',
-    playerTeam: 'Blue',
-    playerSurvived: i % 4 !== 0,
-    playerKills: i % 5 === 0 ? 2 : i % 5 === 2 ? 1 : 0,
-    playerDamage: i % 5 === 0 ? 280 : i % 5 === 2 ? 140 : 0,
-    playerHeadshots: i % 4 === 0 ? 1 : 0,
-    economySpent: i % 3 === 0 ? 2900 : i % 3 === 1 ? 4500 : 1000,
-    loadoutValue: i % 3 === 0 ? 3900 : i % 3 === 1 ? 5500 : 1500,
-    weapon: i % 3 === 2 ? 'Classic' : mainWeapon,
-    armor: i % 3 === 2 ? 'Light Shield' : 'Heavy Shield',
-    plantedSpike: i === 4,
-    defusedSpike: i === 8
-  }));
-
 // Armas personalizadas para cada elo e perfil
 const generateWeaponStats = (
   weaponsConfig: {
-    weapon: string;
-    weaponId: string;
-    category: string;
-    imageUrl: string;
+    weaponKey: string;
     kills: number;
     hsPercent: number;
     usageRate: number;
@@ -91,15 +70,16 @@ const generateWeaponStats = (
   }[]
 ): ValorantWeaponStats[] =>
   weaponsConfig.map((wc) => {
+    const weapon = VALORANT_WEAPONS[wc.weaponKey.toLowerCase()];
     const headshots = Math.round(wc.kills * (wc.hsPercent / 100));
     const legshots = Math.round(wc.kills * 0.1);
     const bodyshots = wc.kills - headshots - legshots;
     
     return {
-      weapon: wc.weapon,
-      weaponId: wc.weaponId,
-      category: wc.category,
-      imageUrl: wc.imageUrl,
+      weapon: weapon.name,
+      weaponId: weapon.weaponId,
+      category: weapon.category,
+      imageUrl: weapon.imageUrl,
       kills: wc.kills,
       headshots,
       bodyshots,
@@ -115,19 +95,20 @@ const generateWeaponStats = (
 // Mapas com cálculo coerente de rounds e taxas de vitória
 const generateMapStats = (
   configs: {
-    map: string;
-    mapId: string;
-    imageUrl: string;
+    mapKey: string;
     matches: number;
     wins: number;
-    bestAgent: string;
-    worstAgent: string;
+    bestAgentKey: string;
+    worstAgentKey: string;
     averageCombatScore: number;
     averageDamagePerRound: number;
     kdRatio: number;
   }[]
 ): ValorantMapStats[] =>
   configs.map((c) => {
+    const map = VALORANT_MAPS[c.mapKey.toLowerCase()];
+    const bestAgent = VALORANT_AGENTS[c.bestAgentKey.toLowerCase()];
+    const worstAgent = VALORANT_AGENTS[c.worstAgentKey.toLowerCase()];
     const losses = c.matches - c.wins;
     const winRate = Number(((c.wins / c.matches) * 100).toFixed(1));
     
@@ -144,9 +125,9 @@ const generateMapStats = (
     const defenseWinRate = Number(((defenseRoundsWon / (defenseRoundsWon + defenseRoundsLost)) * 100).toFixed(1));
     
     return {
-      map: c.map,
-      mapId: c.mapId,
-      imageUrl: c.imageUrl,
+      map: map.name,
+      mapId: map.mapId,
+      imageUrl: map.imageUrl,
       matches: c.matches,
       wins: c.wins,
       losses,
@@ -157,105 +138,11 @@ const generateMapStats = (
       defenseRoundsWon,
       defenseRoundsLost,
       defenseWinRate,
-      bestAgent: c.bestAgent,
-      worstAgent: c.worstAgent,
+      bestAgent: bestAgent.name,
+      worstAgent: worstAgent.name,
       averageCombatScore: c.averageCombatScore,
       averageDamagePerRound: c.averageDamagePerRound,
       kdRatio: c.kdRatio
-    };
-  });
-
-// Partidas recentes dinâmicas baseadas na arma e agente principais
-const generateRecentMatches = (
-  userId: string,
-  baseRank: ValorantRank,
-  mainAgent: string,
-  mainRole: ValorantRole,
-  avgAcs: number,
-  avgAdr: number,
-  hsPercent: number,
-  winStreaks: boolean[],
-  mainWeaponName: string,
-  mainWeaponId: string,
-  mainWeaponCategory: string,
-  mainWeaponImg: string
-): ValorantRecentMatch[] =>
-  Array.from({ length: 5 }, (_, idx) => {
-    const isWin = winStreaks[idx];
-    const scoreText = isWin ? '13 - 9' : '9 - 13';
-    const matchId = `match-${userId}-${idx + 1}`;
-    
-    const kills = isWin ? Math.round(avgAcs / 12) + 2 : Math.max(8, Math.round(avgAcs / 15) - 3);
-    const deaths = isWin ? 12 : 16;
-    const assists = isWin ? 6 : 3;
-    const kdRatio = Number((kills / deaths).toFixed(2));
-    
-    const totalShots = 35;
-    const headshots = Math.round(totalShots * (hsPercent / 100));
-    const legshots = Math.round(totalShots * 0.08);
-    const bodyshots = totalShots - headshots - legshots;
-    
-    return {
-      matchId,
-      userId,
-      map: idx % 2 === 0 ? 'Ascent' : 'Bind',
-      mapId: idx % 2 === 0 ? 'ascent-id' : 'bind-id',
-      mapImageUrl: idx % 2 === 0 ? '/assets/maps/ascent.jpg' : '/assets/maps/bind.jpg',
-      gameMode: 'Competitive',
-      agent: mainAgent,
-      agentId: `${mainAgent.toLowerCase()}-id`,
-      agentRole: mainRole,
-      agentImageUrl: `/assets/agents/${mainAgent.toLowerCase()}.png`,
-      queue: 'competitive',
-      queueId: 'competitive',
-      seasonId: 'mock-season-1',
-      teamId: idx % 2 === 0 ? 'Blue' : 'Red',
-      result: isWin ? 'win' : 'loss',
-      teamScore: isWin ? 13 : 9,
-      enemyScore: isWin ? 9 : 13,
-      roundsWon: isWin ? 13 : 9,
-      roundsLost: isWin ? 9 : 13,
-      scoreText,
-      kills,
-      deaths,
-      assists,
-      kdRatio,
-      averageCombatScore: isWin ? avgAcs + 20 : avgAcs - 30,
-      averageDamagePerRound: isWin ? avgAdr + 15 : avgAdr - 20,
-      headshotPercent: hsPercent,
-      headshots,
-      bodyshots,
-      legshots,
-      firstBloods: isWin ? 3 : 1,
-      firstDeaths: isWin ? 1 : 4,
-      plants: isWin ? 2 : 1,
-      defuses: isWin ? 1 : 0,
-      aces: 0,
-      clutches: isWin ? 1 : 0,
-      rrChange: isWin ? 18 + (idx * 2) : -15 - (idx * 2),
-      rankBefore: baseRank.label,
-      rankAfter: baseRank.label,
-      rankBeforeDetails: baseRank,
-      rankAfterDetails: baseRank,
-      gameStart: new Date(Date.now() - idx * 7200000).toISOString(),
-      startedAt: new Date(Date.now() - idx * 7200000).toISOString(),
-      gameLengthMillis: 2300000,
-      durationMillis: 2300000,
-      attack: { won: isWin ? 7 : 4, lost: isWin ? 5 : 8 },
-      defense: { won: isWin ? 6 : 5, lost: isWin ? 4 : 5 },
-      weapons: [
-        {
-          weaponId: mainWeaponId,
-          weapon: mainWeaponName,
-          category: mainWeaponCategory,
-          imageUrl: mainWeaponImg,
-          kills: Math.round(kills * 0.8),
-          headshots: Math.round(kills * 0.8 * (hsPercent / 100)),
-          bodyshots: Math.round(kills * 0.8 * ((100 - hsPercent - 10) / 100)),
-          legshots: Math.round(kills * 0.8 * 0.1),
-          damage: Math.round(kills * 0.8 * 145)
-        }
-      ]
     };
   });
 
@@ -310,10 +197,10 @@ const user1: ValorantMockUser = {
   },
   agentStats: [
     {
-      agent: 'Sage',
-      agentId: 'sage-id',
-      role: 'Sentinel',
-      imageUrl: '/assets/agents/sage.png',
+      agent: VALORANT_AGENTS.sage.name,
+      agentId: VALORANT_AGENTS.sage.agentId,
+      role: VALORANT_AGENTS.sage.role,
+      imageUrl: VALORANT_AGENTS.sage.imageUrl,
       matches: 40,
       wins: 18,
       losses: 22,
@@ -330,10 +217,10 @@ const user1: ValorantMockUser = {
       isMainAgent: true
     },
     {
-      agent: 'Omen',
-      agentId: 'omen-id',
-      role: 'Controller',
-      imageUrl: '/assets/agents/omen.png',
+      agent: VALORANT_AGENTS.omen.name,
+      agentId: VALORANT_AGENTS.omen.agentId,
+      role: VALORANT_AGENTS.omen.role,
+      imageUrl: VALORANT_AGENTS.omen.imageUrl,
       matches: 20,
       wins: 8,
       losses: 12,
@@ -352,49 +239,41 @@ const user1: ValorantMockUser = {
   ],
   mapStats: generateMapStats([
     {
-      map: 'Haven',
-      mapId: 'haven-id',
-      imageUrl: '/assets/maps/haven.jpg',
+      mapKey: 'haven',
       matches: 15,
       wins: 9,
-      bestAgent: 'Sage',
-      worstAgent: 'Omen',
+      bestAgentKey: 'sage',
+      worstAgentKey: 'omen',
       averageCombatScore: 165,
       averageDamagePerRound: 112,
       kdRatio: 0.90
     },
     {
-      map: 'Ascent',
-      mapId: 'ascent-id',
-      imageUrl: '/assets/maps/ascent.jpg',
+      mapKey: 'ascent',
       matches: 20,
       wins: 9,
-      bestAgent: 'Sage',
-      worstAgent: 'Reyna',
+      bestAgentKey: 'sage',
+      worstAgentKey: 'reyna',
       averageCombatScore: 155,
       averageDamagePerRound: 105,
       kdRatio: 0.75
     },
     {
-      map: 'Bind',
-      mapId: 'bind-id',
-      imageUrl: '/assets/maps/bind.jpg',
+      mapKey: 'bind',
       matches: 15,
       wins: 5,
-      bestAgent: 'Sage',
-      worstAgent: 'Omen',
+      bestAgentKey: 'sage',
+      worstAgentKey: 'omen',
       averageCombatScore: 150,
       averageDamagePerRound: 100,
       kdRatio: 0.70
     },
     {
-      map: 'Split',
-      mapId: 'split-id',
-      imageUrl: '/assets/maps/split.jpg',
+      mapKey: 'split',
       matches: 10,
       wins: 3,
-      bestAgent: 'Omen',
-      worstAgent: 'Sage',
+      bestAgentKey: 'omen',
+      worstAgentKey: 'sage',
       averageCombatScore: 145,
       averageDamagePerRound: 98,
       kdRatio: 0.65
@@ -402,50 +281,35 @@ const user1: ValorantMockUser = {
   ]),
   weaponStats: generateWeaponStats([
     {
-      weapon: 'Vandal',
-      weaponId: 'vandal-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/vandal.png',
+      weaponKey: 'vandal',
       kills: 350,
       hsPercent: 12,
       usageRate: 55,
       baseDamage: 150
     },
     {
-      weapon: 'Phantom',
-      weaponId: 'phantom-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/phantom.png',
+      weaponKey: 'phantom',
       kills: 180,
       hsPercent: 10,
       usageRate: 30,
       baseDamage: 140
     },
     {
-      weapon: 'Marshal',
-      weaponId: 'marshal-id',
-      category: 'Sniper',
-      imageUrl: '/assets/weapons/marshal.png',
+      weaponKey: 'marshal',
       kills: 40,
       hsPercent: 15,
       usageRate: 5,
       baseDamage: 101
     },
     {
-      weapon: 'Ghost',
-      weaponId: 'ghost-id',
-      category: 'Sidearm',
-      imageUrl: '/assets/weapons/ghost.png',
+      weaponKey: 'ghost',
       kills: 30,
       hsPercent: 18,
       usageRate: 7,
       baseDamage: 30
     },
     {
-      weapon: 'Spectre',
-      weaponId: 'spectre-id',
-      category: 'SMG',
-      imageUrl: '/assets/weapons/spectre.png',
+      weaponKey: 'spectre',
       kills: 20,
       hsPercent: 8,
       usageRate: 3,
@@ -487,16 +351,13 @@ const user1: ValorantMockUser = {
   recentMatches: generateRecentMatches(
     user1Profile.id,
     user1Rank,
-    'Sage',
+    'sage',
     'Sentinel',
     145,
     102,
     12,
     user1MatchesWinStreaks,
-    'Vandal',
-    'vandal-id',
-    'Rifle',
-    '/assets/weapons/vandal.png'
+    'vandal'
   ),
   insights: [
     { type: 'warning', title: 'Mira Baixa', description: 'Taxa de headshot de 12% sugere que você precisa treinar posicionamento de mira.' },
@@ -527,7 +388,7 @@ const user1: ValorantMockUser = {
     consistencyScore: 50,
     toxicityScore: 10
   },
-  roundStats: generateRounds(`match-${user1Profile.id}-1`, 'Vandal'),
+  roundStats: generateRounds(`match-${user1Profile.id}-1`, 'vandal'),
   economyStats: {
     averageLoadoutValue: 3000,
     averageSpentPerRound: 2800,
@@ -597,10 +458,10 @@ const user2: ValorantMockUser = {
   },
   agentStats: [
     {
-      agent: 'Omen',
-      agentId: 'omen-id',
-      role: 'Controller',
-      imageUrl: '/assets/agents/omen.png',
+      agent: VALORANT_AGENTS.omen.name,
+      agentId: VALORANT_AGENTS.omen.agentId,
+      role: VALORANT_AGENTS.omen.role,
+      imageUrl: VALORANT_AGENTS.omen.imageUrl,
       matches: 80,
       wins: 44,
       losses: 36,
@@ -617,10 +478,10 @@ const user2: ValorantMockUser = {
       isMainAgent: true
     },
     {
-      agent: 'Sage',
-      agentId: 'sage-id',
-      role: 'Sentinel',
-      imageUrl: '/assets/agents/sage.png',
+      agent: VALORANT_AGENTS.sage.name,
+      agentId: VALORANT_AGENTS.sage.agentId,
+      role: VALORANT_AGENTS.sage.role,
+      imageUrl: VALORANT_AGENTS.sage.imageUrl,
       matches: 40,
       wins: 20,
       losses: 20,
@@ -637,10 +498,10 @@ const user2: ValorantMockUser = {
       isMainAgent: false
     },
     {
-      agent: 'Brimstone',
-      agentId: 'brimstone-id',
-      role: 'Controller',
-      imageUrl: '/assets/agents/brimstone.png',
+      agent: VALORANT_AGENTS.brimstone.name,
+      agentId: VALORANT_AGENTS.brimstone.agentId,
+      role: VALORANT_AGENTS.brimstone.role,
+      imageUrl: VALORANT_AGENTS.brimstone.imageUrl,
       matches: 20,
       wins: 8,
       losses: 12,
@@ -659,49 +520,41 @@ const user2: ValorantMockUser = {
   ],
   mapStats: generateMapStats([
     {
-      map: 'Split',
-      mapId: 'split-id',
-      imageUrl: '/assets/maps/split.jpg',
+      mapKey: 'split',
       matches: 45,
       wins: 27,
-      bestAgent: 'Omen',
-      worstAgent: 'Brimstone',
+      bestAgentKey: 'omen',
+      worstAgentKey: 'brimstone',
       averageCombatScore: 215,
       averageDamagePerRound: 142,
       kdRatio: 1.15
     },
     {
-      map: 'Ascent',
-      mapId: 'ascent-id',
-      imageUrl: '/assets/maps/ascent.jpg',
+      mapKey: 'ascent',
       matches: 40,
       wins: 20,
-      bestAgent: 'Omen',
-      worstAgent: 'Sage',
+      bestAgentKey: 'omen',
+      worstAgentKey: 'sage',
       averageCombatScore: 205,
       averageDamagePerRound: 138,
       kdRatio: 1.05
     },
     {
-      map: 'Bind',
-      mapId: 'bind-id',
-      imageUrl: '/assets/maps/bind.jpg',
+      mapKey: 'bind',
       matches: 30,
       wins: 15,
-      bestAgent: 'Brimstone',
-      worstAgent: 'Sage',
+      bestAgentKey: 'brimstone',
+      worstAgentKey: 'sage',
       averageCombatScore: 200,
       averageDamagePerRound: 135,
       kdRatio: 1.00
     },
     {
-      map: 'Haven',
-      mapId: 'haven-id',
-      imageUrl: '/assets/maps/haven.jpg',
+      mapKey: 'haven',
       matches: 25,
       wins: 10,
-      bestAgent: 'Omen',
-      worstAgent: 'Brimstone',
+      bestAgentKey: 'omen',
+      worstAgentKey: 'brimstone',
       averageCombatScore: 195,
       averageDamagePerRound: 130,
       kdRatio: 0.95
@@ -709,50 +562,35 @@ const user2: ValorantMockUser = {
   ]),
   weaponStats: generateWeaponStats([
     {
-      weapon: 'Vandal',
-      weaponId: 'vandal-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/vandal.png',
+      weaponKey: 'vandal',
       kills: 1100,
       hsPercent: 18,
       usageRate: 60,
       baseDamage: 150
     },
     {
-      weapon: 'Phantom',
-      weaponId: 'phantom-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/phantom.png',
+      weaponKey: 'phantom',
       kills: 600,
       hsPercent: 20,
       usageRate: 25,
       baseDamage: 140
     },
     {
-      weapon: 'Operator',
-      weaponId: 'operator-id',
-      category: 'Sniper',
-      imageUrl: '/assets/weapons/operator.png',
+      weaponKey: 'operator',
       kills: 100,
       hsPercent: 10,
       usageRate: 5,
       baseDamage: 150
     },
     {
-      weapon: 'Sheriff',
-      weaponId: 'sheriff-id',
-      category: 'Sidearm',
-      imageUrl: '/assets/weapons/sheriff.png',
+      weaponKey: 'sheriff',
       kills: 90,
       hsPercent: 25,
       usageRate: 6,
       baseDamage: 55
     },
     {
-      weapon: 'Spectre',
-      weaponId: 'spectre-id',
-      category: 'SMG',
-      imageUrl: '/assets/weapons/spectre.png',
+      weaponKey: 'spectre',
       kills: 60,
       hsPercent: 14,
       usageRate: 4,
@@ -794,16 +632,13 @@ const user2: ValorantMockUser = {
   recentMatches: generateRecentMatches(
     user2Profile.id,
     user2Rank,
-    'Omen',
+    'omen',
     'Controller',
     205,
     138,
     18,
     user2MatchesWinStreaks,
-    'Vandal',
-    'vandal-id',
-    'Rifle',
-    '/assets/weapons/vandal.png'
+    'vandal'
   ),
   insights: [
     { type: 'warning', title: 'Retenção de Util.', description: 'Evite morrer com as smokes no inventário; use-as proativamente no round.' },
@@ -834,7 +669,7 @@ const user2: ValorantMockUser = {
     consistencyScore: 70,
     toxicityScore: 5
   },
-  roundStats: generateRounds(`match-${user2Profile.id}-1`, 'Vandal'),
+  roundStats: generateRounds(`match-${user2Profile.id}-1`, 'vandal'),
   economyStats: {
     averageLoadoutValue: 3500,
     averageSpentPerRound: 3200,
@@ -904,10 +739,10 @@ const user3: ValorantMockUser = {
   },
   agentStats: [
     {
-      agent: 'Jett',
-      agentId: 'jett-id',
-      role: 'Duelist',
-      imageUrl: '/assets/agents/jett.png',
+      agent: VALORANT_AGENTS.jett.name,
+      agentId: VALORANT_AGENTS.jett.agentId,
+      role: VALORANT_AGENTS.jett.role,
+      imageUrl: VALORANT_AGENTS.jett.imageUrl,
       matches: 180,
       wins: 105,
       losses: 75,
@@ -924,10 +759,10 @@ const user3: ValorantMockUser = {
       isMainAgent: true
     },
     {
-      agent: 'Reyna',
-      agentId: 'reyna-id',
-      role: 'Duelist',
-      imageUrl: '/assets/agents/reyna.png',
+      agent: VALORANT_AGENTS.reyna.name,
+      agentId: VALORANT_AGENTS.reyna.agentId,
+      role: VALORANT_AGENTS.reyna.role,
+      imageUrl: VALORANT_AGENTS.reyna.imageUrl,
       matches: 100,
       wins: 55,
       losses: 45,
@@ -944,10 +779,10 @@ const user3: ValorantMockUser = {
       isMainAgent: false
     },
     {
-      agent: 'Raze',
-      agentId: 'raze-id',
-      role: 'Duelist',
-      imageUrl: '/assets/agents/raze.png',
+      agent: VALORANT_AGENTS.raze.name,
+      agentId: VALORANT_AGENTS.raze.agentId,
+      role: VALORANT_AGENTS.raze.role,
+      imageUrl: VALORANT_AGENTS.raze.imageUrl,
       matches: 40,
       wins: 20,
       losses: 20,
@@ -966,49 +801,41 @@ const user3: ValorantMockUser = {
   ],
   mapStats: generateMapStats([
     {
-      map: 'Haven',
-      mapId: 'haven-id',
-      imageUrl: '/assets/maps/haven.jpg',
+      mapKey: 'haven',
       matches: 90,
       wins: 56,
-      bestAgent: 'Jett',
-      worstAgent: 'Reyna',
+      bestAgentKey: 'jett',
+      worstAgentKey: 'reyna',
       averageCombatScore: 255,
       averageDamagePerRound: 162,
       kdRatio: 1.35
     },
     {
-      map: 'Ascent',
-      mapId: 'ascent-id',
-      imageUrl: '/assets/maps/ascent.jpg',
+      mapKey: 'ascent',
       matches: 80,
       wins: 45,
-      bestAgent: 'Jett',
-      worstAgent: 'Raze',
+      bestAgentKey: 'jett',
+      worstAgentKey: 'raze',
       averageCombatScore: 245,
       averageDamagePerRound: 158,
       kdRatio: 1.25
     },
     {
-      map: 'Bind',
-      mapId: 'bind-id',
-      imageUrl: '/assets/maps/bind.jpg',
+      mapKey: 'bind',
       matches: 80,
       wins: 44,
-      bestAgent: 'Reyna',
-      worstAgent: 'Raze',
+      bestAgentKey: 'reyna',
+      worstAgentKey: 'raze',
       averageCombatScore: 240,
       averageDamagePerRound: 155,
       kdRatio: 1.20
     },
     {
-      map: 'Split',
-      mapId: 'split-id',
-      imageUrl: '/assets/maps/split.jpg',
+      mapKey: 'split',
       matches: 70,
       wins: 35,
-      bestAgent: 'Jett',
-      worstAgent: 'Reyna',
+      bestAgentKey: 'jett',
+      worstAgentKey: 'reyna',
       averageCombatScore: 230,
       averageDamagePerRound: 148,
       kdRatio: 1.10
@@ -1016,50 +843,35 @@ const user3: ValorantMockUser = {
   ]),
   weaponStats: generateWeaponStats([
     {
-      weapon: 'Vandal',
-      weaponId: 'vandal-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/vandal.png',
+      weaponKey: 'vandal',
       kills: 3200,
       hsPercent: 28,
       usageRate: 65,
       baseDamage: 150
     },
     {
-      weapon: 'Phantom',
-      weaponId: 'phantom-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/phantom.png',
+      weaponKey: 'phantom',
       kills: 1600,
       hsPercent: 26,
       usageRate: 20,
       baseDamage: 140
     },
     {
-      weapon: 'Operator',
-      weaponId: 'operator-id',
-      category: 'Sniper',
-      imageUrl: '/assets/weapons/operator.png',
+      weaponKey: 'operator',
       kills: 600,
       hsPercent: 12,
       usageRate: 8,
       baseDamage: 150
     },
     {
-      weapon: 'Sheriff',
-      weaponId: 'sheriff-id',
-      category: 'Sidearm',
-      imageUrl: '/assets/weapons/sheriff.png',
+      weaponKey: 'sheriff',
       kills: 300,
       hsPercent: 35,
       usageRate: 5,
       baseDamage: 55
     },
     {
-      weapon: 'Spectre',
-      weaponId: 'spectre-id',
-      category: 'SMG',
-      imageUrl: '/assets/weapons/spectre.png',
+      weaponKey: 'spectre',
       kills: 100,
       hsPercent: 18,
       usageRate: 2,
@@ -1101,16 +913,13 @@ const user3: ValorantMockUser = {
   recentMatches: generateRecentMatches(
     user3Profile.id,
     user3Rank,
-    'Jett',
+    'jett',
     'Duelist',
     245,
     158,
     28,
     user3MatchesWinStreaks,
-    'Vandal',
-    'vandal-id',
-    'Rifle',
-    '/assets/weapons/vandal.png'
+    'vandal'
   ),
   insights: [
     { type: 'warning', title: 'First Death Defensivo', description: 'Você morre cedo em 15% dos rounds defensivos ao tentar buscar duelos perigosos.' },
@@ -1141,7 +950,7 @@ const user3: ValorantMockUser = {
     consistencyScore: 60,
     toxicityScore: 30
   },
-  roundStats: generateRounds(`match-${user3Profile.id}-1`, 'Vandal'),
+  roundStats: generateRounds(`match-${user3Profile.id}-1`, 'vandal'),
   economyStats: {
     averageLoadoutValue: 4000,
     averageSpentPerRound: 3800,
@@ -1211,10 +1020,10 @@ const user4: ValorantMockUser = {
   },
   agentStats: [
     {
-      agent: 'Reyna',
-      agentId: 'reyna-id',
-      role: 'Duelist',
-      imageUrl: '/assets/agents/reyna.png',
+      agent: VALORANT_AGENTS.reyna.name,
+      agentId: VALORANT_AGENTS.reyna.agentId,
+      role: VALORANT_AGENTS.reyna.role,
+      imageUrl: VALORANT_AGENTS.reyna.imageUrl,
       matches: 300,
       wins: 180,
       losses: 120,
@@ -1231,10 +1040,10 @@ const user4: ValorantMockUser = {
       isMainAgent: true
     },
     {
-      agent: 'Jett',
-      agentId: 'jett-id',
-      role: 'Duelist',
-      imageUrl: '/assets/agents/jett.png',
+      agent: VALORANT_AGENTS.jett.name,
+      agentId: VALORANT_AGENTS.jett.agentId,
+      role: VALORANT_AGENTS.jett.role,
+      imageUrl: VALORANT_AGENTS.jett.imageUrl,
       matches: 150,
       wins: 82,
       losses: 68,
@@ -1251,10 +1060,10 @@ const user4: ValorantMockUser = {
       isMainAgent: false
     },
     {
-      agent: 'Chamber',
-      agentId: 'chamber-id',
-      role: 'Sentinel',
-      imageUrl: '/assets/agents/chamber.png',
+      agent: VALORANT_AGENTS.chamber.name,
+      agentId: VALORANT_AGENTS.chamber.agentId,
+      role: VALORANT_AGENTS.chamber.role,
+      imageUrl: VALORANT_AGENTS.chamber.imageUrl,
       matches: 50,
       wins: 23,
       losses: 27,
@@ -1273,49 +1082,41 @@ const user4: ValorantMockUser = {
   ],
   mapStats: generateMapStats([
     {
-      map: 'Bind',
-      mapId: 'bind-id',
-      imageUrl: '/assets/maps/bind.jpg',
+      mapKey: 'bind',
       matches: 150,
       wins: 95,
-      bestAgent: 'Reyna',
-      worstAgent: 'Chamber',
+      bestAgentKey: 'reyna',
+      worstAgentKey: 'chamber',
       averageCombatScore: 280,
       averageDamagePerRound: 180,
       kdRatio: 1.45
     },
     {
-      map: 'Ascent',
-      mapId: 'ascent-id',
-      imageUrl: '/assets/maps/ascent.jpg',
+      mapKey: 'ascent',
       matches: 130,
       wins: 76,
-      bestAgent: 'Reyna',
-      worstAgent: 'Jett',
+      bestAgentKey: 'reyna',
+      worstAgentKey: 'jett',
       averageCombatScore: 270,
       averageDamagePerRound: 175,
       kdRatio: 1.35
     },
     {
-      map: 'Haven',
-      mapId: 'haven-id',
-      imageUrl: '/assets/maps/haven.jpg',
+      mapKey: 'haven',
       matches: 120,
       wins: 66,
-      bestAgent: 'Jett',
-      worstAgent: 'Chamber',
+      bestAgentKey: 'jett',
+      worstAgentKey: 'chamber',
       averageCombatScore: 265,
       averageDamagePerRound: 170,
       kdRatio: 1.28
     },
     {
-      map: 'Split',
-      mapId: 'split-id',
-      imageUrl: '/assets/maps/split.jpg',
+      mapKey: 'split',
       matches: 100,
       wins: 48,
-      bestAgent: 'Reyna',
-      worstAgent: 'Jett',
+      bestAgentKey: 'reyna',
+      worstAgentKey: 'jett',
       averageCombatScore: 250,
       averageDamagePerRound: 160,
       kdRatio: 1.15
@@ -1323,50 +1124,35 @@ const user4: ValorantMockUser = {
   ]),
   weaponStats: generateWeaponStats([
     {
-      weapon: 'Vandal',
-      weaponId: 'vandal-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/vandal.png',
+      weaponKey: 'vandal',
       kills: 6200,
       hsPercent: 34,
       usageRate: 60,
       baseDamage: 150
     },
     {
-      weapon: 'Phantom',
-      weaponId: 'phantom-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/phantom.png',
+      weaponKey: 'phantom',
       kills: 2300,
       hsPercent: 32,
       usageRate: 20,
       baseDamage: 140
     },
     {
-      weapon: 'Operator',
-      weaponId: 'operator-id',
-      category: 'Sniper',
-      imageUrl: '/assets/weapons/operator.png',
+      weaponKey: 'operator',
       kills: 1100,
       hsPercent: 14,
       usageRate: 12,
       baseDamage: 150
     },
     {
-      weapon: 'Sheriff',
-      weaponId: 'sheriff-id',
-      category: 'Sidearm',
-      imageUrl: '/assets/weapons/sheriff.png',
+      weaponKey: 'sheriff',
       kills: 400,
       hsPercent: 42,
       usageRate: 6,
       baseDamage: 55
     },
     {
-      weapon: 'Spectre',
-      weaponId: 'spectre-id',
-      category: 'SMG',
-      imageUrl: '/assets/weapons/spectre.png',
+      weaponKey: 'spectre',
       kills: 200,
       hsPercent: 22,
       usageRate: 2,
@@ -1408,16 +1194,13 @@ const user4: ValorantMockUser = {
   recentMatches: generateRecentMatches(
     user4Profile.id,
     user4Rank,
-    'Reyna',
+    'reyna',
     'Duelist',
     268,
     172,
     34,
     user4MatchesWinStreaks,
-    'Vandal',
-    'vandal-id',
-    'Rifle',
-    '/assets/weapons/vandal.png'
+    'vandal'
   ),
   insights: [
     { type: 'warning', title: 'Alvo Prioritário', description: 'Sua presença agressiva é intensamente contestada por utilitários adversários em Immortal.' },
@@ -1435,7 +1218,7 @@ const user4: ValorantMockUser = {
     secondaryRole: 'Flex',
     primaryRole: 'Duelist',
     playStyle: 'aggressive',
-    communicationStyle: 'shotcaller',
+    communicationStyle: 'quiet',
     preferredQueue: 'competitive',
     preferredMaps: ['Bind', 'Ascent'],
     avoidedMaps: ['Sunset'],
@@ -1448,7 +1231,7 @@ const user4: ValorantMockUser = {
     consistencyScore: 85,
     toxicityScore: 40
   },
-  roundStats: generateRounds(`match-${user4Profile.id}-1`, 'Vandal'),
+  roundStats: generateRounds(`match-${user4Profile.id}-1`, 'vandal'),
   economyStats: {
     averageLoadoutValue: 4200,
     averageSpentPerRound: 4000,
@@ -1518,10 +1301,10 @@ const user5: ValorantMockUser = {
   },
   agentStats: [
     {
-      agent: 'Raze',
-      agentId: 'raze-id',
-      role: 'Duelist',
-      imageUrl: '/assets/agents/raze.png',
+      agent: VALORANT_AGENTS.raze.name,
+      agentId: VALORANT_AGENTS.raze.agentId,
+      role: VALORANT_AGENTS.raze.role,
+      imageUrl: VALORANT_AGENTS.raze.imageUrl,
       matches: 100,
       wins: 45,
       losses: 55,
@@ -1538,10 +1321,10 @@ const user5: ValorantMockUser = {
       isMainAgent: true
     },
     {
-      agent: 'Reyna',
-      agentId: 'reyna-id',
-      role: 'Duelist',
-      imageUrl: '/assets/agents/reyna.png',
+      agent: VALORANT_AGENTS.reyna.name,
+      agentId: VALORANT_AGENTS.reyna.agentId,
+      role: VALORANT_AGENTS.reyna.role,
+      imageUrl: VALORANT_AGENTS.reyna.imageUrl,
       matches: 50,
       wins: 24,
       losses: 26,
@@ -1558,10 +1341,10 @@ const user5: ValorantMockUser = {
       isMainAgent: false
     },
     {
-      agent: 'Phoenix',
-      agentId: 'phoenix-id',
-      role: 'Duelist',
-      imageUrl: '/assets/agents/phoenix.png',
+      agent: VALORANT_AGENTS.phoenix.name,
+      agentId: VALORANT_AGENTS.phoenix.agentId,
+      role: VALORANT_AGENTS.phoenix.role,
+      imageUrl: VALORANT_AGENTS.phoenix.imageUrl,
       matches: 30,
       wins: 15,
       losses: 15,
@@ -1580,49 +1363,41 @@ const user5: ValorantMockUser = {
   ],
   mapStats: generateMapStats([
     {
-      map: 'Lotus',
-      mapId: 'lotus-id',
-      imageUrl: '/assets/maps/lotus.jpg',
+      mapKey: 'lotus',
       matches: 60,
       wins: 34,
-      bestAgent: 'Raze',
-      worstAgent: 'Reyna',
+      bestAgentKey: 'raze',
+      worstAgentKey: 'reyna',
       averageCombatScore: 210,
       averageDamagePerRound: 140,
       kdRatio: 1.05
     },
     {
-      map: 'Split',
-      mapId: 'split-id',
-      imageUrl: '/assets/maps/split.jpg',
+      mapKey: 'split',
       matches: 50,
       wins: 22,
-      bestAgent: 'Raze',
-      worstAgent: 'Phoenix',
+      bestAgentKey: 'raze',
+      worstAgentKey: 'phoenix',
       averageCombatScore: 190,
       averageDamagePerRound: 125,
       kdRatio: 0.88
     },
     {
-      map: 'Ascent',
-      mapId: 'ascent-id',
-      imageUrl: '/assets/maps/ascent.jpg',
+      mapKey: 'ascent',
       matches: 40,
       wins: 16,
-      bestAgent: 'Reyna',
-      worstAgent: 'Phoenix',
+      bestAgentKey: 'reyna',
+      worstAgentKey: 'phoenix',
       averageCombatScore: 180,
       averageDamagePerRound: 120,
       kdRatio: 0.82
     },
     {
-      map: 'Bind',
-      mapId: 'bind-id',
-      imageUrl: '/assets/maps/bind.jpg',
+      mapKey: 'bind',
       matches: 30,
       wins: 12,
-      bestAgent: 'Raze',
-      worstAgent: 'Reyna',
+      bestAgentKey: 'raze',
+      worstAgentKey: 'reyna',
       averageCombatScore: 180,
       averageDamagePerRound: 120,
       kdRatio: 0.80
@@ -1630,50 +1405,35 @@ const user5: ValorantMockUser = {
   ]),
   weaponStats: generateWeaponStats([
     {
-      weapon: 'Phantom',
-      weaponId: 'phantom-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/phantom.png',
+      weaponKey: 'phantom',
       kills: 1300,
       hsPercent: 21,
       usageRate: 50,
       baseDamage: 140
     },
     {
-      weapon: 'Vandal',
-      weaponId: 'vandal-id',
-      category: 'Rifle',
-      imageUrl: '/assets/weapons/vandal.png',
+      weaponKey: 'vandal',
       kills: 900,
       hsPercent: 23,
       usageRate: 35,
       baseDamage: 150
     },
     {
-      weapon: 'Operator',
-      weaponId: 'operator-id',
-      category: 'Sniper',
-      imageUrl: '/assets/weapons/operator.png',
+      weaponKey: 'operator',
       kills: 150,
       hsPercent: 12,
       usageRate: 5,
       baseDamage: 150
     },
     {
-      weapon: 'Ghost',
-      weaponId: 'ghost-id',
-      category: 'Sidearm',
-      imageUrl: '/assets/weapons/ghost.png',
+      weaponKey: 'ghost',
       kills: 130,
       hsPercent: 24,
       usageRate: 6,
       baseDamage: 30
     },
     {
-      weapon: 'Spectre',
-      weaponId: 'spectre-id',
-      category: 'SMG',
-      imageUrl: '/assets/weapons/spectre.png',
+      weaponKey: 'spectre',
       kills: 120,
       hsPercent: 16,
       usageRate: 4,
@@ -1715,16 +1475,13 @@ const user5: ValorantMockUser = {
   recentMatches: generateRecentMatches(
     user5Profile.id,
     user5Rank,
-    'Raze',
+    'raze',
     'Duelist',
     188,
     124,
     21,
     user5MatchesWinStreaks,
-    'Phantom',
-    'phantom-id',
-    'Rifle',
-    '/assets/weapons/phantom.png'
+    'phantom'
   ),
   insights: [
     { type: 'warning', title: 'Queda Recente', description: 'Taxa de vitórias recente despencou para 20%, indicando forte fadiga/tilt.' },
@@ -1755,7 +1512,7 @@ const user5: ValorantMockUser = {
     consistencyScore: 20,
     toxicityScore: 60
   },
-  roundStats: generateRounds(`match-${user5Profile.id}-1`, 'Phantom'),
+  roundStats: generateRounds(`match-${user5Profile.id}-1`, 'phantom'),
   economyStats: {
     averageLoadoutValue: 3200,
     averageSpentPerRound: 3000,
