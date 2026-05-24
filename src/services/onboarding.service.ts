@@ -3,6 +3,7 @@ import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { getCurrentProfile } from './profiles.service';
 
 type ServiceError = {
+  code?: string;
   message?: string;
 };
 
@@ -17,6 +18,13 @@ const handleServiceError = (error: ServiceError | null | undefined, fallbackMess
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
   if (error?.message?.includes('JWT')) return 'Sua sessão expirou. Entre novamente.';
   if (error?.message?.includes('authenticated')) return 'Entre na sua conta para continuar.';
+  if (
+    error?.code === 'PGRST204' ||
+    error?.message?.includes("Could not find the 'game_profile' column") ||
+    error?.message?.includes('schema cache')
+  ) {
+    return 'A coluna game_profile ainda nao existe no banco conectado. Aplique as migrations do Supabase e recarregue o schema cache.';
+  }
   return error?.message || fallbackMessage;
 };
 
