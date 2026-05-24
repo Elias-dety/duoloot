@@ -10,7 +10,7 @@ export interface CoachCardProps {
 
 export const CoachCard: React.FC<CoachCardProps> = ({ coach }) => {
   return (
-    <article className={`dl-panel flex h-full flex-col gap-4 p-4 ${coach.premiumOnly ? 'dl-card-purple' : ''}`}>
+    <article className={`dl-panel flex h-full flex-col gap-4 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${coach.premiumOnly ? 'dl-card-purple hover:shadow-[var(--dl-tactical-purple)]/20' : 'hover:shadow-white/5'}`}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
           <Avatar src={coach.avatarUrl} fallback={coach.name} size="lg" />

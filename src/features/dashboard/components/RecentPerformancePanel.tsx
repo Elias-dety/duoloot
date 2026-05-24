@@ -10,7 +10,7 @@ export const RecentPerformancePanel: React.FC = () => {
   ];
 
   return (
-    <article className="dl-panel flex h-full w-full flex-col p-6">
+    <article className="dl-panel flex h-full w-full flex-col p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
       <div className="mb-6">
         <h3 className="dl-hud-label mb-2"><span className="text-[var(--dl-tactical-blue)]">■</span> Desempenho Recente</h3>
         <p className="text-[13px] text-[var(--dl-tactical-muted)]">Últimas 4 partidas</p>

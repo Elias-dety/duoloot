@@ -36,7 +36,7 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }
   const borderColor = isClosed || isFull ? 'rgb(var(--dl-error-rgb)/0.5)' : isRecommended ? 'rgb(var(--dl-string-rgb)/0.34)' : 'var(--dl-border)';
 
   const statusLabel = isClosed ? 'Fechado' : isFull ? 'Cheio' : lobby.status === 'open' ? 'Ativo' : 'Em jogo';
-  const statusVariant = isClosed || isFull ? 'danger' : 'default';
+  const statusVariant = isClosed || isFull ? 'danger' : lobby.status === 'open' ? 'success' : 'default';
 
   const getCompatibilityDetails = (score: number) => {
     if (score >= 85) return { label: 'Match ideal', tone: 'text-white bg-[rgb(var(--dl-string-rgb)/0.16)] border-[var(--dl-string)]' };
@@ -46,7 +46,7 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }
   };
 
   return (
-    <div className="dl-panel flex h-full flex-col gap-4 p-5 transition-all hover:-translate-y-1" style={{ borderColor, opacity: isClosed ? 0.72 : 1 }}>
+    <div className="dl-panel flex h-full flex-col gap-4 p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-white/5" style={{ borderColor, opacity: isClosed ? 0.72 : 1 }}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <Avatar src={lobby.owner?.avatarUrl} alt={ownerName} fallback={ownerName} />
@@ -61,7 +61,7 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({ lobby, onJoin, isJoining }
         <Badge variant={statusVariant}>{statusLabel}</Badge>
       </div>
 
-      {isRecommended ? <Badge variant="success" className="w-fit">Recomendado</Badge> : null}
+      {isRecommended ? <Badge variant="success" className="w-fit self-start -mt-2">Recomendado</Badge> : null}
 
       {lobby.compatibilityScore !== undefined ? (
         <div className="space-y-2">

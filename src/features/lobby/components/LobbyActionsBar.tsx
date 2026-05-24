@@ -13,7 +13,7 @@ export const LobbyActionsBar: React.FC<LobbyActionsBarProps> = ({ totalLobbies, 
         Lobbies disponíveis
         <DuolootBadge>{String(totalLobbies)}</DuolootBadge>
       </h2>
-      <DuolootButton type="button" onClick={onCreateLobby}>
+      <DuolootButton type="button" onClick={onCreateLobby} className="w-full md:w-auto">
         + Criar Lobby
       </DuolootButton>
     </div>

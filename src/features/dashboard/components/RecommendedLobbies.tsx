@@ -7,7 +7,7 @@ export const RecommendedLobbies: React.FC = () => {
   const recommended = mockLobbies.slice(0, 2);
 
   return (
-    <article className="dl-panel flex h-full w-full flex-col p-6">
+    <article className="dl-panel flex h-full w-full flex-col p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
       <div className="mb-6">
         <h3 className="dl-hud-label mb-2"><span className="text-[var(--dl-tactical-green)]">■</span> Lobbies Recomendados</h3>
         <p className="text-[13px] text-[var(--dl-tactical-muted)]">Compatibilidade baseada no seu perfil</p>

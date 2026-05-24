@@ -36,11 +36,11 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
     filters.region !== 'all' ||
     filters.microphone !== 'all';
 
-  const fieldClassName = 'w-full rounded-2xl border border-[var(--dl-border)] bg-[var(--dl-surface)] px-3 py-2.5 text-sm text-[var(--dl-text)] focus:border-[var(--dl-keyword)] focus:outline-none';
+  const fieldClassName = 'w-full rounded-2xl border border-[var(--dl-border)] bg-[var(--dl-bg)] px-3 py-2.5 text-sm text-[var(--dl-text)] focus:border-[var(--dl-keyword)] focus:outline-none transition-colors';
   const labelClassName = 'mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]';
 
   return (
-    <div className="dl-panel flex flex-col gap-4 p-5">
+    <div className="dl-panel flex flex-col gap-4 p-5 backdrop-blur-md bg-[var(--dl-surface)]/80">
       <div className="flex flex-wrap items-center gap-3 border-b border-[var(--dl-border)]/40 pb-4">
         <img src={ASSETS.icons.filter} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
         <span className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Filtros de matchmaking</span>

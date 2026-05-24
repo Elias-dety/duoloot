@@ -4,7 +4,7 @@ import { ProgressBar } from '@/components/atoms';
 
 export const DashboardVaultProgress: React.FC = () => {
   return (
-    <article className="dl-panel dl-card-yellow flex h-full w-full flex-col p-6">
+    <article className="dl-panel dl-card-yellow flex h-full w-full flex-col p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[var(--dl-tactical-yellow)]/20">
       <div className="mb-6">
         <h3 className="dl-hud-label mb-2"><span className="text-[var(--dl-tactical-yellow)]">■</span> Cofre Ativo</h3>
         <p className="text-[13px] text-[var(--dl-tactical-muted)]">Seu progresso no evento atual</p>

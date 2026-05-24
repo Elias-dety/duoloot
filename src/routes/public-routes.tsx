@@ -13,6 +13,7 @@ const RiotProfilePage = lazy(() => import('@/pages/RiotProfilePage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'));
 const VaultPage = lazy(() => import('@/pages/VaultPage'));
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 import { DuolootLoadingState } from '@/components/duoloot';
 
@@ -39,6 +40,7 @@ export const publicRoutes: RouteObject[] = [
       { path: ROUTES.RIOT_PROFILE, element: <Lazy><RiotProfilePage /></Lazy> },
       { path: ROUTES.LOGIN, element: <Lazy><LoginPage /></Lazy> },
       { path: ROUTES.REGISTER, element: <Lazy><RegisterPage /></Lazy> },
+      { path: '*', element: <Lazy><NotFoundPage /></Lazy> },
     ],
   },
   {

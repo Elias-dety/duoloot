@@ -22,7 +22,7 @@ export const CoachesFilters: React.FC<CoachesFiltersProps> = ({
   onClear,
 }) => {
   return (
-    <div className="dl-panel p-[18px] mb-6">
+    <div className="dl-panel p-[18px] mb-6 backdrop-blur-md bg-[var(--dl-surface)]/80">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_auto_auto]">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--dl-tactical-muted)]" />
