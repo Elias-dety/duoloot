@@ -258,3 +258,302 @@ export interface ValorantApiError {
   /** Status HTTP original da Riot API (quando aplicável) */
   riotStatus?: number;
 }
+
+// ---------------------------------------------------------------------------
+// Duo Loot mock/intelligence layer types
+// ---------------------------------------------------------------------------
+
+export type ValorantRankTier =
+  | 'Unranked'
+  | 'Iron'
+  | 'Bronze'
+  | 'Silver'
+  | 'Gold'
+  | 'Platinum'
+  | 'Diamond'
+  | 'Ascendant'
+  | 'Immortal'
+  | 'Radiant';
+
+export type ValorantRole = 'Duelist' | 'Controller' | 'Initiator' | 'Sentinel' | 'Flex';
+
+export type ValorantQueue = 'competitive' | 'unrated' | 'swiftplay' | 'premier';
+
+export type ValorantMatchResult = 'win' | 'loss' | 'draw';
+
+export type ValorantInsightType = 'positive' | 'warning' | 'neutral';
+
+export type ValorantBadgeRarity = 'common' | 'rare' | 'epic' | 'legendary';
+
+export interface ValorantRank {
+  tier: ValorantRankTier;
+  division: number | null;
+  label: string;
+  rr: number;
+  order: number;
+}
+
+export interface ValorantProfile {
+  userId: string;
+  riotId: string;
+  gameName: string;
+  tagLine: string;
+  region: RiotRegion;
+  platform: ValorantPlatform;
+  level: number;
+  avatarUrl: string;
+  currentRank: ValorantRank;
+  peakRank: ValorantRank;
+}
+
+export interface ValorantAgentDefinition {
+  agentId: string;
+  name: string;
+  role: ValorantRole;
+  imageUrl: string;
+}
+
+export interface ValorantMapDefinition {
+  mapId: string;
+  name: string;
+  imageUrl: string;
+}
+
+export interface ValorantWeaponDefinition {
+  weaponId: string;
+  name: string;
+  category: string;
+  imageUrl: string;
+}
+
+export interface ValorantRoundSideStats {
+  won: number;
+  lost: number;
+}
+
+export interface ValorantMatchWeaponStat {
+  weaponId: string;
+  weapon: string;
+  category: string;
+  imageUrl: string;
+  kills: number;
+  headshots: number;
+  bodyshots: number;
+  legshots: number;
+  damage: number;
+}
+
+export interface ValorantRecentMatch {
+  matchId: string;
+  userId: string;
+  map: string;
+  mapId: string;
+  mapImageUrl: string;
+  agent: string;
+  agentId: string;
+  agentRole: ValorantRole;
+  agentImageUrl: string;
+  queue: ValorantQueue;
+  result: ValorantMatchResult;
+  teamScore: number;
+  enemyScore: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  kdRatio: number;
+  averageCombatScore: number;
+  averageDamagePerRound: number;
+  headshots: number;
+  bodyshots: number;
+  legshots: number;
+  firstBloods: number;
+  firstDeaths: number;
+  plants: number;
+  defuses: number;
+  aces: number;
+  clutches: number;
+  rrChange: number;
+  rankBefore: ValorantRank;
+  rankAfter: ValorantRank;
+  startedAt: string;
+  durationMillis: number;
+  attack: ValorantRoundSideStats;
+  defense: ValorantRoundSideStats;
+  weapons: ValorantMatchWeaponStat[];
+}
+
+export interface ValorantOverviewStats {
+  riotId: string;
+  currentRank: ValorantRank;
+  peakRank: ValorantRank;
+  level: number;
+  matchesPlayed: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  winRate: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  kdRatio: number;
+  kdaRatio: number;
+  averageCombatScore: number;
+  averageDamagePerRound: number;
+  headshotPercent: number;
+  bodyshotPercent: number;
+  legshotPercent: number;
+  firstBloods: number;
+  firstDeaths: number;
+  plants: number;
+  defuses: number;
+  aces: number;
+  clutches: number;
+  playtimeMillis: number;
+  playtimeHours: number;
+  mainAgent: string | null;
+  strongestMap: string | null;
+  mostUsedWeapon: string | null;
+}
+
+export interface ValorantAgentStats {
+  agent: string;
+  agentId: string;
+  role: ValorantRole;
+  imageUrl: string;
+  matches: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  kdRatio: number;
+  kdaRatio: number;
+  averageCombatScore: number;
+  averageDamagePerRound: number;
+  headshotPercent: number;
+  playtimeMillis: number;
+  isMainAgent: boolean;
+}
+
+export interface ValorantMapStats {
+  map: string;
+  mapId: string;
+  imageUrl: string;
+  matches: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  attackRoundsWon: number;
+  attackRoundsLost: number;
+  attackWinRate: number;
+  defenseRoundsWon: number;
+  defenseRoundsLost: number;
+  defenseWinRate: number;
+  bestAgent: string;
+  worstAgent: string;
+  averageCombatScore: number;
+  averageDamagePerRound: number;
+  kdRatio: number;
+}
+
+export interface ValorantWeaponStats {
+  weapon: string;
+  weaponId: string;
+  category: string;
+  imageUrl: string;
+  kills: number;
+  headshots: number;
+  bodyshots: number;
+  legshots: number;
+  headshotPercent: number;
+  bodyshotPercent: number;
+  legshotPercent: number;
+  damage: number;
+  usageRate: number;
+}
+
+export interface ValorantTrendStats {
+  lastMatchesCount: number;
+  lastMatchesWins: number;
+  lastMatchesLosses: number;
+  lastMatchesWinRate: number;
+  lastMatchesKd: number;
+  lastMatchesAcs: number;
+  lastMatchesAdr: number;
+  lastMatchesHsPercent: number;
+  currentWinStreak: number;
+  currentLoseStreak: number;
+  bestWinStreak: number;
+  bestRecentMatchId: string | null;
+  worstRecentMatchId: string | null;
+  rrTrend: number;
+}
+
+export interface ValorantInsight {
+  type: ValorantInsightType;
+  title: string;
+  description: string;
+  metric?: string;
+}
+
+export interface ValorantBadge {
+  id: string;
+  label: string;
+  description: string;
+  rarity: ValorantBadgeRarity;
+  icon: string;
+}
+
+export interface ValorantMatchmakingProfile {
+  userId: string;
+  primaryRole: ValorantRole;
+  secondaryRole: ValorantRole;
+  playStyle: 'aggressive' | 'balanced' | 'supportive' | 'lurker';
+  communicationStyle: 'quiet' | 'balanced' | 'shotcaller';
+  preferredMaps: string[];
+  preferredAgents: string[];
+  aggressionScore: number;
+  reliabilityScore: number;
+  consistencyScore: number;
+  toxicityScore: number;
+}
+
+export interface ValorantStatsBundle {
+  overviewStats: ValorantOverviewStats;
+  agentStats: ValorantAgentStats[];
+  mapStats: ValorantMapStats[];
+  weaponStats: ValorantWeaponStats[];
+  trendStats: ValorantTrendStats;
+}
+
+export interface ValorantMockUser extends ValorantStatsBundle {
+  id: string;
+  profile: ValorantProfile;
+  recentMatches: ValorantRecentMatch[];
+  matchmakingProfile: ValorantMatchmakingProfile;
+  insights: ValorantInsight[];
+  badges: ValorantBadge[];
+}
+
+export interface ValorantDuoCompatibilityResult {
+  compatibilityScore: number;
+  title: string;
+  reason: string;
+  strengths: string[];
+  risks: string[];
+}
+
+export interface ValorantInternalLeaderboardEntry {
+  userId: string;
+  riotId: string;
+  rank: ValorantRank;
+  winRate: number;
+  kdRatio: number;
+  averageCombatScore: number;
+  headshotPercent: number;
+  clutchScore: number;
+  consistencyScore: number;
+  duoLootScore: number;
+  position: number;
+}
