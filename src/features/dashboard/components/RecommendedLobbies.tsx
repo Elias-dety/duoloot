@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 import { mockLobbies } from '@/data/mocks/lobbies.mock';
 
@@ -25,7 +26,7 @@ export const RecommendedLobbies: React.FC = () => {
             </div>
             <div className="mt-2 flex items-center justify-between">
               <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--dl-tactical-muted)]">{lobby.slotsTotal - lobby.slotsFilled} vagas</p>
-              <Link to="/lobby">
+              <Link to={ROUTES.LOBBY}>
                 <button type="button" className="dl-btn h-8 px-4 text-[11px]">Ver Lobby</button>
               </Link>
             </div>
@@ -34,7 +35,7 @@ export const RecommendedLobbies: React.FC = () => {
       </div>
 
       <div className="mt-4">
-        <Link to="/lobby" className="block w-full text-center">
+        <Link to={ROUTES.LOBBY} className="block w-full text-center">
           <button type="button" className="dl-btn dl-btn-green w-full">Procurar mais Lobbies</button>
         </Link>
       </div>

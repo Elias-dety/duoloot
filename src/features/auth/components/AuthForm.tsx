@@ -91,10 +91,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       </div>
 
       <div className="mb-6 space-y-3">
+        {/* TODO: Implementar login com provedor Google via Supabase */}
         <button
           type="button"
-          onClick={() => console.log('Login com Google clicado')}
-          className="flex w-full items-center justify-center gap-2 rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.02] p-3 text-sm font-semibold text-white transition-all hover:bg-white/[0.04]"
+          disabled
+          title="Em breve"
+          className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.02] p-3 text-sm font-semibold text-white opacity-60 transition-all hover:bg-white/[0.04]"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

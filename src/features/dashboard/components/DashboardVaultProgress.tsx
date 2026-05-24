@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 import { ProgressBar } from '@/components/atoms';
 
 export const DashboardVaultProgress: React.FC = () => {
@@ -25,7 +26,7 @@ export const DashboardVaultProgress: React.FC = () => {
           <p className="text-center text-[11px] uppercase tracking-wide text-[var(--dl-tactical-muted)]">Faltam 3 missões para qualificar-se ao sorteio</p>
         </div>
 
-        <Link to="/cofre" className="w-full">
+        <Link to={ROUTES.VAULT} className="w-full">
           <button type="button" className="dl-btn dl-btn-yellow w-full">Acessar o Cofre</button>
         </Link>
       </div>

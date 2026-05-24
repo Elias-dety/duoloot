@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/atoms';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 const MOCK_LOBBIES = [
   {
@@ -41,6 +43,8 @@ const MOCK_LOBBIES = [
 ];
 
 export function LobbyPreviewSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-20">
       <div className="mb-10 text-center">
@@ -103,7 +107,9 @@ export function LobbyPreviewSection() {
                 <span className="h-2 w-2 rounded-full bg-[var(--dl-string)] shadow-[0_0_6px_rgba(59,217,130,0.6)]"></span>
                 Online
               </div>
-              <Button size="sm" variant="secondary" className="px-6">Pedir Vaga</Button>
+              <Button size="sm" variant="secondary" className="px-6" onClick={() => navigate(ROUTES.LOBBY)}>
+                Pedir Vaga
+              </Button>
             </div>
           </div>
         ))}

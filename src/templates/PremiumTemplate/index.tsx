@@ -41,7 +41,10 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
       <Card variant="muted" className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
         <p className="mb-4 font-['Rajdhani'] text-lg font-bold uppercase text-white">Pagamento em breve</p>
         <p className="mb-6 text-sm text-[var(--dl-muted-light)]">O acesso premium está temporariamente indisponível enquanto finalizamos a ativação.</p>
-        <Button variant="secondary">Entender benefícios</Button>
+        {/* TODO: Integrar modal de explicação / pricing */}
+        <Button variant="secondary" disabled title="Em breve">
+          Entender benefícios
+        </Button>
       </Card>
     );
   }
@@ -71,7 +74,10 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
         <p className="mx-auto mb-6 mt-3 max-w-2xl text-sm text-[var(--dl-muted-light)]">
           Entre na lista para desbloquear prioridade no lobby, bônus no Vault e vantagens premium.
         </p>
-        <Button className="mt-2 w-full sm:w-auto">Ativar Premium</Button>
+        {/* TODO: Integrar checkout de pagamentos (ex: Stripe) */}
+        <Button className="mt-2 w-full sm:w-auto" disabled title="Em breve">
+          Ativar Premium
+        </Button>
       </Card>
     </div>
   );

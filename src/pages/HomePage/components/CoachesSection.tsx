@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from '@/components/atoms';
 import { MissingImagePlaceholder } from '@/components/atoms';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 const MOCK_COACHES = [
   {
@@ -45,6 +47,8 @@ const MOCK_COACHES = [
 ];
 
 export function CoachesSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-20">
       <div className="mb-12 text-center">
@@ -109,8 +113,8 @@ export function CoachesSection() {
 
             {/* Ações */}
             <div className="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-[var(--dl-border)]">
-              <Button variant="secondary" size="sm" className="w-full">Ver Perfil</Button>
-              <Button variant="primary" size="sm" className="w-full border-[var(--dl-function)] bg-[var(--dl-function)] shadow-[0_4px_14px_rgba(176,132,255,0.2)]">Agendar</Button>
+              <Button variant="secondary" size="sm" className="w-full" onClick={() => navigate(ROUTES.COACHES)}>Ver Perfil</Button>
+              <Button variant="primary" size="sm" className="w-full border-[var(--dl-function)] bg-[var(--dl-function)] shadow-[0_4px_14px_rgba(176,132,255,0.2)]" onClick={() => navigate(ROUTES.COACHES)}>Agendar</Button>
             </div>
           </div>
         ))}

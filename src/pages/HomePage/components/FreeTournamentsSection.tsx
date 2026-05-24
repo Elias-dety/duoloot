@@ -1,8 +1,12 @@
 import React from 'react';
 import { Button } from '@/components/atoms';
 import { MissingImagePlaceholder } from '@/components/atoms';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 export function FreeTournamentsSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
@@ -35,8 +39,13 @@ export function FreeTournamentsSection() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-            <Button variant="primary">Participar Grátis</Button>
-            <Button variant="secondary">Ver Regras</Button>
+            <Button variant="primary" onClick={() => navigate(ROUTES.VAULT)}>
+              Participar Grátis
+            </Button>
+            {/* TODO: Criar modal de regras */}
+            <Button variant="secondary" disabled title="Em breve">
+              Ver Regras
+            </Button>
           </div>
         </div>
 
