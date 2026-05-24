@@ -1,6 +1,16 @@
 -- Migration: 021_add_missing_database_tables_and_columns
 -- Objetivo: Garantir tabelas e colunas sugeridas na Parte 7 com RLS ativado e segurança reforçada.
 
+CREATE OR REPLACE FUNCTION public.set_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$;
+
 -- ==========================================
 -- 1. PROFILES
 -- ==========================================
@@ -141,7 +151,7 @@ DROP TRIGGER IF EXISTS handle_updated_at_user_subscriptions ON public.user_subsc
 CREATE TRIGGER handle_updated_at_user_subscriptions
   BEFORE UPDATE ON public.user_subscriptions
   FOR EACH ROW
-  EXECUTE FUNCTION moddatetime (updated_at);
+  EXECUTE FUNCTION public.set_updated_at();
 
 
 -- ==========================================

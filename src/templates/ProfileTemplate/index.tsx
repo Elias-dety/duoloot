@@ -88,7 +88,7 @@ export const ProfileTemplate: React.FC<ProfileTemplateProps> = ({
 
       <ProfileHeader player={player} />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 items-start">
+      <div id="profile-compatibility" className="grid grid-cols-1 gap-6 md:grid-cols-2 items-start">
         <ProfileTrustPanel player={player} />
         <ProfileGameInfo player={player} />
       </div>

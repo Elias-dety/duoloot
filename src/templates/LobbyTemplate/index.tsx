@@ -18,6 +18,7 @@ export interface LobbyTemplateProps {
   isCreating?: boolean;
   joiningLobbyId?: string | null;
   errorMessage?: string | null;
+  statusMessage?: string | null;
   invitedLobbyIds?: string[];
 }
 
@@ -36,6 +37,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   isCreating,
   joiningLobbyId,
   errorMessage,
+  statusMessage,
   invitedLobbyIds,
 }) => {
   const { messages: copy } = useLanguage();
@@ -108,11 +110,6 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
             subtitle={copy.lobby.subtitle}
           />
 
-          {onCreateTestLobby && import.meta.env.DEV ? (
-            <Button variant="secondary" size="sm" onClick={onCreateTestLobby} disabled={isCreating}>
-              {isCreating ? 'Criando...' : 'DEV: criar lobby'}
-            </Button>
-          ) : null}
           </div>
           <div className="flex items-center justify-center gap-4 rounded-[1.25rem] border border-[var(--dl-border)] bg-black/20 p-4">
             <img src={ASSETS.icons.lobbyFinderThumb} alt="Icone de busca de lobby" loading="eager" decoding="async" className="h-24 w-24 object-contain" />
@@ -133,10 +130,20 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
         </Card>
       ) : null}
 
+      {statusMessage ? (
+        <Card variant="muted" className="border-[var(--dl-string)] bg-[rgb(var(--dl-string-rgb)/0.1)] p-4">
+          <p className="text-sm font-semibold text-white">{statusMessage}</p>
+        </Card>
+      ) : null}
+
       <LobbyFilters filters={filters} onFiltersChange={setFilters} onClearFilters={handleClearFilters} />
 
       <section className="space-y-4">
-        <LobbyActionsBar totalLobbies={filteredLobbies.length} />
+        <LobbyActionsBar
+          totalLobbies={filteredLobbies.length}
+          onCreateLobby={onCreateTestLobby}
+          isCreating={isCreating}
+        />
 
         {isError ? (
           <EmptyState 

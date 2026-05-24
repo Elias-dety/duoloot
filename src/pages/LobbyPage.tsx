@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LobbyTemplate } from '@/templates/LobbyTemplate';
 import { Lobby } from '@/schemas/lobby.schema';
-import { getOpenLobbies, createLobby } from '@/services/lobbies.service';
+import { getOpenLobbies, createLobby, joinLobby } from '@/services/lobbies.service';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
 import { ROUTES } from '@/constants/routes';
@@ -21,6 +21,7 @@ export default function LobbyPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [joiningLobbyId, setJoiningLobbyId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -92,6 +93,7 @@ export default function LobbyPage() {
     try {
       setIsCreating(true);
       setErrorMessage(null);
+      setStatusMessage(null);
       
       const gp = (profile.game_profile || {}) as PlayerGameProfile;
       const payload = {
@@ -119,6 +121,7 @@ export default function LobbyPage() {
 
       await createLobby(payload);
       await fetchLobbies();
+      setStatusMessage('Lobby criado com sucesso.');
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : 'Erro ao criar lobby.');
     } finally {
@@ -154,9 +157,11 @@ export default function LobbyPage() {
     try {
       setJoiningLobbyId(lobbyId);
       setErrorMessage(null);
-      // Mock join
-      await new Promise(r => setTimeout(r, 500));
+      setStatusMessage(null);
+      await joinLobby(lobbyId);
       setInvitedLobbyIds((prev) => [...prev, lobbyId]);
+      setStatusMessage('Você entrou no lobby.');
+      await fetchLobbies({ silent: true });
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : 'Erro ao entrar no lobby.');
     } finally {
@@ -174,6 +179,7 @@ export default function LobbyPage() {
       isCreating={isCreating}
       joiningLobbyId={joiningLobbyId}
       errorMessage={errorMessage}
+      statusMessage={statusMessage}
       invitedLobbyIds={invitedLobbyIds}
     />
   );

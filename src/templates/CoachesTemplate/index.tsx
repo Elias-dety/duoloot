@@ -16,6 +16,8 @@ export interface CoachesTemplateProps {
   onGameChange: (value: string) => void;
   onAvailabilityChange: (value: 'all' | 'available') => void;
   onClearFilters: () => void;
+  onScheduleCoach?: (coach: Coach) => void;
+  scheduleMessage?: string | null;
 }
 
 export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
@@ -29,6 +31,8 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
   onGameChange,
   onAvailabilityChange,
   onClearFilters,
+  onScheduleCoach,
+  scheduleMessage,
 }) => {
   if (isLoading) {
     return (
@@ -93,10 +97,16 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
         onClear={onClearFilters}
       />
 
+      {scheduleMessage ? (
+        <div className="dl-panel border-[var(--dl-tactical-purple)] bg-[rgba(168,85,247,0.08)] p-4 text-center text-sm font-semibold text-white">
+          {scheduleMessage}
+        </div>
+      ) : null}
+
       {filteredCoaches.length ? (
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 md:grid-cols-2">
           {filteredCoaches.map((coach) => (
-            <CoachCard key={coach.id} coach={coach} />
+            <CoachCard key={coach.id} coach={coach} onSchedule={onScheduleCoach} />
           ))}
         </div>
       ) : (

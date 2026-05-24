@@ -11,11 +11,34 @@ ALTER TABLE public.vault_events
   ADD COLUMN IF NOT EXISTS updated_at timestamptz not null default now();
 
 -- 2. Alter vault_participants
+-- A tabela original usa primary key composta (event_id, player_id). Mantemos
+-- essa chave para o ON CONFLICT existente e adicionamos id como chave unica
+-- para referencias de ranking/historico.
 ALTER TABLE public.vault_participants
-  ADD COLUMN IF NOT EXISTS id uuid primary key default gen_random_uuid(),
+  ADD COLUMN IF NOT EXISTS id uuid,
   ADD COLUMN IF NOT EXISTS points integer not null default 0 check (points >= 0),
   ADD COLUMN IF NOT EXISTS status text not null default 'active' check (status in ('active', 'blocked', 'winner')),
   ADD COLUMN IF NOT EXISTS updated_at timestamptz not null default now();
+
+UPDATE public.vault_participants
+SET id = gen_random_uuid()
+WHERE id IS NULL;
+
+ALTER TABLE public.vault_participants
+  ALTER COLUMN id SET DEFAULT gen_random_uuid(),
+  ALTER COLUMN id SET NOT NULL;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'vault_participants_id_key'
+  ) THEN
+    ALTER TABLE public.vault_participants
+      ADD CONSTRAINT vault_participants_id_key UNIQUE (id);
+  END IF;
+END $$;
 
 -- 3. Create vault_missions
 CREATE TABLE IF NOT EXISTS public.vault_missions (

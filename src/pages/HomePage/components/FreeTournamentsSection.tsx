@@ -7,6 +7,7 @@ import { useLanguage } from '@/i18n';
 export function FreeTournamentsSection() {
   const navigate = useNavigate();
   const { messages: copy } = useLanguage();
+  const [showRules, setShowRules] = React.useState(false);
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
@@ -35,10 +36,16 @@ export function FreeTournamentsSection() {
             <Button variant="primary" onClick={() => navigate(ROUTES.VAULT)}>
               {copy.home.joinFree}
             </Button>
-            <Button variant="secondary" disabled title={copy.common.comingSoon}>
+            <Button variant="secondary" onClick={() => setShowRules((current) => !current)}>
               {copy.home.viewRules}
             </Button>
           </div>
+
+          {showRules ? (
+            <div className="mt-5 rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.04] p-4 text-sm leading-6 text-[var(--dl-muted-light)]">
+              <p>Participe do Cofre ativo, complete as missões dentro do prazo e acompanhe sua posição no ranking. As recompensas são liberadas conforme as regras do evento exibidas na página do Cofre.</p>
+            </div>
+          ) : null}
         </div>
 
         <div className="relative pb-16 sm:pb-12">

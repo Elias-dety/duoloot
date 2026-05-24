@@ -12,6 +12,7 @@ export default function CoachesPage() {
   const [search, setSearch] = useState('');
   const [game, setGame] = useState('all');
   const [availability, setAvailability] = useState<AvailabilityFilter>('all');
+  const [scheduleMessage, setScheduleMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCoaches = async () => {
@@ -62,6 +63,16 @@ export default function CoachesPage() {
         setSearch('');
         setGame('all');
         setAvailability('all');
+        setScheduleMessage(null);
+      }}
+      scheduleMessage={scheduleMessage}
+      onScheduleCoach={(coach) => {
+        if (coach.premiumOnly) {
+          setScheduleMessage(`O agendamento com ${coach.name} exige Premium. Abra a página Premium para liberar esse benefício.`);
+          return;
+        }
+
+        setScheduleMessage(`Solicitação de agendamento com ${coach.name} registrada. A integração de agenda será conectada no próximo passo.`);
       }}
     />
   );

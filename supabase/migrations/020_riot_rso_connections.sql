@@ -1,3 +1,13 @@
+CREATE OR REPLACE FUNCTION public.set_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$;
+
 -- Create riot_connections table
 CREATE TABLE IF NOT EXISTS public.riot_connections (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -17,10 +27,11 @@ CREATE TABLE IF NOT EXISTS public.riot_connections (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_riot_connections_profile_id ON public.riot_connections(profile_id);
 
 -- Add updated_at trigger
+DROP TRIGGER IF EXISTS handle_updated_at_riot_connections ON public.riot_connections;
 CREATE TRIGGER handle_updated_at_riot_connections
   BEFORE UPDATE ON public.riot_connections
   FOR EACH ROW
-  EXECUTE FUNCTION moddatetime (updated_at);
+  EXECUTE FUNCTION public.set_updated_at();
 
 -- Set up Row Level Security
 ALTER TABLE public.riot_connections ENABLE ROW LEVEL SECURITY;

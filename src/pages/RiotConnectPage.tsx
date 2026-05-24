@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/atoms';
+import { lookupValorantProfile, isValorantApiError } from '@/services/valorant';
 
 export default function RiotConnectPage() {
   const navigate = useNavigate();
@@ -11,32 +12,33 @@ export default function RiotConnectPage() {
 
   const handleConnect = async () => {
     setError('');
-    
-    // Validate Name#TAG format
-    const match = riotId.match(/^(.+)#(.+)$/);
+
+    const match = riotId.trim().match(/^(.+)#(.+)$/);
     if (!match) {
       setError('Formato inválido. Use Nome#TAG.');
       return;
     }
 
-    const gameName = match[1];
-    const tagLine = match[2];
+    const gameName = match[1].trim();
+    const tagLine = match[2].trim();
 
     setLoading(true);
 
     try {
-      // Mock network delay
-      await new Promise(r => setTimeout(r, 800));
-      
+      await lookupValorantProfile({
+        gameName,
+        tagLine,
+        region: 'americas',
+        platform: 'br',
+      });
+
       setSuccess(true);
-      
-      // Redirect after success
+
       setTimeout(() => {
         navigate(`/riot/${encodeURIComponent(gameName)}/${encodeURIComponent(tagLine)}`);
-      }, 1500);
-
-    } catch {
-      setError('Erro ao conectar.');
+      }, 900);
+    } catch (err) {
+      setError(isValorantApiError(err) ? err.message : 'Erro ao validar conta Riot.');
     } finally {
       setLoading(false);
     }
@@ -44,22 +46,20 @@ export default function RiotConnectPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4 text-center">
-      <div className="dl-card flex flex-col items-center p-8 max-w-md w-full">
+      <div className="dl-card flex w-full max-w-md flex-col items-center p-8">
         <h1 className="dl-title mb-4 text-2xl">Conectar conta Riot</h1>
-        <p className="dl-muted text-sm mb-6">
-          Insira seu Riot ID para vincular suas estatísticas. (Mock Seguro)
+        <p className="dl-muted mb-6 text-sm">
+          Insira seu Riot ID para validar suas estatísticas e abrir o perfil.
         </p>
-        
-        {/* TODO: Chamadas reais da Riot devem passar pelo backend/serverless (RSO) */}
-        
+
         {success ? (
           <div className="flex flex-col items-center gap-4">
-            <div className="text-[var(--dl-string)] text-4xl">✓</div>
-            <p className="text-white font-bold">Conta vinculada com sucesso!</p>
+            <div className="text-4xl text-[var(--dl-string)]">✓</div>
+            <p className="font-bold text-white">Perfil Riot validado com sucesso!</p>
             <p className="text-[12px] text-[var(--dl-muted-light)]">Redirecionando...</p>
           </div>
         ) : (
-          <div className="w-full flex flex-col gap-4">
+          <div className="flex w-full flex-col gap-4">
             <input
               type="text"
               placeholder="Nome#TAG"
@@ -68,14 +68,14 @@ export default function RiotConnectPage() {
               className="w-full rounded-md border border-[var(--dl-border)] bg-[var(--dl-surface)] p-3 text-white placeholder-[var(--dl-muted-light)] outline-none focus:border-[var(--dl-keyword)]"
             />
             {error && <p className="text-[12px] text-[var(--dl-error)]">{error}</p>}
-            
-            <Button 
-              variant="primary" 
+
+            <Button
+              variant="primary"
               onClick={handleConnect}
               disabled={loading || !riotId.includes('#')}
               className="w-full justify-center"
             >
-              {loading ? 'Conectando...' : 'Vincular Conta'}
+              {loading ? 'Validando...' : 'Validar Riot ID'}
             </Button>
           </div>
         )}

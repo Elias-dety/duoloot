@@ -6,9 +6,10 @@ import { ASSETS } from '@/constants/assets';
 
 export interface CoachCardProps {
   coach: Coach;
+  onSchedule?: (coach: Coach) => void;
 }
 
-export const CoachCard: React.FC<CoachCardProps> = ({ coach }) => {
+export const CoachCard: React.FC<CoachCardProps> = ({ coach, onSchedule }) => {
   return (
     <article className={`dl-panel flex h-full flex-col gap-4 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${coach.premiumOnly ? 'dl-card-purple hover:shadow-[var(--dl-tactical-purple)]/20' : 'hover:shadow-white/5'}`}>
       <div className="flex items-start justify-between gap-4">
@@ -72,6 +73,7 @@ export const CoachCard: React.FC<CoachCardProps> = ({ coach }) => {
         <button 
           className={`dl-btn w-full gap-2 ${!coach.isAvailable ? 'opacity-50 cursor-not-allowed' : coach.premiumOnly ? 'dl-btn-purple' : ''}`} 
           disabled={!coach.isAvailable}
+          onClick={() => onSchedule?.(coach)}
         >
           {coach.premiumOnly ? <Lock className="h-4 w-4" /> : null}
           {coach.isAvailable ? 'Agendar sessão' : 'Agenda fechada'}

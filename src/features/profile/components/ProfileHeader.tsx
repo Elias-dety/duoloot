@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Player } from '@/schemas/player.schema';
 import { Avatar } from '@/components/atoms';
 import { MessageCircle } from 'lucide-react';
 import { ASSETS } from '@/constants/assets';
+import { sendPlayerInvite } from '@/services';
 
 export interface ProfileHeaderProps {
   player: Player;
@@ -15,8 +16,27 @@ const statusMap = {
 };
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ player }) => {
+  const [isInviting, setIsInviting] = useState(false);
+  const [inviteMessage, setInviteMessage] = useState<string | null>(null);
   const status = statusMap[player.status];
   const playerRank = player.gameProfile?.currentRank || player.gameProfile?.rank || 'Sem Rank';
+
+  const handleViewCompatibility = () => {
+    document.getElementById('profile-compatibility')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleInvite = async () => {
+    try {
+      setIsInviting(true);
+      setInviteMessage(null);
+      const response = await sendPlayerInvite(player.id, 'Convite enviado pelo perfil do jogador.');
+      setInviteMessage(response.message || 'Convite enviado.');
+    } catch (error) {
+      setInviteMessage(error instanceof Error ? error.message : 'Não foi possível enviar o convite.');
+    } finally {
+      setIsInviting(false);
+    }
+  };
 
   return (
     <article className={`dl-panel p-6 ${player.isPremium ? 'dl-card-purple' : ''}`}>
@@ -47,15 +67,22 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ player }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:w-auto">
-          <button type="button" className="dl-btn gap-2 border border-[var(--dl-border)] opacity-70 hover:opacity-100" disabled>
-            <MessageCircle className="h-4 w-4" />
-            Ver compatibilidade
-          </button>
-          <button type="button" className="dl-btn dl-btn-red gap-2" disabled>
-            <img src={ASSETS.icons.squad} alt="" aria-hidden="true" className="h-4 w-4 object-contain" />
-            Convidar para lobby
-          </button>
+        <div className="grid grid-cols-1 gap-3 sm:w-auto">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <button type="button" className="dl-btn gap-2 border border-[var(--dl-border)] opacity-70 hover:opacity-100" onClick={handleViewCompatibility}>
+              <MessageCircle className="h-4 w-4" />
+              Ver compatibilidade
+            </button>
+            <button type="button" className="dl-btn dl-btn-red gap-2" onClick={handleInvite} disabled={isInviting}>
+              <img src={ASSETS.icons.squad} alt="" aria-hidden="true" className="h-4 w-4 object-contain" />
+              {isInviting ? 'Enviando...' : 'Convidar para lobby'}
+            </button>
+          </div>
+          {inviteMessage ? (
+            <p className="max-w-sm text-center text-[11px] font-semibold uppercase tracking-wide text-[var(--dl-muted-light)] sm:text-right">
+              {inviteMessage}
+            </p>
+          ) : null}
         </div>
       </div>
     </article>

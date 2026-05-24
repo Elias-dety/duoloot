@@ -129,6 +129,7 @@ import { ASSETS } from '@/constants/assets';
             <Button
               variant="secondary"
               className="w-full"
+              disabled={!lobby.owner?.id}
               onClick={() => navigate(ROUTES.PLAYER_PROFILE.replace(':playerId', lobby.owner?.id || ''))}
             >
               Ver Perfil
@@ -139,7 +140,7 @@ import { ASSETS } from '@/constants/assets';
               disabled={isFull || isClosed || isJoining || isInvited}
               onClick={() => onJoin && onJoin(lobby.id)}
             >
-              {isJoining ? 'Enviando...' : isInvited ? 'Convite enviado' : isClosed ? 'Fechado' : isFull ? 'Lobby cheio' : 'Chamar Duo'}
+              {isJoining ? 'Entrando...' : isInvited ? 'Você entrou' : isClosed ? 'Fechado' : isFull ? 'Lobby cheio' : 'Entrar no lobby'}
             </Button>
           </div>
         </div>

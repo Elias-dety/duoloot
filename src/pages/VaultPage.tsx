@@ -12,6 +12,7 @@ import {
   getVaultSeasons,
   getVaultWinners,
   joinVaultEvent,
+  claimVaultMissionProgress,
 } from '@/services/vault-progress.service';
 import {
   MyVaultRank,
@@ -257,28 +258,14 @@ export default function VaultPage() {
 
     try {
       setSubmittingTaskId(taskId);
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      
-      setMissions((prev) => 
-        prev.map((m) => {
-          if (m.id === taskId) {
-            return {
-              ...m,
-              progress: {
-                ...(m.progress || { current_value: 0, created_at: '', updated_at: '', id: '', mission_id: taskId, event_id: activeEvent.id, player_id: participant?.player_id || '' }),
-                completed: true,
-                current_value: m.target_value,
-                event_id: activeEvent.id,
-                player_id: participant?.player_id || ''
-              }
-            };
-          }
-          return m;
-        })
-      );
-      
-      setActionMessage('Recompensa resgatada');
+      const response = await claimVaultMissionProgress(taskId);
+      if (!response.success) {
+        setActionMessage(response.message);
+        setActionTone('warning');
+        return;
+      }
+      await fetchVaultData({ silent: true });
+      setActionMessage(response.message || 'Progresso registrado.');
       setActionTone('success');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao registrar progresso.';

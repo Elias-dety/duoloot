@@ -1,3 +1,13 @@
+CREATE OR REPLACE FUNCTION public.set_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$;
+
 -- Create riot_accounts table
 CREATE TABLE IF NOT EXISTS public.riot_accounts (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -106,5 +116,6 @@ USING (
 );
 
 -- Trigger for updated_at on riot_stats
-CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.riot_stats 
-FOR EACH ROW EXECUTE PROCEDURE moddatetime(updated_at);
+DROP TRIGGER IF EXISTS handle_updated_at ON public.riot_stats;
+CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.riot_stats
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();

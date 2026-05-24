@@ -16,6 +16,7 @@ export default function PremiumPage() {
   const [isPremiumLocked] = useState(false);
   const [activePlanId, setActivePlanId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -35,12 +36,21 @@ export default function PremiumPage() {
   }, []);
 
   const handleSelectPlan = async (planId: string) => {
+    const selectedPlan = plans.find((plan) => plan.id === planId);
+
     if (!session) {
       navigate('/login', { state: { from: location } });
       return;
     }
+
+    if (selectedPlan && selectedPlan.price > 0) {
+      setActionMessage('Checkout de pagamento ainda não está integrado. Plano não ativado.');
+      return;
+    }
+
     setIsProcessing(true);
-    await new Promise(r => setTimeout(r, 800)); // Feedback visual
+    setActionMessage(null);
+    await new Promise(r => setTimeout(r, 300));
     setActivePlanId(planId);
     setIsProcessing(false);
   };
@@ -53,6 +63,7 @@ export default function PremiumPage() {
       isPremiumLocked={isPremiumLocked}
       activePlanId={activePlanId}
       isProcessing={isProcessing}
+      actionMessage={actionMessage}
       onSelectPlan={handleSelectPlan}
     />
   );
