@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-labelledby="title desc">
+  <title>Home</title>
+  <desc>Home navigation icon.</desc>
+  <defs>
+      <linearGradient id="dl-red" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ff2a2a"/>
+        <stop offset="100%" stop-color="#8f0808"/>
+      </linearGradient>
+      <linearGradient id="dl-white" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="100%" stop-color="#b7bac1"/>
+      </linearGradient>
+      <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="0" dy="0" stdDeviation="2.2" flood-color="#ff0000" flood-opacity="0.38"/>
+      </filter>
+    </defs>
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 28L32 12L54 28" stroke="url(#dl-white)" stroke-width="3.4"/>
+    <path d="M16 26V50H48V26" stroke="url(#dl-white)" stroke-width="3.4"/>
+    <path d="M27 50V36H37V50" stroke="url(#dl-red)" stroke-width="3.4" filter="url(#glow-red)"/>
+
+  </g>
+</svg>

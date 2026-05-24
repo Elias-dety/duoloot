@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" role="img" aria-labelledby="title desc">
+  <title>Vault</title>
+  <desc>Vault chest icon.</desc>
+  <defs>
+      <linearGradient id="dl-red" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ff2a2a"/>
+        <stop offset="100%" stop-color="#8f0808"/>
+      </linearGradient>
+      <linearGradient id="dl-white" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="100%" stop-color="#b7bac1"/>
+      </linearGradient>
+      <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+        <feDropShadow dx="0" dy="0" stdDeviation="2.2" flood-color="#ff0000" flood-opacity="0.38"/>
+      </filter>
+    </defs>
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22L16 16H48L52 22V48L48 52H16L12 48V22Z" stroke="url(#dl-white)" stroke-width="3.2"/>
+    <path d="M12 26H52" stroke="url(#dl-red)" stroke-width="3.2" filter="url(#glow-red)"/>
+    <path d="M20 16V22M44 16V22" stroke="url(#dl-white)" stroke-width="3.2"/>
+    <path d="M27 28H37L41 32V40L37 44H27L23 40V32L27 28Z" stroke="url(#dl-red)" stroke-width="3.2" filter="url(#glow-red)"/>
+    <path d="M29 32H35L37 34V38L35 40H29" stroke="url(#dl-white)" stroke-width="2.8"/>
+
+  </g>
+</svg>
