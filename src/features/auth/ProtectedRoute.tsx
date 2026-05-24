@@ -43,7 +43,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   // Redireciona para o Onboarding se o perfil gamer estiver incompleto
-  if (isSupabaseConfigured) {
+  if (isSupabaseConfigured && profile) {
     const isComplete = isGameProfileComplete(profile);
     if (!isComplete && location.pathname !== ROUTES.ONBOARDING) {
       logger.info('Operador com perfil gamer incompleto. Redirecionando para onboarding.');
@@ -53,4 +53,3 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   return children ? <>{children}</> : <Outlet />;
 };
-

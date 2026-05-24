@@ -1,4 +1,5 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import type { Session, User } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { ensureUserProfile, handleAuthError, PlayerProfile } from '@/services/auth.service';
 import { AuthContext } from './AuthContext';
@@ -9,81 +10,88 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<import('@supabase/supabase-js').User | null>(null);
-  const [session, setSession] = useState<import('@supabase/supabase-js').Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<PlayerProfile | null>(null);
   const [isLoading, setIsLoading] = useState(isSupabaseConfigured);
 
-  const refreshProfile = useCallback(async () => {
-    if (!isSupabaseConfigured || !user) {
+  const syncProfile = useCallback(async (currentUser: User | null) => {
+    if (!isSupabaseConfigured || !currentUser) {
       setProfile(null);
       return;
     }
 
     try {
-      const currentProfile = await ensureUserProfile(user);
+      const currentProfile = await ensureUserProfile(currentUser);
       setProfile(currentProfile);
     } catch (error) {
-      console.error('Falha ao sincronizar perfil do usuário logado:', error);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (!user) {
+      console.error('Falha ao sincronizar perfil do usuario logado:', error);
       setProfile(null);
-      return;
     }
+  }, []);
 
-    void refreshProfile();
-  }, [refreshProfile, user]);
+  const refreshProfile = useCallback(async () => {
+    await syncProfile(user);
+  }, [syncProfile, user]);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
       return;
     }
+
+    let isMounted = true;
 
     void supabase.auth
       .getSession()
       .then(({ data: { session: currentSession } }) => {
+        if (!isMounted) return;
+
+        const currentUser = currentSession?.user ?? null;
         setSession(currentSession);
-        setUser(currentSession?.user ?? null);
+        setUser(currentUser);
+        setIsLoading(false);
+
+        window.setTimeout(() => {
+          void syncProfile(currentUser);
+        }, 0);
       })
       .catch((error: unknown) => {
-        console.error('Erro ao recuperar sessão inicial:', error);
+        console.error('Erro ao recuperar sessao inicial:', error);
       })
       .finally(() => {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+    } = supabase.auth.onAuthStateChange((event, currentSession) => {
       logger.debug(`Evento de Auth detectado: ${event}`);
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
 
-      if (currentSession?.user) {
-        try {
-          const currentProfile = await ensureUserProfile(currentSession.user);
-          setProfile(currentProfile);
-        } catch (error) {
-          console.error('Erro ao atualizar perfil após mudança de auth:', error);
-        }
-      } else {
+      const currentUser = currentSession?.user ?? null;
+      setSession(currentSession);
+      setUser(currentUser);
+
+      if (!currentUser) {
         setProfile(null);
+        setIsLoading(false);
+        return;
       }
 
       setIsLoading(false);
+      window.setTimeout(() => {
+        void syncProfile(currentUser);
+      }, 0);
     });
 
     return () => {
+      isMounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [syncProfile]);
 
   const signIn = async (email: string, password: string) => {
     if (!isSupabaseConfigured) {
-      return { success: false, error: 'Configuração do Supabase ausente.' };
+      return { success: false, error: 'Configuracao do Supabase ausente.' };
     }
 
     try {
@@ -96,11 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       setSession(data.session);
       setUser(data.user);
-
-      if (data.user) {
-        const userProfile = await ensureUserProfile(data.user);
-        setProfile(userProfile);
-      }
+      await syncProfile(data.user);
 
       return { success: true };
     } catch (error: unknown) {
@@ -112,7 +116,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signUp = async (email: string, password: string, metadata: { name: string; nickname: string }) => {
     if (!isSupabaseConfigured) {
-      return { success: false, sessionCreated: false, error: 'Configuração do Supabase ausente.' };
+      return { success: false, sessionCreated: false, error: 'Configuracao do Supabase ausente.' };
     }
 
     try {
@@ -137,8 +141,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (data.user && hasSession) {
         setSession(data.session);
         setUser(data.user);
-        const userProfile = await ensureUserProfile(data.user);
-        setProfile(userProfile);
+        await syncProfile(data.user);
       }
 
       return {

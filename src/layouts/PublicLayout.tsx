@@ -13,6 +13,7 @@ export default function PublicLayout() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const profilePath = user?.id ? ROUTES.PLAYER_PROFILE.replace(':playerId', user.id) : ROUTES.ONBOARDING;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,6 +93,9 @@ export default function PublicLayout() {
               <Button size="sm" onClick={() => navigate(ROUTES.DASHBOARD)}>
                 {copy.common.dashboard}
               </Button>
+              <Button variant="secondary" size="sm" onClick={() => navigate(profilePath)}>
+                {copy.common.profile}
+              </Button>
               <Button variant="secondary" size="sm" onClick={handleLogout}>
                 {copy.common.logout}
               </Button>
@@ -144,6 +148,9 @@ export default function PublicLayout() {
               <div className="dl-mobile-nav-grid">
                 <Button fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(ROUTES.DASHBOARD); }}>
                   {copy.common.dashboard}
+                </Button>
+                <Button variant="secondary" fullWidth size="sm" onClick={() => { closeMobileMenu(); navigate(profilePath); }}>
+                  {copy.common.profile}
                 </Button>
                 <Button variant="secondary" size="sm" fullWidth onClick={handleLogout}>
                   {copy.common.logout}

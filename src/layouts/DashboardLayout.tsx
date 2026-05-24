@@ -13,9 +13,11 @@ export default function DashboardLayout() {
   const { messages: copy } = useLanguage();
   usePlayerPresence();
   const navigate = useNavigate();
+  const profilePath = user?.id ? ROUTES.PLAYER_PROFILE.replace(':playerId', user.id) : ROUTES.ONBOARDING;
 
   const navItems = [
     { label: copy.common.dashboard, path: ROUTES.DASHBOARD, code: 'DB' },
+    { label: copy.common.profile, path: profilePath, code: 'PF' },
     { label: copy.common.premium, path: ROUTES.PREMIUM, code: 'PR' },
     { label: 'Lobby', path: ROUTES.LOBBY, code: 'LB' },
     { label: copy.layout.nav.vault, path: ROUTES.VAULT, code: 'VT' },
@@ -50,7 +52,7 @@ export default function DashboardLayout() {
           </Link>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
-            <Button variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>{copy.common.profile}</Button>
+            <Button variant="secondary" size="sm" onClick={() => navigate(profilePath)}>{copy.common.profile}</Button>
             <Button variant="secondary" size="sm" onClick={handleLogout}>
               {copy.common.logout}
             </Button>
@@ -110,6 +112,7 @@ export default function DashboardLayout() {
           </div>
 
           <LanguageSwitcher fullWidth />
+          <Button fullWidth variant="secondary" size="sm" onClick={() => navigate(profilePath)}>{copy.common.profile}</Button>
           <Button fullWidth variant="secondary" size="sm" onClick={() => navigate(ROUTES.ONBOARDING)}>{copy.common.editProfile}</Button>
           <Button fullWidth variant="danger" size="sm" onClick={handleLogout}>
             {copy.common.endSession}
