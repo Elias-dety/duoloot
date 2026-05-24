@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/features/auth/useAuth';
@@ -9,6 +9,19 @@ export default function PublicLayout() {
   const { isAuthenticated, profile, user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const progress = Math.min(window.scrollY / 180, 1);
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const menuItems = [
     { label: 'Home', path: ROUTES.HOME },
@@ -33,6 +46,13 @@ export default function PublicLayout() {
     return 'Player';
   };
 
+  const r = Math.round(8 + (18 - 8) * scrollProgress);
+  const g = Math.round(9 + (18 - 9) * scrollProgress);
+  const b = Math.round(13 + (24 - 13) * scrollProgress);
+  const a = (0.92 + (0.30 - 0.92) * scrollProgress).toFixed(2);
+  const headerBg = `rgba(${r}, ${g}, ${b}, ${a})`;
+  const borderOpacity = (0.08 - (0.04 * scrollProgress)).toFixed(2);
+
   return (
     <div className="dl-grid-bg flex min-h-screen flex-col bg-[var(--dl-black)]">
       <div className="dl-top-strip">
@@ -40,7 +60,13 @@ export default function PublicLayout() {
         <span>Matchmaking live • Vault rewards active</span>
       </div>
 
-      <header className="dl-header">
+      <header 
+        className="dl-header sticky top-0 z-50 backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300"
+        style={{ 
+          backgroundColor: headerBg,
+          borderBottom: `1px solid rgba(255,255,255,${borderOpacity})`
+        }}
+      >
         <Link to={ROUTES.HOME} className="dl-brand">
           <Logo subtitle="Red Vault" />
         </Link>
