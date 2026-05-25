@@ -1,7 +1,9 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/atoms';
 import { VaultEvent } from '@/features/vault/vault.schema';
 import { ASSETS } from '@/constants/assets';
+import { ROUTES } from '@/constants/routes';
 
 interface VaultJoinPanelProps {
   event: VaultEvent;
@@ -18,6 +20,18 @@ export const VaultJoinPanel: React.FC<VaultJoinPanelProps> = ({
   isLoggedIn,
   participantCount,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleAction = () => {
+    if (!isLoggedIn) {
+      navigate(ROUTES.LOGIN, { state: { from: location } });
+      return;
+    }
+
+    onJoin();
+  };
+
   return (
     <div className="dl-panel flex flex-col items-center gap-4 p-6 sm:flex-row">
       <img
@@ -43,7 +57,7 @@ export const VaultJoinPanel: React.FC<VaultJoinPanelProps> = ({
       <Button
         variant="primary"
         className="w-full shrink-0 sm:w-auto"
-        onClick={onJoin}
+        onClick={handleAction}
         disabled={isJoining}
       >
         {isJoining ? 'Processando...' : isLoggedIn ? 'Entrar no Vault' : 'Login para participar'}
