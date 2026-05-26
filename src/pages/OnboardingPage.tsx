@@ -58,10 +58,6 @@ const OnboardingPage: React.FC = () => {
     }
   };
 
-  const handleSkip = () => {
-    navigate(ROUTES.DASHBOARD);
-  };
-
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--dl-black)]">
@@ -92,7 +88,6 @@ const OnboardingPage: React.FC = () => {
       <OnboardingTemplate
         initialData={initialData}
         onSubmit={handleSubmit}
-        onSkip={handleSkip}
         isLoading={saving}
         error={error}
       />
