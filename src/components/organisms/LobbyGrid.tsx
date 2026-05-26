@@ -7,16 +7,22 @@ export interface LobbyGridProps {
   items: Lobby[];
   isLoading?: boolean;
   onJoinLobby?: (id: string) => void;
+  onLeaveLobby?: (id: string) => void;
   joiningLobbyId?: string | null;
-  invitedLobbyIds?: string[];
+  leavingLobbyId?: string | null;
+  joinedLobbyIds?: string[];
+  currentUserId?: string;
 }
 
-export const LobbyGrid: React.FC<LobbyGridProps> = ({ 
-  items, 
+export const LobbyGrid: React.FC<LobbyGridProps> = ({
+  items,
   isLoading = false,
   onJoinLobby,
+  onLeaveLobby,
   joiningLobbyId,
-  invitedLobbyIds = []
+  leavingLobbyId,
+  joinedLobbyIds = [],
+  currentUserId,
 }) => {
   if (isLoading) {
     return (
@@ -41,15 +47,23 @@ export const LobbyGrid: React.FC<LobbyGridProps> = ({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {items.map((lobby) => (
-        <LobbyCard 
-          key={lobby.id} 
-          lobby={lobby} 
-          onJoin={onJoinLobby} 
-          isJoining={joiningLobbyId === lobby.id}
-          isInvited={invitedLobbyIds.includes(lobby.id)}
-        />
-      ))}
+      {items.map((lobby) => {
+        const isOwner = Boolean(currentUserId && lobby.owner?.id === currentUserId);
+        const isJoined = isOwner || joinedLobbyIds.includes(lobby.id);
+
+        return (
+          <LobbyCard
+            key={lobby.id}
+            lobby={lobby}
+            onJoin={onJoinLobby}
+            onLeave={onLeaveLobby}
+            isJoining={joiningLobbyId === lobby.id}
+            isLeaving={leavingLobbyId === lobby.id}
+            isJoined={isJoined}
+            isOwner={isOwner}
+          />
+        );
+      })}
     </div>
   );
 };
