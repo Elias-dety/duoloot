@@ -10,7 +10,6 @@ export function HomeCallToAction() {
 
   return (
     <section className="relative mx-auto w-full max-w-6xl overflow-hidden px-5 py-24 sm:px-6">
-      {/* Background glow */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 rounded-3xl"
@@ -23,9 +22,7 @@ export function HomeCallToAction() {
         }}
       />
 
-      {/* Glass container */}
       <div className="relative rounded-3xl border border-white/[0.08] bg-white/[0.03] px-8 py-14 text-center backdrop-blur-xl sm:px-16">
-        {/* Top accent line */}
         <div
           className="mx-auto mb-8 h-px w-24"
           style={{
@@ -35,15 +32,15 @@ export function HomeCallToAction() {
         />
 
         <p className="mb-3 font-['Inter'] text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[var(--dl-muted)]">
-          Comece agora
+          Próximo teste
         </p>
 
         <h2 className="mb-5 text-[clamp(1.8rem,4.5vw,3rem)] font-bold leading-[1.1] tracking-[-0.03em] text-white">
-          Pronto para dominar o ranking?
+          Entre no laboratório do Duo Loot
         </h2>
 
         <p className="mx-auto mb-10 max-w-md font-['Inter'] text-[0.95rem] font-light leading-[1.8] text-[var(--dl-muted-light)]">
-          Junte-se a mais de 12 mil jogadores que já encontraram seus duos e estão subindo de elo.
+          Crie uma conta, complete o perfil gamer e teste os fluxos principais enquanto a plataforma ganha dados reais, pagamento e integrações finais.
         </p>
 
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -67,12 +64,11 @@ export function HomeCallToAction() {
           </button>
         </div>
 
-        {/* Bottom trust strip */}
         <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
           {[
-            { label: 'Grátis para começar', color: 'var(--dl-string)' },
-            { label: 'Sem cartão de crédito', color: 'var(--dl-number)' },
-            { label: 'Cancele quando quiser', color: 'var(--dl-function)' },
+            { label: 'Cadastro por e-mail', color: 'var(--dl-string)' },
+            { label: 'Perfil gamer obrigatório', color: 'var(--dl-number)' },
+            { label: 'Módulos em validação', color: 'var(--dl-function)' },
           ].map(({ label, color }) => (
             <div key={label} className="flex items-center gap-1.5">
               <span
