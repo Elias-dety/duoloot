@@ -149,6 +149,36 @@ function normalizeLobbyStatus(status: string | null | undefined): LobbyStatus {
   return ['open', 'full', 'in-game', 'closed'].includes(status || '') ? (status as LobbyStatus) : 'open';
 }
 
+function mapLobbyRecord(item: LobbyRecord, currentProfile: PlayerProfile | null): Lobby {
+  const ownerGameProfile = item.owner?.game_profile || item.owner?.gameProfile;
+  const lobbyMetadata = item.metadata || {};
+  const compatibilityScore = currentProfile
+    ? calculateCompatibility(currentProfile.game_profile, lobbyMetadata, item.mode || '', item.queue || '')
+    : undefined;
+
+  return {
+    id: item.id,
+    owner: {
+      id: item.owner?.id || '',
+      name: item.owner?.name || 'Operador desconhecido',
+      avatarUrl: item.owner?.avatar_url || undefined,
+      trustScore: item.owner?.trust_score || 0,
+      status: item.owner?.status || 'offline',
+      gameProfile: ownerGameProfile,
+    },
+    slotsTotal: Number(item.slots_total) || 2,
+    slotsFilled: Number(item.slots_filled) || 1,
+    mode: item.mode || 'Modo indefinido',
+    queue: item.queue || 'Fila aberta',
+    minRank: item.min_rank || 'Livre',
+    maxRank: item.max_rank || 'Livre',
+    status: normalizeLobbyStatus(item.status),
+    compatibilityScore,
+    metadata: lobbyMetadata,
+    createdAt: item.created_at,
+  };
+}
+
 export async function getOpenLobbies(): Promise<Lobby[]> {
   if (!isSupabaseConfigured) return [];
 
@@ -178,35 +208,15 @@ export async function getOpenLobbies(): Promise<Lobby[]> {
 
   if (error) throw new Error(handleServiceError(error, 'Erro ao carregar lobbies.'));
 
-  return ((data || []) as LobbyRecord[]).map((item) => {
-    const ownerGameProfile = item.owner?.game_profile || item.owner?.gameProfile;
-    const lobbyMetadata = item.metadata || {};
-    const compatibilityScore = currentProfile
-      ? calculateCompatibility(currentProfile.game_profile, lobbyMetadata, item.mode || '', item.queue || '')
-      : undefined;
+  const latestByOwner = new Map<string, LobbyRecord>();
+  for (const item of (data || []) as LobbyRecord[]) {
+    const ownerKey = item.owner?.id || item.id;
+    if (!latestByOwner.has(ownerKey)) {
+      latestByOwner.set(ownerKey, item);
+    }
+  }
 
-    return {
-      id: item.id,
-      owner: {
-        id: item.owner?.id || '',
-        name: item.owner?.name || 'Operador desconhecido',
-        avatarUrl: item.owner?.avatar_url || undefined,
-        trustScore: item.owner?.trust_score || 0,
-        status: item.owner?.status || 'offline',
-        gameProfile: ownerGameProfile,
-      },
-      slotsTotal: Number(item.slots_total) || 2,
-      slotsFilled: Number(item.slots_filled) || 1,
-      mode: item.mode || 'Modo indefinido',
-      queue: item.queue || 'Fila aberta',
-      minRank: item.min_rank || 'Livre',
-      maxRank: item.max_rank || 'Livre',
-      status: normalizeLobbyStatus(item.status),
-      compatibilityScore,
-      metadata: lobbyMetadata,
-      createdAt: item.created_at,
-    };
-  });
+  return Array.from(latestByOwner.values()).map((item) => mapLobbyRecord(item, currentProfile));
 }
 
 export async function createLobby(payload: CreateLobbyPayload) {
