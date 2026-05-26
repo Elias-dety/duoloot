@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { OnboardingForm } from '@/features/onboarding/components/OnboardingForm';
 import type { OnboardingData } from '@/features/onboarding/onboarding.schema';
@@ -29,6 +29,10 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
     region: initialData?.region || 'br',
   });
 
+  const handlePreviewChange = useCallback((data: Partial<OnboardingData>) => {
+    setPreviewData((prev) => ({ ...prev, ...data }));
+  }, []);
+
   return (
     <Frame className="flex flex-col">
       <div className="dl-top-strip">
@@ -57,7 +61,7 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
               initialData={initialData}
               onSubmit={onSubmit}
               isLoading={isLoading}
-              onDataChange={(data) => setPreviewData((prev) => ({ ...prev, ...data }))}
+              onDataChange={handlePreviewChange}
             />
           </div>
 
