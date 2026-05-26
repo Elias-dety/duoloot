@@ -14,12 +14,15 @@ export interface LobbyTemplateProps {
   isLoading: boolean;
   isError: boolean;
   onJoinLobby?: (id: string) => void;
+  onLeaveLobby?: (id: string) => void;
   onCreateTestLobby?: () => void;
   isCreating?: boolean;
   joiningLobbyId?: string | null;
+  leavingLobbyId?: string | null;
   errorMessage?: string | null;
   statusMessage?: string | null;
-  invitedLobbyIds?: string[];
+  joinedLobbyIds?: string[];
+  currentUserId?: string;
 }
 
 const readMetadataString = (metadata: Record<string, unknown> | undefined, key: string) =>
@@ -33,12 +36,15 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   isLoading,
   isError,
   onJoinLobby,
+  onLeaveLobby,
   onCreateTestLobby,
   isCreating,
   joiningLobbyId,
+  leavingLobbyId,
   errorMessage,
   statusMessage,
-  invitedLobbyIds,
+  joinedLobbyIds,
+  currentUserId,
 }) => {
   const { messages: copy } = useLanguage();
   const [filters, setFilters] = React.useState({
@@ -205,9 +211,12 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
           <LobbyGrid 
             items={filteredLobbies} 
             isLoading={isLoading} 
-            onJoinLobby={onJoinLobby} 
-            joiningLobbyId={joiningLobbyId} 
-            invitedLobbyIds={invitedLobbyIds}
+            onJoinLobby={onJoinLobby}
+            onLeaveLobby={onLeaveLobby}
+            joiningLobbyId={joiningLobbyId}
+            leavingLobbyId={leavingLobbyId}
+            joinedLobbyIds={joinedLobbyIds}
+            currentUserId={currentUserId}
           />
         )}
       </section>
