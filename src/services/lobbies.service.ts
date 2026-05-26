@@ -33,6 +33,10 @@ type LobbyRecord = {
   created_at: string;
 };
 
+type LobbyMembershipRecord = {
+  lobby_id?: string | null;
+};
+
 export type CreateLobbyPayload = {
   slots_total?: number;
   mode?: string;
@@ -179,6 +183,34 @@ function mapLobbyRecord(item: LobbyRecord, currentProfile: PlayerProfile | null)
   };
 }
 
+export async function getMyJoinedLobbyIds(): Promise<string[]> {
+  if (!isSupabaseConfigured) return [];
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from('lobby_members')
+    .select('lobby_id')
+    .or(`player_id.eq.${user.id},user_id.eq.${user.id}`);
+
+  if (error) {
+    console.warn('Erro ao carregar participações em lobbies:', error);
+    return [];
+  }
+
+  return Array.from(
+    new Set(
+      ((data || []) as LobbyMembershipRecord[])
+        .map((item) => item.lobby_id)
+        .filter((id): id is string => typeof id === 'string' && id.length > 0)
+    )
+  );
+}
+
 export async function getOpenLobbies(): Promise<Lobby[]> {
   if (!isSupabaseConfigured) return [];
 
@@ -289,7 +321,7 @@ export async function leaveLobby(lobbyId: string) {
     p_lobby_id: lobbyId,
   });
 
-  if (error) throw new Error(handleServiceError(error, 'Erro ao sair do lobby.'));
+  if (error) throw new Error(handleServiceError(error, 'Erro ao sair no lobby.'));
 
   if (!Array.isArray(data) || data.length === 0) {
     throw new Error('Resposta inválida do servidor ao sair do lobby.');
