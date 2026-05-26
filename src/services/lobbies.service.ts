@@ -33,12 +33,36 @@ type LobbyRecord = {
   created_at: string;
 };
 
+type CreateLobbyPayload = {
+  slots_total?: number;
+  mode?: string;
+  queue?: string;
+  min_rank?: string;
+  max_rank?: string;
+  metadata?: Record<string, unknown>;
+};
+
+type CreateLobbyRpcResult = {
+  success: boolean;
+  message: string;
+  lobby_id?: string | null;
+};
+
+type JoinLobbyRpcResult = {
+  success: boolean;
+  message: string;
+  lobby_id?: string | null;
+  slots_filled?: number | null;
+  slots_total?: number | null;
+};
+
 const handleServiceError = (error: ServiceError | null | undefined, fallbackMessage: string) => {
   console.error(error);
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
   if (error?.message?.includes('JWT')) return 'Sua sessão expirou. Entre novamente.';
   if (error?.message?.includes('authenticated')) return 'Entre na sua conta para continuar.';
-  if (error?.code === 'PGRST202') return 'Módulo ainda não configurado no banco.';
+  if (error?.code === 'PGRST202') return 'Módulo de lobbies ainda não configurado no banco. Aplique a migration do Supabase.';
+  if (error?.message?.includes('row-level security')) return 'Sem permissão no banco para esta ação. Verifique as policies/RLS.';
   return error?.message || fallbackMessage;
 };
 
@@ -177,8 +201,7 @@ export async function getOpenLobbies(): Promise<Lobby[]> {
   });
 }
 
-
-export async function createLobby(payload: Record<string, unknown>) {
+export async function createLobby(payload: CreateLobbyPayload) {
   if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
 
   const {
@@ -187,14 +210,27 @@ export async function createLobby(payload: Record<string, unknown>) {
   } = await supabase.auth.getUser();
   if (userError || !user) throw new Error('Entre na sua conta para criar um lobby.');
 
-  const { data, error } = await supabase
-    .from('lobbies')
-    .insert([{ ...payload, owner_id: user.id }])
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc('create_lobby', {
+    p_slots_total: payload.slots_total ?? 5,
+    p_mode: payload.mode ?? 'competitivo',
+    p_queue: payload.queue ?? 'ranked',
+    p_min_rank: payload.min_rank ?? 'livre',
+    p_max_rank: payload.max_rank ?? 'livre',
+    p_metadata: payload.metadata ?? {},
+  });
 
   if (error) throw new Error(handleServiceError(error, 'Erro ao criar lobby.'));
-  return data;
+
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error('Resposta inválida do servidor ao criar lobby.');
+  }
+
+  const result = data[0] as CreateLobbyRpcResult;
+  if (!result.success) {
+    throw new Error(result.message || 'Não foi possível criar o lobby.');
+  }
+
+  return result;
 }
 
 export async function joinLobby(lobbyId: string) {
@@ -215,11 +251,10 @@ export async function joinLobby(lobbyId: string) {
     throw new Error('Resposta inválida do servidor ao entrar no lobby.');
   }
 
-  const result = data[0];
+  const result = data[0] as JoinLobbyRpcResult;
   if (!result.success) {
-    throw new Error(result.message);
+    throw new Error(result.message || 'Não foi possível entrar no lobby.');
   }
 
   return result;
 }
-
