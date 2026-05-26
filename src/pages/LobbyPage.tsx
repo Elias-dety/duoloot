@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LobbyTemplate } from '@/templates/LobbyTemplate';
 import { Lobby } from '@/schemas/lobby.schema';
-import { getOpenLobbies, createLobby, joinLobby, leaveLobby } from '@/services/lobbies.service';
+import { getOpenLobbies, createLobby, joinLobby, leaveLobby, getMyJoinedLobbyIds } from '@/services/lobbies.service';
 import type { CreateLobbyPayload } from '@/services/lobbies.service';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { useAuth } from '@/features/auth/useAuth';
@@ -35,6 +35,17 @@ export default function LobbyPage() {
     }
   }, []);
 
+  const syncJoinedLobbyIds = useCallback(async () => {
+    if (!isSupabaseConfigured || !isAuthenticated) {
+      setJoinedLobbyIds([]);
+      return [];
+    }
+
+    const ids = await getMyJoinedLobbyIds();
+    setJoinedLobbyIds(ids);
+    return ids;
+  }, [isAuthenticated]);
+
   const fetchLobbies = useCallback(async (options?: { silent?: boolean }) => {
     if (!isSupabaseConfigured) return;
 
@@ -43,7 +54,10 @@ export default function LobbyPage() {
         setIsLoading(true);
       }
       setIsError(false);
-      const data = await getOpenLobbies();
+      const [data] = await Promise.all([
+        getOpenLobbies(),
+        syncJoinedLobbyIds(),
+      ]);
       setLobbies(data);
     } catch (error) {
       console.error('Error fetching lobbies:', error);
@@ -53,7 +67,7 @@ export default function LobbyPage() {
         setIsLoading(false);
       }
     }
-  }, []);
+  }, [syncJoinedLobbyIds]);
 
   useEffect(() => {
     if (!isSupabaseConfigured) return;
@@ -187,6 +201,7 @@ export default function LobbyPage() {
       setJoinedLobbyIds((prev) => Array.from(new Set([...prev, lobbyId])));
       setStatusMessage('Você entrou no lobby.');
       await fetchLobbies({ silent: true });
+      await syncJoinedLobbyIds();
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : 'Erro ao entrar no lobby.');
     } finally {
@@ -209,6 +224,7 @@ export default function LobbyPage() {
       setJoinedLobbyIds((prev) => prev.filter((id) => id !== lobbyId));
       setStatusMessage(result.message || 'Você saiu do lobby.');
       await fetchLobbies({ silent: true });
+      await syncJoinedLobbyIds();
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : 'Erro ao sair do lobby.');
     } finally {
