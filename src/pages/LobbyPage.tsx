@@ -97,6 +97,36 @@ export default function LobbyPage() {
     return true;
   };
 
+  const buildDefaultLobbyPayload = (): CreateLobbyPayload => {
+    const gp = (profile?.game_profile || {}) as PlayerGameProfile;
+
+    return {
+      slots_total: 5,
+      mode: gp.preferredModes?.[0] || 'competitivo',
+      queue: gp.preferredModes?.[0] || 'ranked',
+      min_rank: gp.currentRank || 'ferro',
+      max_rank: gp.currentRank || 'radiante',
+      metadata: {
+        mainGame: gp.mainGame,
+        riotId: gp.riotId,
+        currentRank: gp.currentRank,
+        mainRole: gp.mainRole,
+        secondaryRole: gp.secondaryRole,
+        playStyle: gp.playStyle,
+        sessionFocus: gp.sessionFocus,
+        availability: gp.availability,
+        microphone: gp.microphone,
+        region: gp.region,
+        bio: gp.bio,
+        creatorPosition: gp.mainRole || 'flex',
+        creatorPositionLabel: gp.mainRole || 'Flex',
+        requiredPositions: ['duelista', 'sentinela'],
+        requiredPositionLabels: ['Duelista', 'Sentinela'],
+        maxReputationAllowed: 100,
+      },
+    };
+  };
+
   const handleOpenCreateLobby = () => {
     if (!requireReadyProfile()) return;
     setErrorMessage(null);
@@ -120,6 +150,10 @@ export default function LobbyPage() {
     } finally {
       setIsCreating(false);
     }
+  };
+
+  const handleQuickCreateLobby = async () => {
+    await handleCreateLobby(buildDefaultLobbyPayload());
   };
 
   const handleJoinLobby = async (lobbyId: string) => {
@@ -192,7 +226,8 @@ export default function LobbyPage() {
         isError={isError}
         onJoinLobby={handleJoinLobby}
         onLeaveLobby={handleLeaveLobby}
-        onCreateTestLobby={handleOpenCreateLobby}
+        onCreateTestLobby={handleQuickCreateLobby}
+        onConfigureLobby={handleOpenCreateLobby}
         isCreating={isCreating}
         joiningLobbyId={joiningLobbyId}
         leavingLobbyId={leavingLobbyId}
