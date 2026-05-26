@@ -7,7 +7,6 @@ import { Card, Frame, SectionTitle } from '@/components/atoms';
 interface OnboardingTemplateProps {
   initialData?: Partial<OnboardingData> | null;
   onSubmit: (data: OnboardingData) => Promise<void>;
-  onSkip: () => void;
   isLoading: boolean;
   error?: string | null;
 }
@@ -15,7 +14,6 @@ interface OnboardingTemplateProps {
 export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
   initialData,
   onSubmit,
-  onSkip,
   isLoading,
   error,
 }) => {
@@ -58,7 +56,6 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
             <OnboardingForm
               initialData={initialData}
               onSubmit={onSubmit}
-              onSkip={onSkip}
               isLoading={isLoading}
               onDataChange={(data) => setPreviewData((prev) => ({ ...prev, ...data }))}
             />
@@ -66,7 +63,6 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
 
           <div className="lg:sticky lg:top-8 lg:col-span-5 xl:col-span-4">
             <Card variant="elevated" className="space-y-6 p-6 overflow-hidden relative">
-              {/* Glow decorativo */}
               <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-[var(--dl-error)]/10 blur-[40px]" />
 
               <div className="flex items-center justify-between border-b border-[var(--dl-border)] pb-5 relative z-10">
@@ -107,4 +103,3 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
     </Frame>
   );
 };
-
