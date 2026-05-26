@@ -161,6 +161,11 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
       </div>
 
       <div className="mt-auto border-t border-[var(--dl-border)] pt-4">
+        {isJoined && !isOwner ? (
+          <Button variant="secondary" className="mb-3 w-full" disabled>
+            Você entrou
+          </Button>
+        ) : null}
         <div className="flex gap-3">
           <Button
             variant="secondary"
