@@ -56,6 +56,14 @@ type JoinLobbyRpcResult = {
   slots_total?: number | null;
 };
 
+type LeaveLobbyRpcResult = {
+  success: boolean;
+  message: string;
+  lobby_id?: string | null;
+  slots_filled?: number | null;
+  status?: LobbyStatus | null;
+};
+
 const handleServiceError = (error: ServiceError | null | undefined, fallbackMessage: string) => {
   console.error(error);
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
@@ -254,6 +262,32 @@ export async function joinLobby(lobbyId: string) {
   const result = data[0] as JoinLobbyRpcResult;
   if (!result.success) {
     throw new Error(result.message || 'Não foi possível entrar no lobby.');
+  }
+
+  return result;
+}
+
+export async function leaveLobby(lobbyId: string) {
+  if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error('Entre na sua conta para sair do lobby.');
+
+  const { data, error } = await supabase.rpc('leave_lobby', {
+    p_lobby_id: lobbyId,
+  });
+
+  if (error) throw new Error(handleServiceError(error, 'Erro ao sair do lobby.'));
+
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error('Resposta inválida do servidor ao sair do lobby.');
+  }
+
+  const result = data[0] as LeaveLobbyRpcResult;
+  if (!result.success) {
+    throw new Error(result.message || 'Não foi possível sair do lobby.');
   }
 
   return result;
