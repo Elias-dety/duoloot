@@ -4,12 +4,14 @@ import { Badge, Button } from '@/components/atoms';
 export interface LobbyActionsBarProps {
   totalLobbies: number;
   onCreateLobby?: () => void;
+  onConfigureLobby?: () => void;
   isCreating?: boolean;
 }
 
 export const LobbyActionsBar: React.FC<LobbyActionsBarProps> = ({
   totalLobbies,
   onCreateLobby,
+  onConfigureLobby,
   isCreating,
 }) => {
   return (
@@ -27,11 +29,19 @@ export const LobbyActionsBar: React.FC<LobbyActionsBarProps> = ({
           </p>
         </div>
 
-        {onCreateLobby ? (
-          <Button type="button" onClick={onCreateLobby} disabled={isCreating} className="w-full shadow-[0_8px_28px_rgba(255,70,85,0.22)] md:w-auto">
-            {isCreating ? 'Criando...' : '+ Criar Lobby'}
-          </Button>
-        ) : null}
+        <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row">
+          {onConfigureLobby ? (
+            <Button type="button" variant="secondary" onClick={onConfigureLobby} disabled={isCreating} className="w-full md:w-auto">
+              Configurar lobby
+            </Button>
+          ) : null}
+
+          {onCreateLobby ? (
+            <Button type="button" onClick={onCreateLobby} disabled={isCreating} className="w-full shadow-[0_8px_28px_rgba(255,70,85,0.22)] md:w-auto">
+              {isCreating ? 'Criando...' : '+ Criar Lobby'}
+            </Button>
+          ) : null}
+        </div>
       </div>
     </div>
   );
