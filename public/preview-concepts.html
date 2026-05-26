@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Duo Loot — Preview dos 3 Conceitos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dl-black: #0f0f12;
+      --dl-bg: #111116;
+      --dl-surface: #18181c;
+      --dl-surface-2: #202026;
+      --dl-border: #29292f;
+      --dl-text: #ffffff;
+      --dl-muted: #74747d;
+      --dl-muted-light: #a6a6ad;
+      --dl-keyword: #ff4655;
+      --dl-string: #3bd982;
+      --dl-number: #0df0ff;
+      --dl-function: #b084ff;
+      --dl-warning: #ffd166;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #08080a;
+      color: white;
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    .nav {
+      position: sticky; top: 0; z-index: 999;
+      background: rgba(8,8,10,0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid #1a1a20;
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; color: var(--dl-keyword); letter-spacing: 0.1em; }
+    .nav-links { display: flex; gap: 0.5rem; }
+    .nav-link {
+      padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500;
+      text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
+      color: var(--dl-muted-light);
+    }
+    .nav-link:hover { color: white; background: rgba(255,255,255,0.06); border-color: #2a2a30; }
+    .nav-link.op1 { color: #0df0ff; } .nav-link.op1:hover { background: rgba(13,240,255,0.08); border-color: rgba(13,240,255,0.25); }
+    .nav-link.op2 { color: #b084ff; } .nav-link.op2:hover { background: rgba(176,132,255,0.08); border-color: rgba(176,132,255,0.25); }
+    .nav-link.op3 { color: #3bd982; } .nav-link.op3:hover { background: rgba(59,217,130,0.08); border-color: rgba(59,217,130,0.25); }
+
+    /* CONCEPT DIVIDER */
+    .concept-header {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.2rem 2.5rem;
+      border-bottom: 1px solid #1a1a20;
+    }
+    .concept-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 0.9rem; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .concept-header p { font-size: 0.82rem; color: var(--dl-muted-light); }
+
+    /* ===================== OPÇÃO 1 — BROKEN ARENA ===================== */
+    #op1 { background: #08080b; }
+    #op1 .concept-header { background: rgba(13,240,255,0.04); }
+    #op1 .concept-badge { background: rgba(13,240,255,0.12); color: #0df0ff; border: 1px solid rgba(13,240,255,0.25); }
+
+    .op1-hero {
+      position: relative; overflow: hidden;
+      min-height: 88vh;
+      display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+      padding: 5rem 3rem 4rem 5rem; gap: 2rem;
+    }
+    .op1-bg-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 60% at 10% 50%, rgba(13,240,255,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 90% 80%, rgba(255,70,85,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 40% at 60% 10%, rgba(176,132,255,0.05) 0%, transparent 50%);
+    }
+    .op1-grid-lines {
+      position: absolute; inset: 0; pointer-events: none; opacity: 0.035;
+      background-image:
+        linear-gradient(rgba(13,240,255,1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13,240,255,1) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .op1-left { position: relative; z-index: 2; }
+    .op1-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.3rem 0.8rem; border-radius: 4px;
+      border: 1px solid rgba(13,240,255,0.3); background: rgba(13,240,255,0.06);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #0df0ff;
+      letter-spacing: 0.1em; margin-bottom: 2.5rem;
+    }
+    .op1-headline {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: clamp(3.5rem, 7vw, 6.5rem); font-weight: 700;
+      line-height: 0.92; letter-spacing: -0.02em;
+      color: white; margin-bottom: 2rem;
+    }
+    .op1-headline .accent { color: #0df0ff; display: block; }
+    .op1-headline .rotated {
+      display: inline-block;
+      transform: rotate(-3deg) translateX(-8px);
+      transform-origin: left center;
+    }
+    .op1-sub {
+      font-family: 'Work Sans', sans-serif; font-weight: 300; font-size: 1rem;
+      color: var(--dl-muted-light); line-height: 1.7; max-width: 440px; margin-bottom: 2.5rem;
+    }
+    .op1-cta-row { display: flex; align-items: center; gap: 1rem; }
+    .op1-btn-primary {
+      padding: 0.75rem 2rem; border-radius: 4px;
+      background: #ff4655; color: white; border: none; cursor: pointer;
+      font-family: 'Chakra Petch', sans-serif; font-weight: 600; font-size: 0.875rem;
+      letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s;
+    }
+    .op1-btn-primary:hover { background: #ff5c6e; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,70,85,0.35); }
+    .op1-btn-sec {
+      padding: 0.75rem 1.5rem; border-radius: 4px;
+      background: transparent; color: #0df0ff;
+      border: 1px solid rgba(13,240,255,0.35); cursor: pointer;
+      font-family: 'Chakra Petch', sans-serif; font-weight: 500; font-size: 0.875rem;
+      letter-spacing: 0.06em; transition: all 0.2s;
+    }
+    .op1-btn-sec:hover { background: rgba(13,240,255,0.08); }
+
+    .op1-right {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 1rem;
+    }
+    .op1-mockup {
+      width: 100%; max-width: 520px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(13,240,255,0.15);
+      border-radius: 12px; padding: 1.5rem; position: relative;
+      clip-path: polygon(0 0, 96% 0, 100% 4%, 100% 100%, 4% 100%, 0 96%);
+      transform: perspective(900px) rotateY(-4deg) rotateX(2deg);
+    }
+    .op1-mockup-bar { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.2rem; }
+    .op1-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .op1-mockup-title { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--dl-muted); margin-left: auto; }
+    .op1-lobby-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .op1-lobby-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 0.9rem; border-radius: 6px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.2s;
+    }
+    .op1-lobby-item:hover { background: rgba(13,240,255,0.06); border-color: rgba(13,240,255,0.2); }
+    .op1-lobby-left { display: flex; flex-direction: column; gap: 0.2rem; }
+    .op1-lobby-name { font-size: 0.8rem; font-weight: 600; color: white; }
+    .op1-lobby-elo { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--dl-muted-light); }
+    .op1-lobby-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; padding: 0.2rem 0.5rem;
+      border-radius: 3px; font-weight: 500;
+    }
+    .op1-float-cards { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+    .op1-float-card {
+      flex: 1; padding: 0.75rem 1rem; border-radius: 8px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      display: flex; flex-direction: column; gap: 0.25rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    .op1-float-card:nth-child(2) { animation-delay: 1.5s; }
+    .op1-float-val { font-family: 'Chakra Petch', sans-serif; font-size: 1.4rem; font-weight: 700; }
+    .op1-float-label { font-size: 0.65rem; color: var(--dl-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    .op1-diagonal {
+      height: 5rem; background: #0c0c10;
+      clip-path: polygon(0 0, 100% 100%, 100% 100%, 0 100%);
+    }
+    .op1-features {
+      background: #0c0c10; padding: 4rem 5rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    }
+    .op1-feature-tile {
+      padding: 1.5rem; border-radius: 8px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      transition: all 0.25s; cursor: default;
+      clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+    }
+    .op1-feature-tile:hover { background: rgba(13,240,255,0.05); border-color: rgba(13,240,255,0.25); transform: scale(1.02); }
+    .op1-feature-tile.large { grid-column: span 2; }
+    .op1-tile-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .op1-tile-title { font-family: 'Chakra Petch', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .op1-tile-text { font-family: 'Work Sans', sans-serif; font-size: 0.82rem; color: var(--dl-muted-light); line-height: 1.6; }
+
+    /* ===================== OPÇÃO 2 — FROST PROTOCOL ===================== */
+    #op2 { background: #0f0f12; }
+    #op2 .concept-header { background: rgba(176,132,255,0.04); }
+    #op2 .concept-badge { background: rgba(176,132,255,0.1); color: #b084ff; border: 1px solid rgba(176,132,255,0.22); }
+
+    .op2-hero {
+      min-height: 88vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 5rem 2rem; position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .op2-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 50% 30%, rgba(176,132,255,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 20% 80%, rgba(13,240,255,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 30% 30% at 80% 20%, rgba(255,70,85,0.03) 0%, transparent 50%);
+    }
+    .op2-noise {
+      position: absolute; inset: 0; pointer-events: none; opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    .op2-pretag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.3rem 1rem; border-radius: 999px; margin-bottom: 2.5rem;
+      border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04);
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em;
+      color: var(--dl-muted-light); text-transform: uppercase; position: relative; z-index: 2;
+    }
+    .op2-pretag-dot { width: 5px; height: 5px; border-radius: 50%; background: #b084ff; }
+    .op2-headline {
+      position: relative; z-index: 2;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 6.5vw, 5.5rem); font-weight: 700;
+      line-height: 1.05; letter-spacing: -0.03em; color: white;
+      margin-bottom: 1.5rem; max-width: 800px;
+    }
+    .op2-headline .line2 { color: rgba(255,255,255,0.45); }
+    .op2-sub {
+      position: relative; z-index: 2;
+      font-family: 'Inter', sans-serif; font-weight: 400; font-size: 1.05rem;
+      color: var(--dl-muted-light); line-height: 1.75; max-width: 520px;
+      margin-bottom: 3rem;
+    }
+    .op2-search {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; gap: 0;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 0.4rem 0.4rem 0.4rem 1.25rem;
+      width: 100%; max-width: 500px; margin-bottom: 3.5rem;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .op2-search:focus-within {
+      border-color: rgba(176,132,255,0.4);
+      box-shadow: 0 0 0 3px rgba(176,132,255,0.08), 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .op2-input {
+      flex: 1; background: transparent; border: none; outline: none;
+      font-family: 'Inter', sans-serif; font-size: 0.9rem; color: white;
+      padding: 0.5rem 0;
+    }
+    .op2-input::placeholder { color: rgba(255,255,255,0.25); }
+    .op2-search-btn {
+      padding: 0.6rem 1.25rem; border-radius: 7px;
+      background: #ff4655; border: none; color: white; cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.82rem;
+      transition: all 0.2s;
+    }
+    .op2-search-btn:hover { background: #ff5c6e; }
+    .op2-glass-cards {
+      position: relative; z-index: 2;
+      display: flex; gap: 1rem; max-width: 600px; width: 100%;
+    }
+    .op2-glass-card {
+      flex: 1; padding: 1.2rem 1.5rem; border-radius: 12px;
+      background: rgba(255,255,255,0.04); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex; flex-direction: column; gap: 0.25rem;
+      transition: all 0.3s;
+    }
+    .op2-glass-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.14); transform: translateY(-2px); }
+    .op2-glass-val { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; }
+    .op2-glass-label { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: var(--dl-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .op2-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent); margin: 0 5rem; }
+    .op2-features {
+      padding: 5rem; display: flex; flex-direction: column; gap: 5rem;
+    }
+    .op2-feature-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+    .op2-feature-row.reverse { direction: rtl; }
+    .op2-feature-row.reverse > * { direction: ltr; }
+    .op2-feature-label { font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--dl-muted); margin-bottom: 1rem; }
+    .op2-feature-title { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 600; line-height: 1.2; margin-bottom: 1rem; }
+    .op2-feature-text { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 0.95rem; color: var(--dl-muted-light); line-height: 1.8; margin-bottom: 1.5rem; }
+    .op2-metric-line { display: flex; align-items: center; gap: 0.5rem; font-family: 'Inter', sans-serif; font-size: 0.82rem; }
+    .op2-metric-dot { width: 6px; height: 6px; border-radius: 50%; background: #3bd982; flex-shrink: 0; }
+    .op2-panel {
+      padding: 2rem; border-radius: 16px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(16px); display: flex; flex-direction: column; gap: 0.8rem;
+      transition: transform 0.3s;
+    }
+    .op2-panel:hover { transform: translateY(-4px); }
+    .op2-panel-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.7rem 0.9rem; border-radius: 8px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.05);
+    }
+    .op2-panel-name { font-size: 0.82rem; font-weight: 500; }
+    .op2-panel-elo { font-family: 'Inter', sans-serif; font-size: 0.72rem; color: var(--dl-muted-light); }
+    .op2-panel-btn {
+      padding: 0.25rem 0.7rem; border-radius: 5px;
+      background: rgba(176,132,255,0.12); border: 1px solid rgba(176,132,255,0.25);
+      color: #b084ff; font-size: 0.65rem; font-weight: 600; cursor: pointer; letter-spacing: 0.06em;
+    }
+
+    /* ===================== OPÇÃO 3 — TERMINAL OVERRIDE ===================== */
+    #op3 { background: #090a0b; }
+    #op3 .concept-header { background: rgba(59,217,130,0.04); }
+    #op3 .concept-badge { background: rgba(59,217,130,0.1); color: #3bd982; border: 1px solid rgba(59,217,130,0.25); }
+
+    .op3-hero {
+      min-height: 88vh; padding: 4rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .op3-scanline {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+      opacity: 0.4;
+    }
+    .op3-bg-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 50% 60% at 100% 50%, rgba(59,217,130,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 0% 60%, rgba(13,240,255,0.04) 0%, transparent 50%);
+    }
+    .op3-left { position: relative; z-index: 2; }
+    .op3-system-tag {
+      display: inline-flex; align-items: center; gap: 0.6rem; margin-bottom: 2rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #3bd982;
+    }
+    .op3-pulse { width: 6px; height: 6px; border-radius: 50%; background: #3bd982; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(59,217,130,0.4); } 50% { opacity:0.8; box-shadow: 0 0 0 5px rgba(59,217,130,0); } }
+    .op3-headline {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem); font-weight: 700;
+      line-height: 0.9; letter-spacing: -0.01em; color: white;
+      margin-bottom: 2.5rem;
+    }
+    .op3-headline .line-duo { color: rgba(255,255,255,0.2); font-size: 0.7em; display: block; letter-spacing: 0.05em; font-weight: 400; margin-bottom: 0.3rem; }
+    .op3-headline .line-main { display: block; }
+    .op3-headline .cursor {
+      display: inline-block; width: 3px; height: 0.9em;
+      background: #0df0ff; margin-left: 4px; vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    .op3-terminal {
+      background: #0d0e10; border: 1px solid #1e2024;
+      border-radius: 8px; overflow: hidden; margin-bottom: 2rem;
+    }
+    .op3-term-bar {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.6rem 1rem; background: #111215; border-bottom: 1px solid #1e2024;
+    }
+    .op3-term-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .op3-term-title { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--dl-muted); margin-left: auto; }
+    .op3-term-body { padding: 1.2rem 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.9; }
+    .op3-prompt { color: #3bd982; }
+    .op3-arg { color: #0df0ff; }
+    .op3-key { color: #ff4655; }
+    .op3-val { color: #ffd166; }
+    .op3-comment { color: #4a4a55; }
+    .op3-out { color: rgba(255,255,255,0.7); }
+    .op3-metrics { display: flex; gap: 0; margin-top: 0; }
+    .op3-metric {
+      flex: 1; padding: 1rem 1.25rem;
+      border: 1px solid #1e2024; background: #0d0e10;
+      display: flex; flex-direction: column; gap: 0.3rem;
+      margin-right: -1px;
+    }
+    .op3-metric:first-child { border-radius: 6px 0 0 6px; }
+    .op3-metric:last-child { border-radius: 0 6px 6px 0; margin-right: 0; }
+    .op3-metric-val { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700; }
+    .op3-metric-label { font-family: 'Work Sans', sans-serif; font-weight: 300; font-size: 0.68rem; color: var(--dl-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .op3-right { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 0.8rem; }
+    .op3-panel {
+      background: #0d0e10; border: 1px solid #1e2024;
+      border-radius: 8px; padding: 1.25rem;
+    }
+    .op3-panel-head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;
+      padding-bottom: 0.75rem; border-bottom: 1px solid #1e2024;
+    }
+    .op3-panel-title { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #0df0ff; }
+    .op3-panel-status { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #3bd982; }
+    .op3-entry {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .op3-entry:last-child { border-bottom: none; }
+    .op3-entry-rank { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--dl-muted); width: 20px; }
+    .op3-entry-name { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; flex: 1; }
+    .op3-entry-elo {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+      padding: 0.15rem 0.5rem; border-radius: 3px;
+    }
+    .op3-log-panel {
+      background: #0d0e10; border: 1px solid #1e2024; border-radius: 8px; padding: 1rem 1.25rem;
+      max-height: 160px; overflow-y: auto;
+    }
+    .op3-log-entry { display: flex; gap: 0.75rem; padding: 0.25rem 0; }
+    .op3-log-time { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--dl-muted); white-space: nowrap; }
+    .op3-log-msg { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: rgba(255,255,255,0.7); }
+
+    .op3-features {
+      padding: 0 4rem 4rem; display: grid;
+      grid-template-columns: repeat(4,1fr); gap: 0;
+    }
+    .op3-feat-tile {
+      padding: 1.5rem; border: 1px solid #1e2024;
+      background: #0c0d0f; margin-right: -1px; margin-bottom: -1px;
+      transition: all 0.2s; cursor: default;
+    }
+    .op3-feat-tile:hover { background: rgba(13,240,255,0.04); border-color: rgba(13,240,255,0.25); z-index: 1; position: relative; }
+    .op3-feat-tile:first-child { border-radius: 8px 0 0 0; }
+    .op3-feat-tile:last-child { border-radius: 0 0 8px 0; }
+    .op3-feat-icon { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #0df0ff; margin-bottom: 0.75rem; }
+    .op3-feat-title { font-family: 'Chakra Petch', sans-serif; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; color: white; }
+    .op3-feat-text { font-family: 'Work Sans', sans-serif; font-size: 0.78rem; color: var(--dl-muted-light); line-height: 1.6; }
+
+    /* FOOTER COMPARISON */
+    .footer-strip {
+      background: #06060a; border-top: 1px solid #1a1a22;
+      padding: 3rem 5rem;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; align-items: start;
+    }
+    .footer-concept { padding: 1.5rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); }
+    .footer-concept-tag { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1.5rem; font-family: 'JetBrains Mono', monospace; }
+    .footer-concept-content { font-size: 0.82rem; color: var(--dl-muted-light); line-height: 1.7; font-family: 'Inter', sans-serif; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0a0a0c; }
+    ::-webkit-scrollbar-thumb { background: #2a2a32; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">DUOLOOT · PREVIEW</div>
+  <div class="nav-links">
+    <a class="nav-link op1" href="#op1">⚡ Op.1 Broken Arena</a>
+    <a class="nav-link op2" href="#op2">🧊 Op.2 Frost Protocol</a>
+    <a class="nav-link op3" href="#op3">💻 Op.3 Terminal Override</a>
+  </div>
+</nav>
+
+<!-- ================================================================ -->
+<!-- OPÇÃO 1 — BROKEN ARENA -->
+<!-- ================================================================ -->
+<section id="op1">
+  <div class="concept-header">
+    <span class="concept-badge">⚡ Opção 1 — Broken Arena</span>
+    <p>Vanguarda criativa · Grid quebrado · Tipografia colossal · Cortes diagonais · Chakra Petch + Work Sans</p>
+  </div>
+
+  <!-- HERO -->
+  <div class="op1-hero">
+    <div class="op1-bg-glow"></div>
+    <div class="op1-grid-lines"></div>
+
+    <div class="op1-left">
+      <div class="op1-tag">
+        <span>●</span> DUO LOOT · CODEFIRE v2
+      </div>
+      <h1 class="op1-headline">
+        <span class="rotated">ENCONTRE</span>
+        <span class="accent">SEU DUO.</span>
+        DOMINE.
+      </h1>
+      <p class="op1-sub">A plataforma competitiva onde duos são forjados, rankings sobem e recompensas reais esperem os melhores.</p>
+      <div class="op1-cta-row">
+        <button class="op1-btn-primary">BUSCAR JOGADOR →</button>
+        <button class="op1-btn-sec">VER LOBBIES</button>
+      </div>
+    </div>
+
+    <div class="op1-right">
+      <div class="op1-mockup">
+        <div class="op1-mockup-bar">
+          <div class="op1-dot" style="background:#ff4655"></div>
+          <div class="op1-dot" style="background:#ffd166"></div>
+          <div class="op1-dot" style="background:#3bd982"></div>
+          <span class="op1-mockup-title">lobby.find() — 847 online</span>
+        </div>
+        <div class="op1-lobby-list">
+          <div class="op1-lobby-item">
+            <div class="op1-lobby-left">
+              <span class="op1-lobby-name">TitanX · ADC Main</span>
+              <span class="op1-lobby-elo">Diamond I · 64% WR</span>
+            </div>
+            <span class="op1-lobby-badge" style="background:rgba(13,240,255,0.12);color:#0df0ff;border:1px solid rgba(13,240,255,0.25)">2/5</span>
+          </div>
+          <div class="op1-lobby-item">
+            <div class="op1-lobby-left">
+              <span class="op1-lobby-name">SilvaRJ · Support</span>
+              <span class="op1-lobby-elo">Platinum II · 58% WR</span>
+            </div>
+            <span class="op1-lobby-badge" style="background:rgba(59,217,130,0.12);color:#3bd982;border:1px solid rgba(59,217,130,0.25)">1/5</span>
+          </div>
+          <div class="op1-lobby-item">
+            <div class="op1-lobby-left">
+              <span class="op1-lobby-name">FoxMid · Mid Lane</span>
+              <span class="op1-lobby-elo">Emerald III · 72% WR</span>
+            </div>
+            <span class="op1-lobby-badge" style="background:rgba(176,132,255,0.12);color:#b084ff;border:1px solid rgba(176,132,255,0.25)">4/5</span>
+          </div>
+        </div>
+      </div>
+      <div class="op1-float-cards">
+        <div class="op1-float-card">
+          <span class="op1-float-val" style="color:#0df0ff">12.8k</span>
+          <span class="op1-float-label">Matches / dia</span>
+        </div>
+        <div class="op1-float-card">
+          <span class="op1-float-val" style="color:#3bd982">94%</span>
+          <span class="op1-float-label">Satisfação</span>
+        </div>
+        <div class="op1-float-card">
+          <span class="op1-float-val" style="color:#ffd166">&lt;3min</span>
+          <span class="op1-float-label">Tempo médio</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIAGONAL + FEATURES -->
+  <div class="op1-diagonal"></div>
+  <div class="op1-features">
+    <div class="op1-feature-tile large">
+      <div class="op1-tile-icon">⚔️</div>
+      <div class="op1-tile-title" style="font-size:1.3rem">Lobbies Competitivos</div>
+      <div class="op1-tile-text">Encontre jogadores do mesmo elo e estilo de jogo em segundos. Filtros por role, horário e região.</div>
+    </div>
+    <div class="op1-feature-tile" style="border-color:rgba(176,132,255,0.2)">
+      <div class="op1-tile-icon">🏆</div>
+      <div class="op1-tile-title">Vault de Prêmios</div>
+      <div class="op1-tile-text">Complete missões e resgate recompensas reais.</div>
+    </div>
+    <div class="op1-feature-tile" style="border-color:rgba(255,70,85,0.2)">
+      <div class="op1-tile-icon">🎓</div>
+      <div class="op1-tile-title">Coaching Élite</div>
+      <div class="op1-tile-text">Coaches Challenger prontos para elevar seu jogo.</div>
+    </div>
+    <div class="op1-feature-tile" style="border-color:rgba(59,217,130,0.2)">
+      <div class="op1-tile-icon">📊</div>
+      <div class="op1-tile-title">Estatísticas Riot</div>
+      <div class="op1-tile-text">Dados completos via API Riot em tempo real.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- OPÇÃO 2 — FROST PROTOCOL -->
+<!-- ================================================================ -->
+<section id="op2" style="border-top:1px solid #1a1a22">
+  <div class="concept-header">
+    <span class="concept-badge">🧊 Opção 2 — Frost Protocol</span>
+    <p>Minimalismo elegante · Glassmorphism · Espaço negativo · Space Grotesk + Inter</p>
+  </div>
+
+  <!-- HERO -->
+  <div class="op2-hero">
+    <div class="op2-bg"></div>
+    <div class="op2-noise"></div>
+
+    <div class="op2-pretag">
+      <span class="op2-pretag-dot"></span>
+      Plataforma #1 no Brasil · 2025
+    </div>
+
+    <h1 class="op2-headline">
+      Encontre seu duo.<br/>
+      <span class="line2">Domine o ranking.</span>
+    </h1>
+
+    <p class="op2-sub">Matchmaking competitivo com precisão cirúrgica. Lobbies, coaching e recompensas — tudo em um só lugar.</p>
+
+    <div class="op2-search">
+      <input class="op2-input" placeholder="Digite seu Riot ID (Ex: DÉTY#2269)" />
+      <button class="op2-search-btn">Buscar →</button>
+    </div>
+
+    <div class="op2-glass-cards">
+      <div class="op2-glass-card">
+        <span class="op2-glass-val" style="color:#b084ff">12.847</span>
+        <span class="op2-glass-label">Duos encontrados</span>
+      </div>
+      <div class="op2-glass-card">
+        <span class="op2-glass-val" style="color:#0df0ff">98.3%</span>
+        <span class="op2-glass-label">Uptime garantido</span>
+      </div>
+      <div class="op2-glass-card">
+        <span class="op2-glass-val" style="color:#3bd982">&lt; 3min</span>
+        <span class="op2-glass-label">Tempo de match</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="op2-divider"></div>
+
+  <!-- FEATURES -->
+  <div class="op2-features">
+    <div class="op2-feature-row">
+      <div>
+        <div class="op2-feature-label">↳ Feature principal</div>
+        <h3 class="op2-feature-title">Lobbies com<br/>jogadores do seu elo</h3>
+        <p class="op2-feature-text">Sistema de matchmaking com filtros por role, elo e estilo de comunicação. Sem ruído, só o essencial para montar o time perfeito.</p>
+        <div class="op2-metric-line" style="color:#3bd982">
+          <span class="op2-metric-dot"></span>
+          <span>+47% taxa de vitória média após 2 semanas</span>
+        </div>
+      </div>
+      <div class="op2-panel">
+        <div class="op2-panel-row">
+          <div><div class="op2-panel-name">TitanX</div><div class="op2-panel-elo">Diamond I · ADC</div></div>
+          <button class="op2-panel-btn">ENTRAR</button>
+        </div>
+        <div class="op2-panel-row">
+          <div><div class="op2-panel-name">SilvaRJ</div><div class="op2-panel-elo">Platinum II · Support</div></div>
+          <button class="op2-panel-btn">ENTRAR</button>
+        </div>
+        <div class="op2-panel-row">
+          <div><div class="op2-panel-name">FoxMid</div><div class="op2-panel-elo">Emerald III · Mid</div></div>
+          <button class="op2-panel-btn">ENTRAR</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="op2-feature-row reverse">
+      <div>
+        <div class="op2-feature-label">↳ Recompensas reais</div>
+        <h3 class="op2-feature-title">Vault de missões<br/>com prêmios reais</h3>
+        <p class="op2-feature-text">Complete desafios diários e semanais, acumule pontos e resgate prêmios. Do in-game ao mundo físico.</p>
+        <div class="op2-metric-line" style="color:#ffd166">
+          <span class="op2-metric-dot" style="background:#ffd166"></span>
+          <span>R$ 180.000+ em prêmios distribuídos</span>
+        </div>
+      </div>
+      <div class="op2-panel">
+        <div style="display:flex;flex-direction:column;gap:0.5rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:0.85rem;font-weight:600">Missões ativas</span>
+            <span style="font-family:'Inter',sans-serif;font-size:0.7rem;color:#ffd166">3 disponíveis</span>
+          </div>
+          <div class="op2-panel-row" style="flex-direction:column;align-items:flex-start;gap:0.5rem">
+            <span style="font-size:0.8rem;font-weight:500">Vencer 5 partidas rankeds</span>
+            <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:999px">
+              <div style="width:60%;height:100%;background:#3bd982;border-radius:999px"></div>
+            </div>
+            <span style="font-family:'Inter',sans-serif;font-size:0.68rem;color:var(--dl-muted)">3/5 concluídas</span>
+          </div>
+          <div class="op2-panel-row" style="flex-direction:column;align-items:flex-start;gap:0.5rem">
+            <span style="font-size:0.8rem;font-weight:500">Jogar com um duo por 2h</span>
+            <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:999px">
+              <div style="width:85%;height:100%;background:#b084ff;border-radius:999px"></div>
+            </div>
+            <span style="font-family:'Inter',sans-serif;font-size:0.68rem;color:var(--dl-muted)">102min / 120min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ -->
+<!-- OPÇÃO 3 — TERMINAL OVERRIDE -->
+<!-- ================================================================ -->
+<section id="op3" style="border-top:1px solid #1a1a22">
+  <div class="concept-header">
+    <span class="concept-badge">💻 Opção 3 — Terminal Override</span>
+    <p>Dev centric · Alta densidade · Neon ciano/verde · Chakra Petch + JetBrains Mono</p>
+  </div>
+
+  <!-- HERO -->
+  <div class="op3-hero">
+    <div class="op3-scanline"></div>
+    <div class="op3-bg-glow"></div>
+
+    <div class="op3-left">
+      <div class="op3-system-tag">
+        <span class="op3-pulse"></span>
+        DUOLOOT_v2.0 — SISTEMA ATIVO · 98.3% UPTIME
+      </div>
+      <h1 class="op3-headline">
+        <span class="line-duo">// encontre seu</span>
+        <span class="line-main">DUO<span class="cursor"></span></span>
+      </h1>
+      <div class="op3-terminal">
+        <div class="op3-term-bar">
+          <div class="op3-term-dot" style="background:#ff4655"></div>
+          <div class="op3-term-dot" style="background:#ffd166"></div>
+          <div class="op3-term-dot" style="background:#3bd982"></div>
+          <span class="op3-term-title">duoloot ~ matchmaking</span>
+        </div>
+        <div class="op3-term-body">
+          <div><span class="op3-prompt">$ </span><span class="op3-arg">buscar</span> --riot-id <span class="op3-val">"DÉTY#2269"</span></div>
+          <div><span class="op3-comment">&gt; Carregando perfil...</span></div>
+          <div><span class="op3-key">rank</span>: <span class="op3-val">Diamond II</span> · <span class="op3-key">wr</span>: <span class="op3-val">64.3%</span></div>
+          <div><span class="op3-prompt">$ </span><span class="op3-arg">lobby</span>.find({ <span class="op3-key">elo</span>: <span class="op3-val">"Diamond"</span>, <span class="op3-key">role</span>: <span class="op3-val">"ADC"</span> })</div>
+          <div><span class="op3-comment">&gt; 3 lobbies encontrados em 1.2s ✓</span></div>
+        </div>
+      </div>
+      <div class="op3-metrics">
+        <div class="op3-metric">
+          <span class="op3-metric-val" style="color:#0df0ff">12.8k</span>
+          <span class="op3-metric-label">Matches/dia</span>
+        </div>
+        <div class="op3-metric">
+          <span class="op3-metric-val" style="color:#3bd982">94%</span>
+          <span class="op3-metric-label">Satisfação</span>
+        </div>
+        <div class="op3-metric">
+          <span class="op3-metric-val" style="color:#ffd166">&lt;3s</span>
+          <span class="op3-metric-label">Match time</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="op3-right">
+      <div class="op3-panel">
+        <div class="op3-panel-head">
+          <span class="op3-panel-title">// lobbies.active()</span>
+          <span class="op3-panel-status">● 847 online</span>
+        </div>
+        <div class="op3-entry">
+          <span class="op3-entry-rank">01</span>
+          <span class="op3-entry-name">TitanX · <span style="color:#a6a6ad;font-size:0.7rem">ADC · Bot lane</span></span>
+          <span class="op3-entry-elo" style="background:rgba(13,240,255,0.1);color:#0df0ff;border:1px solid rgba(13,240,255,0.2)">DIA I</span>
+        </div>
+        <div class="op3-entry">
+          <span class="op3-entry-rank">02</span>
+          <span class="op3-entry-name">SilvaRJ · <span style="color:#a6a6ad;font-size:0.7rem">SUP · Utility</span></span>
+          <span class="op3-entry-elo" style="background:rgba(59,217,130,0.1);color:#3bd982;border:1px solid rgba(59,217,130,0.2)">PLAT II</span>
+        </div>
+        <div class="op3-entry">
+          <span class="op3-entry-rank">03</span>
+          <span class="op3-entry-name">FoxMid · <span style="color:#a6a6ad;font-size:0.7rem">MID · Carry</span></span>
+          <span class="op3-entry-elo" style="background:rgba(176,132,255,0.1);color:#b084ff;border:1px solid rgba(176,132,255,0.2)">EME III</span>
+        </div>
+        <div class="op3-entry">
+          <span class="op3-entry-rank">04</span>
+          <span class="op3-entry-name">ZeroG · <span style="color:#a6a6ad;font-size:0.7rem">JNG · Engage</span></span>
+          <span class="op3-entry-elo" style="background:rgba(255,70,85,0.1);color:#ff4655;border:1px solid rgba(255,70,85,0.2)">DIA III</span>
+        </div>
+      </div>
+
+      <div class="op3-log-panel">
+        <div class="op3-log-entry"><span class="op3-log-time">[03:47:12]</span><span class="op3-log-msg"><span style="color:#3bd982">@titanx</span>: "Diamond em 3 semanas. Melhor duo da vida."</span></div>
+        <div class="op3-log-entry"><span class="op3-log-time">[21:12:05]</span><span class="op3-log-msg"><span style="color:#0df0ff">@silvarj</span>: "Sistema encontrou meu duo perfeito em 90s."</span></div>
+        <div class="op3-log-entry"><span class="op3-log-time">[18:33:51]</span><span class="op3-log-msg"><span style="color:#b084ff">@foxmid</span>: "Vault pagou meu headset novo. Sério."</span></div>
+        <div class="op3-log-entry"><span class="op3-log-time">[14:20:18]</span><span class="op3-log-msg"><span style="color:#ffd166">@zerog</span>: "Do Ouro ao Diamante em 45 dias usando o sistema."</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="op3-features">
+    <div class="op3-feat-tile">
+      <div class="op3-feat-icon">// lobby.find()</div>
+      <div class="op3-feat-title">Matchmaking</div>
+      <div class="op3-feat-text">Encontre duos do seu nível em segundos. Filtros por elo, role e horário.</div>
+    </div>
+    <div class="op3-feat-tile">
+      <div class="op3-feat-icon">// vault.claim()</div>
+      <div class="op3-feat-title">Vault de Prêmios</div>
+      <div class="op3-feat-text">Missões diárias com prêmios reais resgatáveis. RPG system para gamers.</div>
+    </div>
+    <div class="op3-feat-tile">
+      <div class="op3-feat-icon">// coach.book()</div>
+      <div class="op3-feat-title">Coaching Élite</div>
+      <div class="op3-feat-text">Coaches Challenger. Sessões 1:1. VOD review e acompanhamento de elo.</div>
+    </div>
+    <div class="op3-feat-tile">
+      <div class="op3-feat-icon">// stats.fetch()</div>
+      <div class="op3-feat-title">Stats em Tempo Real</div>
+      <div class="op3-feat-text">Dados Riot API ao vivo. Histórico, win rate, KDA e progresso de rank.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER PREVIEW COMPARISON -->
+<footer style="background:#06060a;border-top:1px solid #14141a;padding:3rem 5rem 2rem">
+  <div style="text-align:center;margin-bottom:2rem">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#4a4a55;letter-spacing:0.1em;text-transform:uppercase">
+      // Preview de Footers — escolha sua opção
+    </p>
+  </div>
+  <div class="footer-strip">
+    <div class="footer-concept" style="border-color:rgba(13,240,255,0.12)">
+      <div class="footer-concept-tag" style="color:#0df0ff">⚡ Op.1 Footer — Broken Arena</div>
+      <div style="font-family:'Chakra Petch',sans-serif;font-size:2.5rem;font-weight:700;color:rgba(255,255,255,0.08);letter-spacing:-0.02em;margin-bottom:1rem;line-height:1">GAME<br/>OVER?<br/><span style="color:rgba(13,240,255,0.3)">NEVER.</span></div>
+      <div class="footer-concept-content">Statement colossal ao fundo, links em grid, marquee sutil.</div>
+    </div>
+    <div class="footer-concept" style="border-color:rgba(176,132,255,0.12)">
+      <div class="footer-concept-tag" style="color:#b084ff">🧊 Op.2 Footer — Frost Protocol</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:300;color:rgba(255,255,255,0.5);margin-bottom:1rem;line-height:1.8">Matchmaking competitivo.<br/>Crafted with precision.</div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
+        <span style="font-family:'Inter',sans-serif;font-size:0.78rem;color:#b084ff;border-bottom:1px solid rgba(176,132,255,0.3);padding-bottom:1px">Sobre</span>
+        <span style="font-family:'Inter',sans-serif;font-size:0.78rem;color:#b084ff;border-bottom:1px solid rgba(176,132,255,0.3);padding-bottom:1px">Planos</span>
+        <span style="font-family:'Inter',sans-serif;font-size:0.78rem;color:#b084ff;border-bottom:1px solid rgba(176,132,255,0.3);padding-bottom:1px">Discord</span>
+        <span style="font-family:'Inter',sans-serif;font-size:0.78rem;color:#b084ff;border-bottom:1px solid rgba(176,132,255,0.3);padding-bottom:1px">Status</span>
+      </div>
+      <div class="footer-concept-content">Minimalista, editorial, elegante. 2–3 links curados.</div>
+    </div>
+    <div class="footer-concept" style="border-color:rgba(59,217,130,0.12)">
+      <div class="footer-concept-tag" style="color:#3bd982">💻 Op.3 Footer — Terminal Override</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:2;margin-bottom:0.5rem">
+        <span style="color:#3bd982">$ </span>help --section<br/>
+        <span style="color:#0df0ff">→ [sobre] [planos] [discord] [status]</span><br/>
+        <span style="color:#4a4a55"># versão 2.0.0 · uptime 98.3%</span>
+      </div>
+      <div class="footer-concept-content">Prompt de terminal. Links como comandos autocomplete.</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid #14141a">
+    <p style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#3a3a44">
+      Duo Loot · Preview Conceitos · Kombai Design System
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
