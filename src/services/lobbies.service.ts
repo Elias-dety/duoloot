@@ -33,7 +33,7 @@ type LobbyRecord = {
   created_at: string;
 };
 
-type CreateLobbyPayload = {
+export type CreateLobbyPayload = {
   slots_total?: number;
   mode?: string;
   queue?: string;
