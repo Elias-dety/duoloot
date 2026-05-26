@@ -16,6 +16,7 @@ export interface LobbyTemplateProps {
   onJoinLobby?: (id: string) => void;
   onLeaveLobby?: (id: string) => void;
   onCreateTestLobby?: () => void;
+  onConfigureLobby?: () => void;
   isCreating?: boolean;
   joiningLobbyId?: string | null;
   leavingLobbyId?: string | null;
@@ -38,6 +39,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   onJoinLobby,
   onLeaveLobby,
   onCreateTestLobby,
+  onConfigureLobby,
   isCreating,
   joiningLobbyId,
   leavingLobbyId,
@@ -189,6 +191,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
         <LobbyActionsBar
           totalLobbies={filteredLobbies.length}
           onCreateLobby={onCreateTestLobby}
+          onConfigureLobby={onConfigureLobby}
           isCreating={isCreating}
         />
 
