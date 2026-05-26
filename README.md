@@ -28,8 +28,9 @@ O projeto usa a identidade visual **Duo Loot Codefire UI** — dark mode premium
 - **Backend:** Supabase (Auth, Database, Edge Functions)
 - **Ícones:** Lucide React
 - **Validação:** Zod
+- **Formulários:** React Hook Form
 - **Roteamento:** React Router 7 (com lazy loading)
-- **CMS:** React Bricks
+- **Testes:** Vitest + Playwright
 
 ## 🚦 Rotas do Sistema
 
@@ -40,10 +41,13 @@ O projeto usa a identidade visual **Duo Loot Codefire UI** — dark mode premium
 | `/cofre` | Vault — Missões e recompensas | Público |
 | `/coaches` | Marketplace de coaches | Público |
 | `/perfil/:playerId` | Perfil público do jogador | Público |
+| `/riot/:gameName/:tagLine` | Perfil Riot/VALORANT | Público |
 | `/login` | Login | Público |
 | `/cadastro` | Cadastro | Público |
 | `/dashboard` | Painel do jogador logado | Privado |
 | `/premium` | Planos Premium | Privado |
+| `/riot/connect` | Conexão de conta Riot | Privado |
+| `/riot/callback` | Callback Riot | Privado |
 | `/onboarding` | Configuração de perfil gamer | Privado |
 | `/admin/cofre` | Admin do Vault | Privado |
 
@@ -54,18 +58,17 @@ src/
 ├── components/        # Componentes globais reutilizáveis
 │   ├── atoms/         # Botões, inputs, badges
 │   ├── molecules/     # Stat cards, timers
-│   ├── organisms/     # Hero sections, grids
-│   └── duoloot/       # Componentes do design system Codefire
-├── features/          # Lógica por domínio (auth, premium, etc.)
+│   └── organisms/     # Grids e blocos compostos
+├── features/          # Lógica por domínio (auth, premium, vault, lobby etc.)
 ├── pages/             # Páginas do app
 │   └── HomePage/      # Seções da Home (Hero, Lobby, Torneios, Coaches)
 ├── layouts/           # Wrappers de rota (PublicLayout, DashboardLayout)
 ├── routes/            # Rotas públicas e privadas (lazy loading)
 ├── styles/            # tokens.css, globals.css, red-vault.css
-├── constants/         # Rotas, constantes globais
+├── constants/         # Rotas, assets e constantes globais
 ├── schemas/           # Schemas Zod
-├── data/mocks/        # Dados mockados para dev
-├── services/          # Serviços (auth, lobbies, vault)
+├── data/mocks/        # Dados mockados para dev/protótipo
+├── services/          # Serviços (auth, lobbies, vault, Riot etc.)
 └── hooks/             # Hooks customizados
 ```
 
@@ -81,9 +84,10 @@ Acesse: http://localhost:5173/
 ## ✅ Verificação
 
 ```bash
-npm run lint      # ESLint
-npm run build     # TypeScript + Vite build
-npm run test -- --run  # Vitest
+npm run lint          # ESLint
+npm run build         # TypeScript + Vite build
+npm run test -- --run # Vitest
+npm run test:e2e      # Playwright
 ```
 
 ## ⚙️ Variáveis de Ambiente
@@ -97,6 +101,15 @@ VITE_SUPABASE_ANON_KEY=sua_chave_aqui
 
 > ⚠️ Nunca coloque `RIOT_API_KEY` no front-end. Use apenas Supabase Edge Functions.
 
+## 🧹 Limpeza e auditoria funcional
+
+Antes de testar página por página, mantenha estas regras:
+
+- Botão sem implementação real deve ficar escondido, desativado com mensagem clara ou marcado como “em breve”.
+- Dados mockados não devem aparecer em produção como se fossem reais.
+- Fluxos obrigatórios, como onboarding, não devem oferecer saídas que voltam para o mesmo bloqueio.
+- Rotas administrativas precisam de proteção por role/permissão, não apenas login.
+
 ---
 
-Desenvolvido com ❤️ pela equipe Duo Loot.
+Desenvolvido pela equipe Duo Loot.
