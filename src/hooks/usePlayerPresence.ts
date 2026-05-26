@@ -7,6 +7,7 @@ type PresenceState = Record<string, Array<Record<string, unknown>>>;
 
 let activeChannel: RealtimeChannel | null = null;
 let activeUnsubscribe: (() => void) | null = null;
+let activeInitialization: Promise<void> | null = null;
 let currentUserId: string | null = null;
 let referenceCount = 0;
 
@@ -22,6 +23,7 @@ export function usePlayerPresence() {
     if (!isSupabaseConfigured) return;
 
     let isMounted = true;
+    let didRegister = false;
 
     const handlePresenceUpdate = (state: PresenceState) => {
       if (!isMounted) return;
@@ -39,29 +41,38 @@ export function usePlayerPresence() {
         if (error || !user || !isMounted) return;
 
         referenceCount++;
+        didRegister = true;
         presenceListeners.add(handlePresenceUpdate);
 
-        if (activeChannel) {
+        if (activeChannel || activeInitialization) {
           handlePresenceUpdate(currentPresenceState);
+          await activeInitialization;
+          if (isMounted) handlePresenceUpdate(currentPresenceState);
           return;
         }
 
-        currentUserId = user.id;
-        await setCurrentUserStatus('online');
+        activeInitialization = (async () => {
+          currentUserId = user.id;
+          await setCurrentUserStatus('online');
 
-        const channel = getOnlinePresenceChannel(user.id);
-        activeChannel = channel;
+          const channel = getOnlinePresenceChannel(user.id);
+          activeChannel = channel;
 
-        const { unsubscribe } = subscribeToPresence(channel, user.id, {}, {
-          onSync: (state) => {
-            currentPresenceState = state;
-            presenceListeners.forEach((listener) => listener(state));
-          },
-        });
+          const { unsubscribe } = subscribeToPresence(channel, user.id, {}, {
+            onSync: (state) => {
+              currentPresenceState = state;
+              presenceListeners.forEach((listener) => listener(state));
+            },
+          });
 
-        activeUnsubscribe = unsubscribe;
+          activeUnsubscribe = unsubscribe;
+        })();
+
+        await activeInitialization;
       } catch (error) {
         console.error('[Presence Hook] Erro ao configurar presença:', error);
+      } finally {
+        activeInitialization = null;
       }
     };
 
@@ -69,8 +80,11 @@ export function usePlayerPresence() {
 
     return () => {
       isMounted = false;
-      referenceCount--;
-      presenceListeners.delete(handlePresenceUpdate);
+
+      if (didRegister) {
+        referenceCount = Math.max(0, referenceCount - 1);
+        presenceListeners.delete(handlePresenceUpdate);
+      }
 
       if (referenceCount <= 0) {
         if (activeUnsubscribe) {
@@ -79,6 +93,7 @@ export function usePlayerPresence() {
         }
 
         activeChannel = null;
+        activeInitialization = null;
         presenceListeners.clear();
         currentPresenceState = {};
 
