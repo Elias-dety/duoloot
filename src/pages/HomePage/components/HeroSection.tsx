@@ -108,7 +108,6 @@ export function HeroSection() {
 
   return (
     <section className="relative flex min-h-[92vh] flex-col items-center justify-center overflow-hidden px-5 py-24 text-center sm:px-6">
-      {/* Background glows */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -121,7 +120,6 @@ export function HeroSection() {
         }}
       />
 
-      {/* Subtle dot grid */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.025]"
@@ -132,42 +130,34 @@ export function HeroSection() {
         }}
       />
 
-      {/* Content */}
       <div className="relative z-10 flex w-full max-w-2xl flex-col items-center gap-0">
-        {/* Pre-tag badge */}
         <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.05] px-4 py-1.5 backdrop-blur-sm">
           <span
             className="h-1.5 w-1.5 rounded-full bg-[var(--dl-number)]"
             style={{ boxShadow: '0 0 6px var(--dl-number)' }}
           />
-          <span className="font-['Inter'] text-[0.68rem] font-500 uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
-            Plataforma #1 no Brasil · 2025
+          <span className="font-['Inter'] text-[0.68rem] font-medium uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
+            MVP em construção · teste fechado em breve
           </span>
         </div>
 
-        {/* Headline */}
         <h1 className="mb-5 text-[clamp(2.8rem,7vw,5rem)] font-bold leading-[1.04] tracking-[-0.03em] text-white">
           {copy.home.heroTitle}
           <span
             className="block"
             style={{ color: 'var(--dl-number)', fontWeight: 700 }}
           >
-            {copy.home.syntaxTwoD.charAt(0).toUpperCase() + copy.home.syntaxTwoD.slice(1)}. {copy.home.syntaxThreeC.charAt(0).toUpperCase() + copy.home.syntaxThreeC.slice(1)}.
+            Encontre duo. Evolua junto.
           </span>
         </h1>
 
-        {/* Subheading */}
         <p className="mb-10 max-w-lg font-['Inter'] text-[1rem] font-300 leading-[1.75] text-[var(--dl-muted-light)]">
-          Matchmaking competitivo com precisão cirúrgica. Lobbies, coaching e recompensas — tudo em um só lugar.
+          Uma plataforma gamer para conectar jogadores, organizar lobbies, testar missões do Cofre e preparar recursos premium sem prometer o que ainda está em construção.
         </p>
 
-        {/* Glass search bar */}
         <form onSubmit={handleSearch} className="w-full max-w-xl">
           <div
             className="group flex w-full items-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.04] p-2 pl-5 backdrop-blur-xl transition-all duration-200 focus-within:border-[var(--dl-number)]/40 focus-within:bg-white/[0.06]"
-            style={{
-              boxShadow: 'none',
-            }}
           >
             <Search
               size={16}
@@ -205,31 +195,19 @@ export function HeroSection() {
           )}
         </form>
 
-        {/* Syntax hints */}
         <div className="mt-5 flex flex-col items-center gap-1 font-['Inter'] text-[0.82rem] font-500 tracking-wide text-[var(--dl-muted-light)]">
           <p>
-            <span className="text-[var(--dl-number)]">{copy.home.syntaxOneA}</span>{' '}
-            {copy.home.syntaxOneB}{' '}
-            <span className="text-[var(--dl-number)]">{copy.home.syntaxOneC}</span>
+            Digite um Riot ID no formato <span className="text-[var(--dl-number)]">Nome#TAG</span> para testar a busca.
           </p>
           <p>
-            <span className="text-[var(--dl-number)]">{copy.home.syntaxTwoA}</span>{' '}
-            <span className="text-[var(--dl-warning)]">{copy.home.syntaxTwoB}</span>{' '}
-            {copy.home.syntaxTwoC}{' '}
-            <span className="text-[var(--dl-function)]">{copy.home.syntaxTwoD}</span>
-          </p>
-          <p>
-            <span className="text-[var(--dl-string)]">{copy.home.syntaxThreeA}</span>{' '}
-            {copy.home.syntaxThreeB}{' '}
-            <span className="text-[var(--dl-keyword)]">{copy.home.syntaxThreeC}</span>
+            Lobbies, Cofre e coaches ainda podem usar dados de demonstração enquanto o backend final é ligado.
           </p>
         </div>
 
-        {/* Stat cards */}
         <div className="mt-12 flex w-full flex-col gap-3 sm:flex-row">
-          <GlassStatCard value="12.847" label="Duos encontrados" color="cyan" />
-          <GlassStatCard value="94%" label="Satisfação" color="green" />
-          <GlassStatCard value="< 3min" label="Tempo de match" color="yellow" />
+          <GlassStatCard value="MVP" label="Base em validação" color="cyan" />
+          <GlassStatCard value="DEV" label="Dados em auditoria" color="green" />
+          <GlassStatCard value="BETA" label="Teste fechado" color="yellow" />
         </div>
       </div>
     </section>
