@@ -114,3 +114,33 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei migration nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 6 autorizada pelo usuário: checklist de validação da migration de Karma
+
+Arquivos alterados nesta etapa:
+
+- `docs/test-checklist.md`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Adicionada seção `Karma / Reputação` no checklist de testes.
+- Adicionado comando sugerido `supabase db push` para aplicar a migration localmente.
+- Adicionadas verificações esperadas para enums, tabelas e trigger da migration de Karma.
+- Adicionados comandos SQL com `to_regtype` e `to_regclass` para validar objetos criados no banco.
+- Adicionada validação manual futura do fluxo de avaliação quando a página/modal existir.
+- Atualizada a lista de evidências úteis para falhas de migration, SQL ou interface.
+
+Commit do checklist relacionado:
+
+- `f047d3788c1f5dc6efe44d5d78385268f849062f`
+
+Testes pendentes para o PC:
+
+- Aplicar a migration com `supabase db push`.
+- Rodar as consultas SQL listadas em `docs/test-checklist.md`.
+- Conferir se nenhum objeto de banco retornou `null`.
+
+Observação:
+
+- Não rodei migration nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
