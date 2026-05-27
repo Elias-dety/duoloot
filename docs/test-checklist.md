@@ -153,6 +153,37 @@ Validação manual da rota:
 5. Sair da conta e tentar abrir `/karma/preview` novamente.
 6. Confirmar que usuário deslogado não acessa a página protegida.
 
+### Validação do link Karma no menu
+
+Arquivo esperado:
+
+```text
+src/layouts/DashboardLayout.tsx
+```
+
+Build:
+
+```bash
+npm run build
+```
+
+Resultado esperado:
+
+- TypeScript compila sem erro.
+- O array `navItems` contém o item `Karma`.
+- O item `Karma` aponta para `ROUTES.KARMA_PREVIEW`.
+- O código visual do menu para Karma é `KM`.
+
+Validação manual do menu:
+
+1. Entrar com um usuário autenticado.
+2. Confirmar que o item `Karma` aparece no menu lateral em desktop.
+3. Confirmar que o item `Karma` aparece no menu superior/mobile quando a largura for pequena.
+4. Clicar em `Karma`.
+5. Confirmar que abre `/karma/preview`.
+6. Confirmar que o item `Karma` fica com estado visual ativo.
+7. Confirmar que os links antigos `Dashboard`, `Perfil`, `Premium`, `Lobby` e `Cofre` continuam aparecendo.
+
 ### Validação da página preview do Karma
 
 Arquivo esperado:
@@ -217,4 +248,5 @@ Se algum teste falhar, guardar e enviar:
 - nome da tabela, função ou trigger que não foi criada;
 - payload usado no `submitKarmaReview`, ocultando dados sensíveis se houver;
 - URL acessada no teste da rota `/karma/preview`;
+- print do item `Karma` no menu desktop e mobile;
 - print da página preview do Karma em desktop e, se possível, em mobile.
