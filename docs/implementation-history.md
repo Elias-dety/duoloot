@@ -239,3 +239,35 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 10 autorizada pelo usuário: checklist de validação da página preview do Karma
+
+Arquivos alterados nesta etapa:
+
+- `docs/test-checklist.md`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Adicionada validação específica para a página `src/pages/KarmaPreviewPage.tsx`.
+- Adicionado `npm run build` como verificação de TypeScript, import de tipos e compilação da página.
+- Adicionada validação visual para o padrão Duo Loot: fundo escuro, `dl-panel`, gradientes, bordas arredondadas e tipografia `Rajdhani`.
+- Adicionada verificação do título `Avaliação pós-partida`, status `Preview • Karma` e jogador mockado `ShadowPhoenix`.
+- Adicionada verificação das opções obrigatórias de desempenho e comportamento.
+- Adicionada verificação de bloqueio/habilitação do botão `Enviar Avaliação` conforme respostas selecionadas.
+- Adicionada verificação do contador de comentário até 150 caracteres.
+- Adicionada verificação do cálculo visual do Karma desta avaliação.
+- Adicionada evidência de print da página preview em desktop e mobile.
+
+Commit do checklist relacionado:
+
+- `5e1d360042183dff62e258cdf2aeda734b9659fd`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Após conectar rota/menu, abrir a página e executar a validação visual listada em `docs/test-checklist.md`.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
