@@ -15,14 +15,13 @@ import type {
   ValorantErrorCode,
   RiotRegion,
 } from '@/types/valorant.types';
-import { isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 // ---------------------------------------------------------------------------
 // Configuração
 // ---------------------------------------------------------------------------
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const EDGE_FUNCTION_BASE = `${SUPABASE_URL}/functions/v1`;
 
@@ -35,6 +34,8 @@ export const EDGE_FUNCTION_BASE = `${SUPABASE_URL}/functions/v1`;
  */
 function mapErrorCode(status: number): ValorantErrorCode {
   switch (status) {
+    case 401:
+      return 'RIOT_API_ERROR';
     case 404:
       return 'PLAYER_NOT_FOUND';
     case 429:
@@ -48,12 +49,24 @@ function mapErrorCode(status: number): ValorantErrorCode {
 
 /**
  * Cria headers padrão para chamadas à Edge Function.
- * Usa a anon key do Supabase como Bearer token.
+ * Usa o access_token da sessão real, não a anon key pública do projeto.
  */
-export function createHeaders(): HeadersInit {
+export async function createHeaders(): Promise<HeadersInit> {
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error || !session?.access_token) {
+    throw {
+      code: 'RIOT_API_ERROR',
+      message: 'Entre na sua conta para consultar dados do VALORANT.',
+    } satisfies ValorantApiError;
+  }
+
   return {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    Authorization: `Bearer ${session.access_token}`,
   };
 }
 
@@ -189,7 +202,7 @@ export async function lookupValorantProfile(
   try {
     const response = await fetch(`${EDGE_FUNCTION_BASE}/valorant-profile-lookup`, {
       method: 'POST',
-      headers: createHeaders(),
+      headers: await createHeaders(),
       body: JSON.stringify({ gameName, tagLine, region, platform }),
     });
 
