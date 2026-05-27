@@ -333,3 +333,32 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 13 autorizada pelo usuário: link temporário de Karma no menu
+
+Arquivos alterados nesta etapa:
+
+- `src/layouts/DashboardLayout.tsx`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Adicionado item temporário `Karma` no array `navItems` do `DashboardLayout`.
+- O novo item aponta para `ROUTES.KARMA_PREVIEW`.
+- O menu lateral passa a exibir o código visual `KM` para a página de Karma.
+- A página preview pode ser acessada pelo menu sem digitar `/karma/preview` manualmente.
+- Nenhuma alteração foi feita no card do lobby nesta etapa.
+
+Commit do menu relacionado:
+
+- `c15ae2a05d3210e3fb435ea82ae126ae767ab78b`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Entrar autenticado e confirmar que o item `Karma` aparece no menu.
+- Clicar em `Karma` e confirmar que abre a página `/karma/preview`.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
