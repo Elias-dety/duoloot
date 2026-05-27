@@ -184,6 +184,39 @@ Validação manual do menu:
 6. Confirmar que o item `Karma` fica com estado visual ativo.
 7. Confirmar que os links antigos `Dashboard`, `Perfil`, `Premium`, `Lobby` e `Cofre` continuam aparecendo.
 
+### Validação do Karma no card do lobby
+
+Arquivo esperado:
+
+```text
+src/features/lobby/components/LobbyCard.tsx
+```
+
+Build:
+
+```bash
+npm run build
+```
+
+Resultado esperado:
+
+- TypeScript compila sem erro.
+- O tipo interno `KarmaLevel` existe no card.
+- A variável fake `karmaLevel` ainda é usada no card.
+- O TODO informa que o dado real virá de `reputacao_jogador` futuramente.
+- O card ainda não busca Karma real no Supabase nesta etapa.
+
+Validação manual do card:
+
+1. Entrar em `/lobby`.
+2. Confirmar que os cards continuam carregando normalmente.
+3. Confirmar que a seção antes chamada `Comportamento` agora aparece como `Karma`.
+4. Confirmar que aparece o texto `Karma do jogador`.
+5. Confirmar que a tag visual mostra `Karma alto`, `Karma neutro` ou `Karma baixo` conforme o estado fake.
+6. Confirmar que a barra mantém três faixas visuais: vermelho, amarelo e verde.
+7. Confirmar que os rótulos da barra são `Karma baixo`, `Neutro` e `Karma alto`.
+8. Confirmar que o restante do card segue funcionando: `Resumo rápido`, `Tags do perfil`, `Descrição`, `Ver Perfil` e botão de entrada/saída.
+
 ### Validação da página preview do Karma
 
 Arquivo esperado:
@@ -249,4 +282,5 @@ Se algum teste falhar, guardar e enviar:
 - payload usado no `submitKarmaReview`, ocultando dados sensíveis se houver;
 - URL acessada no teste da rota `/karma/preview`;
 - print do item `Karma` no menu desktop e mobile;
+- print do card do lobby mostrando a seção `Karma`;
 - print da página preview do Karma em desktop e, se possível, em mobile.
