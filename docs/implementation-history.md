@@ -271,3 +271,34 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 11 autorizada pelo usuário: rota privada da página preview do Karma
+
+Arquivos alterados nesta etapa:
+
+- `src/constants/routes.ts`
+- `src/routes/private-routes.tsx`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Adicionada constante `KARMA_PREVIEW` em `ROUTES`.
+- Definido o caminho `/karma/preview` para acessar a página preview do Karma.
+- Adicionado lazy import de `KarmaPreviewPage` nas rotas privadas.
+- Registrada rota privada para renderizar `KarmaPreviewPage` dentro do `DashboardLayout`.
+- Mantido o menu do cabeçalho sem alteração nesta etapa.
+
+Commits de rota relacionados:
+
+- `cb38904e56782b4e2340a90269912cd5f35e0f5e`
+- `577b0995c4986c5107e1c2ea36c649f11098d2e6`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Entrar autenticado e abrir `/karma/preview` diretamente no navegador.
+- Confirmar que a página carrega dentro do layout protegido.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
