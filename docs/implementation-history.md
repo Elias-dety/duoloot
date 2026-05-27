@@ -144,3 +144,35 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei migration nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 7 autorizada pelo usuário: serviço frontend de Karma
+
+Arquivos alterados nesta etapa:
+
+- `src/services/karma.service.ts`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Criado serviço isolado para operações de Karma no frontend.
+- Criados tipos `CategoriaDesempenhoPartida`, `CategoriaComportamentoPartida`, `SubmitKarmaReviewPayload` e `KarmaSummary`.
+- Criada função `submitKarmaReview` para inserir avaliações em `avaliacoes_partidas`.
+- Criada validação para impedir autoavaliação.
+- Criado corte automático de comentário para respeitar o limite de 150 caracteres.
+- Criada função `getPlayerKarma` para carregar o resumo consolidado em `reputacao_jogador`.
+- Mantido tratamento de erro compatível com o padrão dos serviços Supabase existentes.
+
+Commit do serviço relacionado:
+
+- `53d28a78a86e49a95295a516f3b07e809b447893`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Validar que o TypeScript aceita os tipos e imports do novo serviço.
+- Depois da migration aplicada, testar `submitKarmaReview` com dois usuários diferentes.
+- Depois da migration aplicada, testar `getPlayerKarma` para jogador com e sem avaliações.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
