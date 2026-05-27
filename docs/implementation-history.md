@@ -394,3 +394,35 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 15 autorizada pelo usuário: troca visual de Reputação para Karma no card do lobby
+
+Arquivos alterados nesta etapa:
+
+- `src/features/lobby/components/LobbyCard.tsx`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Renomeado o tipo interno `BehaviorLevel` para `KarmaLevel`.
+- Renomeadas funções auxiliares de comportamento para helpers de Karma.
+- Renomeada a variável fake `behaviorLevel` para `karmaLevel`.
+- Atualizado o TODO para indicar que o dado real virá de `reputacao_jogador` em etapa futura.
+- Trocada a seção visual `Comportamento` para `Karma`.
+- Trocado o texto `Reputação do jogador` para `Karma do jogador`.
+- Atualizados os rótulos da barra para `Karma baixo`, `Neutro` e `Karma alto`.
+- Mantida a barra usando dado fake, sem conectar Supabase nesta etapa.
+
+Commit do card relacionado:
+
+- `6e1f7bf6c0ec5b54ac7555e1cb70527a21abf278`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Abrir `/lobby` e confirmar que o card mostra `Karma` no lugar de `Comportamento`.
+- Confirmar que aparece `Karma do jogador` e que a barra continua visualmente funcionando.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
