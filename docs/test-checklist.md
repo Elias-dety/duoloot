@@ -121,11 +121,49 @@ Validação manual após aplicar a migration:
 8. Usar `getPlayerKarma` para jogador sem avaliações.
 9. Confirmar que retorna `null`, sem quebrar a UI.
 
-### Validação manual futura do fluxo de avaliação
+### Validação da página preview do Karma
 
-Quando a página/modal de Karma existir:
+Arquivo esperado:
+
+```text
+src/pages/KarmaPreviewPage.tsx
+```
+
+Build:
+
+```bash
+npm run build
+```
+
+Resultado esperado:
+
+- TypeScript compila sem erro.
+- A página resolve o import de tipos de `@/services/karma.service`.
+- A página ainda não precisa aparecer no menu enquanto a rota não for conectada.
+
+Validação visual após conectar rota/menu:
 
 1. Abrir a página de prévia do Karma.
+2. Confirmar que o visual segue o padrão Duo Loot: fundo escuro, `dl-panel`, gradientes, bordas arredondadas e tipografia `Rajdhani`.
+3. Confirmar que aparece o título `Avaliação pós-partida`.
+4. Confirmar que aparece o status `Preview • Karma`.
+5. Confirmar que aparece o jogador mockado `ShadowPhoenix`.
+6. Confirmar que aparece a pergunta `Como foi o desempenho desse jogador na partida?`.
+7. Confirmar que aparecem as opções `Ruim`, `Na Média` e `Mandou Bem`.
+8. Confirmar que aparece a pergunta `Como foi o comportamento desse jogador?`.
+9. Confirmar que aparecem as opções `Tóxico / Troll`, `Silencioso / Neutro` e `Gente Boa / Comunicativo`.
+10. Confirmar que o botão `Enviar Avaliação` começa bloqueado.
+11. Selecionar uma resposta de desempenho e confirmar que o botão ainda fica bloqueado.
+12. Selecionar uma resposta de comportamento e confirmar que o botão fica habilitado.
+13. Digitar no comentário opcional e confirmar o contador `0/150` até `150/150`.
+14. Confirmar que o card lateral mostra o Karma desta avaliação mudando conforme as opções.
+15. Confirmar que a página informa que a integração real com Supabase virá depois.
+
+### Validação manual futura do fluxo real de avaliação
+
+Quando a página/modal estiver integrada ao Supabase:
+
+1. Abrir a página/modal após uma partida encerrada.
 2. Selecionar uma opção em `Como foi o desempenho desse jogador na partida?`.
 3. Selecionar uma opção em `Como foi o comportamento desse jogador?`.
 4. Confirmar que `Enviar Avaliação` fica habilitado apenas após as duas respostas obrigatórias.
@@ -145,4 +183,5 @@ Se algum teste falhar, guardar e enviar:
 - conteúdo de `error-context.md`, se o Playwright gerar;
 - erro SQL completo se a migration falhar;
 - nome da tabela, função ou trigger que não foi criada;
-- payload usado no `submitKarmaReview`, ocultando dados sensíveis se houver.
+- payload usado no `submitKarmaReview`, ocultando dados sensíveis se houver;
+- print da página preview do Karma em desktop e, se possível, em mobile.
