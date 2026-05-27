@@ -11,6 +11,7 @@ const AdminVaultPage = lazy(() => import('@/pages/AdminVaultPage'));
 const OnboardingPage = lazy(() => import('@/pages/OnboardingPage'));
 const RiotConnectPage = lazy(() => import('@/pages/RiotConnectPage'));
 const RiotCallbackPage = lazy(() => import('@/pages/RiotCallbackPage'));
+const KarmaPreviewPage = lazy(() => import('@/pages/KarmaPreviewPage'));
 
 import { LoadingState } from '@/components/molecules';
 
@@ -39,6 +40,7 @@ export const privateRoutes: RouteObject[] = [
       { path: ROUTES.ADMIN_VAULT, element: <Lazy><AdminVaultPage /></Lazy> },
       { path: ROUTES.RIOT_CONNECT, element: <Lazy><RiotConnectPage /></Lazy> },
       { path: ROUTES.RIOT_CALLBACK, element: <Lazy><RiotCallbackPage /></Lazy> },
+      { path: ROUTES.KARMA_PREVIEW, element: <Lazy><KarmaPreviewPage /></Lazy> },
     ],
   },
   {
