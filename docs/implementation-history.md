@@ -207,3 +207,35 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 9 autorizada pelo usuário: página preview visual do Karma
+
+Arquivos alterados nesta etapa:
+
+- `src/pages/KarmaPreviewPage.tsx`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Criada página preview visual do formulário/modal de Karma.
+- Seguido o padrão visual do Duo Loot com `dl-panel`, gradientes, bordas arredondadas, cores do design system e tipografia `Rajdhani`.
+- Adicionada pergunta de desempenho com opções `Ruim`, `Na Média` e `Mandou Bem`.
+- Adicionada pergunta de comportamento com opções `Tóxico / Troll`, `Silencioso / Neutro` e `Gente Boa / Comunicativo`.
+- Adicionado campo de comentário opcional com limite de 150 caracteres.
+- Adicionado botão `Enviar Avaliação` bloqueado até as duas perguntas obrigatórias serem respondidas.
+- Adicionado cálculo visual do Karma gerado pela avaliação selecionada.
+- Mantida a página sem rota/menu e sem integração real com Supabase nesta etapa.
+
+Commit da página relacionado:
+
+- `a3be341d8e91ed6a8f81833bf1925e007e717668`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Conferir se a página compila sem erro de import/tipos.
+- Após conectar rota/menu, abrir a página e validar o comportamento visual do formulário.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
