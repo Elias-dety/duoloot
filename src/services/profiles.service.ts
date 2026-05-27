@@ -6,6 +6,20 @@ type ServiceError = {
   message?: string;
 };
 
+const PLAYER_PROFILE_SELECT = `
+  id,
+  name,
+  nickname,
+  avatar_url,
+  trust_score,
+  status,
+  is_premium,
+  created_at,
+  updated_at,
+  game_profile,
+  metadata
+`;
+
 const handleServiceError = (error: ServiceError | null | undefined, fallbackMessage: string) => {
   console.error(error);
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
@@ -26,14 +40,10 @@ export async function getCurrentProfile(): Promise<PlayerProfile> {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('*')
+    .select(PLAYER_PROFILE_SELECT)
     .eq('id', user.id)
     .single();
 
   if (error) throw new Error(handleServiceError(error, 'Perfil não encontrado.'));
   return data as PlayerProfile;
 }
-
-
-
-
