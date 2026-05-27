@@ -121,6 +121,38 @@ Validação manual após aplicar a migration:
 8. Usar `getPlayerKarma` para jogador sem avaliações.
 9. Confirmar que retorna `null`, sem quebrar a UI.
 
+### Validação da rota da página preview do Karma
+
+Arquivos esperados:
+
+```text
+src/constants/routes.ts
+src/routes/private-routes.tsx
+src/pages/KarmaPreviewPage.tsx
+```
+
+Build:
+
+```bash
+npm run build
+```
+
+Resultado esperado:
+
+- TypeScript compila sem erro.
+- `ROUTES.KARMA_PREVIEW` existe e aponta para `/karma/preview`.
+- `private-routes.tsx` carrega `KarmaPreviewPage` via lazy import.
+- A rota `/karma/preview` fica protegida pelo `DashboardLayout`.
+
+Validação manual da rota:
+
+1. Entrar com um usuário autenticado.
+2. Abrir `/karma/preview` diretamente no navegador.
+3. Confirmar que a página carrega sem tela branca.
+4. Confirmar que o layout protegido aparece ao redor da página.
+5. Sair da conta e tentar abrir `/karma/preview` novamente.
+6. Confirmar que usuário deslogado não acessa a página protegida.
+
 ### Validação da página preview do Karma
 
 Arquivo esperado:
@@ -139,11 +171,11 @@ Resultado esperado:
 
 - TypeScript compila sem erro.
 - A página resolve o import de tipos de `@/services/karma.service`.
-- A página ainda não precisa aparecer no menu enquanto a rota não for conectada.
+- A página pode ser aberta diretamente em `/karma/preview` quando o usuário está autenticado.
 
-Validação visual após conectar rota/menu:
+Validação visual:
 
-1. Abrir a página de prévia do Karma.
+1. Abrir `/karma/preview`.
 2. Confirmar que o visual segue o padrão Duo Loot: fundo escuro, `dl-panel`, gradientes, bordas arredondadas e tipografia `Rajdhani`.
 3. Confirmar que aparece o título `Avaliação pós-partida`.
 4. Confirmar que aparece o status `Preview • Karma`.
@@ -184,4 +216,5 @@ Se algum teste falhar, guardar e enviar:
 - erro SQL completo se a migration falhar;
 - nome da tabela, função ou trigger que não foi criada;
 - payload usado no `submitKarmaReview`, ocultando dados sensíveis se houver;
+- URL acessada no teste da rota `/karma/preview`;
 - print da página preview do Karma em desktop e, se possível, em mobile.
