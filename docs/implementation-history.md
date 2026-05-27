@@ -362,3 +362,35 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 14 autorizada pelo usuário: checklist de validação do link Karma no menu
+
+Arquivos alterados nesta etapa:
+
+- `docs/test-checklist.md`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Adicionada validação específica para o link `Karma` no menu.
+- Adicionado `npm run build` como verificação de TypeScript para o `DashboardLayout`.
+- Adicionada checagem para confirmar que `navItems` contém o item `Karma`.
+- Adicionada checagem para confirmar que `Karma` aponta para `ROUTES.KARMA_PREVIEW`.
+- Adicionada checagem do código visual `KM` no menu lateral.
+- Adicionada validação manual do item `Karma` no menu desktop e mobile.
+- Adicionada verificação para garantir que os links antigos continuam aparecendo.
+- Atualizada a lista de evidências úteis com print do item `Karma` no menu desktop e mobile.
+
+Commit do checklist relacionado:
+
+- `ac9653844509764c08e3b280533e9e1fccc12761`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Entrar autenticado e confirmar o item `Karma` no menu desktop e mobile.
+- Clicar em `Karma` e confirmar abertura de `/karma/preview`.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
