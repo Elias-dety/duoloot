@@ -176,3 +176,34 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 8 autorizada pelo usuário: checklist de validação do serviço de Karma
+
+Arquivos alterados nesta etapa:
+
+- `docs/test-checklist.md`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Adicionada validação específica para o arquivo `src/services/karma.service.ts`.
+- Adicionado `npm run build` como verificação de TypeScript, imports e tipos exportados pelo serviço.
+- Adicionada validação manual de `submitKarmaReview` após aplicar a migration.
+- Adicionada validação de autoavaliação bloqueada pelo serviço.
+- Adicionada validação do limite de 150 caracteres do comentário.
+- Adicionada validação manual de `getPlayerKarma` para jogador com avaliações e jogador sem avaliações.
+- Atualizada a lista de evidências úteis com payload usado em `submitKarmaReview`, sem dados sensíveis.
+
+Commit do checklist relacionado:
+
+- `a62235d529ed70611b174de4dafa79192aeec872`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Aplicar migration com `supabase db push`.
+- Executar as validações manuais do serviço listadas em `docs/test-checklist.md`.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
