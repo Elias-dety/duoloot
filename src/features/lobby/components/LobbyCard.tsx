@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
 import { Lobby } from '@/schemas/lobby.schema';
+import { LobbyRulesSummary } from './LobbyRulesSummary';
 
 type MatchLevel = 'vou_carregar' | 'mesmo_nivel' | 'vai_me_carregar';
 type BehaviorLevel = 'toxico' | 'regular' | 'gente_boa';
@@ -274,6 +275,8 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
             })}
           </div>
         </section>
+
+        <LobbyRulesSummary metadata={lobby.metadata} />
 
         <section className="mt-5">
           <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Resumo rápido</h4>
