@@ -89,6 +89,38 @@ Resultado esperado:
 
 - Todas as consultas retornam nomes válidos, não `null`.
 
+### Validação do serviço frontend de Karma
+
+Arquivo esperado:
+
+```text
+src/services/karma.service.ts
+```
+
+Build:
+
+```bash
+npm run build
+```
+
+Resultado esperado:
+
+- TypeScript compila sem erro.
+- O import `@/lib/supabase` é resolvido corretamente.
+- Os tipos `CategoriaDesempenhoPartida`, `CategoriaComportamentoPartida`, `SubmitKarmaReviewPayload` e `KarmaSummary` não geram erro.
+
+Validação manual após aplicar a migration:
+
+1. Entrar com um usuário autenticado.
+2. Usar `submitKarmaReview` com `partidaId`, `avaliadoId`, `categoriaDesempenho`, `categoriaComportamento` e comentário opcional.
+3. Confirmar que a linha aparece em `avaliacoes_partidas`.
+4. Confirmar que `comentario` fica com no máximo 150 caracteres.
+5. Confirmar que autoavaliação retorna erro: `Você não pode avaliar a si mesmo.`.
+6. Usar `getPlayerKarma` para o jogador avaliado.
+7. Confirmar que retorna `karmaGeral`, `scoreDesempenhoTotal`, `scoreComportamentoTotal` e `totalPartidasAvaliadas`.
+8. Usar `getPlayerKarma` para jogador sem avaliações.
+9. Confirmar que retorna `null`, sem quebrar a UI.
+
 ### Validação manual futura do fluxo de avaliação
 
 Quando a página/modal de Karma existir:
@@ -112,4 +144,5 @@ Se algum teste falhar, guardar e enviar:
 - trecho com `BAD RESPONSE`, se aparecer no Playwright;
 - conteúdo de `error-context.md`, se o Playwright gerar;
 - erro SQL completo se a migration falhar;
-- nome da tabela, função ou trigger que não foi criada.
+- nome da tabela, função ou trigger que não foi criada;
+- payload usado no `submitKarmaReview`, ocultando dados sensíveis se houver.
