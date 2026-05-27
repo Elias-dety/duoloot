@@ -6,7 +6,7 @@ import { Lobby } from '@/schemas/lobby.schema';
 import { LobbyRulesSummary } from './LobbyRulesSummary';
 
 type MatchLevel = 'vou_carregar' | 'mesmo_nivel' | 'vai_me_carregar';
-type BehaviorLevel = 'toxico' | 'regular' | 'gente_boa';
+type KarmaLevel = 'baixo' | 'neutro' | 'alto';
 type TagTone = 'green' | 'orange' | 'blue' | 'yellow' | 'pink';
 
 type ProfileTag = {
@@ -15,7 +15,7 @@ type ProfileTag = {
   type: TagTone;
 };
 
-type CssVars = React.CSSProperties & Record<'--match-position' | '--behavior-position', string>;
+type CssVars = React.CSSProperties & Record<'--match-position' | '--karma-position', string>;
 
 export interface LobbyCardProps {
   lobby: Lobby;
@@ -43,16 +43,16 @@ function getMatchLabel(level: MatchLevel) {
   return 'Vai me carregar';
 }
 
-function getBehaviorPosition(level: BehaviorLevel) {
-  if (level === 'toxico') return '16%';
-  if (level === 'regular') return '50%';
+function getKarmaPosition(level: KarmaLevel) {
+  if (level === 'baixo') return '16%';
+  if (level === 'neutro') return '50%';
   return '83%';
 }
 
-function getBehaviorLabel(level: BehaviorLevel) {
-  if (level === 'toxico') return 'Tóxico';
-  if (level === 'regular') return 'Regular';
-  return 'Gente boa';
+function getKarmaLabel(level: KarmaLevel) {
+  if (level === 'baixo') return 'Karma baixo';
+  if (level === 'neutro') return 'Karma neutro';
+  return 'Karma alto';
 }
 
 function toText(value: unknown, fallback = '---') {
@@ -149,9 +149,9 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   const matchLevel = getMatchLevel(matchPercent);
   const matchPosition = `${matchPercent}%`;
 
-  // TODO: substituir por dado real de reputação quando a tabela/score de comportamento existir.
-  const behaviorLevel: BehaviorLevel = 'gente_boa';
-  const behaviorPosition = getBehaviorPosition(behaviorLevel);
+  // TODO: substituir por dado real de Karma quando o resumo `reputacao_jogador` estiver conectado ao card.
+  const karmaLevel: KarmaLevel = 'alto';
+  const karmaPosition = getKarmaPosition(karmaLevel);
 
   const game = toText(profile.mainGame || lobby.metadata?.mainGame, 'Jogo indefinido');
   const mode = lobby.mode || 'Modo indefinido';
@@ -206,7 +206,7 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
 
   const cssVars = {
     '--match-position': matchPosition,
-    '--behavior-position': behaviorPosition,
+    '--karma-position': karmaPosition,
   } as CssVars;
 
   return (
@@ -306,21 +306,21 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
         </section>
 
         <section className="mt-5">
-          <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Comportamento</h4>
+          <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Karma</h4>
           <div className="rounded-[1.125rem] border border-[var(--dl-border)] bg-[var(--dl-surface)] p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <strong className="text-sm font-black text-white">Reputação do jogador</strong>
+              <strong className="text-sm font-black text-white">Karma do jogador</strong>
               <span className="rounded-full border border-[rgb(var(--dl-string-rgb)/0.24)] bg-[rgb(var(--dl-string-rgb)/0.14)] px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.08em] text-[var(--dl-string)]">
-                {getBehaviorLabel(behaviorLevel)}
+                {getKarmaLabel(karmaLevel)}
               </span>
             </div>
-            <div className="relative h-3 rounded-full bg-[linear-gradient(90deg,#ef4444_0_33.33%,#facc15_33.33%_66.66%,#34d399_66.66%_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,.12)]" aria-label={`Nível de comportamento: ${getBehaviorLabel(behaviorLevel)}`}>
-              <span className="absolute top-1/2 h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[var(--dl-string)] bg-[var(--dl-text)] shadow-[0_0_14px_rgba(52,211,153,.45)] [left:var(--behavior-position)]" />
+            <div className="relative h-3 rounded-full bg-[linear-gradient(90deg,#ef4444_0_33.33%,#facc15_33.33%_66.66%,#34d399_66.66%_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,.12)]" aria-label={`Karma do jogador: ${getKarmaLabel(karmaLevel)}`}>
+              <span className="absolute top-1/2 h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[var(--dl-string)] bg-[var(--dl-text)] shadow-[0_0_14px_rgba(52,211,153,.45)] [left:var(--karma-position)]" />
             </div>
             <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px] font-black uppercase tracking-[0.08em]">
-              <span className="text-[#f87171]">Tóxico</span>
-              <span className="text-[#facc15]">Regular</span>
-              <span className="text-[#34d399]">Gente boa</span>
+              <span className="text-[#f87171]">Karma baixo</span>
+              <span className="text-[#facc15]">Neutro</span>
+              <span className="text-[#34d399]">Karma alto</span>
             </div>
           </div>
         </section>
