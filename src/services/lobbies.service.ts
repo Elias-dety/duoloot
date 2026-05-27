@@ -12,6 +12,7 @@ type LobbyStatus = 'open' | 'full' | 'in-game' | 'closed';
 type LobbyOwnerRecord = {
   id?: string;
   name?: string;
+  nickname?: string;
   avatar_url?: string | null;
   trust_score?: number | null;
   status?: 'online' | 'offline' | 'in-game' | null;
@@ -33,6 +34,29 @@ type LobbyRecord = {
   created_at: string;
 };
 
+type CreateLobbyPayload = {
+  slots_total?: unknown;
+  mode?: unknown;
+  queue?: unknown;
+  min_rank?: unknown;
+  max_rank?: unknown;
+  metadata?: unknown;
+};
+
+const SAFE_LOBBY_METADATA_KEYS = [
+  'mainGame',
+  'riotId',
+  'currentRank',
+  'mainRole',
+  'secondaryRole',
+  'playStyle',
+  'sessionFocus',
+  'availability',
+  'microphone',
+  'region',
+  'bio',
+] as const;
+
 const handleServiceError = (error: ServiceError | null | undefined, fallbackMessage: string) => {
   console.error(error);
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
@@ -40,6 +64,38 @@ const handleServiceError = (error: ServiceError | null | undefined, fallbackMess
   if (error?.message?.includes('authenticated')) return 'Entre na sua conta para continuar.';
   if (error?.code === 'PGRST202') return 'Módulo ainda não configurado no banco.';
   return error?.message || fallbackMessage;
+};
+
+const asText = (value: unknown, fallback: string): string => {
+  if (typeof value !== 'string') return fallback;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed.slice(0, 80) : fallback;
+};
+
+const asSlotTotal = (value: unknown): number => {
+  const parsed = typeof value === 'number' ? value : Number(value);
+  if (!Number.isFinite(parsed)) return 5;
+  return Math.min(5, Math.max(2, Math.trunc(parsed)));
+};
+
+const sanitizeLobbyMetadata = (metadata: unknown): Record<string, unknown> => {
+  if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) return {};
+
+  return SAFE_LOBBY_METADATA_KEYS.reduce<Record<string, unknown>>((accumulator, key) => {
+    const value = (metadata as Record<string, unknown>)[key];
+
+    if (typeof value === 'string') {
+      accumulator[key] = value.trim().slice(0, 160);
+      return accumulator;
+    }
+
+    if (typeof value === 'boolean') {
+      accumulator[key] = value;
+      return accumulator;
+    }
+
+    return accumulator;
+  }, {});
 };
 
 export function calculateCompatibility(
@@ -126,7 +182,11 @@ export async function getOpenLobbies(): Promise<Lobby[]> {
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
-      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+      const { data } = await supabase
+        .from('profiles')
+        .select('id, game_profile')
+        .eq('id', user.id)
+        .single();
       currentProfile = (data as PlayerProfile | null) || null;
     }
   } catch (error) {
@@ -137,8 +197,25 @@ export async function getOpenLobbies(): Promise<Lobby[]> {
     .from('lobbies')
     .select(
       `
-      *,
-      owner:profiles!owner_id(*)
+      id,
+      slots_total,
+      slots_filled,
+      mode,
+      queue,
+      min_rank,
+      max_rank,
+      status,
+      metadata,
+      created_at,
+      owner:profiles!owner_id(
+        id,
+        name,
+        nickname,
+        avatar_url,
+        trust_score,
+        status,
+        game_profile
+      )
     `
     )
     .eq('status', 'open')
@@ -177,8 +254,7 @@ export async function getOpenLobbies(): Promise<Lobby[]> {
   });
 }
 
-
-export async function createLobby(payload: Record<string, unknown>) {
+export async function createLobby(payload: CreateLobbyPayload) {
   if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
 
   const {
@@ -187,9 +263,21 @@ export async function createLobby(payload: Record<string, unknown>) {
   } = await supabase.auth.getUser();
   if (userError || !user) throw new Error('Entre na sua conta para criar um lobby.');
 
+  const safePayload = {
+    owner_id: user.id,
+    slots_total: asSlotTotal(payload.slots_total),
+    slots_filled: 1,
+    mode: asText(payload.mode, 'competitivo'),
+    queue: asText(payload.queue, 'ranked'),
+    min_rank: asText(payload.min_rank, 'Livre'),
+    max_rank: asText(payload.max_rank, 'Livre'),
+    status: 'open',
+    metadata: sanitizeLobbyMetadata(payload.metadata),
+  };
+
   const { data, error } = await supabase
     .from('lobbies')
-    .insert([{ ...payload, owner_id: user.id }])
+    .insert([safePayload])
     .select()
     .single();
 
@@ -222,4 +310,3 @@ export async function joinLobby(lobbyId: string) {
 
   return result;
 }
-
