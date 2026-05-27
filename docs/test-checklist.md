@@ -29,9 +29,9 @@ Resultado esperado:
 - O segundo usuário entra no lobby.
 - O card mostra `Você entrou` e `Sair do lobby`.
 
-### Validação manual futura das regras do lobby
+### Validação manual das regras do lobby
 
-Depois que o componente for conectado ao card:
+Fluxo configurável:
 
 1. Entrar em `/lobby`.
 2. Clicar em `Configurar lobby`.
@@ -40,5 +40,21 @@ Depois que o componente for conectado ao card:
 5. Escolher posição do dono.
 6. Escolher reputação máxima.
 7. Criar lobby configurado.
-8. Confirmar se o card mostra `Regras do lobby`.
-9. Confirmar se aparecem posições, posição do dono e reputação máxima.
+8. Confirmar se o card mostra `Regras do lobby` logo depois de `Capacidade do lobby`.
+9. Confirmar se aparecem posições necessárias, posição do dono e reputação máxima.
+10. Confirmar que o card continua mostrando `Resumo rápido`, `Comportamento`, `Tags do perfil`, `Descrição` e botões normalmente.
+
+Fluxo antigo/rápido:
+
+1. Criar lobby usando `+ Criar Lobby`.
+2. Confirmar que o card continua aparecendo sem quebrar.
+3. Confirmar que `Regras do lobby` não aparece quando não houver regras salvas em `metadata`.
+
+### Evidências úteis se falhar
+
+Se algum teste falhar, guardar e enviar:
+
+- erro completo do terminal;
+- print do card do lobby;
+- trecho com `BAD RESPONSE`, se aparecer no Playwright;
+- conteúdo de `error-context.md`, se o Playwright gerar.
