@@ -6,6 +6,20 @@ type ServiceError = {
   message?: string;
 };
 
+const PLAYER_PROFILE_SELECT = `
+  id,
+  name,
+  nickname,
+  avatar_url,
+  trust_score,
+  status,
+  is_premium,
+  created_at,
+  updated_at,
+  game_profile,
+  metadata
+`;
+
 export type PlayerGameProfile = {
   mainGame?: string;
   main_game?: string;
@@ -68,7 +82,7 @@ export async function ensureUserProfile(user: User): Promise<PlayerProfile> {
   try {
     const { data: existingProfile, error: fetchError } = await supabase
       .from('profiles')
-      .select('*')
+      .select(PLAYER_PROFILE_SELECT)
       .eq('id', user.id)
       .maybeSingle();
 
@@ -97,7 +111,7 @@ export async function ensureUserProfile(user: User): Promise<PlayerProfile> {
     const { data: newProfile, error: insertError } = await supabase
       .from('profiles')
       .insert(initialProfile)
-      .select()
+      .select(PLAYER_PROFILE_SELECT)
       .single();
 
     if (insertError) {
