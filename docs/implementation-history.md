@@ -302,3 +302,34 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 12 autorizada pelo usuário: checklist de validação da rota preview do Karma
+
+Arquivos alterados nesta etapa:
+
+- `docs/test-checklist.md`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Adicionada validação específica para a rota `/karma/preview`.
+- Adicionados arquivos esperados da rota: `src/constants/routes.ts`, `src/routes/private-routes.tsx` e `src/pages/KarmaPreviewPage.tsx`.
+- Adicionado `npm run build` como verificação de TypeScript, rota constante e lazy import.
+- Adicionada checagem de `ROUTES.KARMA_PREVIEW` apontando para `/karma/preview`.
+- Adicionada validação manual para abrir `/karma/preview` com usuário autenticado.
+- Adicionada validação manual para confirmar que usuário deslogado não acessa a rota protegida.
+- Atualizada a lista de evidências úteis com a URL acessada no teste da rota.
+
+Commit do checklist relacionado:
+
+- `7fdcb831ebf810259227453dd187ce65e1f05f28`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Abrir `/karma/preview` autenticado.
+- Tentar abrir `/karma/preview` deslogado e confirmar bloqueio pelo fluxo protegido.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
