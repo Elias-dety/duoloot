@@ -83,3 +83,34 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem E2E localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 5 autorizada pelo usuário: base de banco do sistema de Karma
+
+Arquivos alterados nesta etapa:
+
+- `supabase/migrations/20260527154500_create_karma_reputation_system.sql`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Criada migration base para o sistema de Karma/Reputação.
+- Criados enums `categoria_desempenho_partida` e `categoria_comportamento_partida`.
+- Criada tabela `avaliacoes_partidas` para registrar avaliações pós-partida entre jogadores.
+- Criada tabela `reputacao_jogador` para armazenar score consolidado de desempenho, comportamento e `karma_geral`.
+- Criadas funções de pontuação para desempenho e comportamento conforme as regras definidas.
+- Criada trigger para recalcular automaticamente o Karma quando avaliações forem inseridas, atualizadas ou removidas.
+- Ativadas policies básicas de RLS para avaliações e leitura autenticada de Karma.
+
+Commit da migration:
+
+- Não retornado pelo conector nesta etapa; arquivo confirmado na branch `ui/extend-kombai-visuals`.
+
+Testes pendentes para o PC:
+
+- Aplicar migration do Supabase.
+- Validar criação das tabelas `avaliacoes_partidas` e `reputacao_jogador`.
+- Inserir avaliação de teste e confirmar atualização automática de `karma_geral`.
+
+Observação:
+
+- Não rodei migration nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
