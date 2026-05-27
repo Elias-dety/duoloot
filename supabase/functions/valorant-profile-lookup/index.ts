@@ -1,92 +1,174 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+const DEFAULT_ALLOWED_ORIGINS = [
+  'http://localhost:5173',
+  'http://localhost:4173',
+]
+
+const ALLOWED_REGIONS = new Set(['americas', 'asia', 'europe', 'sea'])
+const ALLOWED_PLATFORMS = new Set(['br', 'latam', 'na', 'eu', 'ap', 'kr'])
+
+type AuthenticatedUser = {
+  id: string
+  email?: string
+}
+
+function getAllowedOrigins() {
+  const fromEnv = Deno.env.get('ALLOWED_ORIGINS')
+  if (!fromEnv) return DEFAULT_ALLOWED_ORIGINS
+
+  return fromEnv
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean)
+}
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get('origin') ?? ''
+  const allowedOrigins = getAllowedOrigins()
+  const isAllowedOrigin = !origin || allowedOrigins.includes(origin)
+
+  return {
+    'Access-Control-Allow-Origin': isAllowedOrigin ? (origin || allowedOrigins[0]) : 'null',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Vary': 'Origin',
+  }
+}
+
+function jsonResponse(req: Request, body: Record<string, unknown>, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      ...getCorsHeaders(req),
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store',
+    },
+  })
+}
+
+function isSafeText(value: string, maxLength: number) {
+  if (!value || value.length > maxLength) return false
+  return /^[\p{L}\p{N}_.#\- ]+$/u.test(value)
+}
+
+async function getAuthenticatedUser(req: Request): Promise<AuthenticatedUser | null> {
+  const authorization = req.headers.get('authorization')
+  const token = authorization?.startsWith('Bearer ')
+    ? authorization.slice('Bearer '.length).trim()
+    : ''
+
+  if (!token) return null
+
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('[Auth] SUPABASE_URL ou SUPABASE_ANON_KEY ausente na Edge Function.')
+    return null
+  }
+
+  const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      apikey: supabaseAnonKey,
+    },
+  })
+
+  if (!response.ok) return null
+
+  const user = await response.json()
+  if (!user?.id || typeof user.id !== 'string') return null
+
+  return {
+    id: user.id,
+    email: typeof user.email === 'string' ? user.email : undefined,
+  }
 }
 
 serve(async (req) => {
-  // Tratar preflight OPTIONS
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: getCorsHeaders(req) })
   }
 
   try {
     if (req.method !== 'POST') {
-      return new Response(
-        JSON.stringify({ code: 'METHOD_NOT_ALLOWED', message: 'Método não permitido.' }),
-        { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+      return jsonResponse(req, { code: 'METHOD_NOT_ALLOWED', message: 'Método não permitido.' }, 405)
     }
 
-    const { gameName, tagLine, region = 'americas', platform = 'br' } = await req.json()
+    const authenticatedUser = await getAuthenticatedUser(req)
 
-    // 1. Validação do Payload
-    if (!gameName?.trim() || !tagLine?.trim()) {
-      return new Response(
-        JSON.stringify({ code: 'VALIDATION_ERROR', message: 'gameName e tagLine são obrigatórios.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+    if (!authenticatedUser) {
+      return jsonResponse(req, { code: 'UNAUTHORIZED', message: 'Entre na sua conta para continuar.' }, 401)
     }
 
-    // 2. Leitura da Chave Riot API
+    const payload = await req.json().catch(() => null) as Record<string, unknown> | null
+
+    if (!payload) {
+      return jsonResponse(req, { code: 'VALIDATION_ERROR', message: 'Payload inválido.' }, 400)
+    }
+
+    const gameName = typeof payload.gameName === 'string' ? payload.gameName.trim() : ''
+    const tagLine = typeof payload.tagLine === 'string' ? payload.tagLine.trim() : ''
+    const region = typeof payload.region === 'string' ? payload.region.trim().toLowerCase() : 'americas'
+    const platform = typeof payload.platform === 'string' ? payload.platform.trim().toLowerCase() : 'br'
+
+    if (!isSafeText(gameName, 32) || !isSafeText(tagLine, 16)) {
+      return jsonResponse(req, { code: 'VALIDATION_ERROR', message: 'gameName ou tagLine inválidos.' }, 400)
+    }
+
+    if (!ALLOWED_REGIONS.has(region)) {
+      return jsonResponse(req, { code: 'VALIDATION_ERROR', message: 'Região inválida.' }, 400)
+    }
+
+    if (!ALLOWED_PLATFORMS.has(platform)) {
+      return jsonResponse(req, { code: 'VALIDATION_ERROR', message: 'Plataforma inválida.' }, 400)
+    }
+
     const riotApiKey = Deno.env.get("RIOT_API_KEY")
+    const allowMockFallback = Deno.env.get('ALLOW_RIOT_MOCK_FALLBACK') === 'true'
 
-    // 3. Fallback controlado em desenvolvimento
     const normalizedGameName = gameName.toLowerCase().trim()
     const isTestMock = ['noobmaster', 'midplayer', 'tryhard', 'godmode', 'tilted'].includes(normalizedGameName)
 
-    if (!riotApiKey || isTestMock) {
-      console.log(`[Lookup] Usando fallback mocado para ${gameName}#${tagLine}. Chave Riot configurada: ${!!riotApiKey}`)
-      
+    if (isTestMock && allowMockFallback) {
+      console.log(`[Lookup] Usando fallback mocado para usuário de teste. User: ${authenticatedUser.id}. Chave Riot configurada: ${!!riotApiKey}`)
+
       if (normalizedGameName === 'not found') {
-        return new Response(
-          JSON.stringify({ code: 'PLAYER_NOT_FOUND', message: 'Jogador não encontrado.' }),
-          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return jsonResponse(req, { code: 'PLAYER_NOT_FOUND', message: 'Jogador não encontrado.' }, 404)
       }
 
       const mockResult = getMockProfileResult(gameName, tagLine, region, platform)
-      return new Response(
-        JSON.stringify(mockResult),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+      return jsonResponse(req, mockResult, 200)
     }
 
-    // 4. Fluxo real com Riot API
+    if (!riotApiKey) {
+      console.error('[Lookup] RIOT_API_KEY ausente. Defina ALLOW_RIOT_MOCK_FALLBACK=true apenas em ambiente controlado de desenvolvimento.')
+      return jsonResponse(req, { code: 'RIOT_API_KEY_MISSING', message: 'Integração temporariamente indisponível.' }, 500)
+    }
+
     try {
-      // a. Buscar conta Riot pelo gameName e tagLine
       const accountUrl = `https://${region}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(gameName)}/${encodeURIComponent(tagLine)}`
       const accountRes = await fetch(accountUrl, {
         headers: { 'X-Riot-Token': riotApiKey }
       })
 
       if (accountRes.status === 404) {
-        return new Response(
-          JSON.stringify({ code: 'PLAYER_NOT_FOUND', message: 'Jogador não encontrado na Riot Games.' }),
-          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return jsonResponse(req, { code: 'PLAYER_NOT_FOUND', message: 'Jogador não encontrado na Riot Games.' }, 404)
       }
 
       if (accountRes.status === 429) {
-        return new Response(
-          JSON.stringify({ code: 'RATE_LIMITED', message: 'Limite de requisições à Riot API excedido.' }),
-          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        return jsonResponse(req, { code: 'RATE_LIMITED', message: 'Limite de requisições à Riot API excedido.' }, 429)
       }
 
       if (!accountRes.ok) {
-        return new Response(
-          JSON.stringify({ code: 'RIOT_API_ERROR', message: `Erro ao buscar conta Riot: HTTP ${accountRes.status}` }),
-          { status: accountRes.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
+        console.error(`[Lookup] Riot account endpoint failed with HTTP ${accountRes.status}`)
+        return jsonResponse(req, { code: 'RIOT_API_ERROR', message: 'Falha temporária ao consultar dados externos.' }, accountRes.status)
       }
 
       const accountData = await accountRes.json()
       const { puuid, gameName: rGameName, tagLine: rTagLine } = accountData
 
-      // b. Buscar histórico de partidas
       const matchlistUrl = `https://${platform}.api.riotgames.com/val/match/v1/matchlists/by-puuid/${puuid}`
       const matchlistRes = await fetch(matchlistUrl, {
         headers: { 'X-Riot-Token': riotApiKey }
@@ -100,7 +182,6 @@ serve(async (req) => {
         const matchlistData = await matchlistRes.json()
         matchIds = (matchlistData.history || []).slice(0, 5).map((m: any) => m.matchId)
 
-        // c. Buscar detalhes de partidas recentes de forma concorrente
         const matchDetailsPromises = matchIds.map(async (id: string) => {
           try {
             const detailUrl = `https://${platform}.api.riotgames.com/val/match/v1/matches/${id}`
@@ -110,8 +191,8 @@ serve(async (req) => {
             if (detailRes.ok) {
               return await detailRes.json()
             }
-          } catch (e) {
-            console.error(`Erro ao buscar partida ${id}:`, e)
+          } catch (error) {
+            console.error('[Lookup] Erro ao buscar detalhe de partida:', error)
           }
           return null
         })
@@ -150,24 +231,15 @@ serve(async (req) => {
         matches
       }
 
-      return new Response(
-        JSON.stringify(result),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+      return jsonResponse(req, result, 200)
     } catch (apiErr) {
       console.error('Erro de integração com a Riot API:', apiErr)
-      return new Response(
-        JSON.stringify({ code: 'RIOT_API_ERROR', message: apiErr.message || 'Falha ao conectar à API da Riot Games.' }),
-        { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+      return jsonResponse(req, { code: 'RIOT_API_ERROR', message: 'Falha temporária ao consultar dados externos.' }, 502)
     }
 
   } catch (err) {
     console.error('Erro inesperado na Edge Function:', err)
-    return new Response(
-      JSON.stringify({ code: 'UNKNOWN_ERROR', message: err.message || 'Ocorreu um erro interno.' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+    return jsonResponse(req, { code: 'UNKNOWN_ERROR', message: 'Ocorreu um erro interno.' }, 500)
   }
 })
 
