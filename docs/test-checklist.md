@@ -42,7 +42,7 @@ Fluxo configurável:
 7. Criar lobby configurado.
 8. Confirmar se o card mostra `Regras do lobby` logo depois de `Capacidade do lobby`.
 9. Confirmar se aparecem posições necessárias, posição do dono e reputação máxima.
-10. Confirmar que o card continua mostrando `Resumo rápido`, `Comportamento`, `Tags do perfil`, `Descrição` e botões normalmente.
+10. Confirmar que o card continua mostrando `Resumo rápido`, `Karma`, `Tags do perfil`, `Descrição` e botões normalmente.
 
 Fluxo antigo/rápido:
 
