@@ -7,22 +7,28 @@ export interface LobbyGridProps {
   items: Lobby[];
   isLoading?: boolean;
   onJoinLobby?: (id: string) => void;
+  onLeaveLobby?: (id: string) => void;
   joiningLobbyId?: string | null;
-  invitedLobbyIds?: string[];
+  leavingLobbyId?: string | null;
+  joinedLobbyIds?: string[];
+  currentUserId?: string;
 }
 
-export const LobbyGrid: React.FC<LobbyGridProps> = ({ 
-  items, 
+export const LobbyGrid: React.FC<LobbyGridProps> = ({
+  items,
   isLoading = false,
   onJoinLobby,
+  onLeaveLobby,
   joiningLobbyId,
-  invitedLobbyIds = []
+  leavingLobbyId,
+  joinedLobbyIds = [],
+  currentUserId,
 }) => {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="dl-panel p-5 min-h-[320px] animate-pulse">
+          <div key={i} className="dl-panel min-h-[320px] p-5 animate-pulse">
             <SkeletonBlock width="100%" height="100%" className="rounded-[1rem] bg-[var(--dl-surface)]" />
           </div>
         ))}
@@ -40,16 +46,24 @@ export const LobbyGrid: React.FC<LobbyGridProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {items.map((lobby) => (
-        <LobbyCard 
-          key={lobby.id} 
-          lobby={lobby} 
-          onJoin={onJoinLobby} 
-          isJoining={joiningLobbyId === lobby.id}
-          isInvited={invitedLobbyIds.includes(lobby.id)}
-        />
-      ))}
+    <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {items.map((lobby) => {
+        const isOwner = Boolean(currentUserId && lobby.owner?.id === currentUserId);
+        const isJoined = isOwner || joinedLobbyIds.includes(lobby.id);
+
+        return (
+          <LobbyCard
+            key={lobby.id}
+            lobby={lobby}
+            onJoin={onJoinLobby}
+            onLeave={onLeaveLobby}
+            isJoining={joiningLobbyId === lobby.id}
+            isLeaving={leavingLobbyId === lobby.id}
+            isJoined={isJoined}
+            isOwner={isOwner}
+          />
+        );
+      })}
     </div>
   );
 };

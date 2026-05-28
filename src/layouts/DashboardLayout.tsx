@@ -20,6 +20,7 @@ export default function DashboardLayout() {
     { label: copy.common.profile, path: profilePath, code: 'PF' },
     { label: copy.common.premium, path: ROUTES.PREMIUM, code: 'PR' },
     { label: 'Lobby', path: ROUTES.LOBBY, code: 'LB' },
+    { label: 'Karma', path: ROUTES.KARMA_PREVIEW, code: 'KM' },
     { label: copy.layout.nav.vault, path: ROUTES.VAULT, code: 'VT' },
   ];
 

@@ -11,7 +11,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:lobby": "playwright test tests/e2e/real_lobby_flow.spec.ts --project=chromium --workers=1"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

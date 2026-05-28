@@ -36,16 +36,34 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
     filters.region !== 'all' ||
     filters.microphone !== 'all';
 
-  const fieldClassName = 'w-full rounded-2xl border border-[var(--dl-border)] bg-[var(--dl-bg)] px-3 py-2.5 text-sm text-[var(--dl-text)] focus:border-[var(--dl-keyword)] focus:outline-none transition-colors';
+  const fieldClassName = 'w-full rounded-2xl border border-white/[0.08] bg-black/20 px-3 py-2.5 text-sm text-[var(--dl-text)] transition-colors placeholder:text-[var(--dl-muted)] focus:border-[var(--dl-number)] focus:outline-none';
   const labelClassName = 'mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]';
 
   return (
-    <div className="dl-panel flex flex-col gap-4 p-5 backdrop-blur-md bg-[var(--dl-surface)]/80">
-      <div className="flex flex-wrap items-center gap-3 border-b border-[var(--dl-border)]/40 pb-4">
-        <img src={ASSETS.icons.filter} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
-        <span className="font-['Rajdhani'] text-lg font-bold uppercase text-white">Filtros de matchmaking</span>
+    <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.035] backdrop-blur-xl">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] px-5 py-4">
+        <div className="flex items-center gap-3">
+          <div className="grid h-10 w-10 place-items-center rounded-xl border border-[var(--dl-number)]/25 bg-[var(--dl-number)]/10">
+            <img src={ASSETS.icons.filter} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
+          </div>
+          <div>
+            <span className="block text-lg font-bold uppercase tracking-[-0.01em] text-white">
+              Filtros de matchmaking
+            </span>
+            <span className="font-['Inter'] text-[0.72rem] text-[var(--dl-muted)]">
+              Refine por perfil, região e comunicação.
+            </span>
+          </div>
+        </div>
+
+        {hasActiveFilters ? (
+          <Button type="button" onClick={onClearFilters} variant="secondary" size="sm">
+            Limpar filtros
+          </Button>
+        ) : null}
       </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+
+      <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 xl:grid-cols-5">
         <div className="flex flex-col">
           <label className={labelClassName}>Buscar player</label>
           <input
@@ -103,14 +121,6 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
           </select>
         </div>
       </div>
-
-      {hasActiveFilters ? (
-        <div className="mt-2 flex border-t border-[var(--dl-border)]/40 pt-4">
-          <Button type="button" onClick={onClearFilters} variant="secondary" className="w-full sm:ml-auto sm:w-auto">
-            Limpar filtros
-          </Button>
-        </div>
-      ) : null}
     </div>
   );
 };

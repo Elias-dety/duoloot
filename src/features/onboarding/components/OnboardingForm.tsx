@@ -20,7 +20,6 @@ import {
 interface OnboardingFormProps {
   initialData?: Partial<OnboardingData> | null;
   onSubmit: (data: OnboardingData) => Promise<void>;
-  onSkip: () => void;
   isLoading: boolean;
   onDataChange?: (data: Partial<OnboardingData>) => void;
 }
@@ -28,7 +27,6 @@ interface OnboardingFormProps {
 export const OnboardingForm: React.FC<OnboardingFormProps> = ({
   initialData,
   onSubmit,
-  onSkip,
   isLoading,
   onDataChange,
 }) => {
@@ -334,9 +332,6 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
               Voltar
             </Button>
           )}
-          <Button type="button" onClick={onSkip} variant="ghost" className="px-3 py-2 text-[10px]">
-            Pular por enquanto
-          </Button>
         </div>
 
         {step < totalSteps ? (

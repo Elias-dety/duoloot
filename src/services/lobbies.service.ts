@@ -34,13 +34,39 @@ type LobbyRecord = {
   created_at: string;
 };
 
-type CreateLobbyPayload = {
+type LobbyMembershipRecord = {
+  lobby_id?: string | null;
+};
+
+export type CreateLobbyPayload = {
   slots_total?: unknown;
   mode?: unknown;
   queue?: unknown;
   min_rank?: unknown;
   max_rank?: unknown;
   metadata?: unknown;
+};
+
+type CreateLobbyRpcResult = {
+  success: boolean;
+  message: string;
+  lobby_id?: string | null;
+};
+
+type JoinLobbyRpcResult = {
+  success: boolean;
+  message: string;
+  lobby_id?: string | null;
+  slots_filled?: number | null;
+  slots_total?: number | null;
+};
+
+type LeaveLobbyRpcResult = {
+  success: boolean;
+  message: string;
+  lobby_id?: string | null;
+  slots_filled?: number | null;
+  status?: LobbyStatus | null;
 };
 
 const SAFE_LOBBY_METADATA_KEYS = [
@@ -62,7 +88,8 @@ const handleServiceError = (error: ServiceError | null | undefined, fallbackMess
   if (!isSupabaseConfigured) return 'Configuração do Supabase ausente.';
   if (error?.message?.includes('JWT')) return 'Sua sessão expirou. Entre novamente.';
   if (error?.message?.includes('authenticated')) return 'Entre na sua conta para continuar.';
-  if (error?.code === 'PGRST202') return 'Módulo ainda não configurado no banco.';
+  if (error?.code === 'PGRST202') return 'Módulo de lobbies ainda não configurado no banco. Aplique a migration do Supabase.';
+  if (error?.message?.includes('row-level security')) return 'Sem permissão no banco para esta ação. Verifique as policies/RLS.';
   return error?.message || fallbackMessage;
 };
 
@@ -173,6 +200,64 @@ function normalizeLobbyStatus(status: string | null | undefined): LobbyStatus {
   return ['open', 'full', 'in-game', 'closed'].includes(status || '') ? (status as LobbyStatus) : 'open';
 }
 
+function mapLobbyRecord(item: LobbyRecord, currentProfile: PlayerProfile | null): Lobby {
+  const ownerGameProfile = item.owner?.game_profile || item.owner?.gameProfile;
+  const lobbyMetadata = item.metadata || {};
+  const compatibilityScore = currentProfile
+    ? calculateCompatibility(currentProfile.game_profile, lobbyMetadata, item.mode || '', item.queue || '')
+    : undefined;
+
+  return {
+    id: item.id,
+    owner: {
+      id: item.owner?.id || '',
+      name: item.owner?.name || 'Operador desconhecido',
+      avatarUrl: item.owner?.avatar_url || undefined,
+      trustScore: item.owner?.trust_score || 0,
+      status: item.owner?.status || 'offline',
+      gameProfile: ownerGameProfile,
+    },
+    slotsTotal: Number(item.slots_total) || 2,
+    slotsFilled: Number(item.slots_filled) || 1,
+    mode: item.mode || 'Modo indefinido',
+    queue: item.queue || 'Fila aberta',
+    minRank: item.min_rank || 'Livre',
+    maxRank: item.max_rank || 'Livre',
+    status: normalizeLobbyStatus(item.status),
+    compatibilityScore,
+    metadata: lobbyMetadata,
+    createdAt: item.created_at,
+  };
+}
+
+export async function getMyJoinedLobbyIds(): Promise<string[]> {
+  if (!isSupabaseConfigured) return [];
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from('lobby_members')
+    .select('lobby_id')
+    .or(`player_id.eq.${user.id},user_id.eq.${user.id}`);
+
+  if (error) {
+    console.warn('Erro ao carregar participações em lobbies:', error);
+    return [];
+  }
+
+  return Array.from(
+    new Set(
+      ((data || []) as LobbyMembershipRecord[])
+        .map((item) => item.lobby_id)
+        .filter((id): id is string => typeof id === 'string' && id.length > 0)
+    )
+  );
+}
+
 export async function getOpenLobbies(): Promise<Lobby[]> {
   if (!isSupabaseConfigured) return [];
 
@@ -223,35 +308,15 @@ export async function getOpenLobbies(): Promise<Lobby[]> {
 
   if (error) throw new Error(handleServiceError(error, 'Erro ao carregar lobbies.'));
 
-  return ((data || []) as LobbyRecord[]).map((item) => {
-    const ownerGameProfile = item.owner?.game_profile || item.owner?.gameProfile;
-    const lobbyMetadata = item.metadata || {};
-    const compatibilityScore = currentProfile
-      ? calculateCompatibility(currentProfile.game_profile, lobbyMetadata, item.mode || '', item.queue || '')
-      : undefined;
+  const latestByOwner = new Map<string, LobbyRecord>();
+  for (const item of (data || []) as LobbyRecord[]) {
+    const ownerKey = item.owner?.id || item.id;
+    if (!latestByOwner.has(ownerKey)) {
+      latestByOwner.set(ownerKey, item);
+    }
+  }
 
-    return {
-      id: item.id,
-      owner: {
-        id: item.owner?.id || '',
-        name: item.owner?.name || 'Operador desconhecido',
-        avatarUrl: item.owner?.avatar_url || undefined,
-        trustScore: item.owner?.trust_score || 0,
-        status: item.owner?.status || 'offline',
-        gameProfile: ownerGameProfile,
-      },
-      slotsTotal: Number(item.slots_total) || 2,
-      slotsFilled: Number(item.slots_filled) || 1,
-      mode: item.mode || 'Modo indefinido',
-      queue: item.queue || 'Fila aberta',
-      minRank: item.min_rank || 'Livre',
-      maxRank: item.max_rank || 'Livre',
-      status: normalizeLobbyStatus(item.status),
-      compatibilityScore,
-      metadata: lobbyMetadata,
-      createdAt: item.created_at,
-    };
-  });
+  return Array.from(latestByOwner.values()).map((item) => mapLobbyRecord(item, currentProfile));
 }
 
 export async function createLobby(payload: CreateLobbyPayload) {
@@ -263,26 +328,27 @@ export async function createLobby(payload: CreateLobbyPayload) {
   } = await supabase.auth.getUser();
   if (userError || !user) throw new Error('Entre na sua conta para criar um lobby.');
 
-  const safePayload = {
-    owner_id: user.id,
-    slots_total: asSlotTotal(payload.slots_total),
-    slots_filled: 1,
-    mode: asText(payload.mode, 'competitivo'),
-    queue: asText(payload.queue, 'ranked'),
-    min_rank: asText(payload.min_rank, 'Livre'),
-    max_rank: asText(payload.max_rank, 'Livre'),
-    status: 'open',
-    metadata: sanitizeLobbyMetadata(payload.metadata),
-  };
-
-  const { data, error } = await supabase
-    .from('lobbies')
-    .insert([safePayload])
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc('create_lobby', {
+    p_slots_total: asSlotTotal(payload.slots_total),
+    p_mode: asText(payload.mode, 'competitivo'),
+    p_queue: asText(payload.queue, 'ranked'),
+    p_min_rank: asText(payload.min_rank, 'Livre'),
+    p_max_rank: asText(payload.max_rank, 'Livre'),
+    p_metadata: sanitizeLobbyMetadata(payload.metadata),
+  });
 
   if (error) throw new Error(handleServiceError(error, 'Erro ao criar lobby.'));
-  return data;
+
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error('Resposta inválida do servidor ao criar lobby.');
+  }
+
+  const result = data[0] as CreateLobbyRpcResult;
+  if (!result.success) {
+    throw new Error(result.message || 'Não foi possível criar o lobby.');
+  }
+
+  return result;
 }
 
 export async function joinLobby(lobbyId: string) {
@@ -303,9 +369,34 @@ export async function joinLobby(lobbyId: string) {
     throw new Error('Resposta inválida do servidor ao entrar no lobby.');
   }
 
-  const result = data[0];
+  const result = data[0] as JoinLobbyRpcResult;
   if (!result.success) {
-    throw new Error(result.message);
+    throw new Error(result.message || 'Não foi possível entrar no lobby.');
+  }
+
+  return result;
+}
+export async function leaveLobby(lobbyId: string) {
+  if (!isSupabaseConfigured) throw new Error('Supabase não configurado.');
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error('Entre na sua conta para sair do lobby.');
+
+  const { data, error } = await supabase.rpc('leave_lobby', {
+    p_lobby_id: lobbyId,
+  });
+
+  if (error) throw new Error(handleServiceError(error, 'Erro ao sair no lobby.'));
+
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error('Resposta inválida do servidor ao sair do lobby.');
+  }
+
+  const result = data[0] as LeaveLobbyRpcResult;
+  if (!result.success) {
+    throw new Error(result.message || 'Não foi possível sair do lobby.');
   }
 
   return result;
