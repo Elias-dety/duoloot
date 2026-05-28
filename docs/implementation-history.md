@@ -426,3 +426,36 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 16 autorizada pelo usuário: checklist de validação do Karma no card do lobby
+
+Arquivos alterados nesta etapa:
+
+- `docs/test-checklist.md`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Adicionada validação específica para o Karma no card do lobby.
+- Adicionado `npm run build` como verificação de TypeScript para `LobbyCard.tsx`.
+- Adicionada checagem para confirmar que o tipo `KarmaLevel` existe no card.
+- Adicionada checagem para confirmar que a variável fake `karmaLevel` ainda é usada.
+- Adicionada checagem para garantir que o card ainda não busca Karma real no Supabase.
+- Adicionada validação manual para confirmar `Karma` no lugar de `Comportamento`.
+- Adicionada validação manual para confirmar `Karma do jogador`.
+- Adicionada validação manual da barra com `Karma baixo`, `Neutro` e `Karma alto`.
+- Atualizada a lista de evidências úteis com print do card do lobby mostrando a seção `Karma`.
+
+Commit do checklist relacionado:
+
+- `586db23387d37ee55d7d9b850235389638e81eb1`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Abrir `/lobby` e validar a seção `Karma` no card.
+- Confirmar que o restante do card continua funcionando normalmente.
+
+Observação:
+
+- Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
