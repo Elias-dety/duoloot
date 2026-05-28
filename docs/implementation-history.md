@@ -459,3 +459,36 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 17 autorizada pelo usuário: conexão real do Karma no card do lobby
+
+Arquivos alterados nesta etapa:
+
+- `src/features/lobby/components/LobbyCard.tsx`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Importado `getPlayerKarma` e o tipo `KarmaSummary` no `LobbyCard`.
+- Adicionado `useEffect` para buscar Karma real pelo `lobby.owner.id`.
+- Adicionados estados `karmaSummary` e `isKarmaLoading` para controlar dados e carregamento.
+- Criado fallback visual `Sem Karma` para jogadores sem avaliações.
+- Criada exibição de pontos de Karma e total de avaliações quando houver resumo em `reputacao_jogador`.
+- Definida classificação visual: Karma baixo para `<= -10`, Karma alto para `>= 50` e Karma neutro nos demais casos.
+- Mantida a UI segura em caso de erro, ausência de dono do lobby ou ausência de dados no Supabase.
+
+Commit do card relacionado:
+
+- `ce4f4135a91b83926621fd922224ae2ca297132a`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Aplicar migration com `supabase db push`, se ainda não tiver aplicado.
+- Abrir `/lobby` e confirmar que o card mostra `Carregando`, `Sem Karma` ou o Karma real do dono.
+- Confirmar que jogadores sem avaliações não quebram o card.
+- Confirmar que jogadores avaliados exibem pontos e total de avaliações.
+
+Observação:
+
+- Não rodei build, migration nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
