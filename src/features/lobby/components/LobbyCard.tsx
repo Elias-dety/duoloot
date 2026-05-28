@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
 import { Lobby } from '@/schemas/lobby.schema';
+import { getPlayerKarma, type KarmaSummary } from '@/services/karma.service';
 import { LobbyRulesSummary } from './LobbyRulesSummary';
 
 type MatchLevel = 'vou_carregar' | 'mesmo_nivel' | 'vai_me_carregar';
@@ -43,6 +44,13 @@ function getMatchLabel(level: MatchLevel) {
   return 'Vai me carregar';
 }
 
+function getKarmaLevel(score: number, hasSummary: boolean): KarmaLevel {
+  if (!hasSummary) return 'neutro';
+  if (score <= -10) return 'baixo';
+  if (score >= 50) return 'alto';
+  return 'neutro';
+}
+
 function getKarmaPosition(level: KarmaLevel) {
   if (level === 'baixo') return '16%';
   if (level === 'neutro') return '50%';
@@ -53,6 +61,10 @@ function getKarmaLabel(level: KarmaLevel) {
   if (level === 'baixo') return 'Karma baixo';
   if (level === 'neutro') return 'Karma neutro';
   return 'Karma alto';
+}
+
+function formatKarmaScore(score: number) {
+  return score > 0 ? `+${score}` : String(score);
 }
 
 function toText(value: unknown, fallback = '---') {
@@ -135,8 +147,11 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
 }) => {
   const navigate = useNavigate();
   const [showAllTags, setShowAllTags] = useState(false);
+  const [karmaSummary, setKarmaSummary] = useState<KarmaSummary | null>(null);
+  const [isKarmaLoading, setIsKarmaLoading] = useState(false);
 
   const ownerName = lobby.owner?.name || 'Player desconhecido';
+  const ownerId = lobby.owner?.id;
   const profile = { ...(lobby.metadata || {}), ...(lobby.owner?.gameProfile || {}) } as Record<string, unknown>;
 
   const slotsTotal = Math.max(2, Number(lobby.slotsTotal) || 5);
@@ -149,9 +164,16 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   const matchLevel = getMatchLevel(matchPercent);
   const matchPosition = `${matchPercent}%`;
 
-  // TODO: substituir por dado real de Karma quando o resumo `reputacao_jogador` estiver conectado ao card.
-  const karmaLevel: KarmaLevel = 'alto';
+  const karmaScore = karmaSummary?.karmaGeral ?? 0;
+  const hasKarmaSummary = Boolean(karmaSummary);
+  const karmaLevel = getKarmaLevel(karmaScore, hasKarmaSummary);
   const karmaPosition = getKarmaPosition(karmaLevel);
+  const karmaBadgeLabel = isKarmaLoading ? 'Carregando' : hasKarmaSummary ? getKarmaLabel(karmaLevel) : 'Sem Karma';
+  const karmaDetailLabel = isKarmaLoading
+    ? 'Buscando Karma...'
+    : hasKarmaSummary
+      ? `${formatKarmaScore(karmaScore)} pontos • ${karmaSummary?.totalPartidasAvaliadas ?? 0} avaliações`
+      : 'Jogador ainda sem avaliações';
 
   const game = toText(profile.mainGame || lobby.metadata?.mainGame, 'Jogo indefinido');
   const mode = lobby.mode || 'Modo indefinido';
@@ -162,6 +184,36 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   const mic = toBoolean(profile.microphone ?? lobby.metadata?.microphone);
   const description = toText(profile.bio || lobby.metadata?.bio, 'Procuro squad para jogar com comunicação, foco e lobby organizado.');
   const initials = getInitials(toText(profile.nickname, ownerName));
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (!ownerId) {
+      setKarmaSummary(null);
+      setIsKarmaLoading(false);
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    setIsKarmaLoading(true);
+
+    getPlayerKarma(ownerId)
+      .then((summary) => {
+        if (isMounted) setKarmaSummary(summary);
+      })
+      .catch((error) => {
+        console.error(error);
+        if (isMounted) setKarmaSummary(null);
+      })
+      .finally(() => {
+        if (isMounted) setIsKarmaLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [ownerId]);
 
   // TODO: no futuro trocar tags derivadas por tags persistidas no banco.
   const tags = buildTags(profile, role, mic, rank, region);
@@ -309,12 +361,15 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
           <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Karma</h4>
           <div className="rounded-[1.125rem] border border-[var(--dl-border)] bg-[var(--dl-surface)] p-4">
             <div className="mb-3 flex items-center justify-between gap-3">
-              <strong className="text-sm font-black text-white">Karma do jogador</strong>
+              <div>
+                <strong className="block text-sm font-black text-white">Karma do jogador</strong>
+                <span className="mt-1 block text-xs font-semibold text-[var(--dl-muted-light)]">{karmaDetailLabel}</span>
+              </div>
               <span className="rounded-full border border-[rgb(var(--dl-string-rgb)/0.24)] bg-[rgb(var(--dl-string-rgb)/0.14)] px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.08em] text-[var(--dl-string)]">
-                {getKarmaLabel(karmaLevel)}
+                {karmaBadgeLabel}
               </span>
             </div>
-            <div className="relative h-3 rounded-full bg-[linear-gradient(90deg,#ef4444_0_33.33%,#facc15_33.33%_66.66%,#34d399_66.66%_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,.12)]" aria-label={`Karma do jogador: ${getKarmaLabel(karmaLevel)}`}>
+            <div className="relative h-3 rounded-full bg-[linear-gradient(90deg,#ef4444_0_33.33%,#facc15_33.33%_66.66%,#34d399_66.66%_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,.12)]" aria-label={`Karma do jogador: ${karmaBadgeLabel}`}>
               <span className="absolute top-1/2 h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[var(--dl-string)] bg-[var(--dl-text)] shadow-[0_0_14px_rgba(52,211,153,.45)] [left:var(--karma-position)]" />
             </div>
             <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px] font-black uppercase tracking-[0.08em]">
