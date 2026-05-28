@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
+import { GameRankBadge } from '@/components/molecules';
+import { getGameRankTheme } from '@/features/ranks';
 import { Lobby } from '@/schemas/lobby.schema';
 import { getPlayerKarma, type KarmaSummary } from '@/services/karma.service';
 import { LobbyRulesSummary } from './LobbyRulesSummary';
@@ -16,7 +18,19 @@ type ProfileTag = {
   type: TagTone;
 };
 
-type CssVars = React.CSSProperties & Record<'--match-position' | '--karma-position', string>;
+type CssVars = React.CSSProperties &
+  Record<
+    | '--match-position'
+    | '--karma-position'
+    | '--rank-primary'
+    | '--rank-secondary'
+    | '--rank-accent'
+    | '--rank-border'
+    | '--rank-bg'
+    | '--rank-glow'
+    | '--rank-text',
+    string
+  >;
 
 export interface LobbyCardProps {
   lobby: Lobby;
@@ -180,6 +194,7 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   const queue = lobby.queue || 'Fila aberta';
   const role = toText(profile.mainRole || lobby.metadata?.mainRole, '---');
   const rank = toText(profile.currentRank || profile.rank || lobby.metadata?.currentRank || lobby.minRank, '---');
+  const rankTheme = getGameRankTheme({ game: 'valorant', rank });
   const region = toText(profile.region || lobby.metadata?.region, '---');
   const mic = toBoolean(profile.microphone ?? lobby.metadata?.microphone);
   const description = toText(profile.bio || lobby.metadata?.bio, 'Procuro squad para jogar com comunicação, foco e lobby organizado.');
@@ -230,7 +245,7 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
 
   const statusTone = isClosed || isFull
     ? 'border-[rgb(var(--dl-error-rgb)/0.28)] bg-[rgb(var(--dl-error-rgb)/0.14)] text-[var(--dl-error)]'
-    : 'border-[rgb(var(--dl-string-rgb)/0.28)] bg-[rgb(var(--dl-string-rgb)/0.14)] text-[var(--dl-string)]';
+    : 'border-[var(--rank-border)] bg-[var(--rank-bg)] text-[var(--rank-text)]';
 
   const actionDisabled = isClosed || isJoining || isLeaving || (!isJoined && isFull);
   const actionLabel = isLeaving
@@ -259,18 +274,40 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   const cssVars = {
     '--match-position': matchPosition,
     '--karma-position': karmaPosition,
+    '--rank-primary': rankTheme.colors.primary,
+    '--rank-secondary': rankTheme.colors.secondary,
+    '--rank-accent': rankTheme.colors.accent,
+    '--rank-border': rankTheme.colors.border,
+    '--rank-bg': rankTheme.colors.background,
+    '--rank-glow': rankTheme.colors.glow,
+    '--rank-text': rankTheme.colors.text,
   } as CssVars;
 
   return (
     <article
-      className="dl-panel flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-[var(--dl-border)] bg-[linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018))] p-0 shadow-[0_26px_70px_rgba(0,0,0,.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-white/5"
-      style={{ ...cssVars, opacity: isClosed ? 0.72 : 1 }}
+      className="dl-panel flex h-full flex-col overflow-hidden rounded-[1.75rem] border p-0 transition-all duration-300 hover:-translate-y-1"
+      style={{
+        ...cssVars,
+        opacity: isClosed ? 0.72 : 1,
+        borderColor: 'var(--rank-border)',
+        background:
+          'radial-gradient(circle at 18% 0%, var(--rank-bg), transparent 18rem), linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018))',
+        boxShadow: '0 26px 70px rgba(0,0,0,.35), 0 0 34px var(--rank-glow)',
+      }}
     >
       <div className="flex h-full flex-col p-5 sm:p-6">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex min-w-0 items-end gap-3 sm:gap-4">
-            <div className="grid h-20 w-20 shrink-0 place-items-center rounded-[1.5rem] border-4 border-[var(--dl-surface)] bg-[linear-gradient(135deg,var(--dl-primary),var(--dl-info))] text-2xl font-black text-white shadow-[0_10px_24px_rgba(0,0,0,.32)] sm:h-[84px] sm:w-[84px]">
+            <div className="relative grid h-20 w-20 shrink-0 place-items-center rounded-[1.5rem] border-4 text-2xl font-black text-white shadow-[0_10px_24px_rgba(0,0,0,.32)] sm:h-[84px] sm:w-[84px]" style={{ borderColor: 'var(--rank-border)', background: 'linear-gradient(135deg, var(--rank-secondary), var(--rank-primary))', boxShadow: '0 10px 24px rgba(0,0,0,.32), 0 0 22px var(--rank-glow)' }}>
               {initials}
+              {rankTheme.icon && (
+                <img
+                  src={rankTheme.icon}
+                  alt={`Elo ${rankTheme.label}`}
+                  className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full object-contain drop-shadow-[0_0_14px_var(--rank-glow)]"
+                  loading="lazy"
+                />
+              )}
             </div>
             <div className="min-w-0 pb-1">
               <h3 className="break-words font-['Rajdhani'] text-2xl font-black uppercase leading-none tracking-[-0.02em] text-white sm:text-3xl">
@@ -283,6 +320,11 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
                 <span>•</span>
                 <span>{queue}</span>
               </div>
+              {rank !== '---' && (
+                <div className="mt-3">
+                  <GameRankBadge game="valorant" rank={rank} size="sm" variant="pill" />
+                </div>
+              )}
             </div>
           </div>
 
@@ -318,7 +360,7 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
             {Array.from({ length: slotsTotal }).map((_, index) => {
               const isFilled = index < slotsFilled;
               return (
-                <span key={index} className={`grid min-w-0 place-items-center ${isFilled ? 'text-[var(--dl-string)] drop-shadow-[0_0_10px_rgba(52,211,153,.34)]' : 'text-[#4c566f]'}`}>
+                <span key={index} className={`grid min-w-0 place-items-center ${isFilled ? 'text-[var(--rank-primary)] drop-shadow-[0_0_10px_var(--rank-glow)]' : 'text-[#4c566f]'}`}>
                   <span className="block [&>svg]:h-[clamp(46px,13vw,76px)] [&>svg]:w-[clamp(46px,13vw,76px)]">
                     <PersonIcon />
                   </span>
@@ -333,8 +375,8 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
         <section className="mt-5">
           <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Resumo rápido</h4>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            <div className="flex min-h-[92px] items-center gap-3 rounded-[1.25rem] border border-[var(--dl-border)] bg-[linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.02))] p-4">
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[0.95rem] border border-dashed border-white/20 bg-white/[0.06] text-[#dfe6ff] [&>svg]:h-6 [&>svg]:w-6">
+            <div className="flex min-h-[92px] items-center gap-3 rounded-[1.25rem] border p-4" style={{ borderColor: 'var(--rank-border)', background: 'linear-gradient(135deg, var(--rank-bg), rgba(255,255,255,.02))' }}>
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[0.95rem] border border-dashed bg-white/[0.06] text-[var(--rank-text)] [&>svg]:h-6 [&>svg]:w-6" style={{ borderColor: 'var(--rank-border)' }}>
                 <RoleIcon />
               </div>
               <div className="min-w-0">
@@ -344,8 +386,8 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
               </div>
             </div>
 
-            <div className="flex min-h-[92px] items-center gap-3 rounded-[1.25rem] border border-[rgb(var(--dl-string-rgb)/0.24)] bg-[linear-gradient(135deg,rgba(52,211,153,.13),rgba(52,211,153,.035))] p-4">
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[0.95rem] border border-[rgb(var(--dl-string-rgb)/0.24)] bg-[rgb(var(--dl-string-rgb)/0.12)] text-[var(--dl-string)] [&>svg]:h-6 [&>svg]:w-6">
+            <div className="flex min-h-[92px] items-center gap-3 rounded-[1.25rem] border p-4" style={{ borderColor: 'var(--rank-border)', background: 'linear-gradient(135deg, var(--rank-bg), rgba(255,255,255,.025))' }}>
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[0.95rem] border bg-[var(--rank-bg)] text-[var(--rank-primary)] [&>svg]:h-6 [&>svg]:w-6" style={{ borderColor: 'var(--rank-border)' }}>
                 <MicIcon />
               </div>
               <div className="min-w-0">
@@ -392,7 +434,7 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
                     : tag.type === 'orange'
                       ? 'border-[rgba(251,146,60,.26)] bg-[rgba(251,146,60,.14)]'
                       : tag.type === 'blue'
-                        ? 'border-[rgba(56,189,248,.26)] bg-[rgba(56,189,248,.14)]'
+                        ? 'border-[var(--rank-border)] bg-[var(--rank-bg)]'
                         : tag.type === 'yellow'
                           ? 'border-[rgba(250,204,21,.26)] bg-[rgba(250,204,21,.14)]'
                           : 'border-[rgba(244,114,182,.26)] bg-[rgba(244,114,182,.14)]'
@@ -418,16 +460,17 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
 
         <section className="mt-5">
           <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Descrição</h4>
-          <p className="m-0 rounded-[1.125rem] border border-[var(--dl-border)] bg-white/[0.035] px-4 py-3 text-sm leading-relaxed text-[#d8def0]">
+          <p className="m-0 rounded-[1.125rem] border px-4 py-3 text-sm leading-relaxed text-[#d8def0]" style={{ borderColor: 'var(--rank-border)', background: 'rgba(255,255,255,.035)' }}>
             {description}
           </p>
         </section>
 
-        <footer className="mt-auto border-t border-[var(--dl-border)] pt-5">
+        <footer className="mt-auto border-t pt-5" style={{ borderColor: 'var(--rank-border)' }}>
           {isJoined && !isOwner ? (
             <button
               type="button"
-              className="mb-3 w-full rounded-2xl border border-[var(--dl-border)] bg-white/[0.05] px-4 py-3 text-sm font-black text-white opacity-80"
+              className="mb-3 w-full rounded-2xl border bg-white/[0.05] px-4 py-3 text-sm font-black text-white opacity-80"
+              style={{ borderColor: 'var(--rank-border)' }}
               disabled
             >
               Você entrou
@@ -437,7 +480,8 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
-              className="min-w-0 flex-1 rounded-2xl border border-[var(--dl-border)] bg-white/[0.05] px-4 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-w-0 flex-1 rounded-2xl border bg-white/[0.05] px-4 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
+              style={{ borderColor: 'var(--rank-border)' }}
               disabled={!lobby.owner?.id}
               onClick={() => navigate(ROUTES.PLAYER_PROFILE.replace(':playerId', lobby.owner?.id || ''))}
             >
@@ -447,9 +491,13 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
               type="button"
               className={`min-w-0 flex-1 rounded-2xl px-4 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 ${
                 isJoined || isFull || isClosed
-                  ? 'border border-[var(--dl-border)] bg-white/[0.05]'
-                  : 'bg-[linear-gradient(135deg,var(--dl-primary),#6338e8)] shadow-[0_12px_26px_rgba(99,56,232,.24)]'
+                  ? 'border bg-white/[0.05]'
+                  : 'shadow-[0_12px_26px_var(--rank-glow)]'
               }`}
+              style={{
+                borderColor: isJoined || isFull || isClosed ? 'var(--rank-border)' : undefined,
+                background: isJoined || isFull || isClosed ? undefined : 'linear-gradient(135deg, var(--rank-primary), var(--rank-secondary))',
+              }}
               disabled={actionDisabled}
               onClick={handlePrimaryAction}
             >
