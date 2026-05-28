@@ -7,6 +7,7 @@ import { AgentStatsGrid } from '@/features/riot/components/AgentStatsGrid';
 import { MapStatsGrid } from '@/features/riot/components/MapStatsGrid';
 import { Card } from '@/components/atoms';
 import { LoadingState, EmptyState } from '@/components/molecules';
+import { getValorantRankIcon } from '@/utils/valorantRankIcon';
 import type { ValorantProfileLookupResult } from '@/types/valorant.types';
 
 export default function RiotProfilePage() {
@@ -84,6 +85,8 @@ export default function RiotProfilePage() {
       />
     );
   }
+
+  const rankIconUrl = getValorantRankIcon(profile.stats?.rank);
 
   // --- Map data to component interfaces ---
   const statsForOverview = profile.stats
@@ -184,6 +187,14 @@ export default function RiotProfilePage() {
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--dl-muted)]">
                   Rank
                 </span>
+                {rankIconUrl && (
+                  <img
+                    src={rankIconUrl}
+                    alt={`Elo ${profile.stats.rank}`}
+                    className="h-8 w-8 object-contain drop-shadow-[0_0_12px_rgba(var(--dl-number-rgb),0.3)]"
+                    loading="lazy"
+                  />
+                )}
                 <span className="font-bold text-[var(--dl-number)]">{profile.stats.rank}</span>
               </div>
             )}
