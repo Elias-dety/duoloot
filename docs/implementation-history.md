@@ -492,3 +492,36 @@ Testes pendentes para o PC:
 Observação:
 
 - Não rodei build, migration nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
+
+### Etapa 18 autorizada pelo usuário: checklist de validação do Karma real no card
+
+Arquivos alterados nesta etapa:
+
+- `docs/test-checklist.md`
+- `docs/implementation-history.md`
+
+Resumo:
+
+- Atualizada a validação do card para refletir que o Karma agora é carregado por `getPlayerKarma`.
+- Removida a expectativa antiga de variável fake `karmaLevel` como fonte principal do card.
+- Adicionada checagem do estado tipado `karmaSummary` com `KarmaSummary`.
+- Adicionada checagem do estado visual `Carregando` durante a busca.
+- Adicionada checagem do fallback `Sem Karma` para jogador sem registro em `reputacao_jogador`.
+- Adicionada validação de pontos e total de avaliações exibidos no card quando existir resumo real.
+- Adicionadas validações das faixas `Karma baixo`, `Karma neutro` e `Karma alto`.
+- Atualizada a lista de evidências úteis com print da linha em `reputacao_jogador` usada na validação.
+
+Commit do checklist relacionado:
+
+- `cb3ddc36a7a244940e14f5306c33e1331abba937`
+
+Testes pendentes para o PC:
+
+- `npm run build`
+- Aplicar migration com `supabase db push`, se ainda não tiver aplicado.
+- Abrir `/lobby` e validar `Carregando`, `Sem Karma` e Karma real conforme dados do banco.
+- Conferir se o card segue estável para jogadores com e sem avaliações.
+
+Observação:
+
+- Não rodei build, migration nem testes localmente. Alteração preparada pelo GitHub para validação posterior no PC.
