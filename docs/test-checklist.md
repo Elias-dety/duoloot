@@ -184,7 +184,7 @@ Validação manual do menu:
 6. Confirmar que o item `Karma` fica com estado visual ativo.
 7. Confirmar que os links antigos `Dashboard`, `Perfil`, `Premium`, `Lobby` e `Cofre` continuam aparecendo.
 
-### Validação do Karma no card do lobby
+### Validação do Karma real no card do lobby
 
 Arquivo esperado:
 
@@ -201,21 +201,28 @@ npm run build
 Resultado esperado:
 
 - TypeScript compila sem erro.
-- O tipo interno `KarmaLevel` existe no card.
-- A variável fake `karmaLevel` ainda é usada no card.
-- O TODO informa que o dado real virá de `reputacao_jogador` futuramente.
-- O card ainda não busca Karma real no Supabase nesta etapa.
+- O card importa `getPlayerKarma` de `@/services/karma.service`.
+- O card usa `KarmaSummary` para tipar o estado `karmaSummary`.
+- O card busca Karma real usando `lobby.owner.id`.
+- O card exibe `Carregando` enquanto busca o Karma.
+- O card exibe `Sem Karma` quando `getPlayerKarma` retorna `null`.
+- O card exibe pontos e total de avaliações quando houver registro em `reputacao_jogador`.
+- A UI não quebra se a busca falhar ou se o dono do lobby não tiver ID.
 
 Validação manual do card:
 
-1. Entrar em `/lobby`.
-2. Confirmar que os cards continuam carregando normalmente.
-3. Confirmar que a seção antes chamada `Comportamento` agora aparece como `Karma`.
-4. Confirmar que aparece o texto `Karma do jogador`.
-5. Confirmar que a tag visual mostra `Karma alto`, `Karma neutro` ou `Karma baixo` conforme o estado fake.
-6. Confirmar que a barra mantém três faixas visuais: vermelho, amarelo e verde.
-7. Confirmar que os rótulos da barra são `Karma baixo`, `Neutro` e `Karma alto`.
-8. Confirmar que o restante do card segue funcionando: `Resumo rápido`, `Tags do perfil`, `Descrição`, `Ver Perfil` e botão de entrada/saída.
+1. Aplicar a migration com `supabase db push`, se ainda não tiver aplicado.
+2. Entrar em `/lobby` com usuário autenticado.
+3. Confirmar que os cards continuam carregando normalmente.
+4. Confirmar que a seção `Karma` aparece no card.
+5. Confirmar que aparece `Carregando` rapidamente durante a busca.
+6. Confirmar que jogador sem avaliações mostra `Sem Karma` e `Jogador ainda sem avaliações`.
+7. Criar/inserir uma avaliação para o dono de um lobby.
+8. Confirmar que o card passa a mostrar pontos, por exemplo `+4 pontos`, e o total de avaliações.
+9. Confirmar que Karma `<= -10` aparece como `Karma baixo`.
+10. Confirmar que Karma `>= 50` aparece como `Karma alto`.
+11. Confirmar que valores intermediários aparecem como `Karma neutro`.
+12. Confirmar que o restante do card segue funcionando: `Resumo rápido`, `Tags do perfil`, `Descrição`, `Ver Perfil` e botão de entrada/saída.
 
 ### Validação da página preview do Karma
 
@@ -282,5 +289,6 @@ Se algum teste falhar, guardar e enviar:
 - payload usado no `submitKarmaReview`, ocultando dados sensíveis se houver;
 - URL acessada no teste da rota `/karma/preview`;
 - print do item `Karma` no menu desktop e mobile;
-- print do card do lobby mostrando a seção `Karma`;
+- print do card do lobby mostrando `Carregando`, `Sem Karma` ou Karma real;
+- print da linha em `reputacao_jogador` usada para validar o card;
 - print da página preview do Karma em desktop e, se possível, em mobile.
