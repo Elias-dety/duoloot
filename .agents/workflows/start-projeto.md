@@ -65,16 +65,8 @@ Acesse:
 
 http://localhost:5173/
 
-Rotas úteis do Duo Loot:
+Rotas úteis do Duo Loo, smpre traga todas as páginas.
 
-Home:        http://localhost:5173/
-Lobby:       http://localhost:5173/lobby
-Cofre:       http://localhost:5173/cofre
-Login:       http://localhost:5173/login
-Cadastro:   http://localhost:5173/cadastro
-Dashboard:  http://localhost:5173/dashboard
-Premium:    http://localhost:5173/premium
-Onboarding: http://localhost:5173/onboarding
 6. Testar se está tudo certo
 
 Depois de alterações importantes, rode:
