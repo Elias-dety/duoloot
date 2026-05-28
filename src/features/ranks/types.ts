@@ -25,7 +25,10 @@ export interface GameRankTheme {
   division: RankDivision;
   label: string;
   normalizedRank: string;
+  /** Preferred icon path, using the official game-scoped assets structure. */
   icon: string | null;
+  /** Temporary fallback path used while legacy assets are still being migrated. */
+  fallbackIcon?: string | null;
   colors: RankColorTemperature;
   isUnranked: boolean;
 }
