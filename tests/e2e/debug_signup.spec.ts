@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('Debug Signup', async ({ page }) => {
   page.on('console', msg => console.log('PAGE CONSOLE:', msg.text()));

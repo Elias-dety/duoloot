@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('Signup owner and joiner', async ({ page }) => {
   // We will register owner and joiner users
