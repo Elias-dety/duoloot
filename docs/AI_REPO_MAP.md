@@ -19,11 +19,12 @@ Quando a busca não funcionar, não conclua que o arquivo não existe.
 Use leitura direta por caminhos conhecidos e siga esta ordem:
 
 1. `AGENTS.md`
-2. `docs/PROJECT_RULES.md`
-3. `docs/TECHNICAL_GUIDE.md`
-4. `docs/security/SECURITY_POLICY.md`
-5. `docs/REMOTE_TODO.md`
-6. Trilhas em `docs/trails/`, quando a tarefa envolver uma área específica.
+2. `docs/AI_CHANGELOG.md`
+3. `docs/PROJECT_RULES.md`
+4. `docs/TECHNICAL_GUIDE.md`
+5. `docs/security/SECURITY_POLICY.md`
+6. `docs/REMOTE_TODO.md`
+7. Trilhas em `docs/trails/`, quando a tarefa envolver uma área específica.
 
 ## Arquivos principais conhecidos
 
@@ -31,6 +32,7 @@ Use leitura direta por caminhos conhecidos e siga esta ordem:
 |---|---|
 | `README.md` | Visão geral do projeto. |
 | `AGENTS.md` | Entrada obrigatória para agentes. |
+| `docs/AI_CHANGELOG.md` | Histórico obrigatório das alterações feitas por IA. |
 | `docs/PROJECT_RULES.md` | Regras de produto e limites de decisão. |
 | `docs/TECHNICAL_GUIDE.md` | Stack, estrutura esperada, comandos e padrões técnicos. |
 | `docs/security/SECURITY_POLICY.md` | Regras obrigatórias de segurança. |
@@ -67,6 +69,7 @@ src/
 - Se a busca do conector retornar vazia, registre isso como limitação da ferramenta, não como ausência de código.
 - Antes de alterar arquivos sensíveis, leia `docs/security/SECURITY_POLICY.md`.
 - Quando não puder rodar lint, testes ou build, registre a pendência em `docs/REMOTE_TODO.md`.
+- Ao alterar qualquer coisa, registre a entrada correspondente em `docs/AI_CHANGELOG.md`.
 
 ## Comandos locais úteis para reconstruir o mapa
 
