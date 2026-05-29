@@ -8,18 +8,20 @@ O objetivo deste arquivo é indicar quais documentos governam o projeto e impedi
 
 Antes de qualquer alteração, leia nesta ordem:
 
-1. `docs/PROJECT_RULES.md`
-2. `docs/TECHNICAL_GUIDE.md`
-3. `docs/security/SECURITY_POLICY.md`
-4. `docs/REMOTE_TODO.md`
-5. `docs/AI_REPO_MAP.md`, especialmente se a busca/indexação de código do conector estiver falhando.
-6. Uma trilha em `docs/trails/`, quando a tarefa pedir foco em uma área específica.
+1. `docs/AI_CHANGELOG.md`
+2. `docs/PROJECT_RULES.md`
+3. `docs/TECHNICAL_GUIDE.md`
+4. `docs/security/SECURITY_POLICY.md`
+5. `docs/REMOTE_TODO.md`
+6. `docs/AI_REPO_MAP.md`, especialmente se a busca/indexação de código do conector estiver falhando.
+7. Uma trilha em `docs/trails/`, quando a tarefa pedir foco em uma área específica.
 
 ## Arquivos sempre ativos
 
 Estes documentos devem ser considerados sempre ativos:
 
 - `AGENTS.md`
+- `docs/AI_CHANGELOG.md`
 - `docs/PROJECT_RULES.md`
 - `docs/TECHNICAL_GUIDE.md`
 - `docs/security/SECURITY_POLICY.md`
@@ -45,7 +47,18 @@ Não altere o projeto sem entender:
 2. quais arquivos serão afetados;
 3. se a mudança toca autenticação, autorização, banco, Edge Functions, Premium, pontos, ranking, Vault, Riot, mensagens, convites ou dados de usuário;
 4. quais testes precisam ser rodados;
-5. quais pendências devem ir para `docs/REMOTE_TODO.md`.
+5. quais pendências devem ir para `docs/REMOTE_TODO.md`;
+6. qual entrada deve ser adicionada ou atualizada em `docs/AI_CHANGELOG.md`.
+
+## Histórico de alterações
+
+Toda alteração feita por IA deve ser registrada em:
+
+`docs/AI_CHANGELOG.md`
+
+Isso vale mesmo para alteração de uma linha, documentação, configuração, remoção, teste de conexão, escrita não invasiva ou ajuste visual.
+
+O histórico deve manter pelo menos os últimos 20 itens alterados para preservar contexto entre chats e agentes.
 
 ## Segurança
 
@@ -56,6 +69,10 @@ Quando a tarefa envolver segurança, a autoridade principal é:
 Se uma alteração for feita por motivo de segurança, registre no histórico:
 
 `docs/security/SECURITY_HISTORY.md`
+
+E também registre o contexto geral em:
+
+`docs/AI_CHANGELOG.md`
 
 ## Pendências remotas
 
