@@ -89,15 +89,6 @@ function toBoolean(value: unknown) {
   return typeof value === 'boolean' ? value : false;
 }
 
-function getInitials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join('') || 'DL';
-}
-
 function getRoleHint(role: string) {
   const normalized = role.toLowerCase();
   if (normalized.includes('duel')) return 'Entrada e pressão no combate';
@@ -195,10 +186,14 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   const role = toText(profile.mainRole || lobby.metadata?.mainRole, '---');
   const rank = toText(profile.currentRank || profile.rank || lobby.metadata?.currentRank || lobby.minRank, '---');
   const rankTheme = getGameRankTheme({ game: 'valorant', rank });
+  const [avatarRankIconSrc, setAvatarRankIconSrc] = useState(rankTheme.icon || rankTheme.fallbackIcon || null);
   const region = toText(profile.region || lobby.metadata?.region, '---');
   const mic = toBoolean(profile.microphone ?? lobby.metadata?.microphone);
   const description = toText(profile.bio || lobby.metadata?.bio, 'Procuro squad para jogar com comunicação, foco e lobby organizado.');
-  const initials = getInitials(toText(profile.nickname, ownerName));
+
+  useEffect(() => {
+    setAvatarRankIconSrc(rankTheme.icon || rankTheme.fallbackIcon || null);
+  }, [rankTheme.icon, rankTheme.fallbackIcon]);
 
   useEffect(() => {
     let isMounted = true;
@@ -298,15 +293,31 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
       <div className="flex h-full flex-col p-5 sm:p-6">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex min-w-0 items-end gap-3 sm:gap-4">
-            <div className="relative grid h-20 w-20 shrink-0 place-items-center rounded-[1.5rem] border-4 text-2xl font-black text-white shadow-[0_10px_24px_rgba(0,0,0,.32)] sm:h-[84px] sm:w-[84px]" style={{ borderColor: 'var(--rank-border)', background: 'linear-gradient(135deg, var(--rank-secondary), var(--rank-primary))', boxShadow: '0 10px 24px rgba(0,0,0,.32), 0 0 22px var(--rank-glow)' }}>
-              {initials}
-              {rankTheme.icon && (
+            <div
+              className="grid h-20 w-20 shrink-0 place-items-center rounded-[1.5rem] border-4 p-2 text-2xl font-black text-white shadow-[0_10px_24px_rgba(0,0,0,.32)] sm:h-[84px] sm:w-[84px]"
+              style={{
+                borderColor: 'var(--rank-border)',
+                background: 'radial-gradient(circle, var(--rank-bg), rgba(255,255,255,.04))',
+                boxShadow: '0 10px 24px rgba(0,0,0,.32), 0 0 22px var(--rank-glow)',
+              }}
+            >
+              {avatarRankIconSrc ? (
                 <img
-                  src={rankTheme.icon}
+                  src={avatarRankIconSrc}
                   alt={`Elo ${rankTheme.label}`}
-                  className="absolute -bottom-2 -right-2 h-9 w-9 rounded-full object-contain drop-shadow-[0_0_14px_var(--rank-glow)]"
+                  className="h-full w-full object-contain drop-shadow-[0_0_18px_var(--rank-glow)]"
                   loading="lazy"
+                  onError={() => {
+                    setAvatarRankIconSrc((currentSrc) => {
+                      if (rankTheme.fallbackIcon && currentSrc !== rankTheme.fallbackIcon) {
+                        return rankTheme.fallbackIcon;
+                      }
+                      return null;
+                    });
+                  }}
                 />
+              ) : (
+                <span aria-hidden="true" className="text-[var(--rank-text)]">?</span>
               )}
             </div>
             <div className="min-w-0 pb-1">
