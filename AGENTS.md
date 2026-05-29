@@ -12,7 +12,8 @@ Antes de qualquer alteração, leia nesta ordem:
 2. `docs/TECHNICAL_GUIDE.md`
 3. `docs/security/SECURITY_POLICY.md`
 4. `docs/REMOTE_TODO.md`
-5. Uma trilha em `docs/trails/`, quando a tarefa pedir foco em uma área específica.
+5. `docs/AI_REPO_MAP.md`, especialmente se a busca/indexação de código do conector estiver falhando.
+6. Uma trilha em `docs/trails/`, quando a tarefa pedir foco em uma área específica.
 
 ## Arquivos sempre ativos
 
@@ -23,6 +24,7 @@ Estes documentos devem ser considerados sempre ativos:
 - `docs/TECHNICAL_GUIDE.md`
 - `docs/security/SECURITY_POLICY.md`
 - `docs/REMOTE_TODO.md`
+- `docs/AI_REPO_MAP.md`
 
 ## Arquivos de trilha
 
@@ -62,6 +64,14 @@ Se algo não puder ser testado pelo agente no ambiente atual, registre em:
 `docs/REMOTE_TODO.md`
 
 Inclua sempre comando, ação esperada e motivo.
+
+## Busca e indexação
+
+Se a busca textual do conector retornar vazia para termos que deveriam existir, não assuma que o arquivo ou código não existe.
+
+Use leitura direta por caminhos conhecidos e consulte:
+
+`docs/AI_REPO_MAP.md`
 
 ## Proibição
 
