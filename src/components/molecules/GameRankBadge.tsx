@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { getGameRankTheme, type SupportedGameId } from '@/features/ranks';
 
 interface GameRankBadgeProps {
@@ -31,6 +31,7 @@ export function GameRankBadge({
   className = '',
 }: GameRankBadgeProps) {
   const theme = getGameRankTheme({ game, rank });
+  const [iconSrc, setIconSrc] = useState(theme.icon || theme.fallbackIcon || null);
 
   const badgeStyle = {
     '--rank-primary': theme.colors.primary,
@@ -64,12 +65,20 @@ export function GameRankBadge({
       data-rank-tier={theme.tier}
       data-rank-division={theme.division ?? undefined}
     >
-      {theme.icon && (
+      {iconSrc && (
         <img
-          src={theme.icon}
+          src={iconSrc}
           alt={`Elo ${theme.label}`}
           className={`${iconSizeBySize[size]} object-contain drop-shadow-[0_0_12px_var(--rank-glow)]`}
           loading="lazy"
+          onError={() => {
+            setIconSrc((currentSrc) => {
+              if (theme.fallbackIcon && currentSrc !== theme.fallbackIcon) {
+                return theme.fallbackIcon;
+              }
+              return null;
+            });
+          }}
         />
       )}
       {showLabel && (
