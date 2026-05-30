@@ -110,7 +110,7 @@ export default function KarmaPreviewPage() {
     <main className="relative min-h-[calc(100vh-88px)] overflow-hidden px-4 py-8 text-white sm:px-6 lg:px-8">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgb(var(--dl-primary-rgb)/0.22),transparent_34%),radial-gradient(circle_at_bottom_right,rgb(var(--dl-string-rgb)/0.14),transparent_32%)]" />
 
-      <section className="relative mx-auto max-w-6xl">
+      <section className="relative mx-auto max-w-[2560px] 3xl:px-12 4xl:px-24">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <span className="inline-flex rounded-full border border-[rgb(var(--dl-string-rgb)/0.24)] bg-[rgb(var(--dl-string-rgb)/0.10)] px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-[var(--dl-string)]">

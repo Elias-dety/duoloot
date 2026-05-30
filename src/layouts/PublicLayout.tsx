@@ -171,7 +171,7 @@ export default function PublicLayout() {
       </main>
 
       <footer className="border-t border-[var(--dl-border)] bg-[rgba(15,15,18,0.86)]">
-        <div className="mx-auto flex max-w-[1240px] flex-col gap-8 px-4 py-10 md:px-6">
+        <div className="mx-auto flex max-w-[2560px] 3xl:px-12 4xl:px-24 flex-col gap-8 px-4 py-10 md:px-6">
           <div className="grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
             <div>
               <Link to={ROUTES.HOME} className="dl-brand">

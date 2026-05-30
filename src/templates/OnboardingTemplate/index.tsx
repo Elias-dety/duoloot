@@ -40,7 +40,7 @@ export const OnboardingTemplate: React.FC<OnboardingTemplateProps> = ({
         <span>Red Vault onboarding</span>
       </div>
 
-      <div className="mx-auto flex-1 w-full max-w-[1240px] px-4 py-6 md:px-8 md:py-10">
+      <div className="mx-auto flex-1 w-full max-w-[2560px] 3xl:px-12 4xl:px-24 px-4 py-6 md:px-8 md:py-10">
         <div className="mb-8 md:mb-10">
           <SectionTitle
             eyebrow="Onboarding"

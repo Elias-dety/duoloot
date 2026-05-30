@@ -32,12 +32,12 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
   const premiumPlan = plans.find((plan) => plan.tier === 'premium');
 
   if (isLoading) {
-    return <PageState type="loading" loadingBlocks={4} className="max-w-6xl" />;
+    return <PageState type="loading" loadingBlocks={4} className="max-w-[2560px] 3xl:px-12 4xl:px-24" />;
   }
 
   if (isError) {
     return (
-      <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+      <div className="mx-auto flex w-full max-w-[2560px] 3xl:px-12 4xl:px-24 flex-col items-center justify-center py-16">
         <EmptyState
           icon="error"
           title="Erro ao carregar planos"
@@ -49,7 +49,7 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
 
   if (isPremiumLocked) {
     return (
-      <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+      <div className="mx-auto flex w-full max-w-[2560px] 3xl:px-12 4xl:px-24 flex-col items-center justify-center py-16">
         <EmptyState
           icon="empty"
           title="Pagamento em breve"
@@ -61,7 +61,7 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
 
   if (!plans.length || !freePlan || !premiumPlan) {
     return (
-      <div className="mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+      <div className="mx-auto flex w-full max-w-[2560px] 3xl:px-12 4xl:px-24 flex-col items-center justify-center py-16">
         <EmptyState
           icon="empty"
           title="Nenhum plano disponível"
@@ -72,7 +72,7 @@ export const PremiumTemplate: React.FC<PremiumTemplateProps> = ({
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
+    <div className="mx-auto w-full max-w-[2560px] 3xl:px-12 4xl:px-24 space-y-6 px-3 pb-12 md:px-6">
       <PremiumHero />
 
       {actionMessage ? (

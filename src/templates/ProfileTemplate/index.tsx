@@ -54,7 +54,7 @@ export const ProfileTemplate: React.FC<ProfileTemplateProps> = ({
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
+    <div className="mx-auto w-full max-w-[2560px] 3xl:px-12 4xl:px-24 space-y-6 px-3 pb-12 md:px-6">
       <button type="button" className="dl-btn dl-btn-blue mb-4 px-6 h-[40px] flex items-center gap-2" onClick={() => navigate(-1)}>
         <span className="text-[14px]">◄</span> Voltar
       </button>

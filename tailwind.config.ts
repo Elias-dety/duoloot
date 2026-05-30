@@ -16,6 +16,10 @@ const config: Config = {
       },
     },
     extend: {
+      screens: {
+        '3xl': '1920px',
+        '4xl': '2560px',
+      },
       fontFamily: {
         mono: ["'JetBrains Mono'", 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },

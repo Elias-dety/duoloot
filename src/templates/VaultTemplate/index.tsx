@@ -103,7 +103,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
   const completedMissionsCount = missions.filter((mission) => mission.progress?.completed).length;
 
   return (
-    <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
+    <div className="mx-auto w-full max-w-[2560px] 3xl:px-12 4xl:px-24 space-y-6 px-3 pb-12 md:px-6">
       <Card variant="accent" className="space-y-5 px-5 py-6 md:px-8 md:py-8">
         <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="flex flex-col gap-5">

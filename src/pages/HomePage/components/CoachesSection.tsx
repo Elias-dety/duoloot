@@ -51,7 +51,7 @@ export function CoachesSection() {
   const { messages: copy } = useLanguage();
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-20">
+    <section className="mx-auto max-w-[2560px] 3xl:px-12 4xl:px-24 px-4 py-20">
       <div className="mb-12 text-center">
         <div className="mb-4 inline-flex items-center rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[var(--dl-function)]">
           {copy.home.coachesBadge}

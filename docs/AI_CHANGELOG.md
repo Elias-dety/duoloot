@@ -67,6 +67,160 @@ Registre uma única entrada por pacote de trabalho, incluindo `docs/AI_CHANGELOG
 
 # Últimos 20 itens
 
+## 2026-05-30
+
+### 2026-05-30 — Adição de mais 10 lobbies mockados
+
+ID: AI-20260530-005
+Tipo: test
+Autor: Antigravity
+Commit: pendente
+Arquivos alterados:
+- `src/data/mocks/lobbies.mock.ts`
+- `docs/AI_CHANGELOG.md`
+
+Resumo:
+- Adicionados mais 10 lobbies gerados dinamicamente no mock de lobbies para melhor testar as listas na UI.
+
+Motivo:
+- O usuário solicitou visualizar mais exemplos de cards na tela ("quero mais 10").
+
+Impacto:
+- A interface renderizará mais cards (22 no total em vez de 12), facilitando a visualização e teste do layout da grade e do LobbyCard.
+
+Validação:
+- Validação no ambiente local.
+
+Pendências:
+- Nenhuma.
+
+---
+
+
+### 2026-05-30 — Correção de proporções do LobbyCard e Lobbies Mockados
+
+ID: AI-20260530-004
+Tipo: fix
+Autor: Antigravity
+Commit: pendente
+Arquivos alterados:
+- `src/features/lobby/components/LobbyCard.tsx` (restaurado)
+- `src/components/organisms/LobbyGrid.tsx`
+- `src/data/mocks/lobbies.mock.ts`
+
+Resumo:
+- Restaurado o tamanho original dos textos e espaçamentos do `LobbyCard`.
+- Aplicada uma propriedade de zoom CSS diretamente na grade (`xl:[zoom:0.9] 2xl:[zoom:0.85] 3xl:[zoom:0.75]`) para escalar o componente inteiro sem quebrar ou deformar seu layout interno.
+- Gerados 10 exemplos adicionais de lobbies no arquivo mock.
+
+Motivo:
+- A tentativa anterior de diminuir as fontes distorceu o design visual rico do card. A solução com `zoom` preserva a intenção original do componente, reduzindo seu footprint na tela em monitores gigantes para exibir 4 colunas sem espremer conteúdo horizontalmente.
+
+Impacto:
+- Os cards renderizam na sua proporção original, mas em escala fisicamente menor em resoluções altas, suportando com elegância as 4 colunas solicitadas.
+
+Validação:
+- Requer teste visual local.
+
+Pendências:
+- Nenhuma.
+
+---
+
+### 2026-05-30 — Ajuste de colunas no LobbyGrid
+
+ID: AI-20260530-003
+Tipo: refactor
+Autor: Antigravity
+Commit: pendente
+Arquivos alterados:
+- `src/components/organisms/LobbyGrid.tsx`
+
+Resumo:
+- Atualizada a grade de lobbies para `grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4`.
+
+Motivo:
+- Devido à expansão do layout para monitores gigantes, a restrição de apenas 2 colunas estava deixando os cards enormes. O usuário solicitou 4 cards por fileira.
+
+Impacto:
+- A exibição do lobby ficará mais densa e equilibrada em monitores QHD/FHD, exibindo até 4 lobbies por linha.
+
+Validação:
+- Requer teste visual local.
+
+Pendências:
+- Nenhuma.
+
+---
+
+### 2026-05-30 — Otimização de layouts para monitores 24" (FHD) e 27" (QHD)
+
+ID: AI-20260530-002
+Tipo: refactor
+Autor: Antigravity
+Commit: pendente
+Arquivos alterados:
+- `tailwind.config.ts`
+- Vários templates e layouts (`DashboardTemplate`, `CoachesTemplate`, etc)
+
+Resumo:
+- Adicionados breakpoints `3xl` (1920px) e `4xl` (2560px) no Tailwind.
+- Expandida largura máxima global para `max-w-[2560px]` com margens flexíveis (`3xl:px-12`, `4xl:px-24`).
+- Ajustadas as colunas (`grid-cols`) em dashboards e vitrines para exibirem mais itens horizontalmente em telas gigantes (ex: 4 e 5 colunas).
+
+Motivo:
+- Monitores 27" ficavam com quase 50% de espaço vazio nas laterais mesmo com limite de 1600px. A adoção de layout quase fluido preenche melhor essas telas.
+
+Impacto:
+- Em monitores de 24" ou maiores, o site exibirá mais conteúdo lado a lado, aproveitando a largura extra.
+
+Validação:
+- Requer teste manual rodando `npm run dev` em tela QHD.
+
+Pendências:
+- Nenhuma.
+
+---
+
+### 2026-05-30 — Expansão de layouts para telas HD/QHD
+
+ID: AI-20260530-001
+Tipo: refactor
+Autor: Antigravity
+Commit: pendente
+Arquivos alterados:
+- `src/layouts/PublicLayout.tsx`
+- `src/layouts/EventLayout.tsx`
+- `src/templates/PremiumTemplate/index.tsx`
+- `src/templates/ProfileTemplate/index.tsx`
+- `src/templates/CoachesTemplate/index.tsx`
+- `src/templates/LobbyTemplate/index.tsx`
+- `src/templates/OnboardingTemplate/index.tsx`
+- `src/templates/VaultTemplate/index.tsx`
+- `src/templates/DashboardTemplate/index.tsx`
+- `src/pages/HomePage.tsx`
+- `src/pages/KarmaPreviewPage.tsx`
+- `src/pages/AdminVaultPage.tsx`
+- `src/pages/LoginPage.tsx`
+- Componentes da Home (`CoachesSection`, `FeaturesSection`, `FreeTournamentsSection`)
+
+Resumo:
+- Substituídas restrições `max-w-[1240px]`, `max-w-6xl` e `max-w-7xl` por `max-w-[1600px]`.
+
+Motivo:
+- Conteúdo estreito em resoluções grandes (HD e QHD). O aumento melhora aproveitamento de tela.
+
+Impacto:
+- Site utilizará melhor as bordas em monitores ultrawide ou QHD, evitando amontoamento no meio.
+
+Validação:
+- Testes manuais pendentes via preview local.
+
+Pendências:
+- Nenhuma.
+
+---
+
 ## 2026-05-29
 
 ### 2026-05-29 — Criado histórico obrigatório para agentes

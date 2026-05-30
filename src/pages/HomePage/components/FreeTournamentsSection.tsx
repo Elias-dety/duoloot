@@ -10,7 +10,7 @@ export function FreeTournamentsSection() {
   const [showRules, setShowRules] = React.useState(false);
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20">
+    <section className="mx-auto max-w-[2560px] 3xl:px-12 4xl:px-24 px-4 py-16 sm:px-6 sm:py-20">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
           <div className="mb-4 inline-flex items-center rounded-full border border-[var(--dl-border)] bg-white/[0.04] px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[var(--dl-warning)]">

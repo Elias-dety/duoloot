@@ -60,7 +60,7 @@ const LoginPage: React.FC = () => {
         }}
       />
 
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-11rem)] w-full max-w-6xl items-center gap-10 lg:grid-cols-[0.9fr_1fr]">
+      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-11rem)] w-full max-w-[2560px] 3xl:px-12 4xl:px-24 items-center gap-10 lg:grid-cols-[0.9fr_1fr]">
         <aside className="hidden lg:block">
           <div className="rounded-3xl border border-white/[0.08] bg-white/[0.035] p-8 backdrop-blur-xl">
             <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--dl-number)]/30 bg-[var(--dl-number)]/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[var(--dl-number)]">

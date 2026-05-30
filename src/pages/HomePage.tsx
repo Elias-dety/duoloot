@@ -10,7 +10,7 @@ export default function HomePage() {
 
       {/* Gradient divider */}
       <div
-        className="mx-auto h-px w-full max-w-6xl"
+        className="mx-auto h-px w-full max-w-[2560px]"
         style={{
           background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)',
         }}
@@ -19,7 +19,7 @@ export default function HomePage() {
       <FeaturesSection />
 
       <div
-        className="mx-auto h-px w-full max-w-6xl"
+        className="mx-auto h-px w-full max-w-[2560px]"
         style={{
           background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)',
         }}

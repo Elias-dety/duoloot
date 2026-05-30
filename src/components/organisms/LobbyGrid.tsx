@@ -14,7 +14,7 @@ export interface LobbyGridProps {
   currentUserId?: string;
 }
 
-const gridClassName = 'grid grid-cols-1 gap-5 xl:grid-cols-2';
+const gridClassName = 'grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4';
 
 export const LobbyGrid: React.FC<LobbyGridProps> = ({
   items,
@@ -56,7 +56,7 @@ export const LobbyGrid: React.FC<LobbyGridProps> = ({
         const isJoined = isOwner || joinedLobbyIds.includes(lobby.id);
 
         return (
-          <div key={lobby.id}>
+          <div key={lobby.id} className="xl:[zoom:0.9] 2xl:[zoom:0.85] 3xl:[zoom:0.75]">
             <LobbyCard
               lobby={lobby}
               onJoin={onJoinLobby}

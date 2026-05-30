@@ -71,7 +71,7 @@ export default function AdminVaultPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-6xl p-8 border-t-4 border-[var(--dl-error)] bg-black min-h-screen">
+    <div className="container mx-auto max-w-[2560px] 3xl:px-12 4xl:px-24 p-8 border-t-4 border-[var(--dl-error)] bg-black min-h-screen">
       <div className="mb-8 flex items-end justify-between">
         <SectionTitle
           title="Validação do Cofre (ADMIN)"

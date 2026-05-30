@@ -36,7 +36,7 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="mx-auto flex min-h-[50vh] w-full max-w-[1240px] flex-col items-center justify-center space-y-6 pb-12">
+      <div className="mx-auto flex min-h-[50vh] w-full max-w-[2560px] 3xl:px-12 4xl:px-24 flex-col items-center justify-center space-y-6 pb-12">
         <div className="w-10 h-10 border-2 border-[var(--dl-tactical-purple)] border-t-transparent rounded-full animate-spin" />
         <p className="text-[var(--dl-tactical-muted)] text-[12px] font-bold uppercase tracking-[0.12em]">Buscando instrutores...</p>
       </div>
@@ -45,7 +45,7 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
 
   if (isError) {
     return (
-      <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16" style={{ borderColor: 'rgba(255,51,102,0.3)' }}>
+      <div className="dl-panel mx-auto flex w-full max-w-[2560px] 3xl:px-12 4xl:px-24 flex-col items-center justify-center py-16" style={{ borderColor: 'rgba(255,51,102,0.3)' }}>
         <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-red)] font-['Rajdhani'] uppercase">Erro ao carregar coaches.</p>
         <p className="text-sm text-[var(--dl-tactical-muted)] mb-6">Não foi possível montar a vitrine de coaches agora.</p>
       </div>
@@ -53,7 +53,7 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
+    <div className="mx-auto w-full max-w-[2560px] 3xl:px-12 4xl:px-24 space-y-6 px-3 pb-12 md:px-6">
       {/* Header HUD de Coaches */}
       <div className="dl-panel relative overflow-hidden p-[18px] mb-6 md:p-[28px]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(168,85,247,0.14),transparent_20rem),linear-gradient(120deg,transparent,rgba(168,85,247,0.04),transparent)]" />
@@ -104,13 +104,13 @@ export const CoachesTemplate: React.FC<CoachesTemplateProps> = ({
       ) : null}
 
       {filteredCoaches.length ? (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 md:grid-cols-2 3xl:grid-cols-4 4xl:grid-cols-5">
           {filteredCoaches.map((coach) => (
             <CoachCard key={coach.id} coach={coach} onSchedule={onScheduleCoach} />
           ))}
         </div>
       ) : (
-        <div className="dl-panel mx-auto flex w-full max-w-[1240px] flex-col items-center justify-center py-16">
+        <div className="dl-panel mx-auto flex w-full max-w-[2560px] 3xl:px-12 4xl:px-24 flex-col items-center justify-center py-16">
           <p className="mb-4 text-lg font-bold text-[var(--dl-tactical-muted)] font-['Rajdhani'] uppercase">Nenhum coach encontrado.</p>
           <p className="mb-6 text-sm text-[var(--dl-tactical-muted)]">Ajuste jogo, disponibilidade ou busca para ver novos resultados.</p>
           <button type="button" className="dl-btn" onClick={onClearFilters}>Limpar filtros</button>

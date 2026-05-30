@@ -65,7 +65,7 @@ export default function DashboardTemplate({
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1240px] space-y-6 px-3 pb-12 md:px-6">
+    <div className="mx-auto w-full max-w-[2560px] 3xl:px-12 4xl:px-24 space-y-6 px-3 pb-12 md:px-6">
       <Card variant="accent" className="mb-6 px-5 py-6 md:px-8 md:py-8">
         <SectionTitle
           eyebrow={copy.common.dashboard}
@@ -74,7 +74,7 @@ export default function DashboardTemplate({
         />
       </Card>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 mb-6">
         <div className="lg:col-span-1">
           <RiotConnectPanel />
         </div>
@@ -111,7 +111,7 @@ export default function DashboardTemplate({
 
       <DashboardSummary player={player} summary={summary} />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 3xl:grid-cols-6 4xl:grid-cols-8">
         <div className="lg:col-span-1 xl:col-span-1">
           <TrustScorePanel trustScore={player.trustScore} />
         </div>
@@ -138,7 +138,7 @@ export default function DashboardTemplate({
       <div className="mt-8">
         <RecommendedPlayersPanel />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-6 mt-8">
         <div className="lg:col-span-2 space-y-8">
           <MatchHistoryList
             matches={valorantUser ? (valorantUser.recentMatches || []).map(m => ({

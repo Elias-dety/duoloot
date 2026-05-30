@@ -33,12 +33,6 @@ const screenRadiusClasses: Record<DuoFrameRadius, string> = {
   xl: 'rounded-[32px]',
 };
 
-const innerLineRadiusClasses: Record<DuoFrameRadius, string> = {
-  md: 'rounded-[24px]',
-  lg: 'rounded-[30px]',
-  xl: 'rounded-[34px]',
-};
-
 const glowClasses: Record<DuoFrameVariant, string> = {
   default:
     'bg-[radial-gradient(circle_at_16%_0%,rgba(22,215,255,.18),transparent_24rem),radial-gradient(circle_at_90%_18%,rgba(255,63,102,.12),transparent_26rem),linear-gradient(135deg,rgba(255,255,255,.08),transparent_40%)] opacity-90',
@@ -58,14 +52,6 @@ const frameShadowClasses: Record<DuoFrameVariant, string> = {
   red: 'shadow-[0_34px_90px_rgba(0,0,0,.48),0_0_52px_rgba(255,63,102,.14)]',
   purple: 'shadow-[0_34px_90px_rgba(0,0,0,.48),0_0_52px_rgba(176,132,255,.14)]',
   soft: 'shadow-[0_22px_54px_rgba(0,0,0,.38),0_0_24px_rgba(22,215,255,.05)]',
-};
-
-const innerLineClasses: Record<DuoFrameVariant, string> = {
-  default: 'border-[rgba(22,215,255,.18)] shadow-[inset_0_0_34px_rgba(22,215,255,.055),inset_0_0_20px_rgba(255,63,102,.035)]',
-  cyan: 'border-[rgba(22,215,255,.24)] shadow-[inset_0_0_38px_rgba(22,215,255,.08)]',
-  red: 'border-[rgba(255,63,102,.22)] shadow-[inset_0_0_34px_rgba(255,63,102,.075)]',
-  purple: 'border-[rgba(176,132,255,.22)] shadow-[inset_0_0_34px_rgba(176,132,255,.075),inset_0_0_20px_rgba(22,215,255,.035)]',
-  soft: 'border-[rgba(22,215,255,.12)] shadow-[inset_0_0_26px_rgba(22,215,255,.035)]',
 };
 
 /**
@@ -101,17 +87,8 @@ export const DuoFrame: React.FC<DuoFrameProps> = ({
     />
 
     <div
-      aria-hidden="true"
       className={joinClasses(
-        'pointer-events-none absolute inset-2 border',
-        innerLineRadiusClasses[radius],
-        innerLineClasses[variant],
-      )}
-    />
-
-    <div
-      className={joinClasses(
-        'relative z-[1] overflow-hidden bg-[radial-gradient(circle_at_18%_8%,rgba(22,215,255,.13),transparent_26rem),radial-gradient(circle_at_86%_22%,rgba(255,63,102,.10),transparent_28rem),radial-gradient(circle_at_50%_100%,rgba(176,132,255,.07),transparent_32rem),rgba(5,9,18,.82)] p-2 shadow-[inset_0_0_0_1px_rgba(255,255,255,.035),inset_0_0_50px_rgba(22,215,255,.035)]',
+        'relative z-[1] overflow-hidden bg-[radial-gradient(circle_at_18%_8%,rgba(22,215,255,.13),transparent_26rem),radial-gradient(circle_at_86%_22%,rgba(255,63,102,.10),transparent_28rem),radial-gradient(circle_at_50%_100%,rgba(176,132,255,.07),transparent_32rem),rgba(5,9,18,.82)] p-2 shadow-[inset_0_0_50px_rgba(22,215,255,.035)]',
         screenRadiusClasses[radius],
         screenClassName,
       )}

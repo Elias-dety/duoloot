@@ -280,7 +280,7 @@ export function FeaturesSection() {
   ];
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-5 py-20 sm:px-6">
+    <section className="mx-auto w-full max-w-[2560px] 3xl:px-12 4xl:px-24 px-5 py-20 sm:px-6">
       <div className="mb-16 flex flex-col items-center gap-3 text-center">
         <div className="flex items-center gap-2">
           <span className="h-px w-8 bg-white/10" />
