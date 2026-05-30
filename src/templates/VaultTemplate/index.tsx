@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { UiMarker } from '@/components/atoms';
+import { DuoFrame, UiMarker } from '@/components/atoms';
 import { UI_MARKERS } from '@/config/uiMarkers';
 import { ROUTES } from '@/constants/routes';
 import { VaultSubmissionModal } from './VaultSubmissionModal';
@@ -83,6 +83,205 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
       onJoinVault();
     }
   };
+
+  const getMissionStatusMeta = (mission: VaultMission & { progress: VaultMissionProgress | null }) => {
+    const submitted = mission.my_submission?.status === 'submitted';
+    const approved = mission.my_submission?.status === 'approved';
+    const rejected = mission.my_submission?.status === 'rejected';
+    const closed = mission.status === 'closed' || mission.status === 'archived';
+    const hasWinner = Boolean(mission.winners_count! >= mission.winner_limit!);
+
+    if (approved) {
+      return {
+        label: 'Aprovado',
+        tone: 'success',
+        helper: 'Missão validada.',
+        className: 'border-[rgba(35,209,139,.34)] bg-[rgba(35,209,139,.10)] text-[#27e58a]',
+      };
+    }
+
+    if (submitted) {
+      return {
+        label: 'Em análise',
+        tone: 'warning',
+        helper: 'Aguardando avaliação.',
+        className: 'border-[rgba(255,209,102,.34)] bg-[rgba(255,209,102,.10)] text-[#ffd166]',
+      };
+    }
+
+    if (rejected) {
+      return {
+        label: 'Rejeitado',
+        tone: 'danger',
+        helper: 'Envie novamente se permitido.',
+        className: 'border-[rgba(255,63,102,.34)] bg-[rgba(255,63,102,.10)] text-[#ff3f66]',
+      };
+    }
+
+    if (closed || hasWinner) {
+      return {
+        label: 'Finalizada',
+        tone: 'closed',
+        helper: 'Missão encerrada.',
+        className: 'border-[rgba(255,63,102,.34)] bg-[rgba(255,63,102,.10)] text-[#ff3f66]',
+      };
+    }
+
+    return {
+      label: 'Disponível',
+      tone: 'active',
+      helper: 'Pronta para conclusão.',
+      className: 'border-[rgba(22,215,255,.32)] bg-[rgba(22,215,255,.10)] text-[#16d7ff]',
+    };
+  };
+
+  const getMissionActionLabel = (mission: VaultMission & { progress: VaultMissionProgress | null }) => {
+    const submitted = mission.my_submission?.status === 'submitted';
+    const approved = mission.my_submission?.status === 'approved';
+    const rejected = mission.my_submission?.status === 'rejected';
+    const closed = mission.status === 'closed' || mission.status === 'archived';
+    const hasWinner = Boolean(mission.winners_count! >= mission.winner_limit!);
+
+    if (approved) return '✓ Aprovado';
+    if (submitted) return 'Em análise';
+    if (rejected) return 'Enviar novamente';
+    if (closed || hasWinner) return 'Finalizada';
+
+    return 'Registrar conclusão';
+  };
+
+  const isMissionActionDisabled = (mission: VaultMission & { progress: VaultMissionProgress | null }) => {
+    const submitted = mission.my_submission?.status === 'submitted';
+    const approved = mission.my_submission?.status === 'approved';
+    const closed = mission.status === 'closed' || mission.status === 'archived';
+    const hasWinner = Boolean(mission.winners_count! >= mission.winner_limit!);
+
+    return approved || submitted || closed || hasWinner;
+  };
+
+  const renderMissionCard = (mission: VaultMission & { progress: VaultMissionProgress | null }) => {
+    const approved = mission.my_submission?.status === 'approved';
+    const rejected = mission.my_submission?.status === 'rejected';
+    const closed = mission.status === 'closed' || mission.status === 'archived';
+    const hasWinner = Boolean(mission.winners_count! >= mission.winner_limit!);
+    const statusMeta = getMissionStatusMeta(mission);
+    const actionDisabled = isMissionActionDisabled(mission);
+    const actionLabel = getMissionActionLabel(mission);
+    const cashReward = Number(mission.cash_reward_cents || 0) / 100;
+    const pointsReward = Number(mission.points_reward || 0);
+    const winnersCount = Number(mission.winners_count || 0);
+    const winnerLimit = Number(mission.winner_limit || 0);
+    const hasWinnerLimit = winnerLimit > 0;
+
+    return (
+      <DuoFrame
+        key={mission.id}
+        variant={approved ? 'soft' : rejected || closed || hasWinner ? 'red' : 'default'}
+        thickness="sm"
+        radius="lg"
+        className="h-full min-w-0"
+        screenClassName="p-1.5"
+      >
+        <article className="dl-panel relative flex h-full min-w-0 flex-col overflow-hidden rounded-[1.35rem] border-0 bg-[radial-gradient(circle_at_15%_0%,rgba(22,215,255,.10),transparent_14rem),linear-gradient(135deg,rgba(255,209,102,.06),transparent_34%),linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012)),linear-gradient(145deg,#08111d,#050a12_66%,#08111b)] p-3.5 shadow-[0_18px_42px_rgba(0,0,0,.30),0_0_26px_rgba(22,215,255,.06)] sm:p-4">
+          {(hasWinner && !approved) ? (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
+              <span className="rotate-[-12deg] rounded-lg border-4 border-[var(--dl-error)] px-4 py-1 font-['Rajdhani'] text-2xl font-black uppercase text-[var(--dl-error)] shadow-[0_0_20px_rgba(255,70,85,0.4)]">
+                Finalizada
+              </span>
+            </div>
+          ) : null}
+
+          <header className="relative z-[2] mb-3 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-2.5">
+            <span className={`inline-flex min-h-[30px] shrink-0 items-center justify-center gap-1.5 rounded-full border px-2.5 text-[0.62rem] font-black uppercase tracking-[0.08em] ${statusMeta.className}`}>
+              <span className="h-1.5 w-1.5 rounded-full bg-current shadow-[0_0_10px_currentColor]" />
+              {statusMeta.label}
+            </span>
+
+            <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-right font-['Inter'] text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[rgba(235,239,246,.46)]">
+              Missão do Cofre
+            </span>
+          </header>
+
+          <section className="relative z-[2] border-b border-[rgba(160,180,205,.12)] pb-3.5">
+            <h3 className="m-0 min-w-0 overflow-hidden text-ellipsis font-['Rajdhani'] text-[1.45rem] font-black uppercase leading-[.95] tracking-[.02em] text-white sm:text-[1.6rem]">
+              {mission.title}
+            </h3>
+
+            <p className="mt-2 line-clamp-3 text-[0.76rem] leading-relaxed text-[rgba(235,239,246,.58)] sm:text-[0.82rem]">
+              {mission.requirements || mission.description}
+            </p>
+          </section>
+
+          <section className="relative z-[2] grid gap-2 border-b border-[rgba(160,180,205,.12)] py-3.5">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="min-w-0 rounded-xl border border-[rgba(255,209,102,.22)] bg-[rgba(255,209,102,.08)] px-2.5 py-2 shadow-[0_0_14px_rgba(255,209,102,.06)]">
+                <span className="block text-[0.56rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.52)]">
+                  Recompensa
+                </span>
+                <strong className="mt-1 block truncate font-mono text-[0.82rem] text-[var(--dl-warning)]">
+                  {cashReward > 0 ? `+${cashReward} ${mission.currency}` : 'Evento'}
+                </strong>
+              </div>
+
+              <div className="min-w-0 rounded-xl border border-[rgba(22,215,255,.22)] bg-[rgba(22,215,255,.08)] px-2.5 py-2 shadow-[0_0_14px_rgba(22,215,255,.06)]">
+                <span className="block text-[0.56rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.52)]">
+                  Pontos
+                </span>
+                <strong className="mt-1 flex min-w-0 items-center gap-1 font-mono text-[0.82rem] text-[#16d7ff]">
+                  +{pointsReward}
+                  <img
+                    src={duoCoinIcon16}
+                    alt="DuoCoins"
+                    className="h-4 w-4 shrink-0 drop-shadow-[0_0_4px_rgba(255,209,102,0.3)]"
+                  />
+                </strong>
+              </div>
+            </div>
+
+            {hasWinnerLimit ? (
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-2.5 py-2">
+                <div className="min-w-0">
+                  <span className="block text-[0.56rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.46)]">
+                    Vencedores
+                  </span>
+                  <div className="mt-1 h-2 rounded-full bg-white/[0.08] p-[2px]">
+                    <div
+                      className="h-full rounded-full bg-[linear-gradient(90deg,#14d8ff_0%,#20ddca_42%,#ffd166_100%)]"
+                      style={{ width: `${Math.min(100, Math.round((winnersCount / winnerLimit) * 100))}%` }}
+                    />
+                  </div>
+                </div>
+
+                <span className="font-mono text-[0.75rem] font-bold text-[var(--dl-muted-light)]">
+                  {winnersCount}/{winnerLimit}
+                </span>
+              </div>
+            ) : null}
+          </section>
+
+          <section className="relative z-[2] mt-auto pt-3.5">
+            <p className="mb-2 line-clamp-1 text-[0.68rem] font-semibold leading-snug text-[rgba(235,239,246,.46)]">
+              {statusMeta.helper}
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setActiveMissionForModal({ id: mission.id, title: mission.title })}
+              disabled={actionDisabled}
+              className={`inline-flex min-h-[42px] w-full min-w-0 items-center justify-center rounded-xl px-3 text-center text-[0.72rem] font-black uppercase tracking-[.08em] text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55 ${
+                actionDisabled
+                  ? 'border border-[rgba(160,180,205,.17)] bg-white/[.05] text-[var(--dl-muted)]'
+                  : 'bg-[linear-gradient(135deg,#ff304b,#ff3f72_62%,#ff477a)] shadow-[0_10px_20px_rgba(255,63,102,.16),inset_0_1px_0_rgba(255,255,255,.18)]'
+              }`}
+            >
+              {actionLabel}
+            </button>
+          </section>
+        </article>
+      </DuoFrame>
+    );
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden px-3 pb-12 pt-8 sm:px-5 sm:pb-14 sm:pt-10 lg:px-6 lg:pb-16 lg:pt-12">
       <div
@@ -309,72 +508,8 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
                 </span>
               </div>
 
-              <div className="grid min-w-0 grid-cols-1 gap-3 md:grid-cols-2 xl:gap-4">
-                {missions.map((mission) => {
-                  const submitted = mission.my_submission?.status === 'submitted';
-                  const approved = mission.my_submission?.status === 'approved';
-                  const rejected = mission.my_submission?.status === 'rejected';
-                  const closed = mission.status === 'closed' || mission.status === 'archived';
-                  const hasWinner = mission.winners_count! >= mission.winner_limit!;
-
-                  return (
-                    <article
-                      key={mission.id}
-                      className="min-w-0 rounded-[1.25rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14] hover:bg-white/[0.07] relative overflow-hidden sm:rounded-2xl sm:p-5"
-                    >
-                      {hasWinner && !approved && (
-                        <div className="absolute inset-0 bg-black/60 z-10 flex items-center justify-center backdrop-blur-[2px]">
-                          <span className="font-['Rajdhani'] text-2xl font-bold uppercase text-[var(--dl-error)] rotate-[-15deg] border-4 border-[var(--dl-error)] px-4 py-1 rounded shadow-[0_0_20px_rgba(255,70,85,0.4)]">
-                            Finalizada
-                          </span>
-                        </div>
-                      )}
-                      <div className="mb-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
-                        <div>
-                          <h3 className="min-w-0 overflow-hidden text-ellipsis font-['Rajdhani'] text-lg font-bold uppercase leading-tight text-white sm:text-xl">
-                            {mission.title}
-                          </h3>
-                          <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[var(--dl-muted-light)] sm:text-sm">
-                            {mission.requirements || mission.description}
-                          </p>
-                        </div>
-
-                        <span
-                          className={`shrink-0 rounded-full px-2.5 py-1 font-mono text-[0.62rem] ${
-                            approved
-                              ? 'border border-[var(--dl-string)]/30 bg-[var(--dl-string)]/10 text-[var(--dl-string)]'
-                              : submitted ? 'border border-[var(--dl-warning)]/30 bg-[var(--dl-warning)]/10 text-[var(--dl-warning)]'
-                              : rejected ? 'border border-[var(--dl-error)]/30 bg-[var(--dl-error)]/10 text-[var(--dl-error)]'
-                              : 'border border-white/20 bg-white/5 text-white/70'
-                          }`}
-                        >
-                          {approved ? 'aprovado' : submitted ? 'em análise' : rejected ? 'rejeitado' : 'pendente'}
-                        </span>
-                      </div>
-
-                      <div className="mt-4 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-                        <div className="flex gap-4">
-                          <span className="inline-flex items-center gap-1 font-mono text-[0.68rem] text-[var(--dl-string)] bg-[var(--dl-string)]/10 px-2 py-1 rounded-lg">
-                            + {mission.cash_reward_cents! / 100} {mission.currency}
-                          </span>
-                          <span className="inline-flex items-center gap-1 font-mono text-[0.68rem] text-[var(--dl-muted)]">
-                            +{mission.points_reward}
-                            <img src={duoCoinIcon16} alt="DC" className="h-4 w-4 drop-shadow-[0_0_4px_rgba(255,209,102,0.3)]" />
-                            <span>pts</span>
-                          </span>
-                        </div>
-
-                        <button 
-                          onClick={() => setActiveMissionForModal({ id: mission.id, title: mission.title })}
-                          disabled={approved || submitted || closed || hasWinner}
-                          className="w-full rounded-lg border border-[var(--dl-string)]/30 bg-[var(--dl-string)]/10 px-3 py-2 text-center font-['Inter'] text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-[var(--dl-string)] transition hover:bg-[var(--dl-string)]/20 hover:text-white disabled:opacity-50 disabled:border-white/[0.1] disabled:bg-white/[0.04] disabled:text-[var(--dl-muted)] sm:w-auto"
-                        >
-                          {approved ? '✓ Aprovado' : submitted ? 'Aguardando Avaliação' : 'Registrar Conclusão'}
-                        </button>
-                      </div>
-                    </article>
-                  );
-                })}
+              <div className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-2 xl:gap-4">
+                {missions.map(renderMissionCard)}
               </div>
             </section>
 

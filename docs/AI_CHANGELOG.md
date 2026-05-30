@@ -69,6 +69,37 @@ Registre uma única entrada por pacote de trabalho, incluindo `docs/AI_CHANGELOG
 
 ## 2026-05-30
 
+### 2026-05-30 — Redesign visual dos cards de missão do Cofre
+
+ID: AI-20260530-023
+Tipo: style
+Autor: Antigravity
+Commit: pendente
+Arquivos alterados:
+- `src/templates/VaultTemplate/index.tsx`
+
+Resumo:
+- Adicionado o componente `DuoFrame` nos cards de missão do Cofre (`VaultTemplate`).
+- Redesign completo dos cards da missão, adotando a linguagem visual (DNA) dos cards de Lobby, incluindo fundo com texturas e efeitos premium.
+- Introdução de tags de status coloridas (pendente, aprovado, etc), layout de recompensas atualizado e botões alinhados com o design dos Lobbies.
+- Responsividade garantida usando `lg:grid-cols-2`.
+
+Motivo:
+- Os cards de missão precisavam adotar o design system premium usado nos cards de Lobby para trazer mais valor percebido para os eventos do Cofre.
+
+Impacto:
+- A listagem de missões ativas (#204) está mais elegante e legível, sem alterar nenhuma lógica de backend ou submissão.
+
+Validação:
+- Build local verificado com TSC e npm run build. Linter OK.
+
+Pendências:
+- Nenhuma.
+
+---
+
+## 2026-05-30
+
 ### 2026-05-30 — Responsividade da página Cofre e Correções de Build
 
 ID: AI-20260530-012
