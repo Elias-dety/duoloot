@@ -1,7 +1,9 @@
+import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { UiMarker } from '@/components/atoms';
 import { UI_MARKERS } from '@/config/uiMarkers';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
+import { VaultSubmissionModal } from './VaultSubmissionModal';
 
 import duoCoinIcon16 from '@/assets/icons/duoloot_pontos_token_check_16px.png';
 import duoCoinIcon32 from '@/assets/icons/duoloot_pontos_token_check_32px.png';
@@ -41,7 +43,7 @@ export interface VaultTemplateProps {
   isLoggedIn: boolean;
   currentUserId?: string | null;
   onJoinVault: () => void;
-  onClaimTask: (taskId: string) => void;
+  onSubmitEvidence: (missionId: string, text: string, url: string) => Promise<void>;
   onFinalizeVaultEvent?: () => void;
   showDevFinalizeButton: boolean;
   isJoining: boolean;
@@ -60,13 +62,15 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
   actionMessage,
   onDismissActionMessage,
   onJoinVault,
-  onClaimTask,
+  onSubmitEvidence,
   isJoining,
   submittingTaskId,
   isLoggedIn,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [activeMissionForModal, setActiveMissionForModal] = useState<{ id: string; title: string } | null>(null);
 
   const isParticipating = !!participant;
 
@@ -80,7 +84,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
     }
   };
   return (
-    <div className="relative min-h-screen overflow-hidden px-4 pb-16 pt-12 sm:px-6">
+    <div className="relative min-h-screen overflow-hidden px-3 pb-12 pt-8 sm:px-5 sm:pb-14 sm:pt-10 lg:px-6 lg:pb-16 lg:pt-12">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -104,7 +108,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
         }}
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1500px] flex-col gap-6">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1500px] flex-col gap-4 sm:gap-5 lg:gap-6">
         
         {/* Action message */}
         {actionMessage ? (
@@ -124,7 +128,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
         <section
           data-ui-id={UI_MARKERS.vault.hero.id}
           data-ui-label={UI_MARKERS.vault.hero.label}
-          className="grid items-center gap-8 rounded-[2rem] border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-xl md:grid-cols-[minmax(0,1fr)_360px] md:p-8"
+          className="grid min-w-0 items-center gap-5 rounded-[1.5rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl sm:rounded-[1.75rem] sm:p-5 md:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] md:gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-8 lg:rounded-[2rem] lg:p-8"
         >
           <div className="col-span-full">
             <UiMarker {...UI_MARKERS.vault.hero} />
@@ -138,24 +142,24 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
             </div>
 
             <div>
-              <h1 className="max-w-4xl text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[1.02] tracking-[-0.03em] text-white">
+              <h1 className="max-w-4xl text-[clamp(2rem,12vw,3.4rem)] font-bold leading-[0.98] tracking-[-0.035em] text-white sm:text-[clamp(2.4rem,7vw,4rem)] lg:text-[clamp(3rem,6vw,5rem)]">
                 {event?.title || 'Cofre Duo Loot'}
                 <span className="block text-[var(--dl-warning)]">
                   Missões, ranking e recompensas.
                 </span>
               </h1>
 
-              <p className="mt-5 max-w-2xl font-['Inter'] text-[1rem] font-light leading-[1.75] text-[var(--dl-muted-light)]">
+              <p className="mt-4 max-w-2xl font-['Inter'] text-[0.9rem] font-light leading-[1.65] text-[var(--dl-muted-light)] sm:text-[0.96rem] lg:mt-5 lg:text-[1rem] lg:leading-[1.75]">
                 {event?.description ||
                   'Entre no evento, complete missões, acumule pontos e dispute recompensas com a comunidade.'}
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="grid grid-cols-1 gap-2.5 sm:flex sm:flex-wrap sm:gap-3">
               {!isLoggedIn ? (
                 <button
                   onClick={handleHeroAction}
-                  className="rounded-xl bg-[var(--dl-keyword)] px-5 py-3 font-['Inter'] text-[0.8rem] font-semibold uppercase tracking-[0.1em] text-white shadow-[0_4px_16px_rgba(255,70,85,0.28)] transition hover:bg-[var(--dl-error)]"
+                  className="w-full rounded-xl bg-[var(--dl-keyword)] px-4 py-3 text-center font-['Inter'] text-[0.74rem] font-semibold uppercase tracking-[0.09em] text-white shadow-[0_4px_16px_rgba(255,70,85,0.28)] transition hover:bg-[var(--dl-error)] sm:w-auto sm:px-5 sm:text-[0.8rem]"
                 >
                   Login para participar
                 </button>
@@ -163,14 +167,14 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
                 <button
                   onClick={handleHeroAction}
                   disabled={isJoining}
-                  className="rounded-xl bg-[var(--dl-keyword)] px-5 py-3 font-['Inter'] text-[0.8rem] font-semibold uppercase tracking-[0.1em] text-white shadow-[0_4px_16px_rgba(255,70,85,0.28)] transition hover:bg-[var(--dl-error)] disabled:opacity-50"
+                  className="w-full rounded-xl bg-[var(--dl-keyword)] px-4 py-3 text-center font-['Inter'] text-[0.74rem] font-semibold uppercase tracking-[0.09em] text-white shadow-[0_4px_16px_rgba(255,70,85,0.28)] transition hover:bg-[var(--dl-error)] disabled:opacity-50 sm:w-auto sm:px-5 sm:text-[0.8rem]"
                 >
                   {isJoining ? 'Entrando...' : 'Participar do Cofre'}
                 </button>
               ) : (
                 <button
                   disabled
-                  className="rounded-xl border border-[var(--dl-string)]/30 bg-[var(--dl-string)]/10 px-5 py-3 font-['Inter'] text-[0.8rem] font-semibold uppercase tracking-[0.1em] text-[var(--dl-string)] disabled:opacity-100"
+                  className="w-full rounded-xl border border-[var(--dl-string)]/30 bg-[var(--dl-string)]/10 px-4 py-3 text-center font-['Inter'] text-[0.74rem] font-semibold uppercase tracking-[0.09em] text-[var(--dl-string)] disabled:opacity-100 sm:w-auto sm:px-5 sm:text-[0.8rem]"
                 >
                   ✓ Inscrito no Cofre
                 </button>
@@ -181,19 +185,19 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
                   const el = document.getElementById('vault-missions');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="rounded-xl border border-white/[0.1] bg-white/[0.04] px-5 py-3 font-['Inter'] text-[0.8rem] font-semibold uppercase tracking-[0.1em] text-[var(--dl-muted-light)] transition hover:border-white/[0.18] hover:bg-white/[0.07] hover:text-white"
+                className="w-full rounded-xl border border-white/[0.1] bg-white/[0.04] px-4 py-3 text-center font-['Inter'] text-[0.74rem] font-semibold uppercase tracking-[0.09em] text-[var(--dl-muted-light)] transition hover:border-white/[0.18] hover:bg-white/[0.07] hover:text-white sm:w-auto sm:px-5 sm:text-[0.8rem]"
               >
                 Ver missões
               </button>
             </div>
           </div>
 
-          <div className="relative min-h-[300px] overflow-hidden rounded-[1.5rem] border border-white/[0.08] bg-black/20 p-5">
+          <div className="relative min-h-[220px] overflow-hidden rounded-[1.25rem] border border-white/[0.08] bg-black/20 p-4 sm:min-h-[260px] sm:rounded-[1.5rem] sm:p-5 md:min-h-[280px] lg:min-h-[300px]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,209,102,.16),transparent_55%)]" />
 
-            <div className="relative z-10 flex h-full min-h-[260px] flex-col items-center justify-center text-center">
-              <div className="grid h-32 w-32 place-items-center rounded-[2rem] border border-[var(--dl-warning)]/30 bg-[var(--dl-warning)]/10 shadow-[0_0_44px_rgba(255,209,102,.16)]">
-                <span className="text-6xl">🔐</span>
+            <div className="relative z-10 flex h-full min-h-[190px] flex-col items-center justify-center text-center sm:min-h-[230px] md:min-h-[250px] lg:min-h-[260px]">
+              <div className="grid h-24 w-24 place-items-center rounded-[1.5rem] border border-[var(--dl-warning)]/30 bg-[var(--dl-warning)]/10 shadow-[0_0_34px_rgba(255,209,102,.14)] sm:h-28 sm:w-28 sm:rounded-[1.75rem] lg:h-32 lg:w-32 lg:rounded-[2rem]">
+                <span className="text-5xl sm:text-6xl">🔐</span>
               </div>
 
               <p className="mt-5 font-mono text-[0.72rem] uppercase tracking-[0.18em] text-[var(--dl-warning)]">
@@ -212,7 +216,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
         <section
           data-ui-id={UI_MARKERS.vault.eventStatus.id}
           data-ui-label={UI_MARKERS.vault.eventStatus.label}
-          className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid min-w-0 gap-3 grid-cols-2 lg:grid-cols-4"
         >
           <div className="col-span-full">
             <UiMarker {...UI_MARKERS.vault.eventStatus} />
@@ -225,17 +229,17 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
           ].map((stat) => (
             <div
               key={stat.label}
-              className="flex flex-col gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3.5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.07]"
+              className="min-w-0 rounded-xl border border-white/[0.08] bg-white/[0.04] px-3 py-3 backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.14] hover:bg-white/[0.07] sm:px-4 sm:py-3.5"
             >
               <div className="flex items-center gap-2">
                 {stat.isRankingPoints && (
                   <img src={duoCoinIcon32} alt="DC" className="h-7 w-7 drop-shadow-[0_0_6px_rgba(255,209,102,0.4)]" />
                 )}
-                <span className={`font-mono text-2xl font-bold leading-none ${stat.color}`}>
+                <span className={`font-mono text-xl font-bold leading-none ${stat.color} sm:text-2xl`}>
                   {stat.value}
                 </span>
               </div>
-              <span className="font-['Inter'] text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+              <span className="mt-1.5 block overflow-hidden text-ellipsis whitespace-nowrap font-['Inter'] text-[0.58rem] font-medium uppercase tracking-[0.1em] text-[var(--dl-muted)] sm:text-[0.68rem]">
                 {stat.label}
               </span>
             </div>
@@ -247,21 +251,21 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
         <section
           data-ui-id={UI_MARKERS.vault.progress.id}
           data-ui-label={UI_MARKERS.vault.progress.label}
-          className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-xl md:p-6"
+          className="min-w-0 rounded-[1.35rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl sm:rounded-2xl sm:p-5 md:p-6"
         >
           <UiMarker {...UI_MARKERS.vault.progress} />
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-4 grid gap-4 sm:mb-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
             <div>
               <span className="font-['Inter'] text-[0.7rem] font-medium uppercase tracking-[0.16em] text-[var(--dl-string)]">
-                ↳ Seu progresso
+                Progresso do evento
               </span>
-              <h2 className="mt-3 text-[clamp(1.6rem,3vw,2.2rem)] font-bold leading-[1.18] tracking-[-0.02em] text-white">
+              <h2 className="mt-3 text-[clamp(1.35rem,6vw,1.9rem)] font-bold leading-[1.15] tracking-[-0.02em] text-white sm:text-[clamp(1.6rem,3vw,2.2rem)]">
                 Continue avançando para abrir o Cofre
               </h2>
             </div>
 
-            <div className="text-right">
-              <span className="block font-mono text-3xl font-bold text-[var(--dl-warning)]">
+            <div className="text-left sm:text-right">
+              <span className="block font-mono text-2xl font-bold text-[var(--dl-warning)] sm:text-3xl">
                 {percentage}%
               </span>
               <span className="font-['Inter'] text-[0.68rem] uppercase tracking-[0.12em] text-[var(--dl-muted)]">
@@ -278,8 +282,8 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
           </div>
         </section>
 
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-          <div className="space-y-6">
+        <div className="grid min-w-0 grid-cols-1 gap-4 sm:gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(320px,360px)] xl:gap-6">
+          <div className="min-w-0 space-y-4 sm:space-y-5 lg:space-y-6">
             
             {/* Missions */}
             {/* UI_MARKER: vault.missions.204 | Missões ativas */}
@@ -287,13 +291,13 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
               id="vault-missions"
               data-ui-id={UI_MARKERS.vault.missions.id}
               data-ui-label={UI_MARKERS.vault.missions.label}
-              className="space-y-4"
+              className="min-w-0 space-y-4"
             >
               <UiMarker {...UI_MARKERS.vault.missions} />
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
+              <div className="grid gap-3 border-b border-white/[0.06] pb-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
                 <div>
                   <span className="font-['Inter'] text-[0.7rem] font-medium uppercase tracking-[0.16em] text-[var(--dl-warning)]">
-                    ↳ Missões ativas
+                    Desafios do Cofre
                   </span>
                   <h2 className="mt-2 font-['Rajdhani'] text-3xl font-bold uppercase text-white">
                     Complete tarefas e ganhe pontos
@@ -305,59 +309,67 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="grid min-w-0 grid-cols-1 gap-3 md:grid-cols-2 xl:gap-4">
                 {missions.map((mission) => {
-                  const current = mission.progress?.current_value || 0;
-                  const target = mission.target_value || 1;
-                  const missionPercent = Math.min(100, Math.round((current / target) * 100));
-                  const completed = mission.progress?.completed;
+                  const submitted = mission.my_submission?.status === 'submitted';
+                  const approved = mission.my_submission?.status === 'approved';
+                  const rejected = mission.my_submission?.status === 'rejected';
+                  const closed = mission.status === 'closed' || mission.status === 'archived';
+                  const hasWinner = mission.winners_count! >= mission.winner_limit!;
 
                   return (
                     <article
                       key={mission.id}
-                      className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14] hover:bg-white/[0.07]"
+                      className="min-w-0 rounded-[1.25rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.14] hover:bg-white/[0.07] relative overflow-hidden sm:rounded-2xl sm:p-5"
                     >
-                      <div className="mb-4 flex items-start justify-between gap-4">
+                      {hasWinner && !approved && (
+                        <div className="absolute inset-0 bg-black/60 z-10 flex items-center justify-center backdrop-blur-[2px]">
+                          <span className="font-['Rajdhani'] text-2xl font-bold uppercase text-[var(--dl-error)] rotate-[-15deg] border-4 border-[var(--dl-error)] px-4 py-1 rounded shadow-[0_0_20px_rgba(255,70,85,0.4)]">
+                            Finalizada
+                          </span>
+                        </div>
+                      )}
+                      <div className="mb-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
                         <div>
-                          <h3 className="font-['Rajdhani'] text-xl font-bold uppercase text-white">
+                          <h3 className="min-w-0 overflow-hidden text-ellipsis font-['Rajdhani'] text-lg font-bold uppercase leading-tight text-white sm:text-xl">
                             {mission.title}
                           </h3>
-                          <p className="mt-2 text-sm leading-relaxed text-[var(--dl-muted-light)]">
-                            {mission.description}
+                          <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-[var(--dl-muted-light)] sm:text-sm">
+                            {mission.requirements || mission.description}
                           </p>
                         </div>
 
                         <span
                           className={`shrink-0 rounded-full px-2.5 py-1 font-mono text-[0.62rem] ${
-                            completed
+                            approved
                               ? 'border border-[var(--dl-string)]/30 bg-[var(--dl-string)]/10 text-[var(--dl-string)]'
-                              : 'border border-[var(--dl-warning)]/30 bg-[var(--dl-warning)]/10 text-[var(--dl-warning)]'
+                              : submitted ? 'border border-[var(--dl-warning)]/30 bg-[var(--dl-warning)]/10 text-[var(--dl-warning)]'
+                              : rejected ? 'border border-[var(--dl-error)]/30 bg-[var(--dl-error)]/10 text-[var(--dl-error)]'
+                              : 'border border-white/20 bg-white/5 text-white/70'
                           }`}
                         >
-                          {completed ? 'feito' : `${current}/${target}`}
+                          {approved ? 'aprovado' : submitted ? 'em análise' : rejected ? 'rejeitado' : 'pendente'}
                         </span>
                       </div>
 
-                      <div className="h-2 rounded-full bg-white/[0.08] p-[2px]">
-                        <div
-                          className="h-full rounded-full bg-[linear-gradient(90deg,var(--dl-number),var(--dl-string),var(--dl-warning))]"
-                          style={{ width: `${missionPercent}%` }}
-                        />
-                      </div>
-
-                      <div className="mt-4 flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1 font-mono text-[0.68rem] text-[var(--dl-muted)]">
-                          +{mission.points_reward}
-                          <img src={duoCoinIcon16} alt="DC" className="h-4 w-4 drop-shadow-[0_0_4px_rgba(255,209,102,0.3)]" />
-                          <span>pts</span>
-                        </span>
+                      <div className="mt-4 grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+                        <div className="flex gap-4">
+                          <span className="inline-flex items-center gap-1 font-mono text-[0.68rem] text-[var(--dl-string)] bg-[var(--dl-string)]/10 px-2 py-1 rounded-lg">
+                            + {mission.cash_reward_cents! / 100} {mission.currency}
+                          </span>
+                          <span className="inline-flex items-center gap-1 font-mono text-[0.68rem] text-[var(--dl-muted)]">
+                            +{mission.points_reward}
+                            <img src={duoCoinIcon16} alt="DC" className="h-4 w-4 drop-shadow-[0_0_4px_rgba(255,209,102,0.3)]" />
+                            <span>pts</span>
+                          </span>
+                        </div>
 
                         <button 
-                          onClick={() => onClaimTask(mission.id)}
-                          disabled={completed || submittingTaskId === mission.id}
-                          className="rounded-lg border border-white/[0.1] bg-white/[0.04] px-3 py-2 font-['Inter'] text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-[var(--dl-muted-light)] transition hover:bg-white/[0.07] hover:text-white disabled:opacity-50"
+                          onClick={() => setActiveMissionForModal({ id: mission.id, title: mission.title })}
+                          disabled={approved || submitted || closed || hasWinner}
+                          className="w-full rounded-lg border border-[var(--dl-string)]/30 bg-[var(--dl-string)]/10 px-3 py-2 text-center font-['Inter'] text-[0.7rem] font-semibold uppercase tracking-[0.1em] text-[var(--dl-string)] transition hover:bg-[var(--dl-string)]/20 hover:text-white disabled:opacity-50 disabled:border-white/[0.1] disabled:bg-white/[0.04] disabled:text-[var(--dl-muted)] sm:w-auto"
                         >
-                          {completed ? 'Concluída' : submittingTaskId === mission.id ? 'Registrando...' : 'Registrar'}
+                          {approved ? '✓ Aprovado' : submitted ? 'Aguardando Avaliação' : 'Registrar Conclusão'}
                         </button>
                       </div>
                     </article>
@@ -371,13 +383,13 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
             <section
               data-ui-id={UI_MARKERS.vault.leaderboard.id}
               data-ui-label={UI_MARKERS.vault.leaderboard.label}
-              className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-xl"
+              className="min-w-0 rounded-[1.35rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl sm:rounded-2xl sm:p-5"
             >
               <UiMarker {...UI_MARKERS.vault.leaderboard} />
               <div className="mb-5 flex items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
                 <div>
                   <span className="font-['Inter'] text-[0.7rem] font-medium uppercase tracking-[0.16em] text-[var(--dl-number)]">
-                    ↳ Ranking do Cofre
+                    Posições do evento
                   </span>
                   <h2 className="mt-2 font-['Rajdhani'] text-3xl font-bold uppercase text-white">
                     Top jogadores
@@ -393,7 +405,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
                 {leaderboard.map((entry) => (
                   <div
                     key={entry.participantId}
-                    className="grid grid-cols-[42px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-white/[0.05] bg-black/20 px-3 py-3"
+                    className="grid min-w-0 grid-cols-[36px_minmax(0,1fr)] gap-3 rounded-xl border border-white/[0.05] bg-black/20 px-3 py-3 sm:grid-cols-[42px_minmax(0,1fr)_auto] sm:items-center"
                   >
                     <span className="grid h-9 w-9 place-items-center rounded-lg border border-white/[0.08] bg-white/[0.04] font-mono text-sm text-[var(--dl-warning)]">
                       #{entry.rankPosition}
@@ -408,7 +420,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
                       </span>
                     </div>
 
-                    <span className="inline-flex items-center gap-1 font-mono text-sm font-bold text-[var(--dl-string)]">
+                    <span className="col-start-2 inline-flex items-center gap-1 font-mono text-sm font-bold text-[var(--dl-string)] sm:col-start-auto">
                       {entry.points}
                       <img src={duoCoinIcon16} alt="DC" className="h-4 w-4" />
                       <span>pts</span>
@@ -420,25 +432,25 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
 
           </div>
 
-          <aside className="space-y-6">
+          <aside className="min-w-0 space-y-4 sm:space-y-5 lg:space-y-6">
             
             {/* Rewards */}
             {/* UI_MARKER: vault.rewards.206 | Recompensas */}
             <section
               data-ui-id={UI_MARKERS.vault.rewards.id}
               data-ui-label={UI_MARKERS.vault.rewards.label}
-              className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-xl"
+              className="min-w-0 rounded-[1.35rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl sm:rounded-2xl sm:p-5"
             >
               <UiMarker {...UI_MARKERS.vault.rewards} />
               <span className="font-['Inter'] text-[0.7rem] font-medium uppercase tracking-[0.16em] text-[var(--dl-warning)]">
-                ↳ Recompensas
+                Prêmios
               </span>
 
               <h2 className="mt-3 font-['Rajdhani'] text-3xl font-bold uppercase text-white">
                 O que está dentro do Cofre
               </h2>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              <div className="mt-5 grid gap-3">
                 {[
                   { title: 'Badge Fundador', detail: 'Visual exclusivo beta', color: 'var(--dl-warning)', isBadge: true },
                   { title: '1500 DuoCoins', detail: 'Saldo fictício de evento', color: 'var(--dl-string)', isCoins: true },
@@ -479,7 +491,7 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
             <section
               data-ui-id={UI_MARKERS.vault.howItWorks.id}
               data-ui-label={UI_MARKERS.vault.howItWorks.label}
-              className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-xl"
+              className="min-w-0 rounded-[1.35rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl sm:rounded-2xl sm:p-5"
             >
               <UiMarker {...UI_MARKERS.vault.howItWorks} />
               <h4 className="mb-3 font-['Rajdhani'] text-xl font-bold uppercase text-white">Como funciona</h4>
@@ -496,11 +508,11 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
             <section
               data-ui-id={UI_MARKERS.vault.seasonHistory.id}
               data-ui-label={UI_MARKERS.vault.seasonHistory.label}
-              className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-xl"
+              className="min-w-0 rounded-[1.35rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl sm:rounded-2xl sm:p-5"
             >
               <UiMarker {...UI_MARKERS.vault.seasonHistory} />
               <span className="font-['Inter'] text-[0.7rem] font-medium uppercase tracking-[0.16em] text-[var(--dl-function)]">
-                ↳ Histórico
+                Eventos passados
               </span>
 
               <h2 className="mt-3 font-['Rajdhani'] text-3xl font-bold uppercase text-white">
@@ -556,6 +568,19 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
           </aside>
         </div>
       </div>
+
+      {activeMissionForModal && (
+        <VaultSubmissionModal
+          isOpen={true}
+          onClose={() => setActiveMissionForModal(null)}
+          missionTitle={activeMissionForModal.title}
+          isLoading={submittingTaskId === activeMissionForModal.id}
+          onSubmit={async (text, url) => {
+            await onSubmitEvidence(activeMissionForModal.id, text, url);
+            setActiveMissionForModal(null);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -11,6 +11,7 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
+    addInitScript: 'window.__playwright_test__ = true;',
   },
   projects: [
     {
@@ -27,8 +28,5 @@ export default defineConfig({
     url: 'http://localhost:5173',
     reuseExistingServer: !process.env.CI,
     timeout: 30000,
-    env: {
-      VITE_PLAYWRIGHT: 'true',
-    },
   },
 });

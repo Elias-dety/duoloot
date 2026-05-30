@@ -54,6 +54,10 @@ export const mockMissions: (VaultMission & { progress: VaultMissionProgress | nu
     mission_type: 'join_lobby',
     target_value: 3,
     points_reward: 180,
+    cash_reward_cents: 5000,
+    currency: 'BRL',
+    winner_limit: 1,
+    winners_count: 0,
     status: 'active',
     metadata: {
       icon: 'lobby',
@@ -82,6 +86,10 @@ export const mockMissions: (VaultMission & { progress: VaultMissionProgress | nu
     mission_type: 'win_with_duo',
     target_value: 2,
     points_reward: 320,
+    cash_reward_cents: 15000,
+    currency: 'BRL',
+    winner_limit: 1,
+    winners_count: 0,
     status: 'active',
     metadata: {
       icon: 'duo',
@@ -110,6 +118,10 @@ export const mockMissions: (VaultMission & { progress: VaultMissionProgress | nu
     mission_type: 'complete_profile',
     target_value: 1,
     points_reward: 150,
+    cash_reward_cents: 2000,
+    currency: 'BRL',
+    winner_limit: 1,
+    winners_count: 0,
     status: 'active',
     metadata: {
       icon: 'profile',
@@ -138,6 +150,10 @@ export const mockMissions: (VaultMission & { progress: VaultMissionProgress | nu
     mission_type: 'positive_karma',
     target_value: 3,
     points_reward: 260,
+    cash_reward_cents: 3500,
+    currency: 'BRL',
+    winner_limit: 1,
+    winners_count: 0,
     status: 'active',
     metadata: {
       icon: 'karma',

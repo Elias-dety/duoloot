@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button, SectionTitle, Badge } from '@/components/atoms';
-import { getPendingVaultSubmissions, validateVaultSubmission } from '@/services/vault-admin.service';
+import { getAdminVaultSubmissions, approveVaultSubmission, rejectVaultSubmission } from '@/services/vault.service';
 
 type VaultSubmission = {
   id: string;
   created_at: string;
-  payload: Record<string, unknown>;
-  event?: {
+  mission?: {
     title?: string;
-  } | null;
-  task?: {
-    title?: string;
-    description?: string;
+    event_id?: string;
   } | null;
   player?: {
     name?: string;
@@ -19,6 +15,8 @@ type VaultSubmission = {
     avatar_url?: string | null;
     trust_score?: number | null;
   } | null;
+  evidence_text?: string | null;
+  evidence_url?: string | null;
 };
 
 export default function AdminVaultPage() {
@@ -30,7 +28,7 @@ export default function AdminVaultPage() {
   const fetchSubmissions = async () => {
     try {
       setLoading(true);
-      const data = await getPendingVaultSubmissions();
+      const data = await getAdminVaultSubmissions();
       setSubmissions(data);
       setError(null);
     } catch (error: unknown) {
@@ -45,11 +43,16 @@ export default function AdminVaultPage() {
   }, []);
 
   const handleValidate = async (id: string, isValid: boolean) => {
-    if (!window.confirm(`Tem certeza que deseja ${isValid ? 'APROVAR' : 'REPROVAR'} esta submissão?`)) return;
+    const note = window.prompt(`Tem certeza que deseja ${isValid ? 'APROVAR' : 'REPROVAR'} esta submissão?\n(Opcional) Nota de revisão:`);
+    if (note === null) return;
 
     try {
       setProcessingId(id);
-      await validateVaultSubmission(id, isValid);
+      if (isValid) {
+        await approveVaultSubmission(id, note);
+      } else {
+        await rejectVaultSubmission(id, note);
+      }
       setSubmissions((previous) => previous.filter((submission) => submission.id !== id));
       window.alert(`Submissão ${isValid ? 'aprovada' : 'reprovada'} com sucesso!`);
     } catch (error: unknown) {
@@ -120,17 +123,32 @@ export default function AdminVaultPage() {
 
                 <div className="flex-1 space-y-3">
                   <div>
-                    <h4 className="mb-1 text-xs uppercase tracking-widest text-[var(--dl-muted)]">Evento / Missão</h4>
-                    <p className="font-medium text-white">{submission.event?.title}</p>
-                    <p className="text-sm font-bold text-[var(--dl-error)]">{submission.task?.title}</p>
+                    <h4 className="mb-1 text-xs uppercase tracking-widest text-[var(--dl-muted)]">Missão</h4>
+                    <p className="text-sm font-bold text-[var(--dl-error)]">{submission.mission?.title}</p>
                   </div>
 
                   <div>
-                    <h4 className="mb-1 text-xs uppercase tracking-widest text-[var(--dl-muted)]">Dados Enviados (Payload)</h4>
-                    <div className="overflow-x-auto rounded border border-[var(--dl-border)] bg-black/40 p-3">
-                      <pre className="whitespace-pre-wrap text-[11px] font-mono text-[var(--dl-muted-light)]">
-                        {JSON.stringify(submission.payload, null, 2)}
-                      </pre>
+                    <h4 className="mb-1 text-xs uppercase tracking-widest text-[var(--dl-muted)]">Evidência</h4>
+                    <div className="overflow-x-auto rounded border border-[var(--dl-border)] bg-black/40 p-3 space-y-2">
+                      {submission.evidence_url && (
+                        <div>
+                           <span className="text-[10px] uppercase text-[var(--dl-muted)] block mb-1">Link/URL:</span>
+                           <a href={submission.evidence_url} target="_blank" rel="noreferrer" className="text-brand-primary text-xs underline break-all">
+                             {submission.evidence_url}
+                           </a>
+                        </div>
+                      )}
+                      {submission.evidence_text && (
+                        <div>
+                          <span className="text-[10px] uppercase text-[var(--dl-muted)] block mb-1">Texto:</span>
+                          <pre className="whitespace-pre-wrap text-[11px] font-mono text-[var(--dl-muted-light)]">
+                            {submission.evidence_text}
+                          </pre>
+                        </div>
+                      )}
+                      {!submission.evidence_text && !submission.evidence_url && (
+                        <span className="text-xs italic text-[var(--dl-muted)]">Nenhuma evidência fornecida.</span>
+                      )}
                     </div>
                   </div>
                 </div>

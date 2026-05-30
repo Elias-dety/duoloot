@@ -27,16 +27,63 @@ export const VaultMissionSchema = z.object({
   event_id: z.string().uuid(),
   title: z.string(),
   description: z.string().nullable().optional(),
+  requirements: z.string().nullable().optional(),
   mission_type: z.string(),
   target_value: z.number(),
   points_reward: z.number(),
-  status: z.enum(['active', 'inactive']),
+  cash_reward_cents: z.number().optional().default(0),
+  currency: z.string().optional().default('BRL'),
+  winner_limit: z.number().optional().default(1),
+  status: z.enum(['draft', 'active', 'inactive', 'closed', 'archived']),
+  starts_at: z.string().nullable().optional(),
+  ends_at: z.string().nullable().optional(),
+  created_by: z.string().uuid().nullable().optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  winners_count: z.number().optional().default(0),
+  my_submission: z.object({
+    id: z.string().uuid(),
+    status: z.enum(['submitted', 'approved', 'rejected', 'cancelled']),
+    submitted_at: z.string()
+  }).nullable().optional(),
+});
+
+export type VaultMission = z.infer<typeof VaultMissionSchema>;
+
+export const VaultMissionSubmissionSchema = z.object({
+  id: z.string().uuid(),
+  mission_id: z.string().uuid(),
+  user_id: z.string().uuid(),
+  evidence_text: z.string().nullable().optional(),
+  evidence_url: z.string().nullable().optional(),
+  status: z.enum(['submitted', 'approved', 'rejected', 'cancelled']),
+  submitted_at: z.string(),
+  reviewed_at: z.string().nullable().optional(),
+  reviewed_by: z.string().uuid().nullable().optional(),
+  review_note: z.string().nullable().optional(),
   created_at: z.string(),
   updated_at: z.string(),
 });
 
-export type VaultMission = z.infer<typeof VaultMissionSchema>;
+export type VaultMissionSubmission = z.infer<typeof VaultMissionSubmissionSchema>;
+
+export const VaultMissionRewardSchema = z.object({
+  id: z.string().uuid(),
+  mission_id: z.string().uuid(),
+  submission_id: z.string().uuid(),
+  user_id: z.string().uuid(),
+  points_awarded: z.number(),
+  cash_reward_cents: z.number(),
+  currency: z.string(),
+  reward_status: z.enum(['reserved', 'paid', 'cancelled']),
+  idempotency_key: z.string(),
+  awarded_at: z.string(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+
+export type VaultMissionReward = z.infer<typeof VaultMissionRewardSchema>;
 
 export const VaultParticipantSchema = z.object({
   id: z.string().uuid(),

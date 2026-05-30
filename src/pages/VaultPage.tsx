@@ -12,8 +12,8 @@ import {
   getVaultSeasons,
   getVaultWinners,
   joinVaultEvent,
-  claimVaultMissionProgress,
 } from '@/services/vault-progress.service';
+import { submitVaultMission, getVaultMissions } from '@/services/vault.service';
 import {
   MyVaultRank,
   VaultEvent,
@@ -172,21 +172,22 @@ export default function VaultPage() {
           if (progress) {
             participantData = progress.participant;
             setParticipant(progress.participant);
-            setMissions(progress.missionProgress);
             setTotalPoints(progress.totalPoints);
             setPercentage(progress.percentage);
           } else if (overview) {
             setParticipant(null);
             setTotalPoints(0);
             setPercentage(0);
-            setMissions(overview.missions.map((mission) => ({ ...mission, progress: null })));
           }
         } else if (overview) {
           setParticipant(null);
           setTotalPoints(0);
           setPercentage(0);
-          setMissions(overview.missions.map((mission) => ({ ...mission, progress: null })));
         }
+
+        const m = await getVaultMissions();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setMissions(m as any);
 
         await Promise.all([
           fetchLeaderboardData(eventData.id, {
@@ -264,22 +265,22 @@ export default function VaultPage() {
     }
   };
 
-  const handleClaimTask = async (taskId: string) => {
+  const handleSubmitEvidence = async (missionId: string, evidenceText: string, evidenceUrl: string) => {
     if (!activeEvent) return;
 
     try {
-      setSubmittingTaskId(taskId);
-      const response = await claimVaultMissionProgress(taskId);
+      setSubmittingTaskId(missionId);
+      const response = await submitVaultMission({ missionId, evidenceText, evidenceUrl });
       if (!response.success) {
         setActionMessage(response.message);
         setActionTone('warning');
         return;
       }
       await fetchVaultData({ silent: true });
-      setActionMessage(response.message || 'Progresso registrado.');
+      setActionMessage(response.message || 'Evidência enviada com sucesso!');
       setActionTone('success');
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Erro ao registrar progresso.';
+      const message = error instanceof Error ? error.message : 'Erro ao enviar evidência.';
       setActionMessage(message);
       setActionTone('danger');
     } finally {
@@ -311,7 +312,8 @@ export default function VaultPage() {
     }
   };
 
-  const USE_MOCK_VAULT = typeof navigator !== 'undefined' && navigator.webdriver ? false : true;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const USE_MOCK_VAULT = typeof window !== 'undefined' && (window as any).__playwright_test__ ? false : true;
 
   if (USE_MOCK_VAULT) {
     return (
@@ -339,7 +341,7 @@ export default function VaultPage() {
         isLoggedIn={true}
         currentUserId={mockParticipant.player_id}
         onJoinVault={() => undefined}
-        onClaimTask={() => undefined}
+        onSubmitEvidence={async () => undefined}
         onFinalizeVaultEvent={() => undefined}
         showDevFinalizeButton={false}
         isJoining={false}
@@ -373,7 +375,7 @@ export default function VaultPage() {
       isLoggedIn={isLoggedIn}
       currentUserId={user?.id ?? null}
       onJoinVault={handleJoinVault}
-      onClaimTask={handleClaimTask}
+      onSubmitEvidence={handleSubmitEvidence}
       onFinalizeVaultEvent={handleFinalizeVaultEvent}
       showDevFinalizeButton={Boolean(import.meta.env.DEV && activeEvent?.status === 'active')}
       isJoining={isJoining}

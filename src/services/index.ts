@@ -4,7 +4,6 @@ export * from './vault.service';
 export * from './valorant';
 export * from './recommendations.service';
 export * from './invites.service';
-export * from './vault-admin.service';
 export * from './connections.service';
 export * from './messages.service';
 export * from './auth.service';
