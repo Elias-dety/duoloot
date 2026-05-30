@@ -128,3 +128,70 @@ Verificar no Supabase:
 #### Critério de conclusão
 
 Usuário comum não consegue executar ação admin, alterar dono, manipular pontos ou acessar dados privados de outro usuário.
+
+---
+
+### Remover injeção temporária de dados mockados (Cofre e Lobbies)
+
+Status: pendente
+Prioridade: alta
+Área: frontend
+Criado em: 2026-05-30
+
+#### Motivo
+
+Durante testes visuais e de design, foram injetados dados mockados (`mockLobbies` em `LobbyPage.tsx` e `USE_MOCK_VAULT` em `VaultPage.tsx`) para renderizar os componentes sem depender do banco de dados (Supabase) estar preenchido localmente. Isso precisa ser desfeito antes do deploy de produção para que o sistema leia apenas dados reais.
+
+#### Ação necessária
+
+1. Em `src/pages/VaultPage.tsx`: Remover a flag `USE_MOCK_VAULT` ou definir como `false`, e remover os imports de `mockVaultData`.
+2. Em `src/pages/LobbyPage.tsx`: Remover a importação dinâmica `const { mockLobbies } = await import('@/data/mocks/lobbies.mock');` e remover `...mockLobbies` do array de dados renderizado.
+
+#### Critério de conclusão
+
+As telas "Cofre" e "Lobbies" devem exibir apenas os dados vindos do Supabase. Nenhuma informação falsa de teste deve aparecer na listagem principal.
+
+---
+
+### Aplicar migrations do sistema de Wallet no Supabase
+
+Status: **concluído** (2026-05-30)
+Prioridade: alta
+Área: Supabase
+Criado em: 2026-05-30
+
+#### Motivo
+
+A migration principal (`025_wallet_system.sql`), o seed de recompensas (`026_seed_reward_catalog.sql`) e a integração do Cofre (`027_integrate_vault_wallet.sql`) foram criadas localmente. Elas precisam ser aplicadas ao Supabase real.
+
+#### Ação necessária
+
+1. Aplicar as migrations no Supabase (via `supabase db push` ou executar os scripts SQL diretamente via console/SQL Editor).
+2. Confirmar a criação das tabelas, RLS e RPCs no banco real.
+
+#### Critério de conclusão
+
+- Tabelas criadas com RLS ativo.
+- RPCs registradas sob o search_path `public`.
+- O catálogo de recompensas contendo as 4 recompensas internas iniciais do seed.
+
+---
+
+### Testar cenários de segurança da Wallet no ambiente integrado
+
+Status: **concluído** (2026-05-30)
+Prioridade: alta
+Área: segurança
+Criado em: 2026-05-30
+
+#### Motivo
+
+O documento de testes `docs/trails/WALLET_SECURITY_TESTS.md` detalha 6 cenários críticos (idempotência, saldo insuficiente, resgate solicitado/aprovado/rejeitado, RLS). Eles devem ser testados após a aplicação das migrations.
+
+#### Ação necessária
+
+Executar os cenários de teste descritos em `docs/trails/WALLET_SECURITY_TESTS.md` usando scripts SQL manuais no console do Supabase e validar os resultados esperados.
+
+#### Critério de conclusão
+
+- Todos os 6 cenários aprovados, sem falhas de integridade ou bypass de RLS.

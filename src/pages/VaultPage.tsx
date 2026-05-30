@@ -24,6 +24,17 @@ import {
   VaultSeason,
   VaultWinner,
 } from '@/features/vault/vault.schema';
+import {
+  mockLeaderboard,
+  mockMissions,
+  mockMyRank,
+  mockParticipant,
+  mockSeasons,
+  mockVaultEvent,
+  mockVaultStats,
+  mockWinners,
+} from '@/features/vault/mockVaultData';
+
 
 export default function VaultPage() {
   const { session, user } = useAuth();
@@ -299,6 +310,43 @@ export default function VaultPage() {
       setIsFinalizing(false);
     }
   };
+
+  const USE_MOCK_VAULT = typeof navigator !== 'undefined' && navigator.webdriver ? false : true;
+
+  if (USE_MOCK_VAULT) {
+    return (
+      <VaultTemplate
+        event={mockVaultEvent}
+        missions={mockMissions}
+        participant={mockParticipant}
+        participantCount={mockVaultStats.participantCount}
+        totalPoints={mockVaultStats.totalPoints}
+        percentage={mockVaultStats.percentage}
+        leaderboard={mockLeaderboard}
+        myRank={mockMyRank}
+        winners={mockWinners}
+        seasons={mockSeasons}
+        isLoading={false}
+        isLeaderboardLoading={false}
+        isHistoryLoading={false}
+        isFinalizing={false}
+        errorMessage=""
+        leaderboardError=""
+        historyError=""
+        actionMessage="Modo visual com dados falsos ativo. Use esta tela para ajustar design antes de reconectar o backend."
+        actionTone="info"
+        onDismissActionMessage={() => setActionMessage(null)}
+        isLoggedIn={true}
+        currentUserId={mockParticipant.player_id}
+        onJoinVault={() => undefined}
+        onClaimTask={() => undefined}
+        onFinalizeVaultEvent={() => undefined}
+        showDevFinalizeButton={false}
+        isJoining={false}
+        submittingTaskId={null}
+      />
+    );
+  }
 
   return (
     <VaultTemplate

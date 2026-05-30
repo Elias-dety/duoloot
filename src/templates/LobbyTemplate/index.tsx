@@ -108,7 +108,7 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   }, [filters, lobbies]);
 
   return (
-    <div className="relative mx-auto w-full max-w-[2560px] 3xl:px-12 4xl:px-24 space-y-6 px-3 pb-12 pt-4 md:px-6 md:pt-6">
+    <div className="relative mx-auto w-full max-w-[1600px] space-y-6 px-6 pb-12 pt-4 md:px-10 lg:px-16 md:pt-6">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] rounded-full opacity-80 blur-3xl"

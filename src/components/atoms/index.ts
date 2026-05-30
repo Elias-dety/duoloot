@@ -13,3 +13,5 @@ export * from './ImagePlaceholder';
 export * from './MissingImagePlaceholder';
 export * from './Frame';
 export * from './DuoFrame';
+export * from './UiMarker';
+export * from './UiSection';

@@ -10,6 +10,8 @@ export const ROUTES = {
   RIOT_CONNECT: '/riot/connect',
   RIOT_CALLBACK: '/riot/callback',
   ADMIN_VAULT: '/admin/cofre',
+  WALLET: '/carteira',
+  ADMIN_WALLET: '/admin/carteira',
   KARMA_PREVIEW: '/karma/preview',
   LOGIN: '/login',
   REGISTER: '/cadastro',

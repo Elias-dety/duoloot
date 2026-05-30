@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Button } from '@/components/atoms';
+import { Button, UiMarker } from '@/components/atoms';
+import { UI_MARKERS } from '@/config/uiMarkers';
 import { ASSETS } from '@/constants/assets';
 
 interface LobbyFilterState {
@@ -40,7 +41,14 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
   const labelClassName = 'mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--dl-muted-light)]';
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.035] backdrop-blur-xl">
+    <>
+      {/* UI_MARKER: lobby.filters.503 | Filtros de lobby */}
+      <div
+        data-ui-id={UI_MARKERS.lobby.filters.id}
+        data-ui-label={UI_MARKERS.lobby.filters.label}
+        className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.035] backdrop-blur-xl"
+      >
+        <UiMarker {...UI_MARKERS.lobby.filters} />
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] px-5 py-4">
         <div className="flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-xl border border-[var(--dl-number)]/25 bg-[var(--dl-number)]/10">
@@ -122,5 +130,6 @@ export const LobbyFilters: React.FC<LobbyFiltersProps> = ({
         </div>
       </div>
     </div>
+    </>
   );
 };

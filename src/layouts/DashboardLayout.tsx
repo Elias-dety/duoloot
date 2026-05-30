@@ -1,4 +1,5 @@
 import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 import { useAuth } from '@/features/auth/useAuth';
 import { usePlayerPresence } from '@/hooks/usePlayerPresence';
@@ -7,6 +8,11 @@ import { ROUTES } from '../constants/routes';
 import { Button, Card, Logo } from '@/components/atoms';
 import { LanguageSwitcher } from '@/components/molecules/LanguageSwitcher';
 import { useLanguage } from '@/i18n';
+import { getMyWalletAccount } from '@/services/wallet.service';
+import type { WalletAccount } from '@/features/wallet/wallet.schema';
+
+import duoCoinIcon16 from '@/assets/icons/duoloot_pontos_token_check_16px.png';
+import duoCoinIcon32 from '@/assets/icons/duoloot_pontos_token_check_32px.png';
 
 export default function DashboardLayout() {
   const { profile, user, signOut } = useAuth();
@@ -15,6 +21,16 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
   const profilePath = user?.id ? ROUTES.PLAYER_PROFILE.replace(':playerId', user.id) : ROUTES.ONBOARDING;
 
+  const [wallet, setWallet] = useState<WalletAccount | null>(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      getMyWalletAccount()
+        .then(setWallet)
+        .catch(console.error);
+    }
+  }, [user?.id]);
+
   const navItems = [
     { label: copy.common.dashboard, path: ROUTES.DASHBOARD, code: 'DB' },
     { label: copy.common.profile, path: profilePath, code: 'PF' },
@@ -22,6 +38,7 @@ export default function DashboardLayout() {
     { label: 'Lobby', path: ROUTES.LOBBY, code: 'LB' },
     { label: 'Karma', path: ROUTES.KARMA_PREVIEW, code: 'KM' },
     { label: copy.layout.nav.vault, path: ROUTES.VAULT, code: 'VT' },
+    { label: 'Carteira', path: ROUTES.WALLET, code: 'WL' },
   ];
 
   const handleLogout = async () => {
@@ -52,6 +69,12 @@ export default function DashboardLayout() {
             <Logo compact subtitle={copy.common.dashboard} />
           </Link>
           <div className="flex items-center gap-2">
+            {wallet && (
+              <Link to={ROUTES.WALLET} className="flex items-center gap-1.5 rounded-full border border-[var(--dl-warning)]/20 bg-[var(--dl-warning)]/10 px-2.5 py-1 font-mono text-[11px] font-bold text-[var(--dl-warning)] no-underline">
+                <img src={duoCoinIcon16} alt="DC" className="h-4 w-4" />
+                <span>{new Intl.NumberFormat('pt-BR').format(wallet.available_balance)} DC</span>
+              </Link>
+            )}
             <LanguageSwitcher />
             <Button variant="secondary" size="sm" onClick={() => navigate(profilePath)}>{copy.common.profile}</Button>
             <Button variant="secondary" size="sm" onClick={handleLogout}>
@@ -111,6 +134,18 @@ export default function DashboardLayout() {
           <div className="rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.03] px-4 py-3 text-xs uppercase tracking-[0.12em] text-[var(--dl-muted-light)]">
             {getRank()}
           </div>
+
+          {wallet && (
+            <Link to={ROUTES.WALLET} className="flex items-center justify-between rounded-[1rem] border border-[var(--dl-warning)]/20 bg-[var(--dl-warning)]/5 px-4 py-3 no-underline transition hover:border-[var(--dl-warning)]/40 hover:bg-[var(--dl-warning)]/10">
+              <div className="flex items-center gap-2">
+                <img src={duoCoinIcon32} alt="DC" className="h-6 w-6 shrink-0 drop-shadow-[0_0_6px_rgba(255,209,102,0.4)]" />
+                <span className="font-['Rajdhani'] text-[11px] font-bold uppercase tracking-wider text-[var(--dl-muted-light)]">DuoCoins</span>
+              </div>
+              <strong className="font-mono text-sm font-bold text-[var(--dl-warning)]">
+                {new Intl.NumberFormat('pt-BR').format(wallet.available_balance)} DC
+              </strong>
+            </Link>
+          )}
 
           <LanguageSwitcher fullWidth />
           <Button fullWidth variant="secondary" size="sm" onClick={() => navigate(profilePath)}>{copy.common.profile}</Button>

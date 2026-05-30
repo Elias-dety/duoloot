@@ -65,7 +65,7 @@ export default function DashboardTemplate({
   }
 
   return (
-    <div className="mx-auto w-full max-w-[2560px] 3xl:px-12 4xl:px-24 space-y-6 px-3 pb-12 md:px-6">
+    <div className="mx-auto w-full max-w-[1600px] space-y-6 px-6 pb-12 md:px-10 lg:px-16">
       <Card variant="accent" className="mb-6 px-5 py-6 md:px-8 md:py-8">
         <SectionTitle
           eyebrow={copy.common.dashboard}

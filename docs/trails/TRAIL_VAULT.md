@@ -107,6 +107,19 @@ Qualquer correção de segurança no Vault deve ser registrada em:
 - [ ] Criar testes para usuário comum vs admin.
 - [ ] Definir modelo de auditoria para validações.
 
+## Integração com Wallet / DuoCoins
+
+O Cofre pode gerar DuoCoins quando uma missão aprovada é concluída. A integração segue esta regra:
+
+```txt
+vault_participants.points = ranking e gamificação (não muda).
+DuoCoins via grant_wallet_credit = saldo resgatável (nova camada).
+```
+
+Quando uma missão é concluída e aprovada, o sistema pode chamar `grant_wallet_credit` com idempotency_key no padrão `vault_mission:{event_id}:{mission_id}:{user_id}`.
+
+Para detalhes, leia: `docs/trails/TRAIL_WALLET.md`
+
 ## Critério de pronto
 
 Uma alteração no Vault só está pronta quando:
