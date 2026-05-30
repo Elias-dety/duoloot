@@ -14,8 +14,7 @@ export interface LobbyGridProps {
   currentUserId?: string;
 }
 
-const masonryContainerClassName = 'columns-1 gap-4 md:columns-2 lg:columns-3';
-const masonryItemClassName = 'mb-4 break-inside-avoid';
+const gridClassName = 'grid grid-cols-1 gap-5 xl:grid-cols-2';
 
 export const LobbyGrid: React.FC<LobbyGridProps> = ({
   items,
@@ -29,9 +28,9 @@ export const LobbyGrid: React.FC<LobbyGridProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className={masonryContainerClassName}>
+      <div className={gridClassName}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className={masonryItemClassName}>
+          <div key={i}>
             <div className="dl-panel min-h-[320px] p-5 animate-pulse">
               <SkeletonBlock width="100%" height="100%" className="rounded-[1rem] bg-[var(--dl-surface)]" />
             </div>
@@ -51,13 +50,13 @@ export const LobbyGrid: React.FC<LobbyGridProps> = ({
   }
 
   return (
-    <div className={masonryContainerClassName}>
+    <div className={gridClassName}>
       {items.map((lobby) => {
         const isOwner = Boolean(currentUserId && lobby.owner?.id === currentUserId);
         const isJoined = isOwner || joinedLobbyIds.includes(lobby.id);
 
         return (
-          <div key={lobby.id} className={masonryItemClassName}>
+          <div key={lobby.id}>
             <LobbyCard
               lobby={lobby}
               onJoin={onJoinLobby}

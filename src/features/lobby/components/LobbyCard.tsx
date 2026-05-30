@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
-import { GameRankBadge } from '@/components/molecules';
+import { DuoFrame } from '@/components/atoms';
 import { getGameRankTheme } from '@/features/ranks';
 import { Lobby } from '@/schemas/lobby.schema';
 import { getPlayerKarma, type KarmaSummary } from '@/services/karma.service';
 import { LobbyRulesSummary } from './LobbyRulesSummary';
 
-type MatchLevel = 'vou_carregar' | 'mesmo_nivel' | 'vai_me_carregar';
 type KarmaLevel = 'baixo' | 'neutro' | 'alto';
 type TagTone = 'green' | 'orange' | 'blue' | 'yellow' | 'pink';
 
@@ -17,20 +16,6 @@ type ProfileTag = {
   emoji: string;
   type: TagTone;
 };
-
-type CssVars = React.CSSProperties &
-  Record<
-    | '--match-position'
-    | '--karma-position'
-    | '--rank-primary'
-    | '--rank-secondary'
-    | '--rank-accent'
-    | '--rank-border'
-    | '--rank-bg'
-    | '--rank-glow'
-    | '--rank-text',
-    string
-  >;
 
 export interface LobbyCardProps {
   lobby: Lobby;
@@ -46,29 +31,11 @@ function clampPercent(value: number) {
   return Math.max(0, Math.min(100, value));
 }
 
-function getMatchLevel(matchPercent: number): MatchLevel {
-  if (matchPercent <= 33) return 'vou_carregar';
-  if (matchPercent <= 66) return 'mesmo_nivel';
-  return 'vai_me_carregar';
-}
-
-function getMatchLabel(level: MatchLevel) {
-  if (level === 'vou_carregar') return 'Vou carregar';
-  if (level === 'mesmo_nivel') return 'Mesmo nível';
-  return 'Vai me carregar';
-}
-
 function getKarmaLevel(score: number, hasSummary: boolean): KarmaLevel {
   if (!hasSummary) return 'neutro';
   if (score <= -10) return 'baixo';
   if (score >= 50) return 'alto';
   return 'neutro';
-}
-
-function getKarmaPosition(level: KarmaLevel) {
-  if (level === 'baixo') return '16%';
-  if (level === 'neutro') return '50%';
-  return '83%';
 }
 
 function getKarmaLabel(level: KarmaLevel) {
@@ -87,15 +54,6 @@ function toText(value: unknown, fallback = '---') {
 
 function toBoolean(value: unknown) {
   return typeof value === 'boolean' ? value : false;
-}
-
-function getRoleHint(role: string) {
-  const normalized = role.toLowerCase();
-  if (normalized.includes('duel')) return 'Entrada e pressão no combate';
-  if (normalized.includes('control')) return 'Controle de espaço e ritmo';
-  if (normalized.includes('sentin')) return 'Defesa, leitura e cobertura';
-  if (normalized.includes('initi') || normalized.includes('inici')) return 'Abertura de jogadas e informação';
-  return 'Função principal no lobby';
 }
 
 function buildTags(profile: Record<string, unknown>, role: string, mic: boolean, rank: string, region: string): ProfileTag[] {
@@ -121,26 +79,6 @@ function PersonIcon() {
   );
 }
 
-function RoleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 3L20 7L12 11L4 7L12 3Z" fill="currentColor" />
-      <path d="M7 10L12 13L17 10V15L12 18L7 15V10Z" fill="currentColor" opacity="0.78" />
-    </svg>
-  );
-}
-
-function MicIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 14C13.66 14 15 12.66 15 11V6C15 4.34 13.66 3 12 3C10.34 3 9 4.34 9 6V11C9 12.66 10.34 14 12 14Z" fill="currentColor" />
-      <path d="M17.5 10.5C17.5 13.54 15.04 16 12 16C8.96 16 6.5 13.54 6.5 10.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M12 16V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <path d="M9 21H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 export const LobbyCard: React.FC<LobbyCardProps> = ({
   lobby,
   onJoin,
@@ -151,9 +89,9 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   isOwner,
 }) => {
   const navigate = useNavigate();
-  const [showAllTags, setShowAllTags] = useState(false);
   const [karmaSummary, setKarmaSummary] = useState<KarmaSummary | null>(null);
   const [isKarmaLoading, setIsKarmaLoading] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const ownerName = lobby.owner?.name || 'Player desconhecido';
   const ownerId = lobby.owner?.id;
@@ -166,13 +104,10 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   const isClosed = lobby.status === 'closed';
 
   const matchPercent = clampPercent(lobby.compatibilityScore ?? 0);
-  const matchLevel = getMatchLevel(matchPercent);
-  const matchPosition = `${matchPercent}%`;
 
   const karmaScore = karmaSummary?.karmaGeral ?? 0;
   const hasKarmaSummary = Boolean(karmaSummary);
   const karmaLevel = getKarmaLevel(karmaScore, hasKarmaSummary);
-  const karmaPosition = getKarmaPosition(karmaLevel);
   const karmaBadgeLabel = isKarmaLoading ? 'Carregando' : hasKarmaSummary ? getKarmaLabel(karmaLevel) : 'Sem Karma';
   const karmaDetailLabel = isKarmaLoading
     ? 'Buscando Karma...'
@@ -190,6 +125,24 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
   const region = toText(profile.region || lobby.metadata?.region, '---');
   const mic = toBoolean(profile.microphone ?? lobby.metadata?.microphone);
   const description = toText(profile.bio || lobby.metadata?.bio, 'Procuro squad para jogar com comunicação, foco e lobby organizado.');
+  const mainAgent = toText(
+    profile.mainAgent ||
+      profile.favoriteAgent ||
+      profile.mostPlayedAgent ||
+      lobby.metadata?.mainAgent ||
+      lobby.metadata?.favoriteAgent ||
+      lobby.metadata?.mostPlayedAgent,
+    'Agente indefinido'
+  );
+  const shortDescription = toText(
+    profile.shortDescription ||
+      profile.tagline ||
+      lobby.metadata?.shortDescription ||
+      lobby.metadata?.tagline ||
+      profile.bio ||
+      lobby.metadata?.bio,
+    'Call limpa, foco competitivo e lobby organizado.'
+  );
 
   useEffect(() => {
     setAvatarRankIconSrc(rankTheme.icon || rankTheme.fallbackIcon || null);
@@ -225,22 +178,19 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
     };
   }, [ownerId]);
 
-  // TODO: no futuro trocar tags derivadas por tags persistidas no banco.
   const tags = buildTags(profile, role, mic, rank, region);
-  const visibleTags = showAllTags ? tags : tags.slice(0, 2);
-  const hiddenCount = Math.max(0, tags.length - 2);
 
   const statusLabel = isClosed
     ? 'Fechado'
     : isFull
-      ? 'Lobby cheio'
+      ? 'Cheio'
       : lobby.owner?.status === 'online'
-        ? 'Online • Lobby ativo'
-        : 'Lobby ativo';
+        ? 'Online'
+        : 'Ativo';
 
-  const statusTone = isClosed || isFull
-    ? 'border-[rgb(var(--dl-error-rgb)/0.28)] bg-[rgb(var(--dl-error-rgb)/0.14)] text-[var(--dl-error)]'
-    : 'border-[var(--rank-border)] bg-[var(--rank-bg)] text-[var(--rank-text)]';
+  const statusClassName = isClosed || isFull
+    ? 'border-[rgba(255,63,102,.32)] bg-[rgba(255,63,102,.10)] text-[#ff3f66]'
+    : 'border-[rgba(35,209,139,.34)] bg-[rgba(35,209,139,.10)] text-[#27e58a]';
 
   const actionDisabled = isClosed || isJoining || isLeaving || (!isJoined && isFull);
   const actionLabel = isLeaving
@@ -248,14 +198,14 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
     : isJoining
       ? 'Entrando...'
       : isOwner
-        ? 'Fechar lobby'
+        ? 'Fechar'
         : isJoined
-          ? 'Sair do lobby'
+          ? 'Sair'
           : isClosed
             ? 'Fechado'
             : isFull
-              ? 'Lobby cheio'
-              : 'Entrar no lobby';
+              ? 'Cheio'
+              : 'Entrar';
 
   const handlePrimaryAction = () => {
     if (isJoined) {
@@ -266,46 +216,63 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
     onJoin?.(lobby.id);
   };
 
-  const cssVars = {
-    '--match-position': matchPosition,
-    '--karma-position': karmaPosition,
-    '--rank-primary': rankTheme.colors.primary,
-    '--rank-secondary': rankTheme.colors.secondary,
-    '--rank-accent': rankTheme.colors.accent,
-    '--rank-border': rankTheme.colors.border,
-    '--rank-bg': rankTheme.colors.background,
-    '--rank-glow': rankTheme.colors.glow,
-    '--rank-text': rankTheme.colors.text,
-  } as CssVars;
+  const renderSlots = () =>
+    Array.from({ length: slotsTotal }).map((_, index) => {
+      const isFilled = index < slotsFilled;
+
+      return (
+        <div
+          key={index}
+          className={
+            isFilled
+              ? 'grid aspect-square w-full max-w-16 place-items-center rounded-full border-2 border-[#16d7ff] bg-[radial-gradient(circle_at_50%_35%,rgba(20,216,255,.18),rgba(3,8,14,.9)_67%)] text-[#16d7ff] shadow-[0_0_16px_rgba(20,216,255,.18)]'
+              : 'grid aspect-square w-full max-w-16 place-items-center rounded-full border-2 border-dashed border-[rgba(180,190,205,.42)] bg-white/[0.02] text-3xl font-light text-[rgba(245,247,250,.72)]'
+          }
+          aria-label={isFilled ? 'Jogador no lobby' : 'Vaga aberta'}
+        >
+          {isFilled ? (
+            <span className="block [&>svg]:h-7 [&>svg]:w-7">
+              <PersonIcon />
+            </span>
+          ) : (
+            '+'
+          )}
+        </div>
+      );
+    });
 
   return (
-    <article
-      className="dl-panel flex h-full flex-col overflow-hidden rounded-[1.75rem] border p-0 transition-all duration-300 hover:-translate-y-1"
-      style={{
-        ...cssVars,
-        opacity: isClosed ? 0.72 : 1,
-        borderColor: 'var(--rank-border)',
-        background:
-          'radial-gradient(circle at 18% 0%, var(--rank-bg), transparent 18rem), linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018))',
-        boxShadow: '0 26px 70px rgba(0,0,0,.35), 0 0 34px var(--rank-glow)',
-      }}
-    >
-      <div className="flex h-full flex-col p-5 sm:p-6">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex min-w-0 items-end gap-3 sm:gap-4">
+    <>
+      <DuoFrame
+        variant="default"
+        thickness="md"
+        radius="xl"
+        className="w-full"
+        screenClassName="p-2"
+      >
+        <article className="relative overflow-hidden rounded-[1.75rem] border-0 bg-[linear-gradient(135deg,rgba(20,216,255,.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012)),linear-gradient(145deg,#08111d,#050a12_66%,#08111b)] p-5 shadow-[0_22px_54px_rgba(0,0,0,.32),0_0_38px_rgba(20,216,255,.06)] md:p-6">
+          <header className="relative z-[2] mb-5 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4">
             <div
-              className="grid h-20 w-20 shrink-0 place-items-center rounded-[1.5rem] border-4 p-2 text-2xl font-black text-white shadow-[0_10px_24px_rgba(0,0,0,.32)] sm:h-[84px] sm:w-[84px]"
-              style={{
-                borderColor: 'var(--rank-border)',
-                background: 'radial-gradient(circle, var(--rank-bg), rgba(255,255,255,.04))',
-                boxShadow: '0 10px 24px rgba(0,0,0,.32), 0 0 22px var(--rank-glow)',
-              }}
+              className={`inline-flex min-h-[38px] items-center justify-center gap-2 rounded-full border px-4 text-[0.78rem] font-black uppercase tracking-[0.09em] ${statusClassName}`}
             >
+              <span className="h-2 w-2 rounded-full bg-current shadow-[0_0_14px_currentColor]" />
+              {statusLabel}
+            </div>
+
+            <div className="min-w-0 overflow-hidden">
+              <p className="m-0 overflow-hidden whitespace-nowrap font-['Inter'] text-[0.92rem] font-semibold leading-snug text-[rgba(235,239,246,.58)] [mask-image:linear-gradient(90deg,#000_0%,#000_78%,transparent_100%)] [-webkit-mask-image:linear-gradient(90deg,#000_0%,#000_78%,transparent_100%)]">
+                {shortDescription}
+              </p>
+            </div>
+          </header>
+
+          <section className="relative z-[2] grid items-center gap-5 border-b-2 border-[rgba(160,180,205,.16)] pb-6 md:grid-cols-[116px_minmax(0,1fr)_minmax(180px,218px)]">
+            <div className="grid h-[116px] w-[116px] place-items-center rounded-[1.65rem] border-2 border-[rgba(20,216,255,.72)] bg-[linear-gradient(145deg,rgba(13,31,48,.92),rgba(3,8,15,.96))] shadow-[0_0_28px_rgba(20,216,255,.18),inset_0_0_0_1px_rgba(140,98,255,.22)]">
               {avatarRankIconSrc ? (
                 <img
                   src={avatarRankIconSrc}
                   alt={`Elo ${rankTheme.label}`}
-                  className="h-full w-full object-contain drop-shadow-[0_0_18px_var(--rank-glow)]"
+                  className="h-[84px] w-[84px] object-contain drop-shadow-[0_0_16px_rgba(20,216,255,.32)]"
                   loading="lazy"
                   onError={() => {
                     setAvatarRankIconSrc((currentSrc) => {
@@ -317,206 +284,251 @@ export const LobbyCard: React.FC<LobbyCardProps> = ({
                   }}
                 />
               ) : (
-                <span aria-hidden="true" className="text-[var(--rank-text)]">?</span>
+                <span className="font-['Rajdhani'] text-3xl font-black text-white">?</span>
               )}
             </div>
-            <div className="min-w-0 pb-1">
-              <h3 className="break-words font-['Rajdhani'] text-2xl font-black uppercase leading-none tracking-[-0.02em] text-white sm:text-3xl">
+
+            <div className="min-w-0">
+              <h3 className="m-0 overflow-hidden text-ellipsis whitespace-nowrap font-['Rajdhani'] text-[clamp(2.6rem,5.4vw,4rem)] font-black uppercase leading-[.88] tracking-[.02em] text-white">
                 {ownerName}
               </h3>
-              <div className="mt-2 flex flex-wrap gap-2 text-[11px] font-black uppercase tracking-[0.08em] text-[var(--dl-muted-light)]">
-                <span>{game}</span>
-                <span>•</span>
-                <span>{mode}</span>
-                <span>•</span>
-                <span>{queue}</span>
-              </div>
-              {rank !== '---' && (
-                <div className="mt-3">
-                  <GameRankBadge game="valorant" rank={rank} size="sm" variant="pill" />
-                </div>
-              )}
-            </div>
-          </div>
 
-          <div className={`w-fit rounded-full border px-3 py-2 text-center text-[11px] font-black uppercase tracking-[0.1em] ${statusTone}`}>
-            {statusLabel}
-          </div>
-        </header>
-
-        <section className="mt-5 rounded-[1.125rem] border border-[rgba(250,204,21,.34)] bg-[linear-gradient(135deg,rgba(250,204,21,.18),rgba(250,204,21,.06))] p-4 text-[#facc15]">
-          <div className="mb-3 flex items-center justify-between gap-4">
-            <div>
-              <small className="block text-[10px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Compatibilidade</small>
-              <strong className="block text-3xl font-black leading-none text-[#facc15]">{matchPercent}% Match</strong>
-            </div>
-            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[1rem] border border-[rgba(250,204,21,.28)] bg-[rgba(250,204,21,.13)] text-2xl" aria-hidden="true">
-              ⭐
-            </div>
-          </div>
-
-          <div className="relative h-3 rounded-full bg-[linear-gradient(90deg,#38bdf8_0_33.33%,#34d399_33.33%_66.66%,#facc15_66.66%_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,.13)]" aria-label={`Compatibilidade: ${getMatchLabel(matchLevel)}`}>
-            <span className="absolute top-1/2 h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[#facc15] bg-[var(--dl-text)] shadow-[0_0_14px_rgba(250,204,21,.45)] [left:var(--match-position)]" />
-          </div>
-          <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[10px] font-black uppercase leading-tight tracking-[0.06em]">
-            <span className="text-[#38bdf8]">Vou carregar</span>
-            <span className="text-[#34d399]">Mesmo nível</span>
-            <span className="text-[#facc15]">Vai me carregar</span>
-          </div>
-        </section>
-
-        <section className="mt-5">
-          <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Capacidade do lobby</h4>
-          <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${slotsTotal}, minmax(0, 1fr))` }} aria-label={`${slotsFilled} jogadores no lobby e ${openSlots} vagas livres`}>
-            {Array.from({ length: slotsTotal }).map((_, index) => {
-              const isFilled = index < slotsFilled;
-              return (
-                <span key={index} className={`grid min-w-0 place-items-center ${isFilled ? 'text-[var(--rank-primary)] drop-shadow-[0_0_10px_var(--rank-glow)]' : 'text-[#4c566f]'}`}>
-                  <span className="block [&>svg]:h-[clamp(46px,13vw,76px)] [&>svg]:w-[clamp(46px,13vw,76px)]">
-                    <PersonIcon />
-                  </span>
+              <div className="mt-3 flex min-w-0 flex-wrap items-center gap-3 text-[clamp(1.18rem,2.5vw,1.6rem)] font-black">
+                <span className="inline-flex items-center gap-2 whitespace-nowrap text-[#16d7ff]">
+                  {role}
                 </span>
-              );
-            })}
-          </div>
-        </section>
 
-        <LobbyRulesSummary metadata={lobby.metadata} />
+                <span className="h-7 w-px bg-[rgba(160,180,205,.25)]" />
 
-        <section className="mt-5">
-          <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Resumo rápido</h4>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            <div className="flex min-h-[92px] items-center gap-3 rounded-[1.25rem] border p-4" style={{ borderColor: 'var(--rank-border)', background: 'linear-gradient(135deg, var(--rank-bg), rgba(255,255,255,.02))' }}>
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[0.95rem] border border-dashed bg-white/[0.06] text-[var(--rank-text)] [&>svg]:h-6 [&>svg]:w-6" style={{ borderColor: 'var(--rank-border)' }}>
-                <RoleIcon />
-              </div>
-              <div className="min-w-0">
-                <small className="block text-[10px] font-black uppercase tracking-[0.1em] text-[var(--dl-muted-light)]">Função</small>
-                <strong className="block break-words text-lg font-black uppercase leading-tight text-white">{role}</strong>
-                <span className="mt-1 block break-words text-xs leading-snug text-[var(--dl-muted-light)]">{getRoleHint(role)}</span>
+                <span className="inline-flex items-center gap-2 whitespace-nowrap text-[#ffd166]">
+                  {mainAgent}
+                </span>
               </div>
             </div>
 
-            <div className="flex min-h-[92px] items-center gap-3 rounded-[1.25rem] border p-4" style={{ borderColor: 'var(--rank-border)', background: 'linear-gradient(135deg, var(--rank-bg), rgba(255,255,255,.025))' }}>
-              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[0.95rem] border bg-[var(--rank-bg)] text-[var(--rank-primary)] [&>svg]:h-6 [&>svg]:w-6" style={{ borderColor: 'var(--rank-border)' }}>
-                <MicIcon />
-              </div>
-              <div className="min-w-0">
-                <small className="block text-[10px] font-black uppercase tracking-[0.1em] text-[var(--dl-muted-light)]">Comunicação</small>
-                <strong className="block text-lg font-black uppercase leading-tight text-white">{mic ? 'Mic ON' : 'Mic OFF'}</strong>
-                <span className="mt-1 block text-xs leading-snug text-[var(--dl-muted-light)]">{mic ? 'Usa call durante a partida' : 'Sem microfone'}</span>
-              </div>
-            </div>
-          </div>
-        </section>
+            <div className="grid min-h-[76px] grid-cols-[auto_1fr_auto_auto] items-center gap-3 rounded-2xl border-2 border-[rgba(160,180,205,.18)] bg-[rgba(8,14,24,.56)] px-4 py-3">
+              <span className="text-[rgba(225,238,255,.76)] [&>svg]:h-6 [&>svg]:w-6">
+                <PersonIcon />
+              </span>
 
-        <section className="mt-5">
-          <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Karma</h4>
-          <div className="rounded-[1.125rem] border border-[var(--dl-border)] bg-[var(--dl-surface)] p-4">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <div>
-                <strong className="block text-sm font-black text-white">Karma do jogador</strong>
-                <span className="mt-1 block text-xs font-semibold text-[var(--dl-muted-light)]">{karmaDetailLabel}</span>
-              </div>
-              <span className="rounded-full border border-[rgb(var(--dl-string-rgb)/0.24)] bg-[rgb(var(--dl-string-rgb)/0.14)] px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.08em] text-[var(--dl-string)]">
-                {karmaBadgeLabel}
+              <span className="whitespace-nowrap text-[clamp(1.75rem,4vw,2.6rem)] font-black leading-none text-white">
+                {slotsFilled} / {slotsTotal}
+              </span>
+
+              <span className="h-11 w-px bg-[rgba(160,180,205,.2)]" />
+
+              <span className="grid text-center">
+                <small className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-[rgba(238,241,246,.62)]">
+                  {openSlots === 0 ? 'Status' : 'Falta'}
+                </small>
+                <strong className="text-[1.75rem] leading-none text-white">
+                  {openSlots === 0 ? 'OK' : openSlots}
+                </strong>
               </span>
             </div>
-            <div className="relative h-3 rounded-full bg-[linear-gradient(90deg,#ef4444_0_33.33%,#facc15_33.33%_66.66%,#34d399_66.66%_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,.12)]" aria-label={`Karma do jogador: ${karmaBadgeLabel}`}>
-              <span className="absolute top-1/2 h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-[var(--dl-string)] bg-[var(--dl-text)] shadow-[0_0_14px_rgba(52,211,153,.45)] [left:var(--karma-position)]" />
+          </section>
+
+          <section className="relative z-[2] grid items-center gap-6 border-b-2 border-[rgba(160,180,205,.12)] py-6 md:grid-cols-[minmax(240px,1fr)_2px_minmax(240px,1fr)]">
+            <div className="grid grid-cols-5 items-center gap-2">
+              {renderSlots()}
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px] font-black uppercase tracking-[0.08em]">
-              <span className="text-[#f87171]">Karma baixo</span>
-              <span className="text-[#facc15]">Neutro</span>
-              <span className="text-[#34d399]">Karma alto</span>
+
+            <div className="hidden h-[102px] w-px bg-[rgba(160,180,205,.18)] md:block" />
+
+            <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2">
+              <div className="overflow-hidden text-ellipsis whitespace-nowrap text-[clamp(1.25rem,2.4vw,1.7rem)] font-black uppercase tracking-[.04em] text-[#16d7ff]">
+                Matchmaking
+              </div>
+
+              <div className="whitespace-nowrap text-[clamp(1.75rem,4vw,2.6rem)] font-black leading-none text-[#ffd166]">
+                {matchPercent}%
+              </div>
+
+              <div className="col-span-2 h-5 rounded-full bg-[rgba(160,180,205,.13)] p-[3px] shadow-[inset_0_0_0_2px_rgba(160,180,205,.08)]">
+                <div
+                  className="h-full rounded-full bg-[linear-gradient(90deg,#14d8ff_0%,#20ddca_42%,#ffd166_100%)] shadow-[0_0_18px_rgba(20,216,255,.18)]"
+                  style={{ width: `${matchPercent}%` }}
+                />
+              </div>
+
+              <div className="col-span-2 text-sm font-semibold leading-snug text-[rgba(235,239,246,.48)]">
+                {matchPercent >= 80
+                  ? 'Compatibilidade excelente com seu perfil.'
+                  : matchPercent >= 60
+                    ? 'Alta compatibilidade com seu perfil.'
+                    : matchPercent >= 40
+                      ? 'Compatibilidade média. Vale revisar.'
+                      : 'Baixa compatibilidade para este lobby.'}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="mt-5">
-          <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Tags do perfil</h4>
-          <div className="flex flex-wrap gap-2.5">
-            {visibleTags.map((tag) => (
-              <span
-                key={`${tag.label}-${tag.emoji}`}
-                className={`inline-flex min-w-0 items-center gap-2 rounded-full border px-3 py-2 text-sm font-extrabold text-[#edf1ff] ${
-                  tag.type === 'green'
-                    ? 'border-[rgb(var(--dl-string-rgb)/0.26)] bg-[rgb(var(--dl-string-rgb)/0.14)]'
-                    : tag.type === 'orange'
-                      ? 'border-[rgba(251,146,60,.26)] bg-[rgba(251,146,60,.14)]'
-                      : tag.type === 'blue'
-                        ? 'border-[var(--rank-border)] bg-[var(--rank-bg)]'
-                        : tag.type === 'yellow'
-                          ? 'border-[rgba(250,204,21,.26)] bg-[rgba(250,204,21,.14)]'
-                          : 'border-[rgba(244,114,182,.26)] bg-[rgba(244,114,182,.14)]'
-                }`}
-              >
-                <span aria-hidden="true">{tag.emoji}</span>
-                <span className="break-words">{tag.label}</span>
-              </span>
-            ))}
-
-            {hiddenCount > 0 ? (
-              <button
-                type="button"
-                className="inline-flex min-w-0 cursor-pointer items-center gap-2 rounded-full border border-dashed border-[var(--dl-border)] bg-white/[0.07] px-3 py-2 text-sm font-extrabold text-white transition hover:bg-white/[0.12]"
-                onClick={() => setShowAllTags((value) => !value)}
-              >
-                <span aria-hidden="true">＋</span>
-                {showAllTags ? 'Ver menos' : 'Ver mais'}
-              </button>
-            ) : null}
-          </div>
-        </section>
-
-        <section className="mt-5">
-          <h4 className="mb-3 text-[11px] font-black uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">Descrição</h4>
-          <p className="m-0 rounded-[1.125rem] border px-4 py-3 text-sm leading-relaxed text-[#d8def0]" style={{ borderColor: 'var(--rank-border)', background: 'rgba(255,255,255,.035)' }}>
-            {description}
-          </p>
-        </section>
-
-        <footer className="mt-auto border-t pt-5" style={{ borderColor: 'var(--rank-border)' }}>
-          {isJoined && !isOwner ? (
+          <footer className="relative z-[2] grid grid-cols-1 gap-4 pt-6 sm:grid-cols-[1fr_1.08fr]">
             <button
               type="button"
-              className="mb-3 w-full rounded-2xl border bg-white/[0.05] px-4 py-3 text-sm font-black text-white opacity-80"
-              style={{ borderColor: 'var(--rank-border)' }}
-              disabled
+              className="inline-flex min-h-[64px] items-center justify-center gap-3 rounded-[1.125rem] border-2 border-[rgba(160,180,205,.17)] bg-[linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02))] px-4 text-[clamp(1.1rem,2.5vw,1.55rem)] font-black tracking-[.06em] text-[rgba(245,247,250,.80)] transition hover:-translate-y-0.5 hover:bg-white/[.07]"
+              onClick={() => setIsDetailsOpen(true)}
             >
-              Você entrou
+              Ver mais
             </button>
-          ) : null}
 
-          <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="button"
-              className="min-w-0 flex-1 rounded-2xl border bg-white/[0.05] px-4 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
-              style={{ borderColor: 'var(--rank-border)' }}
-              disabled={!lobby.owner?.id}
-              onClick={() => navigate(ROUTES.PLAYER_PROFILE.replace(':playerId', lobby.owner?.id || ''))}
-            >
-              Ver Perfil
-            </button>
-            <button
-              type="button"
-              className={`min-w-0 flex-1 rounded-2xl px-4 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 ${
-                isJoined || isFull || isClosed
-                  ? 'border bg-white/[0.05]'
-                  : 'shadow-[0_12px_26px_var(--rank-glow)]'
+              className={`inline-flex min-h-[64px] items-center justify-center gap-3 rounded-[1.125rem] px-4 text-[clamp(1.1rem,2.5vw,1.55rem)] font-black tracking-[.06em] text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55 ${
+                actionDisabled
+                  ? 'border-2 border-[rgba(160,180,205,.17)] bg-white/[.05]'
+                  : 'bg-[linear-gradient(135deg,#ff304b,#ff3f72_62%,#ff477a)] shadow-[0_14px_28px_rgba(255,63,102,.18),inset_0_1px_0_rgba(255,255,255,.18)]'
               }`}
-              style={{
-                borderColor: isJoined || isFull || isClosed ? 'var(--rank-border)' : undefined,
-                background: isJoined || isFull || isClosed ? undefined : 'linear-gradient(135deg, var(--rank-primary), var(--rank-secondary))',
-              }}
               disabled={actionDisabled}
               onClick={handlePrimaryAction}
             >
               {actionLabel}
             </button>
+          </footer>
+        </article>
+      </DuoFrame>
+
+      {isDetailsOpen ? (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-black/65 p-5 backdrop-blur-xl"
+          onClick={() => setIsDetailsOpen(false)}
+        >
+          <div
+            className="max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-[1.75rem] border border-[rgba(22,215,255,.24)] bg-[radial-gradient(circle_at_20%_0%,rgba(22,215,255,.12),transparent_18rem),radial-gradient(circle_at_90%_20%,rgba(255,63,102,.10),transparent_16rem),rgba(5,9,18,.96)] p-6 shadow-[0_30px_90px_rgba(0,0,0,.55)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h3 className="font-['Rajdhani'] text-4xl font-black uppercase leading-none text-white">
+              Lobby de {ownerName}
+            </h3>
+
+            <p className="mt-4 text-sm leading-relaxed text-[var(--dl-muted-light)]">
+              {description}
+            </p>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+                <small className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                  Função
+                </small>
+                <strong className="mt-1 block text-white">{role}</strong>
+              </div>
+
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+                <small className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                  Agente
+                </small>
+                <strong className="mt-1 block text-white">{mainAgent}</strong>
+              </div>
+
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+                <small className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                  Lobby
+                </small>
+                <strong className="mt-1 block text-white">{slotsFilled}/{slotsTotal}</strong>
+              </div>
+
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+                <small className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                  Match
+                </small>
+                <strong className="mt-1 block text-white">{matchPercent}%</strong>
+              </div>
+
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+                <small className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                  Jogo
+                </small>
+                <strong className="mt-1 block text-white">{game}</strong>
+                <span className="mt-1 block text-xs text-[var(--dl-muted-light)]">{mode} • {queue}</span>
+              </div>
+
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+                <small className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                  Comunicação
+                </small>
+                <strong className="mt-1 block text-white">{mic ? 'Mic ON' : 'Mic OFF'}</strong>
+                <span className="mt-1 block text-xs text-[var(--dl-muted-light)]">{region}</span>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <small className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                    Karma
+                  </small>
+                  <strong className="mt-1 block text-white">{karmaBadgeLabel}</strong>
+                </div>
+                <span className="rounded-full border border-[rgb(var(--dl-string-rgb)/0.24)] bg-[rgb(var(--dl-string-rgb)/0.14)] px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.08em] text-[var(--dl-string)]">
+                  {karmaDetailLabel}
+                </span>
+              </div>
+            </div>
+
+            {tags.length > 0 ? (
+              <div className="mt-5 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+                <small className="block text-[0.68rem] font-black uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                  Tags
+                </small>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <span
+                      key={`${tag.label}-${tag.emoji}`}
+                      className={`inline-flex min-w-0 items-center gap-2 rounded-full border px-3 py-2 text-sm font-extrabold text-[#edf1ff] ${
+                        tag.type === 'green'
+                          ? 'border-[rgb(var(--dl-string-rgb)/0.26)] bg-[rgb(var(--dl-string-rgb)/0.14)]'
+                          : tag.type === 'orange'
+                            ? 'border-[rgba(251,146,60,.26)] bg-[rgba(251,146,60,.14)]'
+                            : tag.type === 'blue'
+                              ? 'border-[rgba(22,215,255,.24)] bg-[rgba(22,215,255,.10)]'
+                              : tag.type === 'yellow'
+                                ? 'border-[rgba(250,204,21,.26)] bg-[rgba(250,204,21,.14)]'
+                                : 'border-[rgba(244,114,182,.26)] bg-[rgba(244,114,182,.14)]'
+                      }`}
+                    >
+                      <span aria-hidden="true">{tag.emoji}</span>
+                      <span className="break-words">{tag.label}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            <LobbyRulesSummary metadata={lobby.metadata} />
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                className="min-h-12 rounded-2xl border border-white/[0.10] bg-white/[0.06] px-4 font-black text-white"
+                disabled={!lobby.owner?.id}
+                onClick={() => {
+                  setIsDetailsOpen(false);
+                  navigate(ROUTES.PLAYER_PROFILE.replace(':playerId', lobby.owner?.id || ''));
+                }}
+              >
+                Ver perfil
+              </button>
+
+              <button
+                type="button"
+                className="min-h-12 rounded-2xl bg-[linear-gradient(135deg,#ff304b,#ff3f72_62%,#ff477a)] px-4 font-black text-white disabled:opacity-55"
+                disabled={actionDisabled}
+                onClick={handlePrimaryAction}
+              >
+                {actionLabel}
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className="mt-4 min-h-12 w-full rounded-2xl border border-white/[0.10] bg-white/[0.06] px-4 font-black text-white"
+              onClick={() => setIsDetailsOpen(false)}
+            >
+              Fechar
+            </button>
           </div>
-        </footer>
-      </div>
-    </article>
+        </div>
+      ) : null}
+    </>
   );
 };
