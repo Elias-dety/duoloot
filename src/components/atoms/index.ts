@@ -12,3 +12,4 @@ export * from './Logo';
 export * from './ImagePlaceholder';
 export * from './MissingImagePlaceholder';
 export * from './Frame';
+export * from './DuoFrame';
