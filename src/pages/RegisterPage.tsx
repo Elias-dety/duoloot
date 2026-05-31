@@ -55,78 +55,68 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-80px)] overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: [
-            'radial-gradient(ellipse 55% 45% at 12% 20%, rgba(176,132,255,0.09), transparent 62%)',
-            'radial-gradient(ellipse 45% 38% at 86% 78%, rgba(255,70,85,0.08), transparent 60%)',
-            'linear-gradient(180deg, rgba(255,255,255,0.025), transparent 42%)',
-          ].join(', '),
-        }}
-      />
-
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-11rem)] w-full max-w-6xl items-center gap-10 lg:grid-cols-[0.9fr_1fr]">
+    <div className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-12">
+      <div className="mx-auto grid min-h-[calc(100vh-11rem)] w-full max-w-[1600px] items-center gap-10 lg:grid-cols-[0.95fr_1fr]">
         <aside className="hidden lg:block">
-          <div className="rounded-3xl border border-white/[0.08] bg-white/[0.035] p-8 backdrop-blur-xl">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--dl-function)]/30 bg-[var(--dl-function)]/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[var(--dl-function)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--dl-function)] shadow-[0_0_8px_var(--dl-function)]" />
-              Criação de conta
+          <section className="dl-premium-hero p-8 xl:p-10" data-watermark="SIGNUP">
+            <div className="relative z-[2]">
+              <div className="dl-premium-badge mb-8 border-[var(--dl-function)]/30 bg-[var(--dl-function)]/10 px-3 py-1.5 text-[var(--dl-function)]">
+                Criação de conta
+              </div>
+
+              <h1 className="dl-premium-title mb-6 text-[clamp(2.6rem,5vw,5.2rem)] font-black">
+                Monte seu perfil antes de entrar no jogo.
+              </h1>
+
+              <p className="dl-premium-muted mb-8 max-w-md font-['Inter'] text-base font-light">
+                O cadastro cria a conta base. Depois disso, o onboarding coleta seu perfil gamer para alimentar lobbies, recomendações e futuras integrações.
+              </p>
+
+              <div className="grid gap-3">
+                {[
+                  { label: 'Cadastro real', value: 'Supabase Auth', color: 'var(--dl-string)' },
+                  { label: 'Identidade gamer', value: 'Nome + nickname', color: 'var(--dl-function)' },
+                  { label: 'Depois', value: 'Onboarding obrigatório', color: 'var(--dl-warning)' },
+                ].map((item) => (
+                  <div key={item.label} className="dl-stat-tile flex min-h-0 items-center justify-between px-4 py-3">
+                    <span className="dl-stat-label">{item.label}</span>
+                    <span className="text-right font-mono text-[0.72rem]" style={{ color: item.color }}>
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <h1 className="mb-5 text-[clamp(2.2rem,5vw,3.6rem)] font-bold leading-[1.04] tracking-[-0.035em] text-white">
-              Monte seu perfil antes de entrar no jogo.
-            </h1>
-
-            <p className="mb-8 max-w-md font-['Inter'] text-[0.98rem] font-light leading-8 text-[var(--dl-muted-light)]">
-              O cadastro cria a conta base. Depois disso, o onboarding coleta seu perfil gamer para alimentar lobbies, recomendações e futuras integrações.
-            </p>
-
-            <div className="grid gap-3">
-              {[
-                { label: 'Cadastro real', value: 'Supabase Auth', color: 'var(--dl-string)' },
-                { label: 'Identidade gamer', value: 'Nome + nickname', color: 'var(--dl-function)' },
-                { label: 'Depois', value: 'Onboarding obrigatório', color: 'var(--dl-warning)' },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center justify-between rounded-2xl border border-white/[0.07] bg-white/[0.035] px-4 py-3">
-                  <span className="font-['Inter'] text-[0.76rem] uppercase tracking-[0.13em] text-[var(--dl-muted)]">
-                    {item.label}
-                  </span>
-                  <span className="text-right font-mono text-[0.72rem]" style={{ color: item.color }}>
-                    {item.value}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          </section>
         </aside>
 
         <div className="flex w-full justify-center lg:justify-end">
           {needsVerification ? (
-            <Card variant="elevated" className="w-full max-w-md space-y-6 overflow-hidden rounded-[1.75rem] border-white/[0.08] bg-white/[0.04] p-6 text-center backdrop-blur-xl md:p-8">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] text-2xl">
-                ✉
-              </div>
+            <Card variant="elevated" className="dl-glass relative w-full max-w-md space-y-6 overflow-hidden rounded-[1.85rem] p-6 text-center md:p-8">
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_0%,rgba(255,70,85,0.12),transparent_70%)]" />
+              <div className="relative z-[1]">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-[var(--dl-keyword)]/35 bg-[rgb(var(--dl-red-rgb)/0.12)] text-2xl shadow-[0_0_24px_rgba(255,70,85,.14)]">
+                  ✉
+                </div>
 
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold uppercase tracking-[-0.02em] text-white">{copy.auth.verificationSent}</h2>
-                <p className="text-sm leading-7 text-[var(--dl-muted-light)]">
-                  {copy.auth.verificationDescription}
+                <div className="mt-6 space-y-2">
+                  <h2 className="dl-premium-title text-3xl font-black">{copy.auth.verificationSent}</h2>
+                  <p className="text-sm leading-7 text-[var(--dl-muted-light)]">
+                    {copy.auth.verificationDescription}
+                  </p>
+                  <p className="rounded-[1rem] border border-white/[0.08] bg-black/20 px-3 py-2 text-sm font-semibold text-white">
+                    {registeredEmail}
+                  </p>
+                </div>
+
+                <p className="mt-5 text-sm leading-7 text-[var(--dl-muted-light)]">
+                  {copy.auth.verificationInstructions}
                 </p>
-                <p className="rounded-[1rem] border border-white/[0.08] bg-black/20 px-3 py-2 text-sm font-semibold text-white">
-                  {registeredEmail}
-                </p>
+
+                <Button fullWidth variant="secondary" className="mt-6" onClick={() => navigate(ROUTES.LOGIN)}>
+                  {copy.auth.backToLogin}
+                </Button>
               </div>
-
-              <p className="text-sm leading-7 text-[var(--dl-muted-light)]">
-                {copy.auth.verificationInstructions}
-              </p>
-
-              <Button fullWidth variant="secondary" onClick={() => navigate(ROUTES.LOGIN)}>
-                {copy.auth.backToLogin}
-              </Button>
             </Card>
           ) : (
             <AuthForm
