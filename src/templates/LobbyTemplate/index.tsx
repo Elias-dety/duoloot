@@ -4,9 +4,8 @@ import { LobbyGrid } from '@/components/organisms/LobbyGrid';
 import { LobbyActionsBar } from '@/features/lobby/components/LobbyActionsBar';
 import { LobbyFilters } from '@/features/lobby/components/LobbyFilters';
 import { Lobby } from '@/schemas/lobby.schema';
-import { Button, Card, SectionTitle } from '@/components/atoms';
+import { Button, Card } from '@/components/atoms';
 import { EmptyState } from '@/components/molecules';
-import { ASSETS } from '@/constants/assets';
 import { useLanguage } from '@/i18n';
 
 export interface LobbyTemplateProps {
@@ -108,41 +107,35 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
   }, [filters, lobbies]);
 
   return (
-    <div className="relative mx-auto w-full max-w-[1600px] space-y-6 px-6 pb-12 pt-4 md:px-10 lg:px-16 md:pt-6">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] rounded-full opacity-80 blur-3xl"
-        style={{
-          background:
-            'radial-gradient(ellipse 60% 55% at 50% 0%, rgba(13,240,255,0.08), transparent 70%), radial-gradient(ellipse 45% 45% at 82% 12%, rgba(255,70,85,0.06), transparent 65%)',
-        }}
-      />
-
-      <Card variant="muted" className="overflow-hidden border-white/[0.08] bg-white/[0.035] p-0 backdrop-blur-xl">
-        <div className="grid items-stretch gap-0 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="relative px-5 py-7 md:px-8 md:py-9">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--dl-number)]/30 bg-[var(--dl-number)]/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[var(--dl-number)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--dl-number)] shadow-[0_0_8px_var(--dl-number)]" />
+    <div className="dl-premium-shell relative space-y-6 px-5 pb-14 pt-4 sm:px-6 md:pt-6 lg:px-12">
+      <section className="dl-premium-hero overflow-hidden" data-watermark="LOBBY">
+        <div className="grid items-stretch gap-0 lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="relative z-[2] px-5 py-8 md:px-9 md:py-11">
+            <div className="dl-premium-badge mb-6 px-3 py-1.5">
               Matchmaking em auditoria
             </div>
 
-            <SectionTitle
-              eyebrow={copy.lobby.eyebrow}
-              title={copy.lobby.title}
-              subtitle={copy.lobby.subtitle}
-            />
+            <div className="max-w-4xl">
+              <p className="mb-3 font-['Inter'] text-[0.7rem] font-black uppercase tracking-[0.18em] text-[var(--dl-muted)]">
+                {copy.lobby.eyebrow}
+              </p>
+              <h1 className="dl-premium-title text-[clamp(2.4rem,5vw,5rem)] font-black">
+                {copy.lobby.title}
+              </h1>
+              <p className="dl-premium-muted mt-5 max-w-2xl text-sm md:text-base">
+                {copy.lobby.subtitle}
+              </p>
+            </div>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
               {[
                 { label: 'Lobbies reais', value: String(lobbies.length), color: 'var(--dl-number)' },
                 { label: 'Filtrados', value: String(filteredLobbies.length), color: 'var(--dl-string)' },
-                { label: 'Criação', value: 'Perfil obrigatório', color: 'var(--dl-warning)' },
+                { label: 'Criação', value: 'Perfil', color: 'var(--dl-warning)' },
               ].map((item) => (
-                <div key={item.label} className="rounded-2xl border border-white/[0.07] bg-white/[0.035] px-4 py-3">
-                  <span className="block font-['Inter'] text-[0.68rem] uppercase tracking-[0.14em] text-[var(--dl-muted)]">
-                    {item.label}
-                  </span>
-                  <span className="mt-1 block font-mono text-[0.82rem] font-semibold" style={{ color: item.color }}>
+                <div key={item.label} className="dl-stat-tile min-h-[5.8rem]">
+                  <span className="dl-stat-label">{item.label}</span>
+                  <span className="dl-stat-value mt-2 block text-[1.25rem]" style={{ color: item.color }}>
                     {item.value}
                   </span>
                 </div>
@@ -150,25 +143,26 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
             </div>
           </div>
 
-          <div className="relative flex items-center justify-center border-t border-white/[0.08] bg-black/20 p-6 lg:border-l lg:border-t-0">
-            <div
-              aria-hidden="true"
-              className="absolute inset-0"
-              style={{
-                background:
-                  'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(255,70,85,0.08), transparent 70%)',
-              }}
-            />
-            <div className="relative flex items-center justify-center gap-5 rounded-[1.5rem] border border-white/[0.08] bg-white/[0.04] p-5 backdrop-blur-xl">
-              <img src={ASSETS.icons.lobbyFinderThumb} alt="Icone de busca de lobby" loading="eager" decoding="async" className="h-24 w-24 object-contain" />
-              <img src={ASSETS.icons.matchmakingTrustThumb} alt="Icone de matchmaking por confianca" loading="eager" decoding="async" className="h-20 w-20 object-contain opacity-90" />
+          <div className="relative hidden min-h-[22rem] items-center justify-center border-l border-white/[0.08] bg-black/10 p-8 lg:flex">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,70,85,0.08),transparent_60%)]" />
+            <div className="dl-radar" />
+            <div className="absolute bottom-7 left-7 right-7 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl">
+              <div className="mb-3 flex items-center justify-between font-mono text-[0.7rem]">
+                <span className="text-[var(--dl-number)]">// lobby.scan()</span>
+                <span className="text-[var(--dl-string)]">sync</span>
+              </div>
+              <div className="grid gap-2">
+                <div className="h-2 rounded-full bg-white/[0.07]"><div className="h-full w-[86%] rounded-full bg-[linear-gradient(90deg,var(--dl-number),var(--dl-string))]" /></div>
+                <div className="h-2 rounded-full bg-white/[0.07]"><div className="h-full w-[74%] rounded-full bg-[linear-gradient(90deg,var(--dl-number),var(--dl-function))]" /></div>
+                <div className="h-2 rounded-full bg-white/[0.07]"><div className="h-full w-[62%] rounded-full bg-[linear-gradient(90deg,var(--dl-warning),var(--dl-keyword))]" /></div>
+              </div>
             </div>
           </div>
         </div>
-      </Card>
+      </section>
 
       {errorMessage ? (
-        <Card variant="danger" className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <Card variant="danger" className="flex flex-col gap-4 rounded-2xl p-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white">{copy.lobby.syncError}</p>
             <p className="mt-1 text-sm text-[var(--dl-muted-light)]">{errorMessage}</p>
@@ -180,23 +174,27 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
       ) : null}
 
       {statusMessage ? (
-        <Card variant="muted" className="border-[var(--dl-string)] bg-[rgb(var(--dl-string-rgb)/0.1)] p-4">
+        <Card variant="muted" className="rounded-2xl border-[var(--dl-string)] bg-[rgb(var(--dl-string-rgb)/0.1)] p-4">
           <p className="text-sm font-semibold text-white">{statusMessage}</p>
         </Card>
       ) : null}
 
-      <LobbyFilters filters={filters} onFiltersChange={setFilters} onClearFilters={handleClearFilters} />
+      <div className="dl-glass rounded-3xl p-3 md:p-4">
+        <LobbyFilters filters={filters} onFiltersChange={setFilters} onClearFilters={handleClearFilters} />
+      </div>
 
-      <section className="space-y-4">
-        <LobbyActionsBar
-          totalLobbies={filteredLobbies.length}
-          onCreateLobby={onCreateTestLobby}
-          onConfigureLobby={onConfigureLobby}
-          isCreating={isCreating}
-        />
+      <section className="space-y-5">
+        <div className="dl-glass rounded-3xl p-3 md:p-4">
+          <LobbyActionsBar
+            totalLobbies={filteredLobbies.length}
+            onCreateLobby={onCreateTestLobby}
+            onConfigureLobby={onConfigureLobby}
+            isCreating={isCreating}
+          />
+        </div>
 
         {isError ? (
-          <EmptyState 
+          <EmptyState
             icon="error"
             title={copy.lobby.loadingErrorTitle}
             description={copy.lobby.loadingErrorDescription}
@@ -204,16 +202,16 @@ export const LobbyTemplate: React.FC<LobbyTemplateProps> = ({
             onAction={() => window.location.reload()}
           />
         ) : !isLoading && filteredLobbies.length === 0 ? (
-          <EmptyState 
+          <EmptyState
             title={copy.lobby.emptyTitle}
             description={copy.lobby.emptyDescription}
             actionLabel={copy.lobby.clearFilters}
             onAction={handleClearFilters}
           />
         ) : (
-          <LobbyGrid 
-            items={filteredLobbies} 
-            isLoading={isLoading} 
+          <LobbyGrid
+            items={filteredLobbies}
+            isLoading={isLoading}
             onJoinLobby={onJoinLobby}
             onLeaveLobby={onLeaveLobby}
             joiningLobbyId={joiningLobbyId}
