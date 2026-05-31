@@ -33,6 +33,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   const [nickname, setNickname] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
+  const isLogin = type === 'login';
+  const accent = isLogin ? 'var(--dl-number)' : 'var(--dl-function)';
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setFormError(null);
@@ -77,39 +80,28 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   return (
-    <Card variant="elevated" className="w-full max-w-md overflow-hidden rounded-[1.75rem] border-white/[0.08] bg-white/[0.04] p-0 backdrop-blur-xl">
-      <div className="relative border-b border-white/[0.08] px-6 py-6 text-center md:px-8">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              type === 'login'
-                ? 'radial-gradient(ellipse 70% 90% at 50% 0%, rgba(13,240,255,0.08), transparent 70%)'
-                : 'radial-gradient(ellipse 70% 90% at 50% 0%, rgba(176,132,255,0.09), transparent 70%)',
-          }}
-        />
-        <div className="relative z-10 space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.1] bg-white/[0.05] px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white">
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{
-                background: type === 'login' ? 'var(--dl-number)' : 'var(--dl-function)',
-                boxShadow: type === 'login' ? '0 0 6px var(--dl-number)' : '0 0 6px var(--dl-function)',
-              }}
-            />
-            {type === 'login' ? copy.auth.loginBadge : copy.auth.registerBadge}
-          </div>
-          <h2 className="text-[clamp(1.9rem,4vw,2.4rem)] font-bold uppercase leading-none tracking-[-0.02em] text-white">
-            {type === 'login' ? copy.auth.loginTitle : copy.auth.registerTitle}
-          </h2>
-          <p className="mx-auto max-w-sm font-['Inter'] text-sm leading-7 text-[var(--dl-muted-light)]">
-            {type === 'login' ? copy.auth.loginDescription : copy.auth.registerDescription}
-          </p>
-        </div>
+    <Card variant="elevated" className="dl-glass relative w-full max-w-md overflow-hidden rounded-[1.85rem] p-0">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-80" style={{ background: `radial-gradient(ellipse 80% 80% at 50% 0%, ${isLogin ? 'rgba(13,240,255,0.12)' : 'rgba(176,132,255,0.13)'}, transparent 70%)` }} />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-16 top-8 text-[5.8rem] font-black leading-none tracking-[-0.42rem] opacity-[0.08] [writing-mode:vertical-rl]" style={{ color: accent }}>
+        {isLogin ? 'LOGIN' : 'SIGNUP'}
       </div>
 
-      <div className="px-6 py-6 md:px-8 md:py-7">
+      <div className="relative z-[1] border-b border-white/[0.08] px-6 py-7 text-center md:px-8">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[0.68rem] font-black uppercase tracking-[0.18em]" style={{ borderColor: `${accent}4d`, background: `${accent}1a`, color: accent }}>
+          <span className="h-1.5 w-1.5 rounded-full bg-current shadow-[0_0_8px_currentColor]" />
+          {isLogin ? copy.auth.loginBadge : copy.auth.registerBadge}
+        </div>
+
+        <h2 className="dl-premium-title text-[clamp(2rem,4vw,2.65rem)] font-black">
+          {isLogin ? copy.auth.loginTitle : copy.auth.registerTitle}
+        </h2>
+
+        <p className="mx-auto mt-4 max-w-sm font-['Inter'] text-sm leading-7 text-[var(--dl-muted-light)]">
+          {isLogin ? copy.auth.loginDescription : copy.auth.registerDescription}
+        </p>
+      </div>
+
+      <div className="relative z-[1] px-6 py-6 md:px-8 md:py-7">
         {!isSupabaseConfigured && (
           <div className="mb-6 rounded-[1rem] border border-[var(--dl-warning)]/30 bg-[var(--dl-warning)]/10 p-4">
             <p className="text-center text-sm font-medium text-[var(--dl-muted-light)]">
@@ -119,7 +111,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         )}
 
         {formError && (
-          <div className="mb-6 rounded-[1rem] border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] p-4">
+          <div className="mb-6 rounded-[1rem] border border-[var(--dl-keyword)]/40 bg-[rgb(var(--dl-red-rgb)/0.12)] p-4 shadow-[0_0_18px_rgba(255,70,85,.12)]">
             <p className="text-sm font-semibold text-white">{formError}</p>
           </div>
         )}
@@ -138,6 +130,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                   disabled={isLoading || !isSupabaseConfigured}
+                  className="rounded-xl border-white/[0.08] bg-black/20 focus:border-[var(--dl-function)]/45"
                   required
                 />
               </div>
@@ -153,6 +146,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                   value={nickname}
                   onChange={(event) => setNickname(event.target.value.replace(/\s/g, ''))}
                   disabled={isLoading || !isSupabaseConfigured}
+                  className="rounded-xl border-white/[0.08] bg-black/20 focus:border-[var(--dl-function)]/45"
                   required
                 />
                 <span className="block text-xs text-[var(--dl-muted)]">
@@ -173,6 +167,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               disabled={isLoading || !isSupabaseConfigured}
+              className="rounded-xl border-white/[0.08] bg-black/20 focus:border-[var(--dl-number)]/45"
               required
             />
           </div>
@@ -188,6 +183,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               disabled={isLoading || !isSupabaseConfigured}
+              className="rounded-xl border-white/[0.08] bg-black/20 focus:border-[var(--dl-keyword)]/45"
               required
             />
           </div>
@@ -204,6 +200,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
                 disabled={isLoading || !isSupabaseConfigured}
+                className="rounded-xl border-white/[0.08] bg-black/20 focus:border-[var(--dl-keyword)]/45"
                 required
               />
             </div>
@@ -213,7 +210,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             type="submit"
             variant="primary"
             disabled={isLoading || !isSupabaseConfigured}
-            className="mt-6 w-full shadow-[0_8px_28px_rgba(255,70,85,0.25)]"
+            className="mt-6 w-full rounded-xl shadow-[0_8px_28px_rgba(255,70,85,0.25)]"
           >
             {isLoading ? copy.common.processing : type === 'login' ? copy.auth.submitLogin : copy.auth.submitRegister}
           </Button>
@@ -225,7 +222,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           </p>
           <Link
             to={type === 'login' ? ROUTES.REGISTER : ROUTES.LOGIN}
-            className="inline-block font-semibold uppercase tracking-[0.14em] text-white hover:text-[var(--dl-error)]"
+            className="inline-block font-black uppercase tracking-[0.14em] text-white hover:text-[var(--dl-error)]"
           >
             {type === 'login' ? copy.auth.createAccount : copy.auth.doLogin}
           </Link>
