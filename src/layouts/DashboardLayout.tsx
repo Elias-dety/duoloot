@@ -62,15 +62,15 @@ export default function DashboardLayout() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--dl-black)] md:flex-row">
-      <div className="border-b border-[var(--dl-border)] bg-[rgba(15,15,18,0.92)] md:hidden">
+    <div className="dl-grid-bg flex min-h-screen flex-col md:flex-row">
+      <div className="relative z-20 border-b border-white/[0.08] bg-[rgba(18,21,21,0.94)] shadow-[0_18px_42px_rgba(0,0,0,.24)] backdrop-blur-xl md:hidden">
         <header className="flex items-center justify-between gap-3 px-3 py-3">
           <Link to={ROUTES.HOME} className="dl-brand">
             <Logo compact subtitle={copy.common.dashboard} />
           </Link>
           <div className="flex items-center gap-2">
             {wallet && (
-              <Link to={ROUTES.WALLET} className="flex items-center gap-1.5 rounded-full border border-[var(--dl-warning)]/20 bg-[var(--dl-warning)]/10 px-2.5 py-1 font-mono text-[11px] font-bold text-[var(--dl-warning)] no-underline">
+              <Link to={ROUTES.WALLET} className="flex items-center gap-1.5 rounded-full border border-[var(--dl-warning)]/25 bg-[var(--dl-warning)]/10 px-2.5 py-1 font-mono text-[11px] font-bold text-[var(--dl-warning)] no-underline shadow-[0_0_16px_rgba(255,209,102,.08)]">
                 <img src={duoCoinIcon16} alt="DC" className="h-4 w-4" />
                 <span>{new Intl.NumberFormat('pt-BR').format(wallet.available_balance)} DC</span>
               </Link>
@@ -87,7 +87,7 @@ export default function DashboardLayout() {
           {navItems.map((item) => (
             <NavLink key={item.path} to={item.path} className="no-underline">
               {({ isActive }) => (
-                <span className={`inline-flex min-h-9 w-full items-center justify-center rounded-full border px-3.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] ${isActive ? 'border-[var(--dl-keyword)] bg-[var(--dl-keyword)] text-white' : 'border-[var(--dl-border)] bg-white/[0.04] text-white'}`}>
+                <span className={`inline-flex min-h-9 w-full items-center justify-center rounded-full border px-3.5 text-[0.68rem] font-black uppercase tracking-[0.12em] transition ${isActive ? 'border-[var(--dl-number)] bg-[rgba(13,240,255,.12)] text-[var(--dl-number)] shadow-[0_0_18px_rgba(13,240,255,.12)]' : 'border-white/[0.08] bg-white/[0.04] text-white hover:border-[var(--dl-number)]/30 hover:bg-white/[0.06]'}`}>
                   {item.label}
                 </span>
               )}
@@ -96,50 +96,53 @@ export default function DashboardLayout() {
         </nav>
       </div>
 
-      <aside className="hidden w-72 flex-col border-r border-[var(--dl-border)] bg-[rgba(15,15,18,0.94)] p-4 md:flex">
-        <div className="border-b border-[var(--dl-border)] pb-5">
+      <aside className="relative z-20 hidden w-80 shrink-0 flex-col border-r border-white/[0.08] bg-[linear-gradient(180deg,rgba(20,23,24,.94),rgba(17,19,19,.88))] p-4 shadow-[24px_0_70px_rgba(0,0,0,.22)] backdrop-blur-xl md:flex">
+        <div className="border-b border-white/[0.08] pb-5">
           <Link to={ROUTES.HOME} className="dl-brand">
             <Logo subtitle={copy.layout.playerHub} />
           </Link>
+          <div className="dl-status-chip mt-5 px-3 py-1.5">
+            Player hub online
+          </div>
         </div>
 
         <nav className="flex-1 space-y-2 py-5">
           {navItems.map((item) => (
             <NavLink key={item.path} to={item.path} className="block no-underline">
               {({ isActive }) => (
-                <div className={`flex items-center gap-3 rounded-[1.2rem] border px-4 py-3 transition ${isActive ? 'border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] text-white' : 'border-transparent bg-transparent text-[var(--dl-muted-light)] hover:border-[var(--dl-border)] hover:bg-white/[0.04] hover:text-white'}`}>
-                  <span className="grid h-10 w-10 place-items-center rounded-[0.95rem] border border-[var(--dl-border)] bg-white/[0.04] text-[0.74rem] font-bold uppercase tracking-[0.12em]">
+                <div className={`group flex items-center gap-3 rounded-[1.15rem] border px-4 py-3 transition duration-200 ${isActive ? 'border-[var(--dl-number)]/40 bg-[rgba(13,240,255,.10)] text-white shadow-[0_0_24px_rgba(13,240,255,.10)]' : 'border-transparent bg-transparent text-[var(--dl-muted-light)] hover:border-white/[0.08] hover:bg-white/[0.045] hover:text-white'}`}>
+                  <span className={`grid h-10 w-10 place-items-center rounded-[0.95rem] border text-[0.74rem] font-black uppercase tracking-[0.12em] transition ${isActive ? 'border-[var(--dl-number)]/40 bg-[rgba(13,240,255,.12)] text-[var(--dl-number)]' : 'border-white/[0.08] bg-white/[0.04] text-[var(--dl-muted-light)] group-hover:text-white'}`}>
                     {item.code}
                   </span>
-                  <span className="font-semibold uppercase tracking-[0.1em]">{item.label}</span>
+                  <span className="font-black uppercase tracking-[0.1em]">{item.label}</span>
                 </div>
               )}
             </NavLink>
           ))}
         </nav>
 
-        <Card variant="elevated" className="space-y-4">
+        <Card variant="elevated" className="dl-glass space-y-4 rounded-[1.4rem] p-4">
           <div className="flex items-center gap-3">
-            <div className="grid h-12 w-12 place-items-center rounded-[1rem] border border-[var(--dl-keyword)] bg-[rgb(var(--dl-red-rgb)/0.12)] font-['Rajdhani'] text-lg font-bold uppercase">
+            <div className="grid h-12 w-12 place-items-center rounded-[1rem] border border-[var(--dl-number)]/35 bg-[rgba(13,240,255,.10)] font-mono text-lg font-black uppercase text-[var(--dl-number)] shadow-[0_0_22px_rgba(13,240,255,.12)]">
               {getInitials()}
             </div>
             <div className="min-w-0">
-              <p className="truncate font-['Rajdhani'] text-lg font-bold uppercase text-white">{getNickname()}</p>
+              <p className="truncate text-lg font-black uppercase tracking-[-0.02em] text-white">{getNickname()}</p>
               <p className="truncate text-xs uppercase tracking-[0.14em] text-[var(--dl-muted-light)]">
                 {profile?.is_premium ? copy.common.premium : copy.common.standard}
               </p>
             </div>
           </div>
 
-          <div className="rounded-[1rem] border border-[var(--dl-border)] bg-white/[0.03] px-4 py-3 text-xs uppercase tracking-[0.12em] text-[var(--dl-muted-light)]">
+          <div className="rounded-[1rem] border border-white/[0.08] bg-black/20 px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-[var(--dl-muted-light)]">
             {getRank()}
           </div>
 
           {wallet && (
-            <Link to={ROUTES.WALLET} className="flex items-center justify-between rounded-[1rem] border border-[var(--dl-warning)]/20 bg-[var(--dl-warning)]/5 px-4 py-3 no-underline transition hover:border-[var(--dl-warning)]/40 hover:bg-[var(--dl-warning)]/10">
+            <Link to={ROUTES.WALLET} className="flex items-center justify-between rounded-[1rem] border border-[var(--dl-warning)]/25 bg-[var(--dl-warning)]/5 px-4 py-3 no-underline transition hover:border-[var(--dl-warning)]/40 hover:bg-[var(--dl-warning)]/10">
               <div className="flex items-center gap-2">
                 <img src={duoCoinIcon32} alt="DC" className="h-6 w-6 shrink-0 drop-shadow-[0_0_6px_rgba(255,209,102,0.4)]" />
-                <span className="font-['Rajdhani'] text-[11px] font-bold uppercase tracking-wider text-[var(--dl-muted-light)]">DuoCoins</span>
+                <span className="text-[11px] font-black uppercase tracking-wider text-[var(--dl-muted-light)]">DuoCoins</span>
               </div>
               <strong className="font-mono text-sm font-bold text-[var(--dl-warning)]">
                 {new Intl.NumberFormat('pt-BR').format(wallet.available_balance)} DC
@@ -157,6 +160,7 @@ export default function DashboardLayout() {
       </aside>
 
       <main className="relative flex-1 overflow-auto">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] bg-[radial-gradient(ellipse_70%_55%_at_50%_0%,rgba(13,240,255,.08),transparent_72%)]" />
         <div className="relative z-[1] h-full p-3 md:p-6 lg:p-8">
           <Outlet />
         </div>
