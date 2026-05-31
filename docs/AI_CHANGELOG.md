@@ -69,6 +69,39 @@ Registre uma única entrada por pacote de trabalho, incluindo `docs/AI_CHANGELOG
 
 ## 2026-05-30
 
+### 2026-05-30 — Identidade visual Vault Quest Card para missões do Cofre
+
+ID: AI-20260530-024
+Tipo: style
+Autor: Antigravity
+Commit: pendente
+Arquivos alterados:
+- `src/templates/VaultTemplate/index.tsx`
+
+Resumo:
+- Os cards de missão do bloco "Missões ativas #204" foram redesenhados com identidade própria de "Vault Quest Card".
+- O visual foi distanciado dos cards de Lobby, utilizando uma paleta de cores própria definida com CSS Variables (amber, violet, obsidian).
+- A recompensa principal (dinheiro/DuoCoins/evento) ganhou um bloco de grande destaque visual.
+- Pontos extras e vagas de vencedores passaram a ser informações secundárias em um grid inferior.
+- Adicionada barra de progresso horizontal para ocupação de vencedores.
+- Não houveram alterações de backend ou regras de submissão de missões.
+
+Motivo:
+- O card de missão estava parecido demais com um Lobby Card e aparentava ser gerado genericamente. A nova identidade comunica mais eficientemente a natureza de uma "quest" com foco direto na recompensa.
+
+Impacto:
+- Maior imersão visual na aba de Missões do Cofre, com rápida leitura de objetivos e status, sem poluir a tela ou comprometer usabilidade no mobile.
+
+Validação:
+- Linter e build executados com sucesso (zero erros).
+
+Pendências:
+- Nenhuma.
+
+---
+
+## 2026-05-30
+
 ### 2026-05-30 — Redesign visual dos cards de missão do Cofre
 
 ID: AI-20260530-023

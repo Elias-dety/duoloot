@@ -161,106 +161,156 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
 
   const renderMissionCard = (mission: VaultMission & { progress: VaultMissionProgress | null }) => {
     const approved = mission.my_submission?.status === 'approved';
+    const submitted = mission.my_submission?.status === 'submitted';
     const rejected = mission.my_submission?.status === 'rejected';
-    const closed = mission.status === 'closed' || mission.status === 'archived';
     const hasWinner = Boolean(mission.winners_count! >= mission.winner_limit!);
+
     const statusMeta = getMissionStatusMeta(mission);
     const actionDisabled = isMissionActionDisabled(mission);
     const actionLabel = getMissionActionLabel(mission);
+
     const cashReward = Number(mission.cash_reward_cents || 0) / 100;
     const pointsReward = Number(mission.points_reward || 0);
     const winnersCount = Number(mission.winners_count || 0);
     const winnerLimit = Number(mission.winner_limit || 0);
     const hasWinnerLimit = winnerLimit > 0;
+    const winnerPercent = hasWinnerLimit
+      ? Math.min(100, Math.round((winnersCount / winnerLimit) * 100))
+      : 0;
+
+    const questPaletteStyle = {
+      '--quest-bg': 'rgba(8, 13, 22, .92)',
+      '--quest-bg-soft': 'rgba(255, 255, 255, .035)',
+      '--quest-line': 'rgba(255, 255, 255, .08)',
+      '--quest-muted': 'rgba(235, 239, 246, .56)',
+      '--quest-amber': '#ffd166',
+      '--quest-cyan': '#16d7ff',
+      '--quest-jade': '#27e58a',
+      '--quest-violet': '#b084ff',
+      '--quest-rose': '#ff3f66',
+      '--quest-glow': 'rgba(255, 209, 102, .16)',
+    } as React.CSSProperties & Record<string, string>;
 
     return (
       <DuoFrame
         key={mission.id}
-        variant={approved ? 'soft' : rejected || closed || hasWinner ? 'red' : 'default'}
+        variant="soft"
         thickness="sm"
         radius="lg"
         className="h-full min-w-0"
-        screenClassName="p-1.5"
+        screenClassName="p-1"
       >
-        <article className="dl-panel relative flex h-full min-w-0 flex-col overflow-hidden rounded-[1.35rem] border-0 bg-[radial-gradient(circle_at_15%_0%,rgba(22,215,255,.10),transparent_14rem),linear-gradient(135deg,rgba(255,209,102,.06),transparent_34%),linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.012)),linear-gradient(145deg,#08111d,#050a12_66%,#08111b)] p-3.5 shadow-[0_18px_42px_rgba(0,0,0,.30),0_0_26px_rgba(22,215,255,.06)] sm:p-4">
+        <article
+          style={questPaletteStyle}
+          className="relative flex h-full min-w-0 flex-col overflow-hidden rounded-[1.25rem] border border-white/[0.04] bg-[radial-gradient(circle_at_18%_0%,rgba(255,209,102,.10),transparent_12rem),radial-gradient(circle_at_100%_20%,rgba(176,132,255,.08),transparent_14rem),linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015)),linear-gradient(145deg,#08111d,#050a12_70%,#080d16)] p-4 shadow-[0_16px_38px_rgba(0,0,0,.32),0_0_22px_var(--quest-glow)] transition duration-300 hover:-translate-y-1 hover:border-white/[0.10] hover:bg-white/[0.045]"
+        >
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,var(--quest-amber),var(--quest-violet),transparent)] opacity-80" />
+
           {(hasWinner && !approved) ? (
-            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-[2px]">
-              <span className="rotate-[-12deg] rounded-lg border-4 border-[var(--dl-error)] px-4 py-1 font-['Rajdhani'] text-2xl font-black uppercase text-[var(--dl-error)] shadow-[0_0_20px_rgba(255,70,85,0.4)]">
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/65 backdrop-blur-[2px]">
+              <span className="rotate-[-8deg] rounded-lg border-2 border-[var(--quest-rose)] bg-[rgba(255,63,102,.08)] px-4 py-1 font-['Rajdhani'] text-2xl font-black uppercase text-[var(--quest-rose)] shadow-[0_0_20px_rgba(255,63,102,.28)]">
                 Finalizada
               </span>
             </div>
           ) : null}
 
-          <header className="relative z-[2] mb-3 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-2.5">
-            <span className={`inline-flex min-h-[30px] shrink-0 items-center justify-center gap-1.5 rounded-full border px-2.5 text-[0.62rem] font-black uppercase tracking-[0.08em] ${statusMeta.className}`}>
-              <span className="h-1.5 w-1.5 rounded-full bg-current shadow-[0_0_10px_currentColor]" />
-              {statusMeta.label}
-            </span>
+          <header className="relative z-[2] mb-4 grid grid-cols-[44px_minmax(0,1fr)_auto] items-start gap-3">
+            <div className="grid h-11 w-11 place-items-center rounded-2xl border border-[rgba(255,209,102,.28)] bg-[rgba(255,209,102,.10)] shadow-[0_0_18px_rgba(255,209,102,.10)]">
+              <span className="text-xl">
+                {approved ? '✓' : submitted ? '⌛' : rejected ? '!' : '◆'}
+              </span>
+            </div>
 
-            <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-right font-['Inter'] text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[rgba(235,239,246,.46)]">
-              Missão do Cofre
+            <div className="min-w-0">
+              <span className="block overflow-hidden text-ellipsis whitespace-nowrap font-['Inter'] text-[0.58rem] font-black uppercase tracking-[0.16em] text-[var(--quest-muted)]">
+                Contrato do Cofre
+              </span>
+
+              <h3 className="mt-1 min-w-0 overflow-hidden text-ellipsis font-['Rajdhani'] text-[1.55rem] font-black uppercase leading-[.92] tracking-[.01em] text-white sm:text-[1.7rem]">
+                {mission.title}
+              </h3>
+            </div>
+
+            <span className={`inline-flex min-h-[28px] shrink-0 items-center justify-center rounded-full border px-2.5 text-[0.58rem] font-black uppercase tracking-[0.08em] ${statusMeta.className}`}>
+              {statusMeta.label}
             </span>
           </header>
 
-          <section className="relative z-[2] border-b border-[rgba(160,180,205,.12)] pb-3.5">
-            <h3 className="m-0 min-w-0 overflow-hidden text-ellipsis font-['Rajdhani'] text-[1.45rem] font-black uppercase leading-[.95] tracking-[.02em] text-white sm:text-[1.6rem]">
-              {mission.title}
-            </h3>
+          <p className="relative z-[2] mb-4 line-clamp-3 text-[0.8rem] leading-relaxed text-[var(--quest-muted)]">
+            {mission.requirements || mission.description}
+          </p>
 
-            <p className="mt-2 line-clamp-3 text-[0.76rem] leading-relaxed text-[rgba(235,239,246,.58)] sm:text-[0.82rem]">
-              {mission.requirements || mission.description}
-            </p>
-          </section>
+          <section className="relative z-[2] mb-3 rounded-2xl border border-[rgba(255,209,102,.18)] bg-[linear-gradient(135deg,rgba(255,209,102,.12),rgba(255,209,102,.035))] p-3 shadow-[inset_0_0_0_1px_rgba(255,255,255,.025),0_0_18px_rgba(255,209,102,.08)]">
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <span className="font-['Inter'] text-[0.58rem] font-black uppercase tracking-[0.16em] text-[rgba(255,255,255,.50)]">
+                Recompensa principal
+              </span>
 
-          <section className="relative z-[2] grid gap-2 border-b border-[rgba(160,180,205,.12)] py-3.5">
-            <div className="grid grid-cols-2 gap-2">
-              <div className="min-w-0 rounded-xl border border-[rgba(255,209,102,.22)] bg-[rgba(255,209,102,.08)] px-2.5 py-2 shadow-[0_0_14px_rgba(255,209,102,.06)]">
-                <span className="block text-[0.56rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.52)]">
-                  Recompensa
-                </span>
-                <strong className="mt-1 block truncate font-mono text-[0.82rem] text-[var(--dl-warning)]">
-                  {cashReward > 0 ? `+${cashReward} ${mission.currency}` : 'Evento'}
-                </strong>
-              </div>
-
-              <div className="min-w-0 rounded-xl border border-[rgba(22,215,255,.22)] bg-[rgba(22,215,255,.08)] px-2.5 py-2 shadow-[0_0_14px_rgba(22,215,255,.06)]">
-                <span className="block text-[0.56rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.52)]">
-                  Pontos
-                </span>
-                <strong className="mt-1 flex min-w-0 items-center gap-1 font-mono text-[0.82rem] text-[#16d7ff]">
-                  +{pointsReward}
-                  <img
-                    src={duoCoinIcon16}
-                    alt="DuoCoins"
-                    className="h-4 w-4 shrink-0 drop-shadow-[0_0_4px_rgba(255,209,102,0.3)]"
-                  />
-                </strong>
-              </div>
+              <span className="rounded-full border border-[rgba(255,209,102,.26)] bg-black/20 px-2 py-0.5 font-mono text-[0.58rem] text-[var(--quest-amber)]">
+                Cofre
+              </span>
             </div>
 
-            {hasWinnerLimit ? (
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-2.5 py-2">
-                <div className="min-w-0">
-                  <span className="block text-[0.56rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.46)]">
-                    Vencedores
-                  </span>
-                  <div className="mt-1 h-2 rounded-full bg-white/[0.08] p-[2px]">
-                    <div
-                      className="h-full rounded-full bg-[linear-gradient(90deg,#14d8ff_0%,#20ddca_42%,#ffd166_100%)]"
-                      style={{ width: `${Math.min(100, Math.round((winnersCount / winnerLimit) * 100))}%` }}
-                    />
-                  </div>
-                </div>
+            <div className="flex items-end justify-between gap-3">
+              <strong className="min-w-0 truncate font-['Rajdhani'] text-[2rem] font-black leading-none text-[var(--quest-amber)]">
+                {cashReward > 0 ? `+${cashReward}` : 'Evento'}
+              </strong>
 
-                <span className="font-mono text-[0.75rem] font-bold text-[var(--dl-muted-light)]">
-                  {winnersCount}/{winnerLimit}
-                </span>
-              </div>
-            ) : null}
+              <span className="shrink-0 font-mono text-[0.75rem] uppercase text-[rgba(255,255,255,.58)]">
+                {cashReward > 0 ? mission.currency : 'recompensa'}
+              </span>
+            </div>
           </section>
 
-          <section className="relative z-[2] mt-auto pt-3.5">
-            <p className="mb-2 line-clamp-1 text-[0.68rem] font-semibold leading-snug text-[rgba(235,239,246,.46)]">
+          <section className="relative z-[2] grid grid-cols-2 gap-2">
+            <div className="min-w-0 rounded-xl border border-white/[0.07] bg-black/20 px-3 py-2">
+              <span className="block text-[0.54rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.44)]">
+                Pontos
+              </span>
+
+              <strong className="mt-1 flex min-w-0 items-center gap-1 font-mono text-[0.82rem] text-[var(--quest-cyan)]">
+                +{pointsReward}
+                <img
+                  src={duoCoinIcon16}
+                  alt="DuoCoins"
+                  className="h-4 w-4 shrink-0 drop-shadow-[0_0_4px_rgba(255,209,102,0.3)]"
+                />
+              </strong>
+            </div>
+
+            <div className="min-w-0 rounded-xl border border-white/[0.07] bg-black/20 px-3 py-2">
+              <span className="block text-[0.54rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.44)]">
+                Vagas
+              </span>
+
+              <strong className="mt-1 block truncate font-mono text-[0.82rem] text-white">
+                {hasWinnerLimit ? `${winnersCount}/${winnerLimit}` : 'Livre'}
+              </strong>
+            </div>
+          </section>
+
+          {hasWinnerLimit ? (
+            <div className="relative z-[2] mt-3">
+              <div className="mb-1 flex items-center justify-between gap-3">
+                <span className="text-[0.58rem] font-black uppercase tracking-[0.12em] text-[rgba(238,241,246,.42)]">
+                  Ocupação dos vencedores
+                </span>
+                <span className="font-mono text-[0.62rem] text-[var(--quest-muted)]">
+                  {winnerPercent}%
+                </span>
+              </div>
+
+              <div className="h-2 rounded-full bg-white/[0.08] p-[2px]">
+                <div
+                  className="h-full rounded-full bg-[linear-gradient(90deg,var(--quest-amber),var(--quest-violet))]"
+                  style={{ width: `${winnerPercent}%` }}
+                />
+              </div>
+            </div>
+          ) : null}
+
+          <footer className="relative z-[2] mt-auto pt-4">
+            <p className="mb-2 line-clamp-1 text-[0.68rem] font-semibold text-[rgba(235,239,246,.46)]">
               {statusMeta.helper}
             </p>
 
@@ -268,19 +318,93 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
               type="button"
               onClick={() => setActiveMissionForModal({ id: mission.id, title: mission.title })}
               disabled={actionDisabled}
-              className={`inline-flex min-h-[42px] w-full min-w-0 items-center justify-center rounded-xl px-3 text-center text-[0.72rem] font-black uppercase tracking-[.08em] text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55 ${
+              className={`inline-flex min-h-[42px] w-full min-w-0 items-center justify-center rounded-xl px-3 text-center text-[0.72rem] font-black uppercase tracking-[.08em] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-55 ${
                 actionDisabled
-                  ? 'border border-[rgba(160,180,205,.17)] bg-white/[.05] text-[var(--dl-muted)]'
-                  : 'bg-[linear-gradient(135deg,#ff304b,#ff3f72_62%,#ff477a)] shadow-[0_10px_20px_rgba(255,63,102,.16),inset_0_1px_0_rgba(255,255,255,.18)]'
+                  ? 'border border-white/[0.08] bg-white/[.045] text-[var(--dl-muted)]'
+                  : 'bg-[linear-gradient(135deg,#ff304b,#ff3f72_62%,#ff477a)] text-white shadow-[0_10px_20px_rgba(255,63,102,.16),inset_0_1px_0_rgba(255,255,255,.18)]'
               }`}
             >
               {actionLabel}
             </button>
-          </section>
+          </footer>
         </article>
       </DuoFrame>
     );
   };
+
+  const leaderboardRankGroups = [
+    {
+      id: 'iron-silver',
+      title: 'Ferro · Bronze · Prata',
+      subtitle: 'Base competitiva',
+      ranks: ['ferro', 'iron', 'bronze', 'prata', 'silver'],
+      accent: 'var(--dl-muted-light)',
+      gradient: 'linear-gradient(135deg, rgba(148,163,184,.14), rgba(255,255,255,.035))',
+    },
+    {
+      id: 'gold-platinum',
+      title: 'Ouro · Platina',
+      subtitle: 'Fila intermediária',
+      ranks: ['ouro', 'gold', 'platina', 'platinum'],
+      accent: 'var(--dl-warning)',
+      gradient: 'linear-gradient(135deg, rgba(255,209,102,.14), rgba(22,215,255,.055))',
+    },
+    {
+      id: 'diamond-ascendant',
+      title: 'Diamante · Ascendente',
+      subtitle: 'Alta performance',
+      ranks: ['diamante', 'diamond', 'ascendente', 'ascendant'],
+      accent: 'var(--dl-number)',
+      gradient: 'linear-gradient(135deg, rgba(22,215,255,.14), rgba(35,209,139,.055))',
+    },
+    {
+      id: 'immortal-radiant',
+      title: 'Imortal · Radiante',
+      subtitle: 'Elite do Cofre',
+      ranks: ['imortal', 'immortal', 'radiante', 'radiant'],
+      accent: 'var(--dl-error)',
+      gradient: 'linear-gradient(135deg, rgba(255,63,102,.14), rgba(255,209,102,.075))',
+    },
+  ] as const;
+
+  const normalizeRankName = (value: unknown) =>
+    String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+
+  const getLeaderboardEntryRank = (entry: VaultLeaderboardEntry) => {
+    const profile = (entry.gameProfile || {}) as Record<string, unknown>;
+
+    return normalizeRankName(
+      profile.currentRank ||
+        profile.rank ||
+        profile.elo ||
+        profile.current_elo ||
+        ''
+    );
+  };
+
+  const isEntryInRankGroup = (
+    entry: VaultLeaderboardEntry,
+    group: (typeof leaderboardRankGroups)[number]
+  ) => {
+    const rank = getLeaderboardEntryRank(entry);
+
+    return group.ranks.some((rankKey) => rank.includes(rankKey));
+  };
+
+  const leaderboardByRankGroup = leaderboardRankGroups.map((group) => {
+    const entries = leaderboard
+      .filter((entry) => isEntryInRankGroup(entry, group))
+      .slice(0, 5);
+
+    return {
+      ...group,
+      entries,
+    };
+  });
 
   return (
     <div className="relative min-h-screen overflow-hidden px-3 pb-12 pt-8 sm:px-5 sm:pb-14 sm:pt-10 lg:px-6 lg:pb-16 lg:pt-12">
@@ -521,46 +645,94 @@ export const VaultTemplate: React.FC<VaultTemplateProps> = ({
               className="min-w-0 rounded-[1.35rem] border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-xl sm:rounded-2xl sm:p-5"
             >
               <UiMarker {...UI_MARKERS.vault.leaderboard} />
-              <div className="mb-5 flex items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
-                <div>
-                  <span className="font-['Inter'] text-[0.7rem] font-medium uppercase tracking-[0.16em] text-[var(--dl-number)]">
-                    Posições do evento
-                  </span>
-                  <h2 className="mt-2 font-['Rajdhani'] text-3xl font-bold uppercase text-white">
-                    Top jogadores
-                  </h2>
-                </div>
-
-                <span className="rounded-full border border-[var(--dl-number)]/30 bg-[var(--dl-number)]/10 px-3 py-1 font-mono text-[0.68rem] text-[var(--dl-number)]">
-                  live preview
+              
+              <div className="mb-5 border-b border-white/[0.06] pb-4">
+                <span className="font-['Inter'] text-[0.7rem] font-medium uppercase tracking-[0.16em] text-[var(--dl-number)]">
+                  Posições por faixa competitiva
                 </span>
+
+                <h2 className="mt-2 font-['Rajdhani'] text-3xl font-bold uppercase text-white">
+                  Top jogadores por elo
+                </h2>
+
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--dl-muted-light)]">
+                  As missões do Cofre podem ter disputas separadas por elo. Confira os melhores jogadores de cada faixa.
+                </p>
               </div>
 
-              <div className="space-y-2">
-                {leaderboard.map((entry) => (
-                  <div
-                    key={entry.participantId}
-                    className="grid min-w-0 grid-cols-[36px_minmax(0,1fr)] gap-3 rounded-xl border border-white/[0.05] bg-black/20 px-3 py-3 sm:grid-cols-[42px_minmax(0,1fr)_auto] sm:items-center"
+              <div className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-2">
+                {leaderboardByRankGroup.map((group) => (
+                  <article
+                    key={group.id}
+                    className="min-w-0 overflow-hidden rounded-2xl border border-white/[0.08] bg-black/20 p-4"
+                    style={{
+                      background: group.gradient,
+                    }}
                   >
-                    <span className="grid h-9 w-9 place-items-center rounded-lg border border-white/[0.08] bg-white/[0.04] font-mono text-sm text-[var(--dl-warning)]">
-                      #{entry.rankPosition}
-                    </span>
+                    <div className="mb-4 flex items-start justify-between gap-3 border-b border-white/[0.06] pb-3">
+                      <div className="min-w-0">
+                        <h3 className="truncate font-['Rajdhani'] text-xl font-black uppercase leading-none text-white">
+                          {group.title}
+                        </h3>
 
-                    <div className="min-w-0">
-                      <strong className="block truncate text-sm text-white">
-                        {entry.playerNickname || entry.playerName || 'Player'}
-                      </strong>
-                      <span className="block truncate font-mono text-[0.65rem] text-[var(--dl-muted)]">
-                        {entry.missionsCompleted}/{entry.totalMissions} missões · trust {entry.trustScore}
+                        <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--dl-muted)]">
+                          {group.subtitle}
+                        </p>
+                      </div>
+
+                      <span
+                        className="shrink-0 rounded-full border px-2.5 py-1 font-mono text-[0.62rem] uppercase"
+                        style={{
+                          color: group.accent,
+                          borderColor: `${group.accent}55`,
+                          background: `${group.accent}18`,
+                        }}
+                      >
+                        Top {group.entries.length || 0}
                       </span>
                     </div>
 
-                    <span className="col-start-2 inline-flex items-center gap-1 font-mono text-sm font-bold text-[var(--dl-string)] sm:col-start-auto">
-                      {entry.points}
-                      <img src={duoCoinIcon16} alt="DC" className="h-4 w-4" />
-                      <span>pts</span>
-                    </span>
-                  </div>
+                    {group.entries.length > 0 ? (
+                      <div className="space-y-2">
+                        {group.entries.map((entry, index) => (
+                          <div
+                            key={entry.participantId}
+                            className="grid min-w-0 grid-cols-[34px_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-white/[0.06] bg-black/25 px-3 py-2.5"
+                          >
+                            <span
+                              className="grid h-8 w-8 place-items-center rounded-lg border bg-white/[0.04] font-mono text-xs font-bold"
+                              style={{
+                                color: group.accent,
+                                borderColor: `${group.accent}45`,
+                              }}
+                            >
+                              #{index + 1}
+                            </span>
+
+                            <div className="min-w-0">
+                              <strong className="block truncate text-sm text-white">
+                                {entry.playerNickname || entry.playerName || 'Player'}
+                              </strong>
+
+                              <span className="block truncate font-mono text-[0.62rem] text-[var(--dl-muted)]">
+                                {getLeaderboardEntryRank(entry) || 'elo não informado'} · {entry.missionsCompleted}/{entry.totalMissions} missões
+                              </span>
+                            </div>
+
+                            <span className="shrink-0 font-mono text-xs font-bold text-[var(--dl-string)]">
+                              {entry.points} pts
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="rounded-xl border border-dashed border-white/[0.08] bg-black/20 px-3 py-5 text-center">
+                        <p className="font-['Inter'] text-xs font-semibold text-[var(--dl-muted-light)]">
+                          Nenhum jogador ranqueado nesta faixa ainda.
+                        </p>
+                      </div>
+                    )}
+                  </article>
                 ))}
               </div>
             </section>
