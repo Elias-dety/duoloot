@@ -47,52 +47,39 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-80px)] overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: [
-            'radial-gradient(ellipse 55% 45% at 12% 20%, rgba(13,240,255,0.08), transparent 62%)',
-            'radial-gradient(ellipse 45% 38% at 86% 78%, rgba(255,70,85,0.08), transparent 60%)',
-            'linear-gradient(180deg, rgba(255,255,255,0.025), transparent 42%)',
-          ].join(', '),
-        }}
-      />
-
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-11rem)] w-full max-w-[2560px] 3xl:px-12 4xl:px-24 items-center gap-10 lg:grid-cols-[0.9fr_1fr]">
+    <div className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-12">
+      <div className="mx-auto grid min-h-[calc(100vh-11rem)] w-full max-w-[1600px] items-center gap-10 lg:grid-cols-[0.95fr_1fr]">
         <aside className="hidden lg:block">
-          <div className="rounded-3xl border border-white/[0.08] bg-white/[0.035] p-8 backdrop-blur-xl">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--dl-number)]/30 bg-[var(--dl-number)]/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.16em] text-[var(--dl-number)]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--dl-number)] shadow-[0_0_8px_var(--dl-number)]" />
-              Acesso seguro
+          <section className="dl-premium-hero p-8 xl:p-10" data-watermark="LOGIN">
+            <div className="relative z-[2]">
+              <div className="dl-premium-badge mb-8 px-3 py-1.5">
+                Acesso seguro
+              </div>
+
+              <h1 className="dl-premium-title mb-6 text-[clamp(2.6rem,5vw,5.2rem)] font-black">
+                Volte para o painel do seu jogador.
+              </h1>
+
+              <p className="dl-premium-muted mb-8 max-w-md font-['Inter'] text-base font-light">
+                Use o login por e-mail enquanto Google e Riot Sign-On continuam fora da produção. Menos fumaça, mais fluxo testável.
+              </p>
+
+              <div className="grid gap-3">
+                {[
+                  { label: 'Auth real', value: 'Supabase e-mail/senha', color: 'var(--dl-string)' },
+                  { label: 'Após login', value: 'Dashboard ou rota protegida', color: 'var(--dl-number)' },
+                  { label: 'Próximo passo', value: 'Onboarding obrigatório', color: 'var(--dl-warning)' },
+                ].map((item) => (
+                  <div key={item.label} className="dl-stat-tile flex min-h-0 items-center justify-between px-4 py-3">
+                    <span className="dl-stat-label">{item.label}</span>
+                    <span className="text-right font-mono text-[0.72rem]" style={{ color: item.color }}>
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <h1 className="mb-5 text-[clamp(2.2rem,5vw,3.6rem)] font-bold leading-[1.04] tracking-[-0.035em] text-white">
-              Volte para o painel do seu jogador.
-            </h1>
-
-            <p className="mb-8 max-w-md font-['Inter'] text-[0.98rem] font-light leading-8 text-[var(--dl-muted-light)]">
-              Use o login por e-mail enquanto Google e Riot Sign-On continuam fora da produção. Menos fumaça, mais fluxo testável.
-            </p>
-
-            <div className="grid gap-3">
-              {[
-                { label: 'Auth real', value: 'Supabase e-mail/senha', color: 'var(--dl-string)' },
-                { label: 'Após login', value: 'Dashboard ou rota protegida', color: 'var(--dl-number)' },
-                { label: 'Próximo passo', value: 'Onboarding obrigatório', color: 'var(--dl-warning)' },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center justify-between rounded-2xl border border-white/[0.07] bg-white/[0.035] px-4 py-3">
-                  <span className="font-['Inter'] text-[0.76rem] uppercase tracking-[0.13em] text-[var(--dl-muted)]">
-                    {item.label}
-                  </span>
-                  <span className="text-right font-mono text-[0.72rem]" style={{ color: item.color }}>
-                    {item.value}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          </section>
         </aside>
 
         <div className="flex w-full justify-center lg:justify-end">
